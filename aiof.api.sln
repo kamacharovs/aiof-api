@@ -3,7 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30002.166
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aiof.api.core", "aiof.api.core\aiof.api.core.csproj", "{D7996C5D-BB44-41C1-BC3D-0129CCD840E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "aiof.api.core", "aiof.api.core\aiof.api.core.csproj", "{D7996C5D-BB44-41C1-BC3D-0129CCD840E1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8462D5D5-7B8B-4113-BCFB-4F9AA28D76CF}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aiof.api.data", "aiof.api.data\aiof.api.data.csproj", "{DAB0373C-5396-413B-9FB3-380FEA4F5CE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aiof.api.services", "aiof.api.services\aiof.api.services.csproj", "{9558E735-A83A-4089-AF93-8B8AAC433946}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aiof.api.tests", "aiof.api.tests\aiof.api.tests.csproj", "{63D59136-600B-4A21-9A1B-106D57E40C67}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +27,18 @@ Global
 		{D7996C5D-BB44-41C1-BC3D-0129CCD840E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7996C5D-BB44-41C1-BC3D-0129CCD840E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7996C5D-BB44-41C1-BC3D-0129CCD840E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAB0373C-5396-413B-9FB3-380FEA4F5CE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAB0373C-5396-413B-9FB3-380FEA4F5CE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAB0373C-5396-413B-9FB3-380FEA4F5CE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAB0373C-5396-413B-9FB3-380FEA4F5CE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9558E735-A83A-4089-AF93-8B8AAC433946}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9558E735-A83A-4089-AF93-8B8AAC433946}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9558E735-A83A-4089-AF93-8B8AAC433946}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9558E735-A83A-4089-AF93-8B8AAC433946}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63D59136-600B-4A21-9A1B-106D57E40C67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63D59136-600B-4A21-9A1B-106D57E40C67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63D59136-600B-4A21-9A1B-106D57E40C67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63D59136-600B-4A21-9A1B-106D57E40C67}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
