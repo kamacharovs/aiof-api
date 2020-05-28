@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Text.Json;
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+
+using aiof.api.data;
 
 namespace aiof.api.core
 {
@@ -27,6 +30,16 @@ namespace aiof.api.core
 
         public void ConfigureServices(IServiceCollection services)
         {
+            if (_env.IsDevelopment())
+                services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(nameof(AiofContext)));
+            else
+                services.AddDbContext<AiofContext>(o =>
+                    o.UseNpgsql(_configuration.GetConnectionString("PostgreSQL")
+                        .Replace("$DB_HOST", _configuration["DB_HOST"])
+                        .Replace("$DB_NAME", _configuration["DB_NAME"])
+                        .Replace("$DB_USER", _configuration["DB_USER"])
+                        .Replace("$DB_PASSWORD", _configuration["DB_PASSWORD"])));
+
             services.AddHealthChecks();
             services.AddLogging();
 
