@@ -5,20 +5,25 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 
+using aiof.api.services;
+
 namespace aiof.api.core.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("aiof")]
     public class AiofController : ControllerBase
     {
-        public AiofController()
+        public readonly IAiofRepository _repo;
+
+        public AiofController(IAiofRepository repo)
         {
+            _repo = repo ?? throw new ArgumentNullException(nameof(repo));
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok("all in one finance");
+            return Ok(await _repo.GetAssets());
         }
     }
 }

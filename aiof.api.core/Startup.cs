@@ -33,9 +33,9 @@ namespace aiof.api.core
         {
             services.AddScoped<IAiofRepository, AiofRepository>();
 
-            if (_env.IsDevelopment())
-                services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(nameof(AiofContext)));
-            else
+            //if (_env.IsDevelopment())
+            //    services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(nameof(AiofContext)));
+            //else
                 services.AddDbContext<AiofContext>(o =>
                     o.UseNpgsql(_configuration.GetConnectionString("PostgreSQL")
                         .Replace("$DB_HOST", _configuration["DB_HOST"])
