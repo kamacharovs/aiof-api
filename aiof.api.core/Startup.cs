@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 using aiof.api.data;
+using aiof.api.services;
 
 namespace aiof.api.core
 {
@@ -30,6 +31,8 @@ namespace aiof.api.core
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IAiofRepository, AiofRepository>();
+
             if (_env.IsDevelopment())
                 services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(nameof(AiofContext)));
             else
