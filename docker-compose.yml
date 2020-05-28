@@ -12,6 +12,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       DB_HOST: postgres
+      DB_NAME: aiof
       DB_USER: root
       DB_PASSWORD: root
 
