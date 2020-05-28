@@ -4,7 +4,7 @@ using System.Text;
 
 namespace aiof.api.data
 {
-    public class Goal : IGoal
+    public class Goal : IGoal, IPublicKeyId
     {
         public int Id { get; set; }
         public Guid PublicKey { get; set; }

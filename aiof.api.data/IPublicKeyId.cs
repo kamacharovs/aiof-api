@@ -2,15 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-
 namespace aiof.api.data
 {
-    public interface IGoal
+    public interface IPublicKeyId
     {
         int Id { get; set; }
         Guid PublicKey { get; set; }
-        string Name { get; set; }
-        bool Savings { get; set; }
-        string Type { get; set; }
     }
 }
