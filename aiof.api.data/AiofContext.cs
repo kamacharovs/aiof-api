@@ -25,7 +25,6 @@ namespace aiof.api.data
                 e.Property(x => x.Id).HasColumnName("id").IsRequired();
                 e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
                 e.Property(x => x.Type).HasColumnName("type").HasMaxLength(100).IsRequired();
-                e.Property(x => x.Value).HasColumnName("value").HasColumnType("float").IsRequired();
             });
         }
     }
