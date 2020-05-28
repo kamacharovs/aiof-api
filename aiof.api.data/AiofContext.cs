@@ -24,6 +24,7 @@ namespace aiof.api.data
                 e.HasKey(x => x.Id);
 
                 e.Property(x => x.Id).HasColumnName("id").IsRequired();
+                e.Property(x => x.PublicKey).HasColumnName("publicKey").IsRequired();
                 e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
                 e.Property(x => x.Type).HasColumnName("type").HasMaxLength(100).IsRequired();
             });
@@ -35,6 +36,7 @@ namespace aiof.api.data
                 e.HasKey(x => x.Id);
 
                 e.Property(x => x.Id).HasColumnName("id").IsRequired();
+                e.Property(x => x.PublicKey).HasColumnName("publicKey").IsRequired();
                 e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
                 e.Property(x => x.Type).HasColumnName("type").HasMaxLength(100).IsRequired();
             });
