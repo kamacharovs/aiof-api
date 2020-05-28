@@ -8,12 +8,24 @@ namespace aiof.api.data
 {
     public class AiofContext : DbContext
     {
+        public virtual DbSet<Asset> Assets { get; set; }
+
         public AiofContext(DbContextOptions<AiofContext> options)
             : base(options)
         { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Asset>(e =>
+            {
+                e.ToTable("asset");
+
+                e.HasKey(x => x.Id);
+
+                e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
+                e.Property(x => x.Type).HasColumnName("type").HasMaxLength(100).IsRequired();
+                e.Property(x => x.Value).HasColumnName("value").HasColumnType("float").IsRequired();
+            });
         }
     }
 }
