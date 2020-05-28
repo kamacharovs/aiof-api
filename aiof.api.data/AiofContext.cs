@@ -10,6 +10,7 @@ namespace aiof.api.data
     {
         public virtual DbSet<Asset> Assets { get; set; }
         public virtual DbSet<Liability> Liabilities { get; set; }
+        public virtual DbSet<Goal> Goals { get; set; }
 
         public AiofContext(DbContextOptions<AiofContext> options)
             : base(options)
@@ -32,6 +33,18 @@ namespace aiof.api.data
             modelBuilder.Entity<Liability>(e =>
             {
                 e.ToTable("liability");
+
+                e.HasKey(x => x.Id);
+
+                e.Property(x => x.Id).HasColumnName("id").ValueGeneratedOnAdd().IsRequired();
+                e.Property(x => x.PublicKey).HasColumnName("public_key").ValueGeneratedOnAdd().IsRequired();
+                e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
+                e.Property(x => x.Type).HasColumnName("type").HasMaxLength(100).IsRequired();
+            });
+
+            modelBuilder.Entity<Goal>(e =>
+            {
+                e.ToTable("goal");
 
                 e.HasKey(x => x.Id);
 
