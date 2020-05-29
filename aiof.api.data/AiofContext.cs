@@ -43,7 +43,7 @@ namespace aiof.api.data
                 e.Property(x => x.PublicKey).HasColumnName("public_key").ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
                 e.Property(x => x.Type).HasColumnName("type").HasMaxLength(100).IsRequired();
-                e.Property(x => x.FinanceId).HasColumnName("finance_id").IsRequired();
+                e.Property(x => x.FinanceId).HasColumnName("finance_id");
             });
 
             modelBuilder.Entity<Liability>(e =>
@@ -56,6 +56,7 @@ namespace aiof.api.data
                 e.Property(x => x.PublicKey).HasColumnName("public_key").ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
                 e.Property(x => x.Type).HasColumnName("type").HasMaxLength(100).IsRequired();
+                e.Property(x => x.FinanceId).HasColumnName("finance_id");
             });
 
             modelBuilder.Entity<Goal>(e =>
@@ -68,6 +69,7 @@ namespace aiof.api.data
                 e.Property(x => x.PublicKey).HasColumnName("public_key").ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
                 e.Property(x => x.Type).HasColumnName("type").HasMaxLength(100).IsRequired();
+                e.Property(x => x.FinanceId).HasColumnName("finance_id");
             });
 
             modelBuilder.Entity<Finance>(e =>
@@ -87,6 +89,16 @@ namespace aiof.api.data
                     .OnDelete(DeleteBehavior.Cascade);
 
                 e.HasMany(x => x.Assets)
+                    .WithOne()
+                    .HasForeignKey(x => x.FinanceId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                e.HasMany(x => x.Liabilities)
+                    .WithOne()
+                    .HasForeignKey(x => x.FinanceId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                e.HasMany(x => x.Goals)
                     .WithOne()
                     .HasForeignKey(x => x.FinanceId)
                     .OnDelete(DeleteBehavior.Cascade);

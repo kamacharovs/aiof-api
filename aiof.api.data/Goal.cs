@@ -11,5 +11,6 @@ namespace aiof.api.data
         public string Name { get; set; }
         public string Type { get; set; }
         public bool Savings { get; set; } = false;
+        public int FinanceId { get; set; }
     }
 }
