@@ -13,6 +13,7 @@ namespace aiof.api.data
         public virtual DbSet<Asset> Assets { get; set; }
         public virtual DbSet<Liability> Liabilities { get; set; }
         public virtual DbSet<Goal> Goals { get; set; }
+        public virtual DbSet<Finance> Finances { get; set; }
 
         public AiofContext(DbContextOptions<AiofContext> options)
             : base(options)
