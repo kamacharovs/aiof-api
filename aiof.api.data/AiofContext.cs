@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 using Microsoft.EntityFrameworkCore;
@@ -42,6 +43,7 @@ namespace aiof.api.data
                 e.Property(x => x.PublicKey).HasColumnName("public_key").ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
                 e.Property(x => x.Type).HasColumnName("type").HasMaxLength(100).IsRequired();
+                e.Property(x => x.FinanceId).HasColumnName("finance_id").IsRequired();
             });
 
             modelBuilder.Entity<Liability>(e =>
@@ -66,6 +68,28 @@ namespace aiof.api.data
                 e.Property(x => x.PublicKey).HasColumnName("public_key").ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
                 e.Property(x => x.Type).HasColumnName("type").HasMaxLength(100).IsRequired();
+            });
+
+            modelBuilder.Entity<Finance>(e =>
+            {
+                e.ToTable("finance");
+
+                e.HasKey(x => x.Id);
+
+                e.Property(x => x.Id).HasColumnName("id").ValueGeneratedOnAdd().IsRequired();
+                e.Property(x => x.PublicKey).HasColumnName("public_key").ValueGeneratedOnAdd().IsRequired();
+                e.Property(x => x.UserId).HasColumnName("user_id").IsRequired();
+
+                e.HasOne(x => x.User)
+                    .WithMany()
+                    .HasForeignKey(x => x.UserId)
+                    .IsRequired()
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                e.HasMany(x => x.Assets)
+                    .WithOne()
+                    .HasForeignKey(x => x.FinanceId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
         }
     }
