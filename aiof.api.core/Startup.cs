@@ -32,11 +32,12 @@ namespace aiof.api.core
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IAiofRepository, AiofRepository>();
+            services.AddScoped<FakeDataManager>();
 
             //if (_env.IsDevelopment())
             //    services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(nameof(AiofContext)));
             //else
-                services.AddDbContext<AiofContext>(o =>
+            services.AddDbContext<AiofContext>(o =>
                     o.UseNpgsql(_configuration.GetConnectionString("PostgreSQL")
                         .Replace("$DB_HOST", _configuration["DB_HOST"])
                         .Replace("$DB_NAME", _configuration["DB_NAME"])
