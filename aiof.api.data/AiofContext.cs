@@ -31,6 +31,7 @@ namespace aiof.api.data
                 e.Property(x => x.FirstName).HasColumnName("first_name").HasMaxLength(200).IsRequired();
                 e.Property(x => x.LastName).HasColumnName("last_name").HasMaxLength(200).IsRequired();
                 e.Property(x => x.Email).HasColumnName("email").HasMaxLength(100).IsRequired();
+                e.Property(x => x.Username).HasColumnName("username").HasMaxLength(100).IsRequired();
             });
 
             modelBuilder.Entity<Asset>(e =>
@@ -69,6 +70,7 @@ namespace aiof.api.data
                 e.Property(x => x.PublicKey).HasColumnName("public_key").ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
                 e.Property(x => x.Type).HasColumnName("type").HasMaxLength(100).IsRequired();
+                e.Property(x => x.Savings).HasColumnName("savings").HasColumnType("boolean");
                 e.Property(x => x.FinanceId).HasColumnName("finance_id");
             });
 
