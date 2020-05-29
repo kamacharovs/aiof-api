@@ -34,10 +34,10 @@ namespace aiof.api.core
             services.AddScoped<IAiofRepository, AiofRepository>();
             services.AddScoped<FakeDataManager>();
 
-            //if (_env.IsDevelopment())
-            //    services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(nameof(AiofContext)));
-            //else
-            services.AddDbContext<AiofContext>(o =>
+            if (_env.IsDevelopment())
+                services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(nameof(AiofContext)));
+            else
+                services.AddDbContext<AiofContext>(o =>
                     o.UseNpgsql(_configuration.GetConnectionString("PostgreSQL")
                         .Replace("$DB_HOST", _configuration["DB_HOST"])
                         .Replace("$DB_NAME", _configuration["DB_NAME"])
@@ -56,11 +56,14 @@ namespace aiof.api.core
                 });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IServiceProvider services)
         {
-            if (env.IsDevelopment())
+            if (_env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+                services.GetRequiredService<FakeDataManager>()
+                    .UseFakeContext();
             }
 
             app.UseHealthChecks("/ping");
