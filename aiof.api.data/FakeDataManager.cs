@@ -30,6 +30,9 @@ namespace aiof.api.data
             _context.LiabilityTypes
                 .AddRange(GetFakeLiabilityTypes());
 
+            _context.Liabilities
+                .AddRange(GetFakeLiabilities());
+
             _context.SaveChanges();
         }
 
@@ -145,6 +148,21 @@ namespace aiof.api.data
                 new LiabilityType()
                 {
                     Name = "other"
+                }
+            };
+        }
+
+        public IEnumerable<Liability> GetFakeLiabilities()
+        {
+            return new List<Liability>()
+            {
+                new Liability()
+                {
+                    Id = 1,
+                    PublicKey = Guid.NewGuid(),
+                    Name = "car loan",
+                    TypeName = "car loan",
+                    FinanceId = 1
                 }
             };
         }
