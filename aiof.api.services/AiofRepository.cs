@@ -44,10 +44,10 @@ namespace aiof.api.services
                 .AsNoTracking();
         }
 
-        public async Task<IEnumerable<IFinance>> GetFinancesAsync()
+        public async Task<IFinance> GetFinanceAsync(int id)
         {
             return await GetFinancesQuery()
-                .ToListAsync();
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
     }

@@ -27,10 +27,10 @@ namespace aiof.api.core.Controllers
         }
 
         [HttpGet]
-        [Route("finance")]
-        public async Task<IActionResult> GetFinanceAsync()
+        [Route("finance/{id}")]
+        public async Task<IActionResult> GetFinanceAsync([FromRoute]int id)
         {
-            return Ok(await _repo.GetFinancesAsync());
+            return Ok(await _repo.GetFinanceAsync(id));
         }
     }
 }
