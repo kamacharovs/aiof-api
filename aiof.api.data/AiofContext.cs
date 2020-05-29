@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 using Microsoft.EntityFrameworkCore;
@@ -14,9 +13,17 @@ namespace aiof.api.data
         public virtual DbSet<Liability> Liabilities { get; set; }
         public virtual DbSet<Goal> Goals { get; set; }
 
+        public AiofContext()
+        { }
+
         public AiofContext(DbContextOptions<AiofContext> options)
             : base(options)
         { }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseNpgsql("host=127.0.0.1;database=aiof;port=5432;username=postgres;password=root");
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
