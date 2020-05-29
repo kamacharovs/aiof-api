@@ -12,6 +12,7 @@ namespace aiof.api.data
         string Name { get; set; }
         string TypeName { get; set; }
         LiabilityType Type { get; set; }
+        float Value { get; set; }
         int FinanceId { get; set; }
     }
 }

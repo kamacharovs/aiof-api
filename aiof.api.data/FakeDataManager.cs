@@ -162,6 +162,7 @@ namespace aiof.api.data
                     PublicKey = Guid.NewGuid(),
                     Name = "car loan",
                     TypeName = "car loan",
+                    Value = 24923.99F,
                     FinanceId = 1
                 }
             };
