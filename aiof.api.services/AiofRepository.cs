@@ -34,6 +34,7 @@ namespace aiof.api.services
         private IQueryable<Finance> GetFinancesQuery()
         {
             return _context.Finances
+                .Include(x => x.User)
                 .Include(x => x.Assets)
                     .ThenInclude(x => x.Type)
                 .Include(x => x.Liabilities)
