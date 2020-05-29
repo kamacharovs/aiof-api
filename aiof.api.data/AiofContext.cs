@@ -8,6 +8,7 @@ namespace aiof.api.data
 {
     public class AiofContext : DbContext
     {
+        public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Asset> Assets { get; set; }
         public virtual DbSet<Liability> Liabilities { get; set; }
         public virtual DbSet<Goal> Goals { get; set; }
@@ -18,6 +19,19 @@ namespace aiof.api.data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>(e =>
+            {
+                e.ToTable("user");
+
+                e.HasKey(x => x.Id);
+
+                e.Property(x => x.Id).HasColumnName("id").ValueGeneratedOnAdd().IsRequired();
+                e.Property(x => x.PublicKey).HasColumnName("public_key").ValueGeneratedOnAdd().IsRequired();
+                e.Property(x => x.FirstName).HasColumnName("first_name").HasMaxLength(200).IsRequired();
+                e.Property(x => x.LastName).HasColumnName("last_name").HasMaxLength(200).IsRequired();
+                e.Property(x => x.Email).HasColumnName("email").HasMaxLength(100).IsRequired();
+            });
+
             modelBuilder.Entity<Asset>(e =>
             {
                 e.ToTable("asset");
