@@ -33,6 +33,12 @@ namespace aiof.api.data
             _context.Liabilities
                 .AddRange(GetFakeLiabilities());
 
+            _context.GoalTypes
+                .AddRange(GetFakeGoalTypes());
+
+            _context.Goals
+                .AddRange(GetFakeGoals());
+
             _context.SaveChanges();
         }
 
@@ -163,6 +169,37 @@ namespace aiof.api.data
                     Name = "car loan",
                     TypeName = "car loan",
                     Value = 24923.99F,
+                    FinanceId = 1
+                }
+            };
+        }
+
+        public IEnumerable<GoalType> GetFakeGoalTypes()
+        {
+            return new List<GoalType>()
+            {
+                new GoalType()
+                {
+                    Name = "short term"
+                },
+                new GoalType()
+                {
+                    Name = "long term"
+                }
+            };
+        }
+
+        public IEnumerable<Goal> GetFakeGoals()
+        {
+            return new List<Goal>()
+            {
+                new Goal()
+                {
+                    Id = 1,
+                    PublicKey = Guid.NewGuid(),
+                    Name = "savings",
+                    TypeName = "long term",
+                    Savings = true,
                     FinanceId = 1
                 }
             };

@@ -40,6 +40,7 @@ namespace aiof.api.services
                 .Include(x => x.Liabilities)
                     .ThenInclude(x => x.Type)
                 .Include(x => x.Goals)
+                    .ThenInclude(x => x.Type)
                 .AsNoTracking();
         }
 
