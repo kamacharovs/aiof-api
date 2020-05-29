@@ -27,6 +27,9 @@ namespace aiof.api.data
             _context.Assets
                 .AddRange(GetFakeAssets());
 
+            _context.LiabilityTypes
+                .AddRange(GetFakeLiabilityTypes());
+
             _context.SaveChanges();
         }
 
@@ -111,6 +114,37 @@ namespace aiof.api.data
                     TypeName = "house",
                     Value = 250550F,
                     FinanceId = 1
+                }
+            };
+        }
+
+        public IEnumerable<LiabilityType> GetFakeLiabilityTypes()
+        {
+            return new List<LiabilityType>()
+            {
+                new LiabilityType()
+                {
+                    Name = "personal loan"
+                },
+                new LiabilityType()
+                {
+                    Name = "car loan"
+                },
+                new LiabilityType()
+                {
+                    Name = "credit card"
+                },
+                new LiabilityType()
+                {
+                    Name = "mortgage"
+                },
+                new LiabilityType()
+                {
+                    Name = "house renovation"
+                },
+                new LiabilityType()
+                {
+                    Name = "other"
                 }
             };
         }
