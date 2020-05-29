@@ -9,7 +9,8 @@ namespace aiof.api.data
         public int Id { get; set; }
         public Guid PublicKey { get; set; }
         public string Name { get; set; }
-        public string Type { get; set; }
+        public string TypeName { get; set; }
+        public LiabilityType Type { get; set; }
         public int FinanceId { get; set; }
     }
 }
