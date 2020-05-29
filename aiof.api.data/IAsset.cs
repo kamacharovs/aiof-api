@@ -10,5 +10,7 @@ namespace aiof.api.data
         Guid PublicKey { get; set; }
         string Name { get; set; }
         string Type { get; set; }
+        float Value { get; set; }
+        int FinanceId { get; set; }
     }
 }
