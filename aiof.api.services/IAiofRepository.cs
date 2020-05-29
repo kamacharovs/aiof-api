@@ -9,5 +9,6 @@ namespace aiof.api.services
     public interface IAiofRepository
     {
         Task<IEnumerable<IAsset>> GetAssets();
+        Task<IEnumerable<IFinance>> GetFinancesAsync();
     }
 }

@@ -25,5 +25,12 @@ namespace aiof.api.core.Controllers
         {
             return Ok(await _repo.GetAssets());
         }
+
+        [HttpGet]
+        [Route("finance")]
+        public async Task<IActionResult> GetFinanceAsync()
+        {
+            return Ok(await _repo.GetFinancesAsync());
+        }
     }
 }

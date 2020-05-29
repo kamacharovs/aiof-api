@@ -31,5 +31,21 @@ namespace aiof.api.services
                 .ToListAsync();
         }
 
+        private IQueryable<Finance> GetFinancesQuery()
+        {
+            return _context.Finances
+                .Include(x => x.Assets)
+                    .ThenInclude(x => x.Type)
+                .Include(x => x.Liabilities)
+                .Include(x => x.Goals)
+                .AsNoTracking();
+        }
+
+        public async Task<IEnumerable<IFinance>> GetFinancesAsync()
+        {
+            return await GetFinancesQuery()
+                .ToListAsync();
+        }
+
     }
 }
