@@ -9,7 +9,8 @@ namespace aiof.api.data
         int Id { get; set; }
         Guid PublicKey { get; set; }
         string Name { get; set; }
-        string Type { get; set; }
+        string TypeName { get; set; }
+        AssetType Type { get; set; }
         float Value { get; set; }
         int FinanceId { get; set; }
     }

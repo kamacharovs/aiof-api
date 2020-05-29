@@ -21,6 +21,9 @@ namespace aiof.api.data
             _context.Finances
                 .AddRange(GetFakeFinances());
 
+            _context.AssetTypes
+                .AddRange(GetFakeAssetTypes());
+
             _context.Assets
                 .AddRange(GetFakeAssets());
 
@@ -56,6 +59,37 @@ namespace aiof.api.data
             };
         }
 
+        public IEnumerable<AssetType> GetFakeAssetTypes()
+        {
+            return new List<AssetType>()
+            {
+                new AssetType()
+                {
+                    Name = "car"
+                },
+                new AssetType()
+                {
+                    Name = "house"
+                },
+                new AssetType()
+                {
+                    Name = "investment"
+                },
+                new AssetType()
+                {
+                    Name = "stock"
+                },
+                new AssetType()
+                {
+                    Name = "cash"
+                },
+                new AssetType()
+                {
+                    Name = "other"
+                }
+            };
+        }
+
         public IEnumerable<Asset> GetFakeAssets()
         {
             return new List<Asset>
@@ -65,7 +99,7 @@ namespace aiof.api.data
                     Id = 1,
                     PublicKey = Guid.NewGuid(),
                     Name = "car",
-                    Type = "car",
+                    TypeName = "car",
                     Value = 14762.12F,
                     FinanceId = 1
                 },
@@ -74,7 +108,7 @@ namespace aiof.api.data
                     Id = 2,
                     PublicKey = Guid.NewGuid(),
                     Name = "house",
-                    Type = "house",
+                    TypeName = "house",
                     Value = 250550F,
                     FinanceId = 1
                 }
