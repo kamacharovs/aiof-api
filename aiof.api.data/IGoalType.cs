@@ -4,8 +4,8 @@ using System.Text;
 
 namespace aiof.api.data
 {
-    public class LiabilityType : ILiabilityType
+    public interface IGoalType
     {
-        public string Name { get; set; }
+        string Name { get; set; }
     }
 }

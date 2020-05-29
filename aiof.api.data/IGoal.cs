@@ -10,7 +10,9 @@ namespace aiof.api.data
         int Id { get; set; }
         Guid PublicKey { get; set; }
         string Name { get; set; }
+        string TypeName { get; set; }
+        GoalType Type { get; set; }
         bool Savings { get; set; }
-        string Type { get; set; }
+        int FinanceId { get; set; }
     }
 }

@@ -16,6 +16,7 @@ namespace aiof.api.data
         public virtual DbSet<Finance> Finances { get; set; }
         public virtual DbSet<AssetType> AssetTypes { get; set; }
         public virtual DbSet<LiabilityType> LiabilityTypes { get; set; }
+        public virtual DbSet<GoalType> GoalTypes { get; set; }
 
         public AiofContext(DbContextOptions<AiofContext> options)
             : base(options)
@@ -108,9 +109,26 @@ namespace aiof.api.data
                 e.Property(x => x.Id).HasColumnName("id").ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.PublicKey).HasColumnName("public_key").ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
-                e.Property(x => x.Type).HasColumnName("type").HasMaxLength(100).IsRequired();
+                e.Property(x => x.TypeName).HasColumnName("type_name").HasMaxLength(100).IsRequired();
                 e.Property(x => x.Savings).HasColumnName("savings").HasColumnType("boolean");
                 e.Property(x => x.FinanceId).HasColumnName("finance_id");
+
+                e.HasOne(x => x.Type)
+                    .WithMany()
+                    .HasForeignKey(x => x.TypeName)
+                    .IsRequired();
+            });
+
+            modelBuilder.Entity<GoalType>(e =>
+            {
+                e.ToTable("goal_type");
+
+                e.HasKey(x => x.Name);
+
+                e.HasIndex(x => x.Name)
+                    .IsUnique();
+
+                e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
             });
 
             modelBuilder.Entity<Finance>(e =>
