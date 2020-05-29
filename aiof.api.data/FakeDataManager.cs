@@ -21,6 +21,9 @@ namespace aiof.api.data
             _context.Finances
                 .AddRange(GetFakeFinances());
 
+            _context.Assets
+                .AddRange(GetFakeAssets());
+
             _context.SaveChanges();
         }
 
@@ -49,6 +52,31 @@ namespace aiof.api.data
                     Id = 1,
                     PublicKey = Guid.NewGuid(),
                     UserId = 1
+                }
+            };
+        }
+
+        public IEnumerable<Asset> GetFakeAssets()
+        {
+            return new List<Asset>
+            {
+                new Asset()
+                {
+                    Id = 1,
+                    PublicKey = Guid.NewGuid(),
+                    Name = "car",
+                    Type = "car",
+                    Value = 14762.12F,
+                    FinanceId = 1
+                },
+                new Asset()
+                {
+                    Id = 2,
+                    PublicKey = Guid.NewGuid(),
+                    Name = "house",
+                    Type = "house",
+                    Value = 250550F,
+                    FinanceId = 1
                 }
             };
         }
