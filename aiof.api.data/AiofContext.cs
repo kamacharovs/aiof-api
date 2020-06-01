@@ -57,18 +57,6 @@ namespace aiof.api.data
                     .IsRequired();
             });
 
-            modelBuilder.Entity<AssetType>(e =>
-            {
-                e.ToTable("asset_type");
-
-                e.HasKey(x => x.Name);
-
-                e.HasIndex(x => x.Name)
-                    .IsUnique();
-
-                e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
-            });
-
             modelBuilder.Entity<Liability>(e =>
             {
                 e.ToTable("liability");
@@ -88,18 +76,6 @@ namespace aiof.api.data
                     .IsRequired();
             });
 
-            modelBuilder.Entity<LiabilityType>(e =>
-            {
-                e.ToTable("liability_type");
-
-                e.HasKey(x => x.Name);
-
-                e.HasIndex(x => x.Name)
-                    .IsUnique();
-
-                e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
-            });
-
             modelBuilder.Entity<Goal>(e =>
             {
                 e.ToTable("goal");
@@ -117,18 +93,6 @@ namespace aiof.api.data
                     .WithMany()
                     .HasForeignKey(x => x.TypeName)
                     .IsRequired();
-            });
-
-            modelBuilder.Entity<GoalType>(e =>
-            {
-                e.ToTable("goal_type");
-
-                e.HasKey(x => x.Name);
-
-                e.HasIndex(x => x.Name)
-                    .IsUnique();
-
-                e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
             });
 
             modelBuilder.Entity<Finance>(e =>
@@ -161,6 +125,42 @@ namespace aiof.api.data
                     .WithOne()
                     .HasForeignKey(x => x.FinanceId)
                     .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<AssetType>(e =>
+            {
+                e.ToTable("asset_type");
+
+                e.HasKey(x => x.Name);
+
+                e.HasIndex(x => x.Name)
+                    .IsUnique();
+
+                e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
+            });
+
+            modelBuilder.Entity<LiabilityType>(e =>
+            {
+                e.ToTable("liability_type");
+
+                e.HasKey(x => x.Name);
+
+                e.HasIndex(x => x.Name)
+                    .IsUnique();
+
+                e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
+            });
+
+            modelBuilder.Entity<GoalType>(e =>
+            {
+                e.ToTable("goal_type");
+
+                e.HasKey(x => x.Name);
+
+                e.HasIndex(x => x.Name)
+                    .IsUnique();
+
+                e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
             });
         }
     }
