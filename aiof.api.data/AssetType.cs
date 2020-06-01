@@ -4,7 +4,7 @@ using System.Text;
 
 namespace aiof.api.data
 {
-    public class AssetType : IAssetType
+    public class AssetType : IAssetType, IPublicKeyName
     {
         public string Name { get; set; }
         public Guid PublicKey { get; set; }
