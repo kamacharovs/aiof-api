@@ -21,10 +21,21 @@ namespace aiof.api.services
             _client = client ?? throw new ArgumentNullException(nameof(client));
         }
 
-        public async Task SendMetadataAsync()
+        public async Task<string> SendMetadataAsync(string endpoint)
         {
-            var response = await _client.GetStringAsync("frequencies");
-            var k = 0;
+            try
+            {
+                return await _client.GetStringAsync(endpoint);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public async Task<object> GetFrequenciesAsync()
+        {
+            return await SendMetadataAsync("frequencies");
         }
     }
 }

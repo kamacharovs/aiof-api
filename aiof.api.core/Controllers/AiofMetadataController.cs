@@ -19,5 +19,12 @@ namespace aiof.api.core.Controllers
         {
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
         }
+
+        [HttpGet]
+        [Route("frequencies")]
+        public async Task<IActionResult> GetFrequenciesAsync()
+        {
+            return Ok(await _repo.GetFrequenciesAsync());
+        }
     }
 }

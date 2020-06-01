@@ -7,6 +7,7 @@ namespace aiof.api.services
 {
     public interface IAiofMetadataRepository
     {
-        Task SendMetadataAsync();
+        Task<string> SendMetadataAsync(string endpoint);
+        Task<object> GetFrequenciesAsync();
     }
 }
