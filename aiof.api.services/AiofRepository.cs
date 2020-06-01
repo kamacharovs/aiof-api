@@ -31,6 +31,14 @@ namespace aiof.api.services
                 .ToListAsync();
         }
 
+        private IQueryable<Asset> GetAssetsQuery()
+        {
+            return _context.Assets
+                .Include(x => x.Type)
+                .AsNoTracking()
+                .AsQueryable();
+        }
+
         private IQueryable<Finance> GetFinancesQuery()
         {
             return _context.Finances
@@ -41,7 +49,14 @@ namespace aiof.api.services
                     .ThenInclude(x => x.Type)
                 .Include(x => x.Goals)
                     .ThenInclude(x => x.Type)
-                .AsNoTracking();
+                .AsNoTracking()
+                .AsQueryable();
+        }
+
+        public async Task<IAsset> GetAssetAsync(int id)
+        {
+            return await GetAssetsQuery()
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<IFinance> GetFinanceAsync(int id)
