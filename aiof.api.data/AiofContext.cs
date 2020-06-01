@@ -137,6 +137,7 @@ namespace aiof.api.data
                     .IsUnique();
 
                 e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
+                e.Property(x => x.PublicKey).HasColumnName("public_key").ValueGeneratedOnAdd().IsRequired();
             });
 
             modelBuilder.Entity<LiabilityType>(e =>
@@ -149,6 +150,7 @@ namespace aiof.api.data
                     .IsUnique();
 
                 e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
+                e.Property(x => x.PublicKey).HasColumnName("public_key").ValueGeneratedOnAdd().IsRequired();
             });
 
             modelBuilder.Entity<GoalType>(e =>
@@ -161,6 +163,7 @@ namespace aiof.api.data
                     .IsUnique();
 
                 e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
+                e.Property(x => x.PublicKey).HasColumnName("public_key").ValueGeneratedOnAdd().IsRequired();
             });
         }
     }
