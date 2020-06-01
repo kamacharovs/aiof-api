@@ -34,6 +34,13 @@ namespace aiof.api.core
             services.AddScoped<IAiofRepository, AiofRepository>();
             services.AddScoped<FakeDataManager>();
 
+            services.AddHttpClient<IAiofMetadataRepository, AiofMetadataRepository>("metadata", c =>
+                {
+                    c.BaseAddress = new Uri(_configuration["Metadata:BaseUrl"]);
+                    c.DefaultRequestHeaders.Add("Accept", "application/json");
+                })
+                .SetHandlerLifetime(TimeSpan.FromMinutes(5));
+
             if (_env.IsDevelopment())
                 services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(nameof(AiofContext)));
             else

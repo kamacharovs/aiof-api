@@ -21,12 +21,6 @@ namespace aiof.api.core.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
-        {
-            return Ok(await _repo.GetAssets());
-        }
-
-        [HttpGet]
         [Route("finance/{id}")]
         public async Task<IActionResult> GetFinanceAsync([FromRoute]int id)
         {
