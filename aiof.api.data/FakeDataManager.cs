@@ -71,37 +71,6 @@ namespace aiof.api.data
             };
         }
 
-        public IEnumerable<AssetType> GetFakeAssetTypes()
-        {
-            return new List<AssetType>()
-            {
-                new AssetType()
-                {
-                    Name = "car"
-                },
-                new AssetType()
-                {
-                    Name = "house"
-                },
-                new AssetType()
-                {
-                    Name = "investment"
-                },
-                new AssetType()
-                {
-                    Name = "stock"
-                },
-                new AssetType()
-                {
-                    Name = "cash"
-                },
-                new AssetType()
-                {
-                    Name = "other"
-                }
-            };
-        }
-
         public IEnumerable<Asset> GetFakeAssets()
         {
             return new List<Asset>
@@ -127,37 +96,6 @@ namespace aiof.api.data
             };
         }
 
-        public IEnumerable<LiabilityType> GetFakeLiabilityTypes()
-        {
-            return new List<LiabilityType>()
-            {
-                new LiabilityType()
-                {
-                    Name = "personal loan"
-                },
-                new LiabilityType()
-                {
-                    Name = "car loan"
-                },
-                new LiabilityType()
-                {
-                    Name = "credit card"
-                },
-                new LiabilityType()
-                {
-                    Name = "mortgage"
-                },
-                new LiabilityType()
-                {
-                    Name = "house renovation"
-                },
-                new LiabilityType()
-                {
-                    Name = "other"
-                }
-            };
-        }
-
         public IEnumerable<Liability> GetFakeLiabilities()
         {
             return new List<Liability>()
@@ -174,21 +112,6 @@ namespace aiof.api.data
             };
         }
 
-        public IEnumerable<GoalType> GetFakeGoalTypes()
-        {
-            return new List<GoalType>()
-            {
-                new GoalType()
-                {
-                    Name = "short term"
-                },
-                new GoalType()
-                {
-                    Name = "long term"
-                }
-            };
-        }
-
         public IEnumerable<Goal> GetFakeGoals()
         {
             return new List<Goal>()
@@ -201,6 +124,97 @@ namespace aiof.api.data
                     TypeName = "long term",
                     Savings = true,
                     FinanceId = 1
+                }
+            };
+        }
+
+        public IEnumerable<AssetType> GetFakeAssetTypes()
+        {
+            return new List<AssetType>()
+            {
+                new AssetType()
+                {
+                    Name = "car",
+                    PublicKey = Guid.NewGuid()
+                },
+                new AssetType()
+                {
+                    Name = "house",
+                    PublicKey = Guid.NewGuid()
+                },
+                new AssetType()
+                {
+                    Name = "investment",
+                    PublicKey = Guid.NewGuid()
+                },
+                new AssetType()
+                {
+                    Name = "stock",
+                    PublicKey = Guid.NewGuid()
+                },
+                new AssetType()
+                {
+                    Name = "cash",
+                    PublicKey = Guid.NewGuid()
+                },
+                new AssetType()
+                {
+                    Name = "other",
+                    PublicKey = Guid.NewGuid()
+                }
+            };
+        }
+
+        public IEnumerable<LiabilityType> GetFakeLiabilityTypes()
+        {
+            return new List<LiabilityType>()
+            {
+                new LiabilityType()
+                {
+                    Name = "personal loan",
+                    PublicKey = Guid.NewGuid()
+                },
+                new LiabilityType()
+                {
+                    Name = "car loan",
+                    PublicKey = Guid.NewGuid()
+                },
+                new LiabilityType()
+                {
+                    Name = "credit card",
+                    PublicKey = Guid.NewGuid()
+                },
+                new LiabilityType()
+                {
+                    Name = "mortgage",
+                    PublicKey = Guid.NewGuid()
+                },
+                new LiabilityType()
+                {
+                    Name = "house renovation",
+                    PublicKey = Guid.NewGuid()
+                },
+                new LiabilityType()
+                {
+                    Name = "other",
+                    PublicKey = Guid.NewGuid()
+                }
+            };
+        }
+
+        public IEnumerable<GoalType> GetFakeGoalTypes()
+        {
+            return new List<GoalType>()
+            {
+                new GoalType()
+                {
+                    Name = "short term",
+                    PublicKey = Guid.NewGuid()
+                },
+                new GoalType()
+                {
+                    Name = "long term",
+                    PublicKey = Guid.NewGuid()
                 }
             };
         }
