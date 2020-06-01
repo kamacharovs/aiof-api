@@ -7,5 +7,6 @@ namespace aiof.api.data
     public class GoalType : IGoalType
     {
         public string Name { get; set; }
+        public Guid PublicKey { get; set; }
     }
 }

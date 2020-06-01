@@ -7,5 +7,6 @@ namespace aiof.api.data
     public interface ILiabilityType
     {
         string Name { get; set; }
+        Guid PublicKey { get; set; }
     }
 }

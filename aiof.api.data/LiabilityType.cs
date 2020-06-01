@@ -7,5 +7,6 @@ namespace aiof.api.data
     public class LiabilityType : ILiabilityType
     {
         public string Name { get; set; }
+        public Guid PublicKey { get; set; }
     }
 }
