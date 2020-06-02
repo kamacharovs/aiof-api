@@ -1,11 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
-using System.Text.Json;
-using System.Text;
-using System.Diagnostics;
 
 using Xunit;
 
@@ -22,6 +16,22 @@ namespace aiof.api.tests
         {
             _repo = new Helper<IAiofRepository>()
                 .GetRequiredService() ?? throw new ArgumentNullException(nameof(IAiofRepository));
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        public async Task GetAssetAsync_Exists(int id)
+        {
+            var asset = await _repo.GetAssetAsync(id);
+
+            Assert.NotNull(asset);
+            Assert.NotEqual(Guid.Empty, asset.PublicKey);
+            Assert.NotNull(asset.Name);
+            Assert.NotNull(asset.TypeName);
+            Assert.NotNull(asset.Type);
+            Assert.NotEqual(0, asset.Value);
+            Assert.NotEqual(0, asset.FinanceId);
         }
 
         [Theory]

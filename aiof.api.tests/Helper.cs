@@ -29,7 +29,7 @@ namespace aiof.api.tests
             services.AddScoped<IAiofRepository, AiofRepository>();
             services.AddScoped<FakeDataManager>();
 
-            services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(nameof(AiofContext)));
+            services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
             services.AddLogging();
 
