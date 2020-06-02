@@ -9,6 +9,7 @@ namespace aiof.api.services
     {
         Task<object> GetMetadataAsync(string endpoint, bool asJsonElement = false);
         Task<object> PostMetadataAsync(string endpoint, string jsonContent, bool asJsonElement = false);
+        Task<object> GetLoanPaymentsAsync(double loanAmount, double numberOfYears, double rateOfInterest, string frequency = "monthly");
         Task<object> GetFrequenciesAsync();
     }
 }
