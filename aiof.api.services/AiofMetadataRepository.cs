@@ -73,6 +73,9 @@ namespace aiof.api.services
 
         public async Task<object> GetLoanPaymentsAsync(float loanAmount, float numberOfYears, float rateOfInterest, string frequency = "monthly")
         {
+            _logger.LogInformation($"getting loan payments information. loanAmount='{loanAmount}', numberOfYears='{numberOfYears}', " +
+                $"rateOfInterest='{rateOfInterest}', frequency='{frequency}'");
+
             return await PostMetadataAsync($"loan/payments/{frequency}",
                 JsonSerializer.Serialize(new
                 {
