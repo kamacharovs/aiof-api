@@ -1,4 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Text.Json;
+using System.Text;
+using System.Diagnostics;
 
 using Xunit;
 
@@ -17,10 +24,16 @@ namespace aiof.api.tests
                 .GetRequiredService() ?? throw new ArgumentNullException(nameof(IAiofRepository));
         }
 
-        [Fact]
-        public void Test1()
+        [Theory]
+        [InlineData(1)]
+        public async Task GetFinanceAsync_Exists(int id)
         {
+            var finance = await _repo.GetFinanceAsync(id);
 
+            Assert.NotNull(finance);
+            Assert.NotEmpty(finance.Assets);
+            Assert.NotEmpty(finance.Liabilities);
+            Assert.NotEmpty(finance.Goals);
         }
     }
 }
