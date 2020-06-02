@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
-using System.Threading.Tasks;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 using Microsoft.Extensions.Logging;
 
@@ -21,21 +22,30 @@ namespace aiof.api.services
             _client = client ?? throw new ArgumentNullException(nameof(client));
         }
 
-        public async Task<string> SendMetadataAsync(string endpoint)
+        public async Task<object> GetMetadataAsync(string endpoint, bool asJsonElement = false)
         {
             try
             {
-                return await _client.GetStringAsync(endpoint);
+                var response = await (await _client.GetAsync(endpoint))
+                    .EnsureSuccessStatusCode()
+                    .Content
+                    .ReadAsStringAsync();
+
+                var responseObj = JsonSerializer.Deserialize<object>(response);
+
+                return asJsonElement
+                    ? (JsonElement)responseObj
+                    : responseObj;
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw new AiofFriendlyException(e.Message);
             }
         }
 
         public async Task<object> GetFrequenciesAsync()
         {
-            return await SendMetadataAsync("frequencies");
+            return await GetMetadataAsync("frequencies");
         }
     }
 }
