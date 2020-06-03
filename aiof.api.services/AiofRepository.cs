@@ -75,6 +75,22 @@ namespace aiof.api.services
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
+        public async Task<Asset> AddAssetAsync(Asset asset)
+        {
+            await _context.Assets
+                .AddAsync(asset);
+
+            await _context.SaveChangesAsync();
+
+            return asset;
+        }
+
+        public async IAsyncEnumerable<Asset> AddAssetsAsync(IEnumerable<Asset> assets)
+        {
+            foreach (var asset in assets)
+                yield return await AddAssetAsync(asset);
+        }
+
         public async Task<IFinance> GetFinanceAsync(int id)
         {
             return await GetFinancesQuery()
