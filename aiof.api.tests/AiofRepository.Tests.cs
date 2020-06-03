@@ -35,6 +35,28 @@ namespace aiof.api.tests
         }
 
         [Theory]
+        [InlineData("car")]
+        [InlineData("house")]
+        public async  Task GetAssetsAsync_GetBy_OrderBy_TypeName_NotEmpty(string typeName)
+        {
+            var assets = await _repo.GetAssetsAsync(typeName);
+
+            Assert.NotNull(assets);
+            Assert.NotEmpty(assets);
+        }
+
+        [Theory]
+        [InlineData("test")]
+        [InlineData("test 1")]
+        [InlineData("doesn't exist")]
+        public async Task GetAssetsAsync_GetBy_OrderBy_TypeName_Empty(string typeName)
+        {
+            var assets = await _repo.GetAssetsAsync(typeName);
+
+            Assert.Empty(assets);
+        }
+
+        [Theory]
         [InlineData("car", "car", 3000, 1)]
         [InlineData("house", "house", 600000, 1)]
         [InlineData("cash", "cash", 15000, 1)]
