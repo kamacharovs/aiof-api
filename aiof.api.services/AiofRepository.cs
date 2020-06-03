@@ -75,6 +75,14 @@ namespace aiof.api.services
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
+        public async Task<IEnumerable<IAsset>> GetAssetsAsync(string typeName)
+        {
+            return await GetAssetsQuery()
+                .Where(x => x.TypeName == typeName)
+                .OrderBy(x => x.TypeName)
+                .ToListAsync();
+        }
+
         public async Task<Asset> AddAssetAsync(Asset asset)
         {
             await _context.Assets
