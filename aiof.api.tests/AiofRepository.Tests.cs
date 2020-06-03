@@ -35,6 +35,26 @@ namespace aiof.api.tests
         }
 
         [Theory]
+        [InlineData("car", "car", 3000, 1)]
+        [InlineData("house", "house", 600000, 1)]
+        [InlineData("cash", "cash", 15000, 1)]
+        [InlineData("other", "other", 300, 1)]
+        public async Task AddAssetAsync_Valid(string name, string typeName, double value, int financeId)
+        {
+            var asset = await _repo.AddAssetAsync(new Asset()
+                {
+                    PublicKey = Guid.NewGuid(),
+                    Name = name,
+                    TypeName = typeName,
+                    Value = (float)value,
+                    FinanceId = financeId
+                });
+
+            Assert.NotNull(asset);
+            Assert.NotEqual(Guid.Empty, asset.PublicKey);
+        }
+
+        [Theory]
         [InlineData(1)]
         public async Task GetFinanceAsync_Exists(int id)
         {
