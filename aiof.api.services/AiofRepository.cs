@@ -79,6 +79,22 @@ namespace aiof.api.services
         {
             return await GetFinancesQuery()
                 .FirstOrDefaultAsync(x => x.Id == id);
-        }        
+        }
+
+        public async Task<IFinance> AddFinanceAsync(int userId,
+            IEnumerable<Asset> assets,
+            IEnumerable<Liability> liabilities,
+            IEnumerable<Goal> goals)
+        {
+            var finance = await _context.Finances
+                .AddAsync(new Finance()
+                {
+                    UserId = userId
+                });
+
+            await _context.SaveChangesAsync();
+
+            return finance.Entity;
+        }
     }
 }
