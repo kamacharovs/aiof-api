@@ -39,6 +39,22 @@ namespace aiof.api.services
                 .AsQueryable();
         }
 
+        private IQueryable<Liability> GetLiabilitiesQuery()
+        {
+            return _context.Liabilities
+                .Include(x => x.Type)
+                .AsNoTracking()
+                .AsQueryable();
+        }
+
+        private IQueryable<Goal> GetGoalsQuery()
+        {
+            return _context.Goals
+                .Include(x => x.Type)
+                .AsNoTracking()
+                .AsQueryable();
+        }
+
         private IQueryable<Finance> GetFinancesQuery()
         {
             return _context.Finances
