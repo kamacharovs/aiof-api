@@ -74,6 +74,7 @@ namespace aiof.api.core
             }
 
             app.UseHealthChecks("/ping");
+            app.UseAiofExceptionMiddleware();
 
             app.UseRouting();
             app.UseAuthorization();
