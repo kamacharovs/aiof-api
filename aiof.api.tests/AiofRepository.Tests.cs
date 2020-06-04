@@ -81,6 +81,7 @@ namespace aiof.api.tests
         [InlineData("car", "house")]
         public async Task AddAssetsAsync_MultipleAssets(string typeName1, string typeName2)
         {
+            var typeNames = new List<string>() { typeName1, typeName2 };
             var asset1 = new Asset()
             {
                 PublicKey = Guid.NewGuid(),
@@ -104,6 +105,7 @@ namespace aiof.api.tests
             await foreach (var asset in assets)
             {
                 Assert.NotNull(asset);
+                Assert.Contains(asset.TypeName, typeNames);
             }
         }
 
