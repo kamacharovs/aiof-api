@@ -154,6 +154,8 @@ namespace aiof.api.services
             IEnumerable<Liability> liabilities,
             IEnumerable<Goal> goals)
         {
+            //TODO check if all financeId's are the same
+
             var finance = await _context.Finances
                 .AddAsync(new Finance()
                 {
@@ -161,6 +163,10 @@ namespace aiof.api.services
                 });
 
             await _context.SaveChangesAsync();
+
+            var dbAssets = AddAssetsAsync(assets);
+            var dbLiabilities = AddLiabilitiesAsync(liabilities);
+            var dbGoals = AddGoalsAsync(goals);
 
             return finance.Entity;
         }
