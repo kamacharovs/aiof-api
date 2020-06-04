@@ -137,6 +137,12 @@ namespace aiof.api.services
             return goal;
         }
 
+        public async IAsyncEnumerable<Goal> AddGoalsAsync(IEnumerable<Goal> goals)
+        {
+            foreach (var goal in goals)
+                yield return await AddGoalAsync(goal);
+        }
+
         public async Task<IFinance> GetFinanceAsync(int id)
         {
             return await GetFinancesQuery()
