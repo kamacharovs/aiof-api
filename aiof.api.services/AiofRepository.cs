@@ -105,7 +105,7 @@ namespace aiof.api.services
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<ILiability> AddLiabilityAsync(Liability liability)
+        public async Task<Liability> AddLiabilityAsync(Liability liability)
         {
             await _context.Liabilities
                 .AddAsync(liability);
@@ -115,13 +115,19 @@ namespace aiof.api.services
             return liability;
         }
 
+        public async IAsyncEnumerable<Liability> AddLiabilitiesAsync(IEnumerable<Liability> liabilities)
+        {
+            foreach (var liability in liabilities)
+                yield return await AddLiabilityAsync(liability);
+        }
+
         public async Task<IGoal> GetGoalAsync(int id)
         {
             return await GetGoalsQuery()
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<IGoal> AddGoalAsync(Goal goal)
+        public async Task<Goal> AddGoalAsync(Goal goal)
         {
             await _context.Goals
                 .AddAsync(goal);
