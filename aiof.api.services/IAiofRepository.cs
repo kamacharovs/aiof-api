@@ -8,7 +8,7 @@ namespace aiof.api.services
 {
     public interface IAiofRepository
     {
-        Task<IEnumerable<IAsset>> GetAssets();
+        Task<User> GetUserAsync(int id);
         Task<IAsset> GetAssetAsync(int id);
         Task<IEnumerable<IAsset>> GetAssetsAsync(string typeName);
         Task<Asset> AddAssetAsync(Asset asset);

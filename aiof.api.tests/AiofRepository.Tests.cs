@@ -21,6 +21,16 @@ namespace aiof.api.tests
 
         [Theory]
         [InlineData(1)]
+        public async Task GetUserAsync_Valid(int id)
+        {
+            var user = await _repo.GetUserAsync(id);
+
+            Assert.NotNull(user);
+            Assert.Equal("Georgi", user.FirstName);
+        }
+
+        [Theory]
+        [InlineData(1)]
         [InlineData(2)]
         public async Task GetAssetAsync_Exists(int id)
         {

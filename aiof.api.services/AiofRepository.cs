@@ -25,10 +25,11 @@ namespace aiof.api.services
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task<IEnumerable<IAsset>> GetAssets()
+        private IQueryable<User> GetUsersQuery()
         {
-            return await _context.Assets
-                .ToListAsync();
+            return _context.Users
+                .AsNoTracking()
+                .AsQueryable();
         }
 
         private IQueryable<Asset> GetAssetsQuery()
@@ -67,6 +68,12 @@ namespace aiof.api.services
                     .ThenInclude(x => x.Type)
                 .AsNoTracking()
                 .AsQueryable();
+        }
+
+        public async Task<User> GetUserAsync(int id)
+        {
+            return await GetUsersQuery()
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<IAsset> GetAssetAsync(int id)
