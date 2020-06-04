@@ -99,6 +99,18 @@ namespace aiof.api.services
                 yield return await AddAssetAsync(asset);
         }
 
+        public async Task<ILiability> GetLiabilityAsync(int id)
+        {
+            return await GetLiabilitiesQuery()
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<IGoal> GetGoalAsync(int id)
+        {
+            return await GetGoalsQuery()
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
         public async Task<IFinance> GetFinanceAsync(int id)
         {
             return await GetFinancesQuery()
