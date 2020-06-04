@@ -105,10 +105,30 @@ namespace aiof.api.services
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
+        public async Task<ILiability> AddLiabilityAsync(Liability liability)
+        {
+            await _context.Liabilities
+                .AddAsync(liability);
+
+            await _context.SaveChangesAsync();
+
+            return liability;
+        }
+
         public async Task<IGoal> GetGoalAsync(int id)
         {
             return await GetGoalsQuery()
                 .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<IGoal> AddGoalAsync(Goal goal)
+        {
+            await _context.Goals
+                .AddAsync(goal);
+
+            await _context.SaveChangesAsync();
+
+            return goal;
         }
 
         public async Task<IFinance> GetFinanceAsync(int id)
