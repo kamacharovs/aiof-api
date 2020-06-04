@@ -5,6 +5,7 @@ using Xunit;
 
 using aiof.api.data;
 using aiof.api.services;
+using System.Collections.Generic;
 
 namespace aiof.api.tests
 {
@@ -74,6 +75,36 @@ namespace aiof.api.tests
 
             Assert.NotNull(asset);
             Assert.NotEqual(Guid.Empty, asset.PublicKey);
+        }
+
+        [Theory]
+        [InlineData("car", "house")]
+        public async Task AddAssetsAsync_MultipleAssets(string typeName1, string typeName2)
+        {
+            var asset1 = new Asset()
+            {
+                PublicKey = Guid.NewGuid(),
+                Name = typeName1,
+                TypeName = typeName1,
+                Value = 1.0F,
+                FinanceId = 1
+            };
+
+            var asset2 = new Asset()
+            {
+                PublicKey = Guid.NewGuid(),
+                Name = typeName2,
+                TypeName = typeName2,
+                Value = 1.0F,
+                FinanceId = 1
+            };
+
+            var assets = _repo.AddAssetsAsync(new List<Asset>() { asset1, asset2 });
+
+            await foreach (var asset in assets)
+            {
+                Assert.NotNull(asset);
+            }
         }
 
         [Theory]
