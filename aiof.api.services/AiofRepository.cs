@@ -169,7 +169,6 @@ namespace aiof.api.services
                     $"assets, liabilities and goals cannot be NULL");
             }
 
-
             //TODO check if all financeId's are the same
             var financeId = assets?.FirstOrDefault()
                 .FinanceId;
