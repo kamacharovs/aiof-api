@@ -161,8 +161,10 @@ namespace aiof.api.services
             IEnumerable<Liability> liabilities,
             IEnumerable<Goal> goals)
         {
+
+
             //TODO check if all financeId's are the same
-            var financeId = assets.FirstOrDefault()
+            var financeId = assets?.FirstOrDefault()
                 .FinanceId;
 
             if (!assets.All(x => x.FinanceId == financeId)
@@ -182,11 +184,11 @@ namespace aiof.api.services
             await _context.SaveChangesAsync();
 
             await foreach (var asset in AddAssetsAsync(assets))
-                _logger.LogInformation($"userId='{userId}'|financeId='{finance.Entity.Id}'. added asset='{JsonSerializer.Serialize(asset)}'");
+                _logger.LogInformation($"userId='{userId}'|financeId='{financeId}'. added asset='{JsonSerializer.Serialize(asset)}'");
             await foreach (var liability in AddLiabilitiesAsync(liabilities))
-                _logger.LogInformation($"userId='{userId}'|financeId='{finance.Entity.Id}'. added liability='{JsonSerializer.Serialize(liability)}'");
+                _logger.LogInformation($"userId='{userId}'|financeId='{financeId}'. added liability='{JsonSerializer.Serialize(liability)}'");
             await foreach (var goal in AddGoalsAsync(goals))
-                _logger.LogInformation($"userId='{userId}'|financeId='{finance.Entity.Id}'. added goal='{JsonSerializer.Serialize(goal)}'");
+                _logger.LogInformation($"userId='{userId}'|financeId='{financeId}'. added goal='{JsonSerializer.Serialize(goal)}'");
 
             return finance.Entity;
         }
