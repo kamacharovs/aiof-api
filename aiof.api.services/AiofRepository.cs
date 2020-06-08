@@ -171,9 +171,12 @@ namespace aiof.api.services
 
             await _context.SaveChangesAsync();
 
-            var dbAssets = AddAssetsAsync(assets);
-            var dbLiabilities = AddLiabilitiesAsync(liabilities);
-            var dbGoals = AddGoalsAsync(goals);
+            await foreach (var asset in AddAssetsAsync(assets))
+                _logger.LogInformation($"userId='{userId}'|financeId='{finance.Entity.Id}'. added asset='{JsonSerializer.Serialize(asset)}'");
+            await foreach (var liability in AddLiabilitiesAsync(liabilities))
+                _logger.LogInformation($"userId='{userId}'|financeId='{finance.Entity.Id}'. added liability='{JsonSerializer.Serialize(liability)}'");
+            await foreach (var goal in AddGoalsAsync(goals))
+                _logger.LogInformation($"userId='{userId}'|financeId='{finance.Entity.Id}'. added goal='{JsonSerializer.Serialize(goal)}'");
 
             return finance.Entity;
         }
