@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
+using System.Net;
 using System.Threading.Tasks;
 using System.Text.Json;
 using System.Text;
@@ -162,6 +162,16 @@ namespace aiof.api.services
             IEnumerable<Goal> goals)
         {
             //TODO check if all financeId's are the same
+            var financeId = assets.FirstOrDefault()
+                .FinanceId;
+
+            if (!assets.All(x => x.FinanceId == financeId)
+                || !liabilities.All(x => x.FinanceId == financeId)
+                || !goals.All(x => x.FinanceId == financeId))
+            {
+                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
+                    $"all assets, liabilities and goals must have the same 'FinanceId'");
+            }
 
             var finance = await _context.Finances
                 .AddAsync(new Finance()
