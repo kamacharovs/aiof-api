@@ -161,6 +161,13 @@ namespace aiof.api.services
             IEnumerable<Liability> liabilities,
             IEnumerable<Goal> goals)
         {
+            if (assets == null
+                || liabilities == null
+                || goals == null)
+            {
+                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
+                    $"assets, liabilities and goals cannot be NULL");
+            }
 
 
             //TODO check if all financeId's are the same
