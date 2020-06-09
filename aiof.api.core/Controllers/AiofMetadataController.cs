@@ -11,6 +11,7 @@ using aiof.api.services;
 namespace aiof.api.core.Controllers
 {
     [ApiController]
+    [Produces("application/json")]
     [Route("aiof/metadata")]
     public class AiofMetadataController : ControllerBase
     {
