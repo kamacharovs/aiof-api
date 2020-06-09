@@ -25,7 +25,7 @@ namespace aiof.api.core.Controllers
 
         [HttpGet]
         [Route("finance/{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Finance), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetFinanceAsync([FromRoute]int id)
         {
@@ -34,7 +34,7 @@ namespace aiof.api.core.Controllers
 
         [HttpGet]
         [Route("asset/{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Asset), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAssetAsync([FromRoute]int id)
         {
