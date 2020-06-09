@@ -102,7 +102,8 @@ namespace aiof.api.core
             app.UseSwagger();
             app.UseSwaggerUI(x =>
             {
-                x.SwaggerEndpoint("/swagger/v1/swagger.json", "Aiof API v1");
+                x.SwaggerEndpoint($"/swagger/{_configuration["OpenApi:Version"]}/swagger.json",
+                    $"{_configuration["OpenApi:Title"]} {_configuration["OpenApi:Version"]}");
                 x.RoutePrefix = string.Empty;
             });
 
