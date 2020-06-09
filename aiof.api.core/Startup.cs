@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 
 using aiof.api.data;
 using aiof.api.services;
@@ -31,6 +32,7 @@ namespace aiof.api.core
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IEnvConfiguration, EnvConfiguration>();
             services.AddScoped<IAiofRepository, AiofRepository>();
             services.AddScoped<FakeDataManager>();
 
@@ -61,6 +63,27 @@ namespace aiof.api.core
                     o.JsonSerializerOptions.WriteIndented = true;
                     o.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
                 });
+
+            services.AddSwaggerGen(x =>
+            {
+                x.SwaggerDoc(_configuration["OpenApi:Version"], new OpenApiInfo
+                {
+                    Title = _configuration["OpenApi:Title"],
+                    Version = _configuration["OpenApi:Version"],
+                    Description = _configuration["OpenApi:Description"],
+                    Contact = new OpenApiContact
+                    {
+                        Name = _configuration["OpenApi:Contact:Name"],
+                        Email = _configuration["OpenApi:Contact:Email"],
+                        Url = new Uri(_configuration["OpenApi:Contact:Url"])
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = _configuration["OpenApi:License:Name"],
+                        Url = new Uri(_configuration["OpenApi:License:Url"]),
+                    }
+                });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IServiceProvider services)
@@ -75,6 +98,13 @@ namespace aiof.api.core
 
             app.UseHealthChecks("/ping");
             app.UseAiofExceptionMiddleware();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(x =>
+            {
+                x.SwaggerEndpoint("/swagger/v1/swagger.json", "Aiof API v1");
+                x.RoutePrefix = string.Empty;
+            });
 
             app.UseRouting();
             app.UseAuthorization();
