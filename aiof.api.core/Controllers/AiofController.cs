@@ -45,7 +45,7 @@ namespace aiof.api.core.Controllers
         [ProducesResponseType(typeof(IAsset), StatusCodes.Status201Created)]
         public async Task<IActionResult> AddAssetAsync([FromBody]AssetDto assetDto)
         {
-            return Ok(await _repo.AddAssetAsync(assetDto));
+            return Created("asset", await _repo.AddAssetAsync(assetDto));
         }
 
 
