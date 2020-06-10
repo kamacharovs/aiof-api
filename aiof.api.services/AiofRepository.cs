@@ -59,10 +59,24 @@ namespace aiof.api.services
                 .AsQueryable();
         }
 
+        private IQueryable<LiabilityType> GetLiabilityTypesQuery()
+        {
+            return _context.LiabilityTypes
+                .AsNoTracking()
+                .AsQueryable();
+        }
+
         private IQueryable<Goal> GetGoalsQuery()
         {
             return _context.Goals
                 .Include(x => x.Type)
+                .AsNoTracking()
+                .AsQueryable();
+        }
+
+        private IQueryable<GoalType> GetGoalTypesQuery()
+        {
+            return _context.GoalTypes
                 .AsNoTracking()
                 .AsQueryable();
         }
@@ -126,10 +140,18 @@ namespace aiof.api.services
                 yield return await AddAssetAsync(assetDto);
         }
 
+
         public async Task<ILiability> GetLiabilityAsync(int id)
         {
             return await GetLiabilitiesQuery()
                 .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<IEnumerable<ILiabilityType>> GetLiabilityTypesAsync()
+        {
+            return await GetLiabilityTypesQuery()
+                .OrderBy(x => x.Name)
+                .ToListAsync();
         }
 
         public async Task<ILiability> AddLiabilityAsync(LiabilityDto liabilityDto)
@@ -150,10 +172,18 @@ namespace aiof.api.services
                 yield return await AddLiabilityAsync(liabilityDto);
         }
 
+
         public async Task<IGoal> GetGoalAsync(int id)
         {
             return await GetGoalsQuery()
                 .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<IEnumerable<IGoalType>> GetGoalTypesAsync()
+        {
+            return await GetGoalTypesQuery()
+                .OrderBy(x => x.Name)
+                .ToListAsync();
         }
 
         public async Task<IGoal> AddGoalAsync(GoalDto goalDto)
@@ -173,6 +203,7 @@ namespace aiof.api.services
             foreach (var goalDto in goalDtos)
                 yield return await AddGoalAsync(goalDto);
         }
+
 
         public async Task<IFinance> GetFinanceAsync(int id)
         {
