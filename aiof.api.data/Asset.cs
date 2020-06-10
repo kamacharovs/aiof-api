@@ -15,7 +15,7 @@ namespace aiof.api.data
         public int FinanceId { get; set; }
     }
 
-    public class AssetDTO
+    public class AssetDto
     {
         public string Name { get; set; }
         public string TypeName { get; set; }
