@@ -74,9 +74,8 @@ namespace aiof.api.tests
         [InlineData("other", "other", 300, 1)]
         public async Task AddAssetAsync_Valid(string name, string typeName, double value, int financeId)
         {
-            var asset = await _repo.AddAssetAsync(new Asset()
+            var asset = await _repo.AddAssetAsync(new AssetDto()
                 {
-                    PublicKey = Guid.NewGuid(),
                     Name = name,
                     TypeName = typeName,
                     Value = (float)value,
@@ -84,7 +83,8 @@ namespace aiof.api.tests
                 });
 
             Assert.NotNull(asset);
-            Assert.NotEqual(Guid.Empty, asset.PublicKey);
+            Assert.NotNull(asset?.Name);
+            Assert.NotNull(asset?.TypeName);
         }
 
         [Theory]
@@ -92,25 +92,23 @@ namespace aiof.api.tests
         public async Task AddAssetsAsync_MultipleAssets(string typeName1, string typeName2)
         {
             var typeNames = new List<string>() { typeName1, typeName2 };
-            var asset1 = new Asset()
+            var asset1 = new AssetDto()
             {
-                PublicKey = Guid.NewGuid(),
                 Name = typeName1,
                 TypeName = typeName1,
                 Value = 1.0F,
                 FinanceId = 1
             };
 
-            var asset2 = new Asset()
+            var asset2 = new AssetDto()
             {
-                PublicKey = Guid.NewGuid(),
                 Name = typeName2,
                 TypeName = typeName2,
                 Value = 1.0F,
                 FinanceId = 1
             };
 
-            var assets = _repo.AddAssetsAsync(new List<Asset>() { asset1, asset2 });
+            var assets = _repo.AddAssetsAsync(new List<AssetDto>() { asset1, asset2 });
 
             await foreach (var asset in assets)
             {

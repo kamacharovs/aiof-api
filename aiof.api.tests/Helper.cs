@@ -5,6 +5,8 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
+using AutoMapper;
+
 using aiof.api.data;
 using aiof.api.services;
 
@@ -28,6 +30,7 @@ namespace aiof.api.tests
 
             services.AddScoped<IAiofRepository, AiofRepository>();
             services.AddScoped<FakeDataManager>();
+            services.AddSingleton(new MapperConfiguration(x => { x.AddProfile(new AutoMappingProfileDto()); }).CreateMapper());
 
             services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
