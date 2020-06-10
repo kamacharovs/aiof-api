@@ -100,6 +100,24 @@ namespace aiof.api.services
             return await GetAssetAsync(asset.Id) as Asset;
         }
 
+        public async Task<Asset> AddAssetAsync(AssetDTO assetDto)
+        {
+            var asset = new Asset
+            {
+                Name = assetDto.Name,
+                TypeName = assetDto.TypeName,
+                Value = assetDto.Value,
+                FinanceId = assetDto.FinanceId
+            };
+
+            await _context.Assets
+                .AddAsync(asset);
+
+            await _context.SaveChangesAsync();
+
+            return await GetAssetAsync(asset.Id) as Asset;
+        }
+
         public async IAsyncEnumerable<Asset> AddAssetsAsync(IEnumerable<Asset> assets)
         {
             foreach (var asset in assets)
