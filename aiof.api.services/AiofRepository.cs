@@ -97,7 +97,7 @@ namespace aiof.api.services
 
             await _context.SaveChangesAsync();
 
-            return asset;
+            return await GetAssetAsync(asset.Id) as Asset;
         }
 
         public async IAsyncEnumerable<Asset> AddAssetsAsync(IEnumerable<Asset> assets)
