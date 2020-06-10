@@ -118,20 +118,22 @@ namespace aiof.api.services
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<Liability> AddLiabilityAsync(Liability liability)
+        public async Task<ILiability> AddLiabilityAsync(LiabilityDto liabilityDto)
         {
+            var liability = _mapper.Map<Liability>(liabilityDto);
+
             await _context.Liabilities
                 .AddAsync(liability);
 
             await _context.SaveChangesAsync();
 
-            return liability;
+            return await GetLiabilityAsync(liability.Id);
         }
 
-        public async IAsyncEnumerable<Liability> AddLiabilitiesAsync(IEnumerable<Liability> liabilities)
+        public async IAsyncEnumerable<ILiability> AddLiabilitiesAsync(IEnumerable<LiabilityDto> liabilityDtos)
         {
-            foreach (var liability in liabilities)
-                yield return await AddLiabilityAsync(liability);
+            foreach (var liabilityDto in liabilityDtos)
+                yield return await AddLiabilityAsync(liabilityDto);
         }
 
         public async Task<IGoal> GetGoalAsync(int id)
@@ -140,20 +142,22 @@ namespace aiof.api.services
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<Goal> AddGoalAsync(Goal goal)
+        public async Task<IGoal> AddGoalAsync(GoalDto goalDto)
         {
+            var goal = _mapper.Map<Goal>(goalDto);
+
             await _context.Goals
                 .AddAsync(goal);
 
             await _context.SaveChangesAsync();
 
-            return goal;
+            return await GetGoalAsync(goal.Id);
         }
 
-        public async IAsyncEnumerable<Goal> AddGoalsAsync(IEnumerable<Goal> goals)
+        public async IAsyncEnumerable<IGoal> AddGoalsAsync(IEnumerable<GoalDto> goalDtos)
         {
-            foreach (var goal in goals)
-                yield return await AddGoalAsync(goal);
+            foreach (var goalDto in goalDtos)
+                yield return await AddGoalAsync(goalDto);
         }
 
         public async Task<IFinance> GetFinanceAsync(int id)
@@ -164,12 +168,12 @@ namespace aiof.api.services
 
         public async Task<IFinance> AddFinanceAsync(int userId,
             IEnumerable<AssetDto> assetDtos,
-            IEnumerable<Liability> liabilities,
-            IEnumerable<Goal> goals)
+            IEnumerable<LiabilityDto> liabilityDtos,
+            IEnumerable<GoalDto> goalDtos)
         {
             if (assetDtos == null
-                || liabilities == null
-                || goals == null)
+                || liabilityDtos == null
+                || goalDtos == null)
             {
                 throw new AiofFriendlyException(HttpStatusCode.BadRequest,
                     $"assets, liabilities and goals cannot be NULL");
@@ -180,8 +184,8 @@ namespace aiof.api.services
                 .FinanceId;
 
             if (!assetDtos.All(x => x.FinanceId == financeId)
-                || !liabilities.All(x => x.FinanceId == financeId)
-                || !goals.All(x => x.FinanceId == financeId))
+                || !liabilityDtos.All(x => x.FinanceId == financeId)
+                || !goalDtos.All(x => x.FinanceId == financeId))
             {
                 throw new AiofFriendlyException(HttpStatusCode.BadRequest,
                     $"all assets, liabilities and goals must have the same 'FinanceId'");
@@ -197,9 +201,9 @@ namespace aiof.api.services
 
             await foreach (var asset in AddAssetsAsync(assetDtos))
                 _logger.LogInformation($"userId='{userId}'|financeId='{financeId}'. added asset='{JsonSerializer.Serialize(asset)}'");
-            await foreach (var liability in AddLiabilitiesAsync(liabilities))
+            await foreach (var liability in AddLiabilitiesAsync(liabilityDtos))
                 _logger.LogInformation($"userId='{userId}'|financeId='{financeId}'. added liability='{JsonSerializer.Serialize(liability)}'");
-            await foreach (var goal in AddGoalsAsync(goals))
+            await foreach (var goal in AddGoalsAsync(goalDtos))
                 _logger.LogInformation($"userId='{userId}'|financeId='{financeId}'. added goal='{JsonSerializer.Serialize(goal)}'");
 
             return finance.Entity;
