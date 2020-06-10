@@ -12,8 +12,9 @@ using aiof.api.data;
 namespace aiof.api.core.Controllers
 {
     [ApiController]
-    [Produces("application/json")]
     [Route("aiof")]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public class AiofController : ControllerBase
     {
         public readonly IAiofRepository _repo;
@@ -25,8 +26,7 @@ namespace aiof.api.core.Controllers
 
         [HttpGet]
         [Route("finance/{id}")]
-        [ProducesResponseType(typeof(Finance), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(IFinance), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetFinanceAsync([FromRoute]int id)
         {
             return Ok(await _repo.GetFinanceAsync(id));
@@ -34,8 +34,7 @@ namespace aiof.api.core.Controllers
 
         [HttpGet]
         [Route("asset/{id}")]
-        [ProducesResponseType(typeof(Asset), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(IAsset), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAssetAsync([FromRoute]int id)
         {
             return Ok(await _repo.GetAssetAsync(id));

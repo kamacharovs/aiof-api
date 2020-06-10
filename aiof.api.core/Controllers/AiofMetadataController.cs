@@ -11,8 +11,9 @@ using aiof.api.services;
 namespace aiof.api.core.Controllers
 {
     [ApiController]
-    [Produces("application/json")]
     [Route("aiof/metadata")]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public class AiofMetadataController : ControllerBase
     {
         public readonly IAiofMetadataRepository _repo;
@@ -25,7 +26,6 @@ namespace aiof.api.core.Controllers
         [HttpGet]
         [Route("frequencies")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetFrequenciesAsync()
         {
             return Ok(await _repo.GetFrequenciesAsync());
