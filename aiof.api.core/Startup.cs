@@ -14,6 +14,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
+using AutoMapper;
+
 using aiof.api.data;
 using aiof.api.services;
 
@@ -36,6 +38,7 @@ namespace aiof.api.core
             services.AddScoped<IAiofRepository, AiofRepository>();
             services.AddScoped<FakeDataManager>();
 
+            services.AddSingleton(new MapperConfiguration(x => { x.AddProfile(new AutoMappingProfileDto()); }).CreateMapper());
             services.AddHttpClient<IAiofMetadataRepository, AiofMetadataRepository>("metadata", c =>
                 {
                     c.BaseAddress = new Uri(_configuration["Metadata:BaseUrl"]);
