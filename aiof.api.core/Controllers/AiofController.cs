@@ -40,6 +40,15 @@ namespace aiof.api.core.Controllers
             return Ok(await _repo.GetAssetAsync(id));
         }
 
+        [HttpPost]
+        [Route("asset")]
+        [ProducesResponseType(typeof(IAsset), StatusCodes.Status201Created)]
+        public async Task<IActionResult> AddAssetAsync([FromBody]Asset asset)
+        {
+            return Ok(await _repo.AddAssetAsync(asset));
+        }
+
+
         [HttpGet]
         [Route("liability/{id}")]
         [ProducesResponseType(typeof(ILiability), StatusCodes.Status200OK)]
