@@ -66,6 +66,14 @@ namespace aiof.api.core.Controllers
             return Ok(await _repo.GetLiabilityAsync(id));
         }
 
+        [HttpGet]
+        [Route("liability/types")]
+        [ProducesResponseType(typeof(IEnumerable<ILiabilityType>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetLiabilityTypesAsync()
+        {
+            return Ok(await _repo.GetLiabilityTypesAsync());
+        }
+
         [HttpPost]
         [Route("liability")]
         [ProducesResponseType(typeof(ILiability), StatusCodes.Status201Created)]
@@ -81,6 +89,14 @@ namespace aiof.api.core.Controllers
         public async Task<IActionResult> GetGoalAsync([FromRoute]int id)
         {
             return Ok(await _repo.GetGoalAsync(id));
+        }
+
+        [HttpGet]
+        [Route("goal/types")]
+        [ProducesResponseType(typeof(IEnumerable<IGoalType>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetGoalTypesAsync()
+        {
+            return Ok(await _repo.GetGoalTypesAsync());
         }
 
         [HttpPost]
