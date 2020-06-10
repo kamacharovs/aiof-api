@@ -11,8 +11,8 @@ namespace aiof.api.services
         Task<User> GetUserAsync(int id);
         Task<IAsset> GetAssetAsync(int id);
         Task<IEnumerable<IAsset>> GetAssetsAsync(string typeName);
-        Task<Asset> AddAssetAsync(Asset asset);
-        IAsyncEnumerable<Asset> AddAssetsAsync(IEnumerable<Asset> assets);
+        Task<Asset> AddAssetAsync(AssetDto asset);
+        IAsyncEnumerable<Asset> AddAssetsAsync(IEnumerable<AssetDto> assets);
         Task<ILiability> GetLiabilityAsync(int id);
         Task<Liability> AddLiabilityAsync(Liability liability);
         IAsyncEnumerable<Liability> AddLiabilitiesAsync(IEnumerable<Liability> liabilities);
@@ -21,7 +21,7 @@ namespace aiof.api.services
         IAsyncEnumerable<Goal> AddGoalsAsync(IEnumerable<Goal> goals);
         Task<IFinance> GetFinanceAsync(int id);
         Task<IFinance> AddFinanceAsync(int userId,
-            IEnumerable<Asset> assets,
+            IEnumerable<AssetDto> assets,
             IEnumerable<Liability> liabilities,
             IEnumerable<Goal> goals);
     }

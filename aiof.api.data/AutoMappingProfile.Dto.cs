@@ -10,7 +10,7 @@ namespace aiof.api.data
     {
         public AutoMappingProfileDto()
         {
-            CreateMap<Asset, AssetDto>()
+            CreateMap<AssetDto, Asset>()
                 .ForMember(d => d.Name, o => o.MapFrom(s => s.Name))
                 .ForMember(d => d.TypeName, o => o.MapFrom(s => s.TypeName))
                 .ForMember(d => d.Name, o => o.MapFrom(s => s.Value))

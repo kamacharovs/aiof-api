@@ -10,6 +10,8 @@ using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
+using AutoMapper;
+
 using aiof.api.data;
 
 namespace aiof.api.services
@@ -17,11 +19,13 @@ namespace aiof.api.services
     public class AiofRepository : IAiofRepository
     {
         private readonly AiofContext _context;
+        private readonly IMapper _mapper;
         private readonly ILogger<AiofRepository> _logger;
 
-        public AiofRepository(AiofContext context, ILogger<AiofRepository> logger)
+        public AiofRepository(AiofContext context, IMapper mapper, ILogger<AiofRepository> logger)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -90,25 +94,9 @@ namespace aiof.api.services
                 .ToListAsync();
         }
 
-        public async Task<Asset> AddAssetAsync(Asset asset)
+        public async Task<Asset> AddAssetAsync(AssetDto assetDto)
         {
-            await _context.Assets
-                .AddAsync(asset);
-
-            await _context.SaveChangesAsync();
-
-            return await GetAssetAsync(asset.Id) as Asset;
-        }
-
-        public async Task<Asset> AddAssetAsync(AssetDTO assetDto)
-        {
-            var asset = new Asset
-            {
-                Name = assetDto.Name,
-                TypeName = assetDto.TypeName,
-                Value = assetDto.Value,
-                FinanceId = assetDto.FinanceId
-            };
+            var asset = _mapper.Map<Asset>(assetDto);
 
             await _context.Assets
                 .AddAsync(asset);
@@ -118,10 +106,10 @@ namespace aiof.api.services
             return await GetAssetAsync(asset.Id) as Asset;
         }
 
-        public async IAsyncEnumerable<Asset> AddAssetsAsync(IEnumerable<Asset> assets)
+        public async IAsyncEnumerable<Asset> AddAssetsAsync(IEnumerable<AssetDto> assetsDto)
         {
-            foreach (var asset in assets)
-                yield return await AddAssetAsync(asset);
+            foreach (var assetDto in assetsDto)
+                yield return await AddAssetAsync(assetDto);
         }
 
         public async Task<ILiability> GetLiabilityAsync(int id)
@@ -175,11 +163,11 @@ namespace aiof.api.services
         }
 
         public async Task<IFinance> AddFinanceAsync(int userId,
-            IEnumerable<Asset> assets,
+            IEnumerable<AssetDto> assetDtos,
             IEnumerable<Liability> liabilities,
             IEnumerable<Goal> goals)
         {
-            if (assets == null
+            if (assetDtos == null
                 || liabilities == null
                 || goals == null)
             {
@@ -188,10 +176,10 @@ namespace aiof.api.services
             }
 
             //TODO check if all financeId's are the same
-            var financeId = assets?.FirstOrDefault()
+            var financeId = assetDtos?.FirstOrDefault()
                 .FinanceId;
 
-            if (!assets.All(x => x.FinanceId == financeId)
+            if (!assetDtos.All(x => x.FinanceId == financeId)
                 || !liabilities.All(x => x.FinanceId == financeId)
                 || !goals.All(x => x.FinanceId == financeId))
             {
@@ -207,7 +195,7 @@ namespace aiof.api.services
 
             await _context.SaveChangesAsync();
 
-            await foreach (var asset in AddAssetsAsync(assets))
+            await foreach (var asset in AddAssetsAsync(assetDtos))
                 _logger.LogInformation($"userId='{userId}'|financeId='{financeId}'. added asset='{JsonSerializer.Serialize(asset)}'");
             await foreach (var liability in AddLiabilitiesAsync(liabilities))
                 _logger.LogInformation($"userId='{userId}'|financeId='{financeId}'. added liability='{JsonSerializer.Serialize(liability)}'");
