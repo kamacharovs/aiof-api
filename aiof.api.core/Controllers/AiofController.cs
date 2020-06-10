@@ -32,12 +32,21 @@ namespace aiof.api.core.Controllers
             return Ok(await _repo.GetFinanceAsync(id));
         }
 
+
         [HttpGet]
         [Route("asset/{id}")]
         [ProducesResponseType(typeof(IAsset), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAssetAsync([FromRoute]int id)
         {
             return Ok(await _repo.GetAssetAsync(id));
+        }
+
+        [HttpGet]
+        [Route("asset/types")]
+        [ProducesResponseType(typeof(IEnumerable<IAssetType>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAssetTypesAsync()
+        {
+            return Ok(await _repo.GetAssetTypesAsync());
         }
 
         [HttpPost]
@@ -57,12 +66,29 @@ namespace aiof.api.core.Controllers
             return Ok(await _repo.GetLiabilityAsync(id));
         }
 
+        [HttpPost]
+        [Route("liability")]
+        [ProducesResponseType(typeof(ILiability), StatusCodes.Status201Created)]
+        public async Task<IActionResult> AddLiabilityAsync([FromBody]LiabilityDto liabilityDto)
+        {
+            return Created("liability", await _repo.AddLiabilityAsync(liabilityDto));
+        }
+
+
         [HttpGet]
         [Route("goal/{id}")]
         [ProducesResponseType(typeof(IGoal), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetGoalAsync([FromRoute]int id)
         {
             return Ok(await _repo.GetGoalAsync(id));
+        }
+
+        [HttpPost]
+        [Route("goal")]
+        [ProducesResponseType(typeof(IGoal), StatusCodes.Status201Created)]
+        public async Task<IActionResult> AddGoalAsync([FromBody]GoalDto goalDto)
+        {
+            return Created("goal", await _repo.AddGoalAsync(goalDto));
         }
     }
 }

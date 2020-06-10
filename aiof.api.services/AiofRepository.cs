@@ -44,6 +44,13 @@ namespace aiof.api.services
                 .AsQueryable();
         }
 
+        private IQueryable<AssetType> GetAssetTypesQuery()
+        {
+            return _context.AssetTypes
+                .AsNoTracking()
+                .AsQueryable();
+        }
+
         private IQueryable<Liability> GetLiabilitiesQuery()
         {
             return _context.Liabilities
@@ -91,6 +98,13 @@ namespace aiof.api.services
             return await GetAssetsQuery()
                 .Where(x => x.TypeName == typeName)
                 .OrderBy(x => x.TypeName)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<IAssetType>> GetAssetTypesAsync()
+        {
+            return await GetAssetTypesQuery()
+                .OrderBy(x => x.Name)
                 .ToListAsync();
         }
 

@@ -11,6 +11,7 @@ namespace aiof.api.services
         Task<User> GetUserAsync(int id);
         Task<IAsset> GetAssetAsync(int id);
         Task<IEnumerable<IAsset>> GetAssetsAsync(string typeName);
+        Task<IEnumerable<IAssetType>> GetAssetTypesAsync();
         Task<IAsset> AddAssetAsync(AssetDto asset);
         IAsyncEnumerable<IAsset> AddAssetsAsync(IEnumerable<AssetDto> assets);
         Task<ILiability> GetLiabilityAsync(int id);
