@@ -94,7 +94,7 @@ namespace aiof.api.services
                 .ToListAsync();
         }
 
-        public async Task<Asset> AddAssetAsync(AssetDto assetDto)
+        public async Task<IAsset> AddAssetAsync(AssetDto assetDto)
         {
             var asset = _mapper.Map<Asset>(assetDto);
 
@@ -103,10 +103,10 @@ namespace aiof.api.services
 
             await _context.SaveChangesAsync();
 
-            return await GetAssetAsync(asset.Id) as Asset;
+            return await GetAssetAsync(asset.Id);
         }
 
-        public async IAsyncEnumerable<Asset> AddAssetsAsync(IEnumerable<AssetDto> assetsDto)
+        public async IAsyncEnumerable<IAsset> AddAssetsAsync(IEnumerable<AssetDto> assetsDto)
         {
             foreach (var assetDto in assetsDto)
                 yield return await AddAssetAsync(assetDto);
