@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace aiof.api.data
@@ -18,6 +19,7 @@ namespace aiof.api.data
 
     public class FinanceDto
     {
+        [Required]
         public int UserId { get; set; }
 
         public List<AssetDto> AssetDtos { get; set; } = new List<AssetDto>();
