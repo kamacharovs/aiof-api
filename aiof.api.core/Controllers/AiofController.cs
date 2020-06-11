@@ -35,6 +35,8 @@ namespace aiof.api.core.Controllers
 
         [HttpPost]
         [Route("finance")]
+        [ProducesResponseType(typeof(IFinance), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddFinanceAsync([FromBody]FinanceDto finance)
         {
             return Created("finance", await _repo.AddFinanceAsync(finance));
