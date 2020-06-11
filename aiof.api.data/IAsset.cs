@@ -12,6 +12,6 @@ namespace aiof.api.data
         string TypeName { get; set; }
         AssetType Type { get; set; }
         float Value { get; set; }
-        int FinanceId { get; set; }
+        int? FinanceId { get; set; }
     }
 }

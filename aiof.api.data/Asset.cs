@@ -13,7 +13,7 @@ namespace aiof.api.data
         public string TypeName { get; set; }
         public AssetType Type { get; set; }
         public float Value { get; set; } 
-        public int FinanceId { get; set; }
+        public int? FinanceId { get; set; }
     }
 
     public class AssetDto
@@ -27,6 +27,6 @@ namespace aiof.api.data
         [Required]
         public float Value { get; set; }
 
-        public int FinanceId { get; set; }
+        public int? FinanceId { get; set; }
     }
 }

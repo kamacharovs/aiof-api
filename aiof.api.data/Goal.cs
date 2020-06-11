@@ -13,7 +13,7 @@ namespace aiof.api.data
         public string TypeName { get; set; }
         public GoalType Type { get; set; }
         public bool Savings { get; set; } = false;
-        public int FinanceId { get; set; }
+        public int? FinanceId { get; set; }
     }
 
     public class GoalDto
@@ -26,6 +26,6 @@ namespace aiof.api.data
 
         public bool Savings { get; set; } = false;
 
-        public int FinanceId { get; set; }
+        public int? FinanceId { get; set; }
     }
 }
