@@ -210,11 +210,10 @@ namespace aiof.api.services
                 throw new AiofFriendlyException(HttpStatusCode.BadRequest,
                     "Unable to update 'Goal'. 'IGoal' parameter cannot be NULL");
 
-            var dbGoal = await GetGoalAsync(id);
-            var mappGoal = _mapper.Map(goalDto, dbGoal as Goal);
+            var goal = await GetGoalAsync(id);
 
             _context.Goals
-                .Update(mappGoal);
+                .Update(_mapper.Map(goalDto, goal as Goal));
 
             await _context.SaveChangesAsync();
 
