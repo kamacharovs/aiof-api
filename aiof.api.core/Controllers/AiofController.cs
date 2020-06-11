@@ -60,7 +60,7 @@ namespace aiof.api.core.Controllers
         }
 
         [HttpPost]
-        [Route("asset")]
+        [Route("asset/add")]
         [ProducesResponseType(typeof(IAsset), StatusCodes.Status201Created)]
         public async Task<IActionResult> AddAssetAsync([FromBody]AssetDto assetDto)
         {
@@ -85,7 +85,7 @@ namespace aiof.api.core.Controllers
         }
 
         [HttpPost]
-        [Route("liability")]
+        [Route("liability/add")]
         [ProducesResponseType(typeof(ILiability), StatusCodes.Status201Created)]
         public async Task<IActionResult> AddLiabilityAsync([FromBody]LiabilityDto liabilityDto)
         {
@@ -110,7 +110,7 @@ namespace aiof.api.core.Controllers
         }
 
         [HttpPost]
-        [Route("goal")]
+        [Route("goal/add")]
         [ProducesResponseType(typeof(IGoal), StatusCodes.Status201Created)]
         public async Task<IActionResult> AddGoalAsync([FromBody]GoalDto goalDto)
         {
