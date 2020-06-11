@@ -220,26 +220,6 @@ namespace aiof.api.services
             if (financeDto == null)
                 throw new AiofFriendlyException(HttpStatusCode.BadRequest,
                     $"finance dto cannot be NULL");
-            else if (financeDto.AssetDtos == null
-                || financeDto.LiabilityDtos == null
-                || financeDto.GoalDtos == null)
-            {
-                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"assets, liabilities and goals cannot be NULL");
-            }
-
-            //TODO check if all financeId's are the same
-            var financeId = financeDto?.AssetDtos?
-                .FirstOrDefault()
-                .FinanceId;
-
-            if (!financeDto.AssetDtos.All(x => x.FinanceId == financeId)
-                || !financeDto.LiabilityDtos.All(x => x.FinanceId == financeId)
-                || !financeDto.GoalDtos.All(x => x.FinanceId == financeId))
-            {
-                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"all assets, liabilities and goals must have the same 'FinanceId'");
-            }
 
             var finance = _mapper.Map<Finance>(financeDto);
 
@@ -247,13 +227,6 @@ namespace aiof.api.services
                 .AddAsync(finance);
 
             await _context.SaveChangesAsync();
-
-            //await foreach (var asset in AddAssetsAsync(assetDtos))
-            //    _logger.LogInformation($"userId='{userId}'|financeId='{financeId}'. added asset='{JsonSerializer.Serialize(asset)}'");
-            //await foreach (var liability in AddLiabilitiesAsync(liabilityDtos))
-            //    _logger.LogInformation($"userId='{userId}'|financeId='{financeId}'. added liability='{JsonSerializer.Serialize(liability)}'");
-            //await foreach (var goal in AddGoalsAsync(goalDtos))
-            //    _logger.LogInformation($"userId='{userId}'|financeId='{financeId}'. added goal='{JsonSerializer.Serialize(goal)}'");
 
             return await GetFinanceAsync(finance.Id);
         }
