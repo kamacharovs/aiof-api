@@ -119,6 +119,9 @@ namespace aiof.api.core.Controllers
 
         [HttpPut]
         [Route("goal/{id}/update")]
+        [ProducesResponseType(typeof(IGoal), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdateGoalAsync([FromRoute]int id, [FromBody]GoalDto goalDto)
         {
             return Ok(await _repo.UpdateGoalAsync(id, goalDto));
