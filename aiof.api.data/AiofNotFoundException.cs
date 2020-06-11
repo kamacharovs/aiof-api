@@ -14,7 +14,7 @@ namespace aiof.api.data
         { }
 
         public AiofNotFoundException(string message)
-            : base(message)
+            : base(HttpStatusCode.NotFound, message)
         { }
 
         public AiofNotFoundException(string message, Exception inner)
