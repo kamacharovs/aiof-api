@@ -17,10 +17,10 @@ namespace aiof.api.data
                 .ForMember(x => x.FinanceId, o => o.MapFrom(s => s.FinanceId));
 
             CreateMap<GoalDto, Goal>()
-                .ForMember(x => x.Name, o => o.MapFrom(s => s.Name))
-                .ForMember(x => x.TypeName, o => o.MapFrom(s => s.TypeName))
-                .ForMember(x => x.Savings, o => o.MapFrom(s => s.Savings))
-                .ForMember(x => x.FinanceId, o => o.MapFrom(s => s.FinanceId));
+                .ForMember(x => x.Name, o => o.Condition(s => s.Name != null))
+                .ForMember(x => x.TypeName, o => o.Condition(s => s.TypeName != null))
+                .ForMember(x => x.Savings, o => o.Condition(s => s.Savings != null))
+                .ForMember(x => x.FinanceId, o => o.Condition(s => s.FinanceId != null));
 
             CreateMap<LiabilityDto, Liability>()
                 .ForMember(x => x.Name, o => o.MapFrom(s => s.Name))
