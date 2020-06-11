@@ -33,6 +33,13 @@ namespace aiof.api.core.Controllers
             return Ok(await _repo.GetFinanceAsync(id));
         }
 
+        [HttpPost]
+        [Route("finance")]
+        public async Task<IActionResult> AddFinanceAsync([FromBody]FinanceDto finance)
+        {
+            return Created("finance", await _repo.AddFinanceAsync(finance));
+        }
+
 
         [HttpGet]
         [Route("asset/{id}")]
