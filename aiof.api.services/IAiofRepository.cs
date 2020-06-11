@@ -22,6 +22,7 @@ namespace aiof.api.services
         Task<IEnumerable<IGoalType>> GetGoalTypesAsync();
         Task<IGoal> AddGoalAsync(GoalDto goal);
         IAsyncEnumerable<IGoal> AddGoalsAsync(IEnumerable<GoalDto> goals);
+        Task<IGoal> UpdateGoalAsync(int id, GoalDto goalDto);
         Task<IFinance> GetFinanceAsync(int id);
         Task<IFinance> AddFinanceAsync(FinanceDto financeDto);
     }

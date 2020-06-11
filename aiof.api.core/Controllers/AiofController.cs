@@ -116,5 +116,12 @@ namespace aiof.api.core.Controllers
         {
             return Created("goal", await _repo.AddGoalAsync(goalDto));
         }
+
+        [HttpPut]
+        [Route("goal/{id}/update")]
+        public async Task<IActionResult> UpdateGoalAsync([FromRoute]int id, [FromBody]GoalDto goalDto)
+        {
+            return Ok(await _repo.UpdateGoalAsync(id, goalDto));
+        }
     }
 }

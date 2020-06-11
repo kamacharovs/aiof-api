@@ -204,6 +204,23 @@ namespace aiof.api.services
                 yield return await AddGoalAsync(goalDto);
         }
 
+        public async Task<IGoal> UpdateGoalAsync(int id, GoalDto goalDto)
+        {
+            if (goalDto == null)
+                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
+                    "Unable to update 'Goal'. 'IGoal' parameter cannot be NULL");
+
+            var dbGoal = await GetGoalAsync(id);
+            var mappGoal = _mapper.Map(goalDto, dbGoal as Goal);
+
+            _context.Goals
+                .Update(mappGoal);
+
+            await _context.SaveChangesAsync();
+
+            return await GetGoalAsync(id);
+        }
+
 
         public async Task<IFinance> GetFinanceAsync(int id)
         {
