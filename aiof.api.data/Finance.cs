@@ -15,4 +15,13 @@ namespace aiof.api.data
         public List<Liability> Liabilities { get; set; } = new List<Liability>();
         public List<Goal> Goals { get; set; } = new List<Goal>();
     }
+
+    public class FinanceDto
+    {
+        public int UserId { get; set; }
+
+        public List<AssetDto> Assets { get; set; } = new List<AssetDto>();
+        public List<LiabilityDto> Liabilities { get; set; } = new List<LiabilityDto>();
+        public List<GoalDto> Goals { get; set; } = new List<GoalDto>();
+    }
 }
