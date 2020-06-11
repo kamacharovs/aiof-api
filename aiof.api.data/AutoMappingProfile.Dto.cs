@@ -27,6 +27,12 @@ namespace aiof.api.data
                 .ForMember(x => x.TypeName, o => o.MapFrom(s => s.TypeName))
                 .ForMember(x => x.Value, o => o.MapFrom(s => s.Value))
                 .ForMember(x => x.FinanceId, o => o.MapFrom(s => s.FinanceId));
+
+            CreateMap<FinanceDto, Finance>()
+                .ForMember(x => x.UserId, o => o.MapFrom(s => s.UserId))
+                .ForMember(x => x.Assets, o => o.MapFrom(s => s.AssetDtos))
+                .ForMember(x => x.Liabilities, o => o.MapFrom(s => s.LiabilityDtos))
+                .ForMember(x => x.Goals, o => o.MapFrom(s => s.GoalDtos));
         }
     }
 }

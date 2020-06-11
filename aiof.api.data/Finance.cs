@@ -20,8 +20,8 @@ namespace aiof.api.data
     {
         public int UserId { get; set; }
 
-        public List<AssetDto> Assets { get; set; } = new List<AssetDto>();
-        public List<LiabilityDto> Liabilities { get; set; } = new List<LiabilityDto>();
-        public List<GoalDto> Goals { get; set; } = new List<GoalDto>();
+        public List<AssetDto> AssetDtos { get; set; } = new List<AssetDto>();
+        public List<LiabilityDto> LiabilityDtos { get; set; } = new List<LiabilityDto>();
+        public List<GoalDto> GoalDtos { get; set; } = new List<GoalDto>();
     }
 }
