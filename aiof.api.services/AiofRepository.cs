@@ -212,6 +212,9 @@ namespace aiof.api.services
 
             var goal = await GetGoalAsync(id);
 
+            if (goal == null)
+                throw new AiofNotFoundException($"Unable to find 'Goal' with id='{id}'");
+
             _context.Goals
                 .Update(_mapper.Map(goalDto, goal as Goal));
 
