@@ -207,8 +207,12 @@ namespace aiof.api.services
 
         public async Task<IFinance> GetFinanceAsync(int id)
         {
-            return await GetFinancesQuery()
+            var finance = await GetFinancesQuery()
                 .FirstOrDefaultAsync(x => x.Id == id);
+
+            return finance == null
+                ? throw new AiofNotFoundException($"Finance with id='{id}' doesn't exist")
+                : finance;
         }
 
         public async Task<IFinance> AddFinanceAsync(int userId,
