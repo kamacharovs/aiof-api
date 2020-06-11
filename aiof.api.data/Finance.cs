@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace aiof.api.data
 {
@@ -22,8 +23,13 @@ namespace aiof.api.data
         [Required]
         public int UserId { get; set; }
 
+        [JsonPropertyName("assets")]
         public List<AssetDto> AssetDtos { get; set; } = new List<AssetDto>();
+
+        [JsonPropertyName("liabilities")]
         public List<LiabilityDto> LiabilityDtos { get; set; } = new List<LiabilityDto>();
+
+        [JsonPropertyName("goals")]
         public List<GoalDto> GoalDtos { get; set; } = new List<GoalDto>();
     }
 }
