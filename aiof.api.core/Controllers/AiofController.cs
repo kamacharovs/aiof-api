@@ -102,6 +102,16 @@ namespace aiof.api.core.Controllers
             return Created("liability", await _repo.AddLiabilityAsync(liabilityDto));
         }
 
+        [HttpPut]
+        [Route("liability/{id}/update")]
+        [ProducesResponseType(typeof(ILiability), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> UpdateLiabilityAsync([FromRoute]int id, [FromBody]LiabilityDto liabilityDto)
+        {
+            return Ok(await _repo.UpdateLiabilityAsync(id, liabilityDto));
+        }
+
 
         [HttpGet]
         [Route("goal/{id}")]

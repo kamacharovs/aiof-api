@@ -191,6 +191,25 @@ namespace aiof.api.services
                 yield return await AddLiabilityAsync(liabilityDto);
         }
 
+        public async Task<ILiability> UpdateLiabilityAsync(int id, LiabilityDto liabilityDto)
+        {
+            if (liabilityDto == null)
+                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
+                    $"Unable to update 'Liability'. '{nameof(LiabilityDto)}' parameter cannot be NULL");
+
+            var liability = await GetLiabilityAsync(id);
+
+            if (liability == null)
+                throw new AiofNotFoundException($"Unable to find 'Liability' with id='{id}'");
+
+            _context.Liabilities
+                .Update(_mapper.Map(liabilityDto, liability as Liability));
+
+            await _context.SaveChangesAsync();
+
+            return await GetLiabilityAsync(id);
+        }
+
 
         public async Task<IGoal> GetGoalAsync(int id)
         {
