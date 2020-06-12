@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace aiof.api.data
@@ -18,15 +17,9 @@ namespace aiof.api.data
 
     public class LiabilityDto
     {
-        [Required]
         public string Name { get; set; }
-
-        [Required]
         public string TypeName { get; set; }
-
-        [Required]
         public float Value { get; set; }
-
         public int? FinanceId { get; set; }
     }
 }
