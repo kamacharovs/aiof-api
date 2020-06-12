@@ -67,6 +67,16 @@ namespace aiof.api.core.Controllers
             return Created("asset", await _repo.AddAssetAsync(assetDto));
         }
 
+        [HttpPut]
+        [Route("asset/{id}/update")]
+        [ProducesResponseType(typeof(IAsset), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> UpdateAssetAsync([FromRoute]int id, [FromBody]AssetDto assetDto)
+        {
+            return Ok(await _repo.UpdateAssetAsync(id, assetDto));
+        }
+
 
         [HttpGet]
         [Route("liability/{id}")]

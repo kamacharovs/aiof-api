@@ -140,6 +140,25 @@ namespace aiof.api.services
                 yield return await AddAssetAsync(assetDto);
         }
 
+        public async Task<IAsset> UpdateAssetAsync(int id, AssetDto assetDto)
+        {
+            if (assetDto == null)
+                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
+                    $"Unable to update 'Asset'. '{nameof(AssetDto)}' parameter cannot be NULL");
+
+            var asset = await GetAssetAsync(id);
+
+            if (asset == null)
+                throw new AiofNotFoundException($"Unable to find 'Asset' with id='{id}'");
+
+            _context.Assets
+                .Update(_mapper.Map(assetDto, asset as Asset));
+
+            await _context.SaveChangesAsync();
+
+            return await GetAssetAsync(id);
+        }
+
 
         public async Task<ILiability> GetLiabilityAsync(int id)
         {
@@ -208,7 +227,7 @@ namespace aiof.api.services
         {
             if (goalDto == null)
                 throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    "Unable to update 'Goal'. 'IGoal' parameter cannot be NULL");
+                    $"Unable to update 'Goal'. '{nameof(GoalDto)}' parameter cannot be NULL");
 
             var goal = await GetGoalAsync(id);
 
