@@ -25,6 +25,23 @@ namespace aiof.api.core.Controllers
         }
 
         [HttpGet]
+        [Route("user/{id}")]
+        [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetUserAsync([FromRoute]int id)
+        {
+            return Ok(await _repo.GetUserAsync(id));
+        }
+
+        [HttpGet]
+        [Route("user/username/{username}")]
+        [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetUserAsync([FromRoute]string username)
+        {
+            return Ok(await _repo.GetUserAsync(username));
+        }
+
+
+        [HttpGet]
         [Route("finance/{id}")]
         [ProducesResponseType(typeof(IFinance), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

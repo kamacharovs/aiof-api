@@ -95,10 +95,16 @@ namespace aiof.api.services
                 .AsQueryable();
         }
 
-        public async Task<User> GetUserAsync(int id)
+        public async Task<IUser> GetUserAsync(int id)
         {
             return await GetUsersQuery()
                 .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<IUser> GetUserAsync(string username)
+        {
+            return await GetUsersQuery()
+                .FirstOrDefaultAsync(x => x.Username == username);
         }
 
         public async Task<IAsset> GetAssetAsync(int id)
