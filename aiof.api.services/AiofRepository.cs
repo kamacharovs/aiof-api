@@ -107,6 +107,18 @@ namespace aiof.api.services
                 .FirstOrDefaultAsync(x => x.Username == username);
         }
 
+        public async Task<IUser> AddUserAsync(UserDto userDto)
+        {
+            var user = _mapper.Map<User>(userDto);
+
+            await _context.Users
+                .AddAsync(user);
+
+            await _context.SaveChangesAsync();
+
+            return user;
+        }
+
         public async Task<IAsset> GetAssetAsync(int id)
         {
             return await GetAssetsQuery()

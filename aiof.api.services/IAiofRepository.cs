@@ -10,6 +10,7 @@ namespace aiof.api.services
     {
         Task<IUser> GetUserAsync(int id);
         Task<IUser> GetUserAsync(string username);
+        Task<IUser> AddUserAsync(UserDto userDto);
         Task<IAsset> GetAssetAsync(int id);
         Task<IEnumerable<IAsset>> GetAssetsAsync(string typeName);
         Task<IEnumerable<IAssetType>> GetAssetTypesAsync();

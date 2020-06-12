@@ -40,6 +40,15 @@ namespace aiof.api.core.Controllers
             return Ok(await _repo.GetUserAsync(username));
         }
 
+        [HttpPost]
+        [Route("user/add")]
+        [ProducesResponseType(typeof(IUser), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AddUserAsync([FromBody]UserDto user)
+        {
+            return Created("user", await _repo.AddUserAsync(user));
+        }
+
 
         [HttpGet]
         [Route("finance/{id}")]
