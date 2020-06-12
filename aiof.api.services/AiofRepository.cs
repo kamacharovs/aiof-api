@@ -156,7 +156,7 @@ namespace aiof.api.services
 
             await _context.SaveChangesAsync();
 
-            return await GetAssetAsync(id);
+            return asset;
         }
 
 
@@ -207,7 +207,7 @@ namespace aiof.api.services
 
             await _context.SaveChangesAsync();
 
-            return await GetLiabilityAsync(id);
+            return liability;
         }
 
 
@@ -258,7 +258,7 @@ namespace aiof.api.services
 
             await _context.SaveChangesAsync();
 
-            return await GetGoalAsync(id);
+            return goal;
         }
 
 
