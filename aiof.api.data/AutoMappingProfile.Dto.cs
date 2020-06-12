@@ -14,7 +14,8 @@ namespace aiof.api.data
                 .ForMember(x => x.Name, o => o.MapFrom(s => s.Name))
                 .ForMember(x => x.TypeName, o => o.MapFrom(s => s.TypeName))
                 .ForMember(x => x.Value, o => o.MapFrom(s => s.Value))
-                .ForMember(x => x.FinanceId, o => o.MapFrom(s => s.FinanceId));
+                .ForMember(x => x.FinanceId, o => o.MapFrom(s => s.FinanceId))
+                .ForAllMembers(x => x.Condition((src, dest, value) => value != null));
 
             CreateMap<GoalDto, Goal>()
                 .ForMember(x => x.Name, o => o.Condition(s => s.Name != null))
@@ -26,13 +27,15 @@ namespace aiof.api.data
                 .ForMember(x => x.Name, o => o.MapFrom(s => s.Name))
                 .ForMember(x => x.TypeName, o => o.MapFrom(s => s.TypeName))
                 .ForMember(x => x.Value, o => o.MapFrom(s => s.Value))
-                .ForMember(x => x.FinanceId, o => o.MapFrom(s => s.FinanceId));
+                .ForMember(x => x.FinanceId, o => o.MapFrom(s => s.FinanceId))
+                .ForAllMembers(x => x.Condition((src, dest, value) => value != null));
 
             CreateMap<FinanceDto, Finance>()
                 .ForMember(x => x.UserId, o => o.MapFrom(s => s.UserId))
                 .ForMember(x => x.Assets, o => o.MapFrom(s => s.AssetDtos))
                 .ForMember(x => x.Liabilities, o => o.MapFrom(s => s.LiabilityDtos))
-                .ForMember(x => x.Goals, o => o.MapFrom(s => s.GoalDtos));
+                .ForMember(x => x.Goals, o => o.MapFrom(s => s.GoalDtos))
+                .ForAllMembers(x => x.Condition((src, dest, value) => value != null));
         }
     }
 }
