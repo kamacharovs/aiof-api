@@ -149,7 +149,7 @@ namespace aiof.api.services
 
             await _context.SaveChangesAsync();
 
-            return await GetAssetAsync(asset.Id);
+            return asset;
         }
 
         public async IAsyncEnumerable<IAsset> AddAssetsAsync(IEnumerable<AssetDto> assetsDto)
@@ -200,7 +200,7 @@ namespace aiof.api.services
 
             await _context.SaveChangesAsync();
 
-            return await GetLiabilityAsync(liability.Id);
+            return liability;
         }
 
         public async IAsyncEnumerable<ILiability> AddLiabilitiesAsync(IEnumerable<LiabilityDto> liabilityDtos)
@@ -251,7 +251,7 @@ namespace aiof.api.services
 
             await _context.SaveChangesAsync();
 
-            return await GetGoalAsync(goal.Id);
+            return goal;
         }
 
         public async IAsyncEnumerable<IGoal> AddGoalsAsync(IEnumerable<GoalDto> goalDtos)
