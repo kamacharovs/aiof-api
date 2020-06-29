@@ -30,10 +30,9 @@ namespace aiof.api.data
 
             CreateMap<FinanceDto, Finance>()
                 .ForMember(x => x.UserId, o => o.MapFrom(s => s.UserId))
-                .ForMember(x => x.Assets, o => o.MapFrom(s => s.AssetDtos))
-                .ForMember(x => x.Liabilities, o => o.MapFrom(s => s.LiabilityDtos))
-                .ForMember(x => x.Goals, o => o.MapFrom(s => s.GoalDtos))
-                .ForAllMembers(x => x.Condition((src, dest, value) => value != null));
+                .ForMember(x => x.Assets, o => o.Condition(s => s.AssetDtos != null))
+                .ForMember(x => x.Liabilities, o => o.Condition(s => s.LiabilityDtos != null))
+                .ForMember(x => x.Goals, o => o.Condition(s => s.GoalDtos != null));
 
             CreateMap<UserDto, User>()
                 .ForMember(x => x.FirstName, o => o.Condition(s => s.FirstName != null))
