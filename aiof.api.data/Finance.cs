@@ -21,7 +21,7 @@ namespace aiof.api.data
     public class FinanceDto
     {
         [Required]
-        public int UserId { get; set; }
+        public int? UserId { get; set; }
 
         [JsonPropertyName("assets")]
         public List<AssetDto> AssetDtos { get; set; } = new List<AssetDto>();
