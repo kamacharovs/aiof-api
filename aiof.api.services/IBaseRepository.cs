@@ -8,8 +8,9 @@ using aiof.api.data;
 namespace aiof.api.services
 {
     public interface IBaseRepository<T>
-        where T : class
+        where T : class, IEntity
     {
         IQueryable<T> GetEntityQuery();
+        Task<IEntity> GetEntityAsync(int id);
     }
 }
