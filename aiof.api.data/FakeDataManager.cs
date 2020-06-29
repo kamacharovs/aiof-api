@@ -54,6 +54,15 @@ namespace aiof.api.data
                     LastName = "Kamacharov",
                     Email = "gkama@test.com",
                     Username = "gkama"
+                },
+                new User()
+                {
+                    Id = 2,
+                    PublicKey = Guid.NewGuid(),
+                    FirstName = "Jessie",
+                    LastName = "Brown",
+                    Email = "jbro@test.com",
+                    Username = "jbro"
                 }
             };
         }
