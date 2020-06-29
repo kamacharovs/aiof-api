@@ -36,6 +36,7 @@ namespace aiof.api.core
         {
             services.AddScoped<IEnvConfiguration, EnvConfiguration>();
             services.AddScoped<IAiofRepository, AiofRepository>();
+            services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddScoped<FakeDataManager>();
 
             services.AddSingleton(new MapperConfiguration(x => { x.AddProfile(new AutoMappingProfileDto()); }).CreateMapper());
