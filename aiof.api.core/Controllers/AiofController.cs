@@ -59,6 +59,10 @@ namespace aiof.api.core.Controllers
             return Ok(await _repo.GetFinanceAsync(id));
         }
 
+
+        /// <summary>
+        /// Adds a specific set of assets, liabilities and golas as a Finance object
+        /// </summary>
         [HttpPost]
         [Route("finance/add")]
         [ProducesResponseType(typeof(IFinance), StatusCodes.Status201Created)]
