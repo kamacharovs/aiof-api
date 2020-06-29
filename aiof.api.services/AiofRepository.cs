@@ -95,12 +95,6 @@ namespace aiof.api.services
                 .AsQueryable();
         }
 
-        public IQueryable<T> GetEntityQuery<T>()
-            where T : class
-        {
-            return _context.Set<T>().AsNoTracking();
-        }
-
         public async Task<IUser> GetUserAsync(int id)
         {
             return await GetUsersQuery()
