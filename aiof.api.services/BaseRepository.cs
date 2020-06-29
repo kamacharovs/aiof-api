@@ -17,7 +17,7 @@ using aiof.api.data;
 namespace aiof.api.services
 {
     public class BaseRepository<T> : IBaseRepository<T>
-        where T : class, IEntity
+        where T : class, IPublicKeyId
     {
         private readonly AiofContext _context;
         private readonly IMapper _mapper;
@@ -40,6 +40,18 @@ namespace aiof.api.services
         {
             return await GetEntityQuery()
                 .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<T> GetEntityAsync(Guid publicKey)
+        {
+            return await GetEntityQuery()
+                .FirstOrDefaultAsync(x => x.PublicKey == publicKey);
+        }
+
+        public async Task<T> GetEntityAsync(string publicKey)
+        {
+            return await GetEntityQuery()
+                .FirstOrDefaultAsync(x => x.PublicKey == Guid.Parse(publicKey));
         }
     }
 }
