@@ -11,6 +11,6 @@ namespace aiof.api.services
         where T : class, IEntity
     {
         IQueryable<T> GetEntityQuery();
-        Task<IEntity> GetEntityAsync(int id);
+        Task<T> GetEntityAsync(int id);
     }
 }
