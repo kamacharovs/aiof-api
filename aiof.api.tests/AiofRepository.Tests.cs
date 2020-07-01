@@ -1,11 +1,11 @@
 using System;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 using Xunit;
 
 using aiof.api.data;
 using aiof.api.services;
-using System.Collections.Generic;
 
 namespace aiof.api.tests
 {
