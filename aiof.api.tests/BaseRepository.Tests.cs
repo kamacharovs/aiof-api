@@ -30,5 +30,14 @@ namespace aiof.api.tests
             Assert.NotNull(asset.Name);
             Assert.NotNull(asset.TypeName);
         }
+
+        [Theory]
+        [InlineData(999)]
+        [InlineData(998)]
+        [InlineData(997)]
+        public async Task GetEntityAsync_Asset_NotFound(int id)
+        {
+            await Assert.ThrowsAsync<AiofNotFoundException>(() => _assetRepo.GetEntityAsync(id));
+        }
     }
 }
