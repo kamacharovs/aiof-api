@@ -32,6 +32,17 @@ namespace aiof.api.tests
         }
 
         [Theory]
+        [InlineData("dbf79a48-0504-4bd0-ad00-8cbc3044e585")]
+        public async Task GetEntityAsync_Asset_ByPublicKey_Valid(string publicKey)
+        {
+            var asset1 = await _assetRepo.GetEntityAsync(publicKey);
+            var asset2 = await _assetRepo.GetEntityAsync(Guid.Parse("dbf79a48-0504-4bd0-ad00-8cbc3044e585"));
+
+            Assert.NotNull(asset1);
+            Assert.NotNull(asset2);
+        }
+
+        [Theory]
         [InlineData(999)]
         [InlineData(998)]
         [InlineData(997)]
