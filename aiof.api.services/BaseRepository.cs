@@ -39,19 +39,22 @@ namespace aiof.api.services
         public async Task<T> GetEntityAsync(int id)
         {
             return await GetEntityQuery()
-                .FirstOrDefaultAsync(x => x.Id == id);
+                .FirstOrDefaultAsync(x => x.Id == id)
+                ?? throw new AiofNotFoundException();
         }
 
         public async Task<T> GetEntityAsync(Guid publicKey)
         {
             return await GetEntityQuery()
-                .FirstOrDefaultAsync(x => x.PublicKey == publicKey);
+                .FirstOrDefaultAsync(x => x.PublicKey == publicKey)
+                ?? throw new AiofNotFoundException();
         }
 
         public async Task<T> GetEntityAsync(string publicKey)
         {
             return await GetEntityQuery()
-                .FirstOrDefaultAsync(x => x.PublicKey == Guid.Parse(publicKey));
+                .FirstOrDefaultAsync(x => x.PublicKey == Guid.Parse(publicKey))
+                ?? throw new AiofNotFoundException();
         }
     }
 }
