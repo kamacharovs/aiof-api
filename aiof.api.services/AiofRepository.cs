@@ -116,6 +116,8 @@ namespace aiof.api.services
 
             await _context.SaveChangesAsync();
 
+            _logger.LogInformation($"added user='{JsonSerializer.Serialize(user)}'");
+
             return user;
         }
 
