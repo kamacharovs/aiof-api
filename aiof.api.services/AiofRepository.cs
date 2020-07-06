@@ -293,13 +293,14 @@ namespace aiof.api.services
         }
 
 
-        public async Task<IFinance> GetFinanceAsync(int id)
+        public async Task<IFinance> GetFinanceAsync(int id, int userId)
         {
             var finance = await GetFinancesQuery()
-                .FirstOrDefaultAsync(x => x.Id == id);
+                .FirstOrDefaultAsync(x => x.Id == id
+                    && x.UserId == userId);
 
             return finance == null
-                ? throw new AiofNotFoundException($"Finance with id='{id}' doesn't exist")
+                ? throw new AiofNotFoundException($"Finance with id='{id}' and userId='{userId}' doesn't exist")
                 : finance;
         }
 
@@ -316,7 +317,7 @@ namespace aiof.api.services
 
             await _context.SaveChangesAsync();
 
-            return await GetFinanceAsync(finance.Id);
+            return await GetFinanceAsync(finance.Id, finance.UserId);
         }
     }
 }
