@@ -121,6 +121,17 @@ namespace aiof.api.services
             return user;
         }
 
+        public async Task<bool> IsUserUniqueAsync(string username, string email)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(x => x.Username == username
+                    || x.Email == email);
+            
+            return user == null
+                ? true
+                : false;
+        }
+
         public async Task<IAsset> GetAssetAsync(int id)
         {
             return await GetAssetsQuery()
