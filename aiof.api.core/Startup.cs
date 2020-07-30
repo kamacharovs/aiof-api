@@ -43,7 +43,7 @@ namespace aiof.api.core
             services.AddSingleton(new MapperConfiguration(x => { x.AddProfile(new AutoMappingProfileDto()); }).CreateMapper());
             services.AddHttpClient<IAiofMetadataRepository, AiofMetadataRepository>("metadata", c =>
                 {
-                    c.BaseAddress = new Uri(_configuration["Metadata:BaseUrl"]);
+                    c.BaseAddress = new Uri(_configuration[$"{Keys.Metadata}:{Keys.BaseUrl}"]);
                     c.DefaultRequestHeaders.Add("Accept", "application/json");
                 })
                 .SetHandlerLifetime(TimeSpan.FromMinutes(5));
@@ -76,21 +76,21 @@ namespace aiof.api.core
 
             services.AddSwaggerGen(x =>
             {
-                x.SwaggerDoc(_configuration["OpenApi:Version"], new OpenApiInfo
+                x.SwaggerDoc(_configuration[$"{Keys.OpenApi}:{Keys.Version}"], new OpenApiInfo
                 {
-                    Title = _configuration["OpenApi:Title"],
-                    Version = _configuration["OpenApi:Version"],
-                    Description = _configuration["OpenApi:Description"],
+                    Title = _configuration[$"{Keys.OpenApi}:{Keys.Title}"],
+                    Version = _configuration[$"{Keys.OpenApi}:{Keys.Version}"],
+                    Description = _configuration[$"{Keys.OpenApi}:{Keys.Description}"],
                     Contact = new OpenApiContact
                     {
-                        Name = _configuration["OpenApi:Contact:Name"],
-                        Email = _configuration["OpenApi:Contact:Email"],
-                        Url = new Uri(_configuration["OpenApi:Contact:Url"])
+                        Name = _configuration[$"{Keys.OpenApi}:{Keys.Contact}:{Keys.Name}"],
+                        Email = _configuration[$"{Keys.OpenApi}:{Keys.Contact}:{Keys.Email}"],
+                        Url = new Uri(_configuration[$"{Keys.OpenApi}:{Keys.Contact}:{Keys.Url}"])
                     },
                     License = new OpenApiLicense
                     {
-                        Name = _configuration["OpenApi:License:Name"],
-                        Url = new Uri(_configuration["OpenApi:License:Url"]),
+                        Name = _configuration[$"{Keys.OpenApi}:{Keys.License}:{Keys.Name}"],
+                        Url = new Uri(_configuration[$"{Keys.OpenApi}:{Keys.License}:{Keys.Url}"]),
                     }
                 });
             });
@@ -112,8 +112,8 @@ namespace aiof.api.core
             app.UseSwagger();
             app.UseSwaggerUI(x =>
             {
-                x.SwaggerEndpoint($"/swagger/{_configuration["OpenApi:Version"]}/swagger.json",
-                    $"{_configuration["OpenApi:Title"]} {_configuration["OpenApi:Version"]}");
+                x.SwaggerEndpoint($"/swagger/{_configuration[$"{Keys.OpenApi}:{Keys.Version}"]}/swagger.json",
+                    $"{_configuration[$"{Keys.OpenApi}:{Keys.Title}"]} {_configuration[$"{Keys.OpenApi}:{Keys.Version}"]}");
                 x.RoutePrefix = string.Empty;
             });
 
