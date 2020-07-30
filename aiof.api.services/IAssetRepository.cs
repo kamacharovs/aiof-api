@@ -16,6 +16,7 @@ namespace aiof.api.services
             int? financeId);
         Task<IAsset> GetAssetAsync(AssetDto assetDto);
         Task<IEnumerable<IAsset>> GetAssetsAsync(string typeName);
+        Task<IEnumerable<IAssetType>> GetAssetTypesAsync();
         Task<IAsset> AddAssetAsync(AssetDto assetDto);
         IAsyncEnumerable<IAsset> AddAssetsAsync(IEnumerable<AssetDto> assetsDto);
         Task<IAsset> UpdateAssetAsync(

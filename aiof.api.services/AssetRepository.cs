@@ -72,8 +72,7 @@ namespace aiof.api.services
                 .FirstOrDefaultAsync(x => x.Name == name
                     && x.TypeName == typeName
                     && x.Value == value
-                    && x.FinanceId == financeId)
-                ?? throw new AiofNotFoundException($"{nameof(Asset)} with Name='{name}' was not found");
+                    && x.FinanceId == financeId);
         }
         public async Task<IAsset> GetAssetAsync(AssetDto assetDto)
         {
@@ -92,17 +91,31 @@ namespace aiof.api.services
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<IAssetType>> GetAssetTypesAsync()
+        {
+            return await GetAssetTypesQuery()
+                .OrderBy(x => x.Name)
+                .ToListAsync();
+        }
+
         public async Task<IAsset> AddAssetAsync(AssetDto assetDto)
         {
             await _assetDtoValidator.ValidateAndThrowAsync(assetDto);
 
-            var asset = await GetAssetAsync(assetDto) as Asset
-                ?? _mapper.Map<Asset>(assetDto);
+            if (await GetAssetAsync(assetDto) != null)
+                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
+                    $"{nameof(Asset)} with the provided information already exists");
+
+            var asset = _mapper.Map<Asset>(assetDto);
 
             await _context.Assets
                 .AddAsync(asset);
 
             await _context.SaveChangesAsync();
+
+            await _context.Entry(asset)
+                .Reference(x => x.Type)
+                .LoadAsync();
             
             _logger.LogInformation($"Created {nameof(Asset)} with Id='{asset.Id}', PublicKey='{asset.PublicKey}' and FinanceId='{asset.FinanceId}'");
 

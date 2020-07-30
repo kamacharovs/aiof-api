@@ -72,42 +72,6 @@ namespace aiof.api.core.Controllers
             return Created("finance", await _repo.AddFinanceAsync(finance));
         }
 
-
-        [HttpGet]
-        [Route("asset/{id}")]
-        [ProducesResponseType(typeof(IAsset), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAssetAsync([FromRoute]int id)
-        {
-            return Ok(await _repo.GetAssetAsync(id));
-        }
-
-        [HttpGet]
-        [Route("asset/types")]
-        [ProducesResponseType(typeof(IEnumerable<IAssetType>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAssetTypesAsync()
-        {
-            return Ok(await _repo.GetAssetTypesAsync());
-        }
-
-        [HttpPost]
-        [Route("asset/add")]
-        [ProducesResponseType(typeof(IAsset), StatusCodes.Status201Created)]
-        public async Task<IActionResult> AddAssetAsync([FromBody]AssetDto assetDto)
-        {
-            return Created("asset", await _repo.AddAssetAsync(assetDto));
-        }
-
-        [HttpPut]
-        [Route("asset/{id}/update")]
-        [ProducesResponseType(typeof(IAsset), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UpdateAssetAsync([FromRoute]int id, [FromBody]AssetDto assetDto)
-        {
-            return Ok(await _repo.UpdateAssetAsync(id, assetDto));
-        }
-
-
         [HttpGet]
         [Route("liability/{id}")]
         [ProducesResponseType(typeof(ILiability), StatusCodes.Status200OK)]

@@ -29,6 +29,7 @@ namespace aiof.api.tests
             Assert.Equal("Georgi", user.FirstName);
         }
 
+        /*
         [Theory]
         [InlineData(1)]
         [InlineData(2)]
@@ -116,6 +117,7 @@ namespace aiof.api.tests
                 Assert.Contains(asset.TypeName, typeNames);
             }
         }
+        */
 
         [Theory]
         [InlineData(1, 1)]

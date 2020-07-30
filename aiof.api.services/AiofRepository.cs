@@ -36,21 +36,6 @@ namespace aiof.api.services
                 .AsQueryable();
         }
 
-        private IQueryable<Asset> GetAssetsQuery()
-        {
-            return _context.Assets
-                .Include(x => x.Type)
-                .AsNoTracking()
-                .AsQueryable();
-        }
-
-        private IQueryable<AssetType> GetAssetTypesQuery()
-        {
-            return _context.AssetTypes
-                .AsNoTracking()
-                .AsQueryable();
-        }
-
         private IQueryable<Liability> GetLiabilitiesQuery()
         {
             return _context.Liabilities
@@ -116,63 +101,6 @@ namespace aiof.api.services
                 ? true
                 : false;
         }
-
-        public async Task<IAsset> GetAssetAsync(int id)
-        {
-            return await GetAssetsQuery()
-                .FirstOrDefaultAsync(x => x.Id == id);
-        }
-
-        public async Task<IEnumerable<IAsset>> GetAssetsAsync(string typeName)
-        {
-            return await GetAssetsQuery()
-                .Where(x => x.TypeName == typeName)
-                .OrderBy(x => x.TypeName)
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<IAssetType>> GetAssetTypesAsync()
-        {
-            return await GetAssetTypesQuery()
-                .OrderBy(x => x.Name)
-                .ToListAsync();
-        }
-
-        public async Task<IAsset> AddAssetAsync(AssetDto assetDto)
-        {
-            var asset = _mapper.Map<Asset>(assetDto);
-
-            await _context.Assets
-                .AddAsync(asset);
-
-            await _context.SaveChangesAsync();
-
-            return asset;
-        }
-
-        public async IAsyncEnumerable<IAsset> AddAssetsAsync(IEnumerable<AssetDto> assetsDto)
-        {
-            foreach (var assetDto in assetsDto)
-                yield return await AddAssetAsync(assetDto);
-        }
-
-        public async Task<IAsset> UpdateAssetAsync(int id, AssetDto assetDto)
-        {
-            if (assetDto == null)
-                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"Unable to update 'Asset'. '{nameof(AssetDto)}' parameter cannot be NULL");
-
-            var asset = await GetAssetAsync(id)
-                ?? throw new AiofNotFoundException($"Unable to find 'Asset' with id='{id}'");
-
-            _context.Assets
-                .Update(_mapper.Map(assetDto, asset as Asset));
-
-            await _context.SaveChangesAsync();
-
-            return asset;
-        }
-
 
         public async Task<ILiability> GetLiabilityAsync(int id)
         {

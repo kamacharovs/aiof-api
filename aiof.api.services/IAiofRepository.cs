@@ -12,12 +12,6 @@ namespace aiof.api.services
         Task<IUser> GetUserAsync(string username);
         Task<IUser> AddUserAsync(UserDto userDto);
         Task<bool> IsUserUniqueAsync(string username, string email);
-        Task<IAsset> GetAssetAsync(int id);
-        Task<IEnumerable<IAsset>> GetAssetsAsync(string typeName);
-        Task<IEnumerable<IAssetType>> GetAssetTypesAsync();
-        Task<IAsset> AddAssetAsync(AssetDto asset);
-        IAsyncEnumerable<IAsset> AddAssetsAsync(IEnumerable<AssetDto> assets);
-        Task<IAsset> UpdateAssetAsync(int id, AssetDto assetDto);
         Task<ILiability> GetLiabilityAsync(int id);
         Task<IEnumerable<ILiabilityType>> GetLiabilityTypesAsync();
         Task<ILiability> AddLiabilityAsync(LiabilityDto liability);
