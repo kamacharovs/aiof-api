@@ -35,6 +35,16 @@ namespace aiof.api.core.Controllers
             return Ok(await _repo.GetGoalAsync(id));
         }
 
+        [HttpPut]
+        [Route("{id}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IGoal), StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpdateGoalAsync([FromRoute]int id, [FromBody]GoalDto goalDto)
+        {
+            return Ok(await _repo.UpdateGoalAsync(id, goalDto));
+        }
+
         [HttpGet]
         [Route("types")]
         [ProducesResponseType(typeof(IEnumerable<IGoalType>), StatusCodes.Status200OK)]
@@ -49,16 +59,6 @@ namespace aiof.api.core.Controllers
         public async Task<IActionResult> AddGoalAsync([FromBody]GoalDto goalDto)
         {
             return Created(nameof(Goal), await _repo.AddGoalAsync(goalDto));
-        }
-
-        [HttpPut]
-        [Route("{id}/update")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(IGoal), StatusCodes.Status200OK)]
-        public async Task<IActionResult> UpdateGoalAsync([FromRoute]int id, [FromBody]GoalDto goalDto)
-        {
-            return Ok(await _repo.UpdateGoalAsync(id, goalDto));
         }
     }
 }

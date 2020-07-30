@@ -4,7 +4,8 @@ using System.Text;
 
 namespace aiof.api.data
 {
-    public class Goal : IGoal, IPublicKeyId
+    public class Goal : IGoal, 
+        IPublicKeyId, IPublicKeyName, IEntity
     {
         public int Id { get; set; }
         public Guid PublicKey { get; set; } = Guid.NewGuid();

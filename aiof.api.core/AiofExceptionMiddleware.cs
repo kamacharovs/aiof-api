@@ -68,7 +68,7 @@ namespace aiof.api.core
                 Detail = canViewSensitiveInfo
                     ? e.Demystify().ToString()
                     : null,
-                Instance = $"aiof:error:{id}"
+                Instance = $"aiof:api:error:{id}"
             };
 
             if (e is AiofException ae)
