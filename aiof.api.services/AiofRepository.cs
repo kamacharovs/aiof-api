@@ -22,7 +22,11 @@ namespace aiof.api.services
         private readonly IMapper _mapper;
         private readonly ILogger<AiofRepository> _logger;
 
-        public AiofRepository(AiofContext context, IMapper mapper, ILogger<AiofRepository> logger)
+        public AiofRepository(
+            ILogger<AiofRepository> logger, 
+            IMapper mapper, 
+            IAiofMetadataRepository metadataRepo,
+            AiofContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));

@@ -29,7 +29,7 @@ namespace aiof.api.services
             _client = client ?? throw new ArgumentNullException(nameof(client));
         }
 
-        public async Task<object> GetMetadataAsync(string endpoint, bool asJsonElement = false)
+        public async Task<string> GetMetadataAsync(string endpoint, bool asJsonElement = false)
         {
             try
             {
@@ -38,11 +38,7 @@ namespace aiof.api.services
                     .Content
                     .ReadAsStringAsync();
 
-                var responseObj = JsonSerializer.Deserialize<object>(response);
-
-                return asJsonElement
-                    ? (JsonElement)responseObj
-                    : responseObj;
+                return response;
             }
             catch (Exception e)
             {
@@ -71,9 +67,10 @@ namespace aiof.api.services
             }
         }
 
-        public async Task<object> GetFrequenciesAsync()
+        public async Task<IEnumerable<string>> GetFrequenciesAsync()
         {
-            return await GetMetadataAsync("frequencies");
+            return JsonSerializer.Deserialize<List<string>>(
+                await GetMetadataAsync("frequencies"));
         }
 
         public async Task<object> GetLoanPaymentsAsync(
