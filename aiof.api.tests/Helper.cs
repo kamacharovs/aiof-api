@@ -6,15 +6,20 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 using AutoMapper;
+using FluentValidation;
 
 using aiof.api.data;
 using aiof.api.services;
 
 namespace aiof.api.tests
 {
-    public class Helper<T>
+    public static class Helper
     {
-        public T GetRequiredService()
+        public const string Category = nameof(Category);
+        public const string UnitTest = nameof(UnitTest);
+        public const string IntegrationTest = nameof(IntegrationTest);
+        
+        public static T GetRequiredService<T>()
         {
             var provider = Provider();
 
@@ -24,14 +29,23 @@ namespace aiof.api.tests
             return provider.GetRequiredService<T>();
         }
 
-        private IServiceProvider Provider()
+        private static IServiceProvider Provider()
         {
             var services = new ServiceCollection();
 
+            services.AddScoped<IEnvConfiguration, EnvConfiguration>();
             services.AddScoped<IAiofRepository, AiofRepository>();
+            services.AddScoped<IAssetRepository, AssetRepository>();
+            services.AddScoped<IGoalRepository, GoalRepository>();
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddScoped<FakeDataManager>();
+
             services.AddSingleton(new MapperConfiguration(x => { x.AddProfile(new AutoMappingProfileDto()); }).CreateMapper());
+
+            services.AddScoped<AbstractValidator<AssetDto>, AssetDtoValidator>();
+            services.AddScoped<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>();
+            services.AddScoped<AbstractValidator<GoalDto>, GoalDtoValidator>();
+            services.AddScoped<AbstractValidator<FinanceDto>, FinanceDtoValidator>();
 
             services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
@@ -39,6 +53,5 @@ namespace aiof.api.tests
 
             return services.BuildServiceProvider();
         }
-
     }
 }

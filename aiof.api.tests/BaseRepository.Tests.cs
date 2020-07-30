@@ -15,8 +15,7 @@ namespace aiof.api.tests
 
         public BaseRepositoryTests()
         {
-            _assetRepo = new Helper<IBaseRepository<Asset>>()
-                .GetRequiredService() ?? throw new ArgumentNullException(nameof(IBaseRepository<Asset>));
+            _assetRepo = Helper.GetRequiredService<IBaseRepository<Asset>>() ?? throw new ArgumentNullException(nameof(IBaseRepository<Asset>));
         }
 
         [Theory]

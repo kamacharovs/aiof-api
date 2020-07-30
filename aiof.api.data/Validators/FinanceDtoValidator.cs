@@ -13,6 +13,9 @@ namespace aiof.api.data
         {
             ValidatorOptions.Global.CascadeMode = CascadeMode.StopOnFirstFailure;
 
+            RuleFor(x => x)
+                .NotNull();
+
             RuleFor(x => x.UserId)
                 .NotNull()
                 .NotEmpty();

@@ -15,8 +15,7 @@ namespace aiof.api.tests
 
         public AiofRepositoryTests()
         {
-            _repo = new Helper<IAiofRepository>()
-                .GetRequiredService() ?? throw new ArgumentNullException(nameof(IAiofRepository));
+            _repo = Helper.GetRequiredService<IAiofRepository>() ?? throw new ArgumentNullException(nameof(IAiofRepository));
         }
 
         [Theory]
