@@ -37,6 +37,7 @@ namespace aiof.api.core
         {
             services.AddScoped<IEnvConfiguration, EnvConfiguration>();
             services.AddScoped<IAiofRepository, AiofRepository>();
+            services.AddScoped<IAssetRepository, AssetRepository>();
             services.AddScoped<IGoalRepository, GoalRepository>();
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddScoped<FakeDataManager>();
