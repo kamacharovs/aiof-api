@@ -49,7 +49,6 @@ namespace aiof.api.data
                 new User()
                 {
                     Id = 1,
-                    PublicKey = Guid.NewGuid(),
                     FirstName = "Georgi",
                     LastName = "Kamacharov",
                     Email = "gkama@test.com",
@@ -58,7 +57,6 @@ namespace aiof.api.data
                 new User()
                 {
                     Id = 2,
-                    PublicKey = Guid.NewGuid(),
                     FirstName = "Jessie",
                     LastName = "Brown",
                     Email = "jbro@test.com",
@@ -74,7 +72,6 @@ namespace aiof.api.data
                 new Finance()
                 {
                     Id = 1,
-                    PublicKey = Guid.NewGuid(),
                     UserId = 1
                 }
             };
@@ -87,7 +84,6 @@ namespace aiof.api.data
                 new Asset()
                 {
                     Id = 1,
-                    PublicKey = Guid.NewGuid(),
                     Name = "car",
                     TypeName = "car",
                     Value = 14762.12F,
@@ -96,7 +92,6 @@ namespace aiof.api.data
                 new Asset()
                 {
                     Id = 2,
-                    PublicKey = Guid.NewGuid(),
                     Name = "house",
                     TypeName = "house",
                     Value = 250550F,
@@ -121,7 +116,6 @@ namespace aiof.api.data
                 new Liability()
                 {
                     Id = 1,
-                    PublicKey = Guid.NewGuid(),
                     Name = "car loan",
                     TypeName = "car loan",
                     Value = 24923.99F,
@@ -137,7 +131,6 @@ namespace aiof.api.data
                 new Goal()
                 {
                     Id = 1,
-                    PublicKey = Guid.NewGuid(),
                     Name = "savings",
                     TypeName = "long term",
                     Savings = true,
@@ -152,33 +145,27 @@ namespace aiof.api.data
             {
                 new AssetType()
                 {
-                    Name = "car",
-                    PublicKey = Guid.NewGuid()
+                    Name = "car"
                 },
                 new AssetType()
                 {
-                    Name = "house",
-                    PublicKey = Guid.NewGuid()
+                    Name = "house"
                 },
                 new AssetType()
                 {
-                    Name = "investment",
-                    PublicKey = Guid.NewGuid()
+                    Name = "investment"
                 },
                 new AssetType()
                 {
-                    Name = "stock",
-                    PublicKey = Guid.NewGuid()
+                    Name = "stock"
                 },
                 new AssetType()
                 {
-                    Name = "cash",
-                    PublicKey = Guid.NewGuid()
+                    Name = "cash"
                 },
                 new AssetType()
                 {
-                    Name = "other",
-                    PublicKey = Guid.NewGuid()
+                    Name = "other"
                 }
             };
         }
@@ -189,28 +176,23 @@ namespace aiof.api.data
             {
                 new LiabilityType()
                 {
-                    Name = "personal loan",
-                    PublicKey = Guid.NewGuid()
+                    Name = "personal loan"
                 },
                 new LiabilityType()
                 {
-                    Name = "car loan",
-                    PublicKey = Guid.NewGuid()
+                    Name = "car loan"
                 },
                 new LiabilityType()
                 {
-                    Name = "credit card",
-                    PublicKey = Guid.NewGuid()
+                    Name = "credit card"
                 },
                 new LiabilityType()
                 {
-                    Name = "mortgage",
-                    PublicKey = Guid.NewGuid()
+                    Name = "mortgage"
                 },
                 new LiabilityType()
                 {
-                    Name = "house renovation",
-                    PublicKey = Guid.NewGuid()
+                    Name = "house renovation"
                 },
                 new LiabilityType()
                 {
@@ -226,13 +208,11 @@ namespace aiof.api.data
             {
                 new GoalType()
                 {
-                    Name = "short term",
-                    PublicKey = Guid.NewGuid()
+                    Name = "short term"
                 },
                 new GoalType()
                 {
-                    Name = "long term",
-                    PublicKey = Guid.NewGuid()
+                    Name = "long term"
                 }
             };
         }
