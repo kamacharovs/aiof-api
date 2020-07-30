@@ -196,8 +196,7 @@ namespace aiof.api.data
                 },
                 new LiabilityType()
                 {
-                    Name = "other",
-                    PublicKey = Guid.NewGuid()
+                    Name = "other"
                 }
             };
         }
