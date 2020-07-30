@@ -177,10 +177,8 @@ namespace aiof.api.services
                 throw new AiofFriendlyException(HttpStatusCode.BadRequest,
                     $"Unable to update 'Asset'. '{nameof(AssetDto)}' parameter cannot be NULL");
 
-            var asset = await GetAssetAsync(id);
-
-            if (asset == null)
-                throw new AiofNotFoundException($"Unable to find 'Asset' with id='{id}'");
+            var asset = await GetAssetAsync(id)
+                ?? throw new AiofNotFoundException($"Unable to find 'Asset' with id='{id}'");
 
             _context.Assets
                 .Update(_mapper.Map(assetDto, asset as Asset));

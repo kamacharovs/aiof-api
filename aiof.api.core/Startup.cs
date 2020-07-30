@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 using AutoMapper;
+using FluentValidation;
 
 using aiof.api.data;
 using aiof.api.services;
@@ -46,6 +47,11 @@ namespace aiof.api.core
                     c.DefaultRequestHeaders.Add("Accept", "application/json");
                 })
                 .SetHandlerLifetime(TimeSpan.FromMinutes(5));
+
+            services.AddScoped<AbstractValidator<AssetDto>, AssetDtoValidator>();
+            services.AddScoped<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>();
+            services.AddScoped<AbstractValidator<GoalDto>, GoalDtoValidator>();
+            services.AddScoped<AbstractValidator<FinanceDto>, FinanceDtoValidator>();
 
             if (_env.IsDevelopment())
                 services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(nameof(AiofContext)));
