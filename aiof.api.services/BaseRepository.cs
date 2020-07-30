@@ -23,17 +23,24 @@ namespace aiof.api.services
         private readonly IMapper _mapper;
         private readonly ILogger<BaseRepository<T>> _logger;
 
-        public BaseRepository(AiofContext context, IMapper mapper, ILogger<BaseRepository<T>> logger)
+        public BaseRepository(
+            ILogger<BaseRepository<T>> logger,
+            IMapper mapper,
+            AiofContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public IQueryable<T> GetEntityQuery()
+        public IQueryable<T> GetEntityQuery(bool asNoTracking = true)
         {
-            return _context.Set<T>()
-                .AsNoTracking();
+            return asNoTracking
+                ? _context.Set<T>()
+                    .AsNoTracking()
+                    .AsQueryable()
+                : _context.Set<T>()
+                    .AsQueryable();
         }
 
         public async Task<T> GetEntityAsync(int id)
