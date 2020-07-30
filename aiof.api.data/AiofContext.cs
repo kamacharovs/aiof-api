@@ -34,7 +34,7 @@ namespace aiof.api.data
                     .IsUnique();
 
                 e.Property(x => x.Id).HasColumnName("id").ValueGeneratedOnAdd().IsRequired();
-                e.Property(x => x.PublicKey).HasColumnName("public_key").ValueGeneratedOnAdd().IsRequired();
+                e.Property(x => x.PublicKey).HasColumnName("public_key").IsRequired();
                 e.Property(x => x.FirstName).HasColumnName("first_name").HasMaxLength(200).IsRequired();
                 e.Property(x => x.LastName).HasColumnName("last_name").HasMaxLength(200).IsRequired();
                 e.Property(x => x.Email).HasColumnName("email").HasMaxLength(100).IsRequired();
@@ -48,7 +48,7 @@ namespace aiof.api.data
                 e.HasKey(x => x.Id);
 
                 e.Property(x => x.Id).HasColumnName("id").ValueGeneratedOnAdd().IsRequired();
-                e.Property(x => x.PublicKey).HasColumnName("public_key").ValueGeneratedOnAdd().IsRequired();
+                e.Property(x => x.PublicKey).HasColumnName("public_key").IsRequired();
                 e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
                 e.Property(x => x.TypeName).HasColumnName("type_name").HasMaxLength(100).IsRequired();
                 e.Property(x => x.Value).HasColumnName("value").IsRequired();
@@ -67,7 +67,7 @@ namespace aiof.api.data
                 e.HasKey(x => x.Id);
 
                 e.Property(x => x.Id).HasColumnName("id").ValueGeneratedOnAdd().IsRequired();
-                e.Property(x => x.PublicKey).HasColumnName("public_key").ValueGeneratedOnAdd().IsRequired();
+                e.Property(x => x.PublicKey).HasColumnName("public_key").IsRequired();
                 e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
                 e.Property(x => x.TypeName).HasColumnName("type_name").HasMaxLength(100).IsRequired();
                 e.Property(x => x.Value).HasColumnName("value").IsRequired();
@@ -86,7 +86,7 @@ namespace aiof.api.data
                 e.HasKey(x => x.Id);
 
                 e.Property(x => x.Id).HasColumnName("id").ValueGeneratedOnAdd().IsRequired();
-                e.Property(x => x.PublicKey).HasColumnName("public_key").ValueGeneratedOnAdd().IsRequired();
+                e.Property(x => x.PublicKey).HasColumnName("public_key").IsRequired();
                 e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
                 e.Property(x => x.TypeName).HasColumnName("type_name").HasMaxLength(100).IsRequired();
                 e.Property(x => x.Savings).HasColumnName("savings").HasColumnType("boolean");
@@ -105,7 +105,7 @@ namespace aiof.api.data
                 e.HasKey(x => x.Id);
 
                 e.Property(x => x.Id).HasColumnName("id").ValueGeneratedOnAdd().IsRequired();
-                e.Property(x => x.PublicKey).HasColumnName("public_key").ValueGeneratedOnAdd().IsRequired();
+                e.Property(x => x.PublicKey).HasColumnName("public_key").IsRequired();
                 e.Property(x => x.UserId).HasColumnName("user_id").IsRequired();
 
                 e.HasOne(x => x.User)
@@ -140,7 +140,7 @@ namespace aiof.api.data
                     .IsUnique();
 
                 e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
-                e.Property(x => x.PublicKey).HasColumnName("public_key").ValueGeneratedOnAdd().IsRequired();
+                e.Property(x => x.PublicKey).HasColumnName("public_key").IsRequired();
             });
 
             modelBuilder.Entity<LiabilityType>(e =>
@@ -153,7 +153,7 @@ namespace aiof.api.data
                     .IsUnique();
 
                 e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
-                e.Property(x => x.PublicKey).HasColumnName("public_key").ValueGeneratedOnAdd().IsRequired();
+                e.Property(x => x.PublicKey).HasColumnName("public_key").IsRequired();
             });
 
             modelBuilder.Entity<GoalType>(e =>
@@ -166,7 +166,7 @@ namespace aiof.api.data
                     .IsUnique();
 
                 e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
-                e.Property(x => x.PublicKey).HasColumnName("public_key").ValueGeneratedOnAdd().IsRequired();
+                e.Property(x => x.PublicKey).HasColumnName("public_key").IsRequired();
             });
         }
     }

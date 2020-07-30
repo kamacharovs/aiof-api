@@ -80,6 +80,10 @@ namespace aiof.api.services
 
             await _context.SaveChangesAsync();
 
+            await _context.Entry(goal)
+                .Reference(x => x.Type)
+                .LoadAsync();
+
             _logger.LogInformation($"Created {nameof(Goal)} with Id='{goal.Id}', PublicKey='{goal.PublicKey}' and FinanceId='{goal.FinanceId}'");
 
             return goal;
