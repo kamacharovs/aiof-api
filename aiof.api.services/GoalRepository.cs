@@ -71,7 +71,7 @@ namespace aiof.api.services
 
         public async Task<IGoal> AddGoalAsync(GoalDto goalDto)
         {
-            _goalDtoValidator.ValidateAndThrow(goalDto);
+            await _goalDtoValidator.ValidateAndThrowAsync(goalDto);
 
             var goal = _mapper.Map<Goal>(goalDto);
 
