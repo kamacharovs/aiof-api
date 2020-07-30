@@ -20,7 +20,9 @@ namespace aiof.api.data
             _featureManager = featureManager ?? throw new ArgumentNullException(nameof(featureManager));
         }
 
-        public string DatabaseConString => _config.GetConnectionString(Keys.Database);
+        public string DatabaseConString => _config.GetConnectionString(Keys.Database) ?? throw new KeyNotFoundException();
+
+        public string MetadataDefaultFrequency => _config[$"{Keys.Metadata}:{Keys.DefaultFrequency}"] ?? throw new KeyNotFoundException();
 
         public async Task<bool> IsEnabledAsync(FeatureFlags featureFlag)
         {

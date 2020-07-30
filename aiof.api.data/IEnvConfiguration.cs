@@ -10,6 +10,7 @@ namespace aiof.api.data
     public interface IEnvConfiguration
     {
         string DatabaseConString { get; }
+        string MetadataDefaultFrequency { get; }
 
         Task<bool> IsEnabledAsync(FeatureFlags featureFlag);
     }

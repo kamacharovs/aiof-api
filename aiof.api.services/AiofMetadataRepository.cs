@@ -15,13 +15,18 @@ namespace aiof.api.services
 {
     public class AiofMetadataRepository : IAiofMetadataRepository
     {
-        private readonly HttpClient _client;
         private readonly ILogger<AiofMetadataRepository> _logger;
+        private readonly IEnvConfiguration _envConfig;
+        private readonly HttpClient _client;
 
-        public AiofMetadataRepository(HttpClient client, ILogger<AiofMetadataRepository> logger)
+        public AiofMetadataRepository(
+            ILogger<AiofMetadataRepository> logger, 
+            IEnvConfiguration envConfig,
+            HttpClient client)
         {
-            _client = client ?? throw new ArgumentNullException(nameof(client));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _envConfig = envConfig ?? throw new ArgumentNullException(nameof(envConfig));
+            _client = client ?? throw new ArgumentNullException(nameof(client));
         }
 
         public async Task<object> GetMetadataAsync(string endpoint, bool asJsonElement = false)
@@ -71,8 +76,14 @@ namespace aiof.api.services
             return await GetMetadataAsync("frequencies");
         }
 
-        public async Task<object> GetLoanPaymentsAsync(double loanAmount, double numberOfYears, double rateOfInterest, string frequency = "monthly")
+        public async Task<object> GetLoanPaymentsAsync(
+            double loanAmount, 
+            double numberOfYears, 
+            double rateOfInterest, 
+            string frequency = null)
         {
+            frequency = frequency ?? _envConfig.MetadataDefaultFrequency;
+            
             _logger.LogInformation($"getting loan payments information. loanAmount='{loanAmount}', numberOfYears='{numberOfYears}', " +
                 $"rateOfInterest='{rateOfInterest}', frequency='{frequency}'");
 
