@@ -4,6 +4,8 @@ namespace aiof.api.data
 {
     public static class Keys
     {
+        public const string FeatureManagement = nameof(FeatureManagement);
+
         public const string Database = nameof(Database);
 
         public const string Metadata = nameof(Metadata);
