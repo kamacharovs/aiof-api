@@ -23,11 +23,6 @@ namespace aiof.api.services
         Task<ILiability> AddLiabilityAsync(LiabilityDto liability);
         IAsyncEnumerable<ILiability> AddLiabilitiesAsync(IEnumerable<LiabilityDto> liabilities);
         Task<ILiability> UpdateLiabilityAsync(int id, LiabilityDto liabilityDto);
-        Task<IGoal> GetGoalAsync(int id);
-        Task<IEnumerable<IGoalType>> GetGoalTypesAsync();
-        Task<IGoal> AddGoalAsync(GoalDto goal);
-        IAsyncEnumerable<IGoal> AddGoalsAsync(IEnumerable<GoalDto> goals);
-        Task<IGoal> UpdateGoalAsync(int id, GoalDto goalDto);
         Task<IFinance> GetFinanceAsync(int id, int userId);
         Task<IFinance> AddFinanceAsync(FinanceDto financeDto);
     }

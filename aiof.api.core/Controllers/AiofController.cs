@@ -141,40 +141,5 @@ namespace aiof.api.core.Controllers
         {
             return Ok(await _repo.UpdateLiabilityAsync(id, liabilityDto));
         }
-
-
-        [HttpGet]
-        [Route("goal/{id}")]
-        [ProducesResponseType(typeof(IGoal), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetGoalAsync([FromRoute]int id)
-        {
-            return Ok(await _repo.GetGoalAsync(id));
-        }
-
-        [HttpGet]
-        [Route("goal/types")]
-        [ProducesResponseType(typeof(IEnumerable<IGoalType>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetGoalTypesAsync()
-        {
-            return Ok(await _repo.GetGoalTypesAsync());
-        }
-
-        [HttpPost]
-        [Route("goal/add")]
-        [ProducesResponseType(typeof(IGoal), StatusCodes.Status201Created)]
-        public async Task<IActionResult> AddGoalAsync([FromBody]GoalDto goalDto)
-        {
-            return Created("goal", await _repo.AddGoalAsync(goalDto));
-        }
-
-        [HttpPut]
-        [Route("goal/{id}/update")]
-        [ProducesResponseType(typeof(IGoal), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UpdateGoalAsync([FromRoute]int id, [FromBody]GoalDto goalDto)
-        {
-            return Ok(await _repo.UpdateGoalAsync(id, goalDto));
-        }
     }
 }

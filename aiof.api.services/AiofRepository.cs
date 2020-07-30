@@ -66,21 +66,6 @@ namespace aiof.api.services
                 .AsQueryable();
         }
 
-        private IQueryable<Goal> GetGoalsQuery()
-        {
-            return _context.Goals
-                .Include(x => x.Type)
-                .AsNoTracking()
-                .AsQueryable();
-        }
-
-        private IQueryable<GoalType> GetGoalTypesQuery()
-        {
-            return _context.GoalTypes
-                .AsNoTracking()
-                .AsQueryable();
-        }
-
         private IQueryable<Finance> GetFinancesQuery()
         {
             return _context.Finances
@@ -238,58 +223,6 @@ namespace aiof.api.services
 
             return liability;
         }
-
-
-        public async Task<IGoal> GetGoalAsync(int id)
-        {
-            return await GetGoalsQuery()
-                .FirstOrDefaultAsync(x => x.Id == id);
-        }
-
-        public async Task<IEnumerable<IGoalType>> GetGoalTypesAsync()
-        {
-            return await GetGoalTypesQuery()
-                .OrderBy(x => x.Name)
-                .ToListAsync();
-        }
-
-        public async Task<IGoal> AddGoalAsync(GoalDto goalDto)
-        {
-            var goal = _mapper.Map<Goal>(goalDto);
-
-            await _context.Goals
-                .AddAsync(goal);
-
-            await _context.SaveChangesAsync();
-
-            return goal;
-        }
-
-        public async IAsyncEnumerable<IGoal> AddGoalsAsync(IEnumerable<GoalDto> goalDtos)
-        {
-            foreach (var goalDto in goalDtos)
-                yield return await AddGoalAsync(goalDto);
-        }
-
-        public async Task<IGoal> UpdateGoalAsync(int id, GoalDto goalDto)
-        {
-            if (goalDto == null)
-                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"Unable to update 'Goal'. '{nameof(GoalDto)}' parameter cannot be NULL");
-
-            var goal = await GetGoalAsync(id);
-
-            if (goal == null)
-                throw new AiofNotFoundException($"Unable to find 'Goal' with id='{id}'");
-
-            _context.Goals
-                .Update(_mapper.Map(goalDto, goal as Goal));
-
-            await _context.SaveChangesAsync();
-
-            return goal;
-        }
-
 
         public async Task<IFinance> GetFinanceAsync(int id, int userId)
         {
