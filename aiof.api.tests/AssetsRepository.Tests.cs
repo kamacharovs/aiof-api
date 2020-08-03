@@ -20,7 +20,7 @@ namespace aiof.api.tests
 
         [Theory]
         [MemberData(nameof(Helper.AssetsNameTypeNameValueFinanceId), MemberType = typeof(Helper))]
-        public async Task GetAssetAsync_Exists(
+        public async Task GetAssetAsync_By_NameTypeNameValueFinanceId_Exists(
             string name,
             string typeName,
             float? value,
@@ -34,6 +34,38 @@ namespace aiof.api.tests
 
             Assert.NotNull(asset);
             Assert.NotNull(asset.Name);
+            Assert.NotNull(asset.TypeName);
+            Assert.NotNull(asset.Type);
+            Assert.Equal(name, asset.Name);
+            Assert.Equal(typeName, asset.TypeName);
+            Assert.Equal(value, asset.Value);
+            Assert.Equal(financeId, asset.FinanceId);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.AssetsNameTypeNameValueFinanceId), MemberType = typeof(Helper))]
+        public async Task GetAssetAsync_By_AssetDto_Exists(
+            string name,
+            string typeName,
+            float? value,
+            int? financeId)
+        {
+            var asset = await _repo.GetAssetAsync(new AssetDto
+            {
+                Name = name,
+                TypeName = typeName,
+                Value = value,
+                FinanceId = financeId
+            });
+
+            Assert.NotNull(asset);
+            Assert.NotNull(asset.Name);
+            Assert.NotNull(asset.TypeName);
+            Assert.NotNull(asset.Type);
+            Assert.Equal(name, asset.Name);
+            Assert.Equal(typeName, asset.TypeName);
+            Assert.Equal(value, asset.Value);
+            Assert.Equal(financeId, asset.FinanceId);
         }
     }
 }
