@@ -24,7 +24,7 @@ namespace aiof.api.tests
         public async Task GetAssetAsync_By_NameTypeNameValueFinanceId_Exists(
             string name,
             string typeName,
-            float? value,
+            decimal? value,
             int? financeId)
         {
             var asset = await _repo.GetAssetAsync(
@@ -48,7 +48,7 @@ namespace aiof.api.tests
         public async Task GetAssetAsync_By_AssetDto_Exists(
             string name,
             string typeName,
-            float? value,
+            decimal? value,
             int? financeId)
         {
             var asset = await _repo.GetAssetAsync(new AssetDto
@@ -116,7 +116,7 @@ namespace aiof.api.tests
         public async Task AddAssetAsync_AlreadyExists_Throws_AiofFriendlyException(
             string name,
             string typeName,
-            float? value,
+            decimal? value,
             int? financeId)
         {
             await Assert.ThrowsAsync<AiofFriendlyException>(() => _repo.AddAssetAsync(new AssetDto
@@ -133,7 +133,7 @@ namespace aiof.api.tests
         public async Task AddAssetAsync_Is_Successful(
             string name,
             string typeName,
-            float? value,
+            decimal? value,
             int? financeId)
         {
             var asset = await _repo.AddAssetAsync(new AssetDto

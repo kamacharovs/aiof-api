@@ -12,7 +12,7 @@ namespace aiof.api.data
         public string Name { get; set; }
         public string TypeName { get; set; }
         public AssetType Type { get; set; }
-        public float Value { get; set; } 
+        public decimal Value { get; set; } 
         public int? FinanceId { get; set; }
     }
 
@@ -20,7 +20,7 @@ namespace aiof.api.data
     {
         public string Name { get; set; }
         public string TypeName { get; set; }
-        public float? Value { get; set; }
+        public decimal? Value { get; set; }
         public int? FinanceId { get; set; }
     }
 }

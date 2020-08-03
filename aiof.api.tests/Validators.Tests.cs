@@ -95,11 +95,11 @@ namespace aiof.api.tests
                 UserId = 1,
                 AssetDtos = new List<AssetDto>
                 {
-                    new AssetDto { Name = "car", TypeName = "car", Value = 1500F }
+                    new AssetDto { Name = "car", TypeName = "car", Value = 1500M }
                 },
                 LiabilityDtos = new List<LiabilityDto>
                 {
-                    new LiabilityDto { Name = "car loan", TypeName = "car loan", Value = 1500F }
+                    new LiabilityDto { Name = "car loan", TypeName = "car loan", Value = 1500M }
                 }
             };
 

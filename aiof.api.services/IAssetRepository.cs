@@ -12,7 +12,7 @@ namespace aiof.api.services
         Task<IAsset> GetAssetAsync(
             string name,
             string typeName,
-            float? value,
+            decimal? value,
             int? financeId);
         Task<IAsset> GetAssetAsync(AssetDto assetDto);
         Task<IEnumerable<IAsset>> GetAssetsAsync(string typeName);

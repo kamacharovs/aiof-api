@@ -88,7 +88,7 @@ namespace aiof.api.data
                     Id = 1,
                     Name = "car",
                     TypeName = "car",
-                    Value = 14762.12F,
+                    Value = 14762.12M,
                     FinanceId = 1
                 },
                 new Asset()
@@ -96,7 +96,7 @@ namespace aiof.api.data
                     Id = 2,
                     Name = "house",
                     TypeName = "house",
-                    Value = 250550F,
+                    Value = 250550M,
                     FinanceId = 1
                 },
                 new Asset
@@ -105,7 +105,7 @@ namespace aiof.api.data
                     PublicKey = Guid.Parse("dbf79a48-0504-4bd0-ad00-8cbc3044e585"),
                     Name = "hardcoded guid",
                     TypeName = "house",
-                    Value = 999999F,
+                    Value = 999999M,
                     FinanceId = 1
                 }
             };
@@ -120,7 +120,7 @@ namespace aiof.api.data
                     Id = 1,
                     Name = "car loan",
                     TypeName = "car loan",
-                    Value = 24923.99F,
+                    Value = 24923.99M,
                     FinanceId = 1
                 }
             };

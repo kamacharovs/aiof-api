@@ -65,7 +65,7 @@ namespace aiof.api.services
         public async Task<IAsset> GetAssetAsync(
             string name,
             string typeName,
-            float? value,
+            decimal? value,
             int? financeId)
         {
             return await GetAssetsQuery()
