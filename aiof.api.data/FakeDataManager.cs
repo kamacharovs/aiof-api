@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace aiof.api.data
 {
@@ -215,5 +215,41 @@ namespace aiof.api.data
                 }
             };
         }
+
+
+
+        #region Unit Tests
+        public IEnumerable<object[]> GetFakeAssetsData(
+            bool id = false,
+            bool name = false,
+            bool typeName = false,
+            bool value = false,
+            bool financeId = false)
+        {
+            var fakeAssets = GetFakeAssets()
+                .ToArray();
+
+            var toReturn = new List<object[]>();
+
+            if (name
+                && typeName
+                && value
+                && financeId)
+            {
+                foreach (var fakeAsset in fakeAssets)
+                {
+                    toReturn.Add(new object[] 
+                    { 
+                        fakeAsset.Name, 
+                        fakeAsset.TypeName, 
+                        fakeAsset.Value, 
+                        fakeAsset.FinanceId
+                    });
+                }
+            }
+
+            return toReturn;
+        }
+        #endregion
     }
 }
