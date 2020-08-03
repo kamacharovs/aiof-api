@@ -78,25 +78,25 @@ namespace aiof.api.tests
                 It.IsAny<double>(),
                 It.IsAny<string>()
             )).ReturnsAsync(
-                new List<object>
+                new List<LoanPayment>
                 {
-                    new
+                    new LoanPayment
                     {
-                        initialBalance =  15000,
-                        endingBalance = 14818.14,
-                        interest = 56.25,
-                        month = 1,
-                        payment = 238.11,
-                        principal = 181.86
+                        InitialBalance =  15000F,
+                        EndingBalance = 14818.14F,
+                        Interest = 56.25F,
+                        Month = 1,
+                        Payment = 238.11F,
+                        Principal = 181.86F
                     },
-                    new
+                    new LoanPayment
                     {
-                        initialBalance =  14818.14,
-                        endingBalance = 14635.6,
-                        interest = 55.57,
-                        month = 2,
-                        payment = 238.11,
-                        principal = 182.54
+                        InitialBalance =  14818.14F,
+                        EndingBalance = 14635.6F,
+                        Interest = 55.57F,
+                        Month = 2,
+                        Payment = 238.11F,
+                        Principal = 182.54F
                     }
                 }
             );

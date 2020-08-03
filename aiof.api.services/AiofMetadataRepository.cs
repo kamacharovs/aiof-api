@@ -29,16 +29,14 @@ namespace aiof.api.services
             _client = client ?? throw new ArgumentNullException(nameof(client));
         }
 
-        public async Task<string> GetMetadataAsync(string endpoint, bool asJsonElement = false)
+        public async Task<string> GetMetadataAsync(string endpoint)
         {
             try
             {
-                var response = await (await _client.GetAsync(endpoint))
+                return await (await _client.GetAsync(endpoint))
                     .EnsureSuccessStatusCode()
                     .Content
                     .ReadAsStringAsync();
-
-                return response;
             }
             catch (Exception e)
             {
@@ -46,20 +44,16 @@ namespace aiof.api.services
             }
         }
 
-        public async Task<object> PostMetadataAsync(string endpoint, string jsonContent, bool asJsonElement = false)
+        public async Task<string> PostMetadataAsync(
+            string endpoint, 
+            string jsonContent)
         {
             try
             {
-                var response = await (await _client.PostAsync(endpoint, new StringContent(jsonContent, Encoding.UTF8, "application/json")))
+                return await (await _client.PostAsync(endpoint, new StringContent(jsonContent, Encoding.UTF8, "application/json")))
                     .EnsureSuccessStatusCode()
                     .Content
                     .ReadAsStringAsync();
-
-                var responseObj = JsonSerializer.Deserialize<object>(response);
-
-                return asJsonElement
-                    ? (JsonElement)responseObj
-                    : responseObj;
             }
             catch (Exception e)
             {
@@ -73,7 +67,7 @@ namespace aiof.api.services
                 await GetMetadataAsync("frequencies"));
         }
 
-        public async Task<object> GetLoanPaymentsAsync(
+        public async Task<IEnumerable<ILoanPayment>> GetLoanPaymentsAsync(
             double loanAmount, 
             double numberOfYears, 
             double rateOfInterest, 
@@ -84,13 +78,14 @@ namespace aiof.api.services
             _logger.LogInformation($"getting loan payments information. loanAmount='{loanAmount}', numberOfYears='{numberOfYears}', " +
                 $"rateOfInterest='{rateOfInterest}', frequency='{frequency}'");
 
-            return await PostMetadataAsync($"loan/payments/{frequency}",
+            return JsonSerializer.Deserialize<List<LoanPayment>>(
+                await PostMetadataAsync($"loan/payments/{frequency}",
                 JsonSerializer.Serialize(new
                 {
                     loanAmount,
                     numberOfYears,
                     rateOfInterest
-                }));
+                })));
         }
     }
 }
