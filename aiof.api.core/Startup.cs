@@ -58,12 +58,7 @@ namespace aiof.api.core
             if (_env.IsDevelopment())
                 services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(nameof(AiofContext)));
             else
-                services.AddDbContext<AiofContext>(o =>
-                    o.UseNpgsql(_configuration.GetConnectionString("PostgreSQL")
-                        .Replace("$DB_HOST", _configuration["DB_HOST"])
-                        .Replace("$DB_NAME", _configuration["DB_NAME"])
-                        .Replace("$DB_USER", _configuration["DB_USER"])
-                        .Replace("$DB_PASSWORD", _configuration["DB_PASSWORD"])));
+                services.AddDbContext<AiofContext>(o => o.UseNpgsql(_configuration.GetConnectionString(Keys.Database)));
 
             services.AddHealthChecks();
             services.AddLogging();
