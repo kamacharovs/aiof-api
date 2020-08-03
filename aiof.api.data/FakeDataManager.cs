@@ -89,7 +89,7 @@ namespace aiof.api.data
                     Name = "car",
                     TypeName = "car",
                     Value = 14762.12M,
-                    FinanceId = 1
+                    UserId = 1
                 },
                 new Asset()
                 {
@@ -97,7 +97,7 @@ namespace aiof.api.data
                     Name = "house",
                     TypeName = "house",
                     Value = 250550M,
-                    FinanceId = 1
+                    UserId = 1
                 },
                 new Asset
                 {
@@ -106,7 +106,7 @@ namespace aiof.api.data
                     Name = "hardcoded guid",
                     TypeName = "house",
                     Value = 999999M,
-                    FinanceId = 1
+                    UserId = 1
                 }
             };
         }
@@ -226,7 +226,7 @@ namespace aiof.api.data
             bool name = false,
             bool typeName = false,
             bool value = false,
-            bool financeId = false)
+            bool userId = false)
         {
             var fakeAssets = GetFakeAssets()
                 .ToArray();
@@ -236,7 +236,7 @@ namespace aiof.api.data
             if (name
                 && typeName
                 && value
-                && financeId)
+                && userId)
             {
                 foreach (var fakeAsset in fakeAssets)
                 {
@@ -245,7 +245,7 @@ namespace aiof.api.data
                         fakeAsset.Name, 
                         fakeAsset.TypeName, 
                         fakeAsset.Value, 
-                        fakeAsset.FinanceId
+                        fakeAsset.UserId
                     });
                 }
             }

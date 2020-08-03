@@ -110,13 +110,13 @@ namespace aiof.api.tests
         static FakeDataManager _Fake
             => Helper.GetRequiredService<FakeDataManager>() ?? throw new ArgumentNullException(nameof(FakeDataManager));
 
-        public static IEnumerable<object[]> AssetsNameTypeNameValueFinanceId()
+        public static IEnumerable<object[]> AssetsNameTypeNameValueUserId()
         {
             return _Fake.GetFakeAssetsData(
                 name: true,
                 typeName: true,
                 value: true,
-                financeId: true);
+                userId: true);
         }
         public static IEnumerable<object[]> AssetsId()
         {
@@ -135,7 +135,7 @@ namespace aiof.api.tests
                 .RuleFor(x => x.Name, f => f.Random.String())
                 .RuleFor(x => x.TypeName, f => "car")
                 .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000))
-                .RuleFor(x => x.FinanceId, f => 1)
+                .RuleFor(x => x.UserId, f => 1)
                 .Generate(3);
 
             var toReturn = new List<object[]>();
@@ -147,7 +147,7 @@ namespace aiof.api.tests
                     fakeAssetDto.Name, 
                     fakeAssetDto.TypeName, 
                     fakeAssetDto.Value, 
-                    fakeAssetDto.FinanceId
+                    fakeAssetDto.UserId
                 });
             }
 

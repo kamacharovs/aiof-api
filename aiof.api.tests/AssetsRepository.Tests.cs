@@ -20,18 +20,18 @@ namespace aiof.api.tests
         }
 
         [Theory]
-        [MemberData(nameof(Helper.AssetsNameTypeNameValueFinanceId), MemberType = typeof(Helper))]
-        public async Task GetAssetAsync_By_NameTypeNameValueFinanceId_Exists(
+        [MemberData(nameof(Helper.AssetsNameTypeNameValueUserId), MemberType = typeof(Helper))]
+        public async Task GetAssetAsync_By_NameTypeNameValueUserId_Exists(
             string name,
             string typeName,
             decimal? value,
-            int? financeId)
+            int? userId)
         {
             var asset = await _repo.GetAssetAsync(
                 name,
                 typeName,
                 value,
-                financeId);
+                userId);
 
             Assert.NotNull(asset);
             Assert.NotNull(asset.Name);
@@ -40,23 +40,23 @@ namespace aiof.api.tests
             Assert.Equal(name, asset.Name);
             Assert.Equal(typeName, asset.TypeName);
             Assert.Equal(value, asset.Value);
-            Assert.Equal(financeId, asset.FinanceId);
+            Assert.Equal(userId, asset.UserId);
         }
 
         [Theory]
-        [MemberData(nameof(Helper.AssetsNameTypeNameValueFinanceId), MemberType = typeof(Helper))]
+        [MemberData(nameof(Helper.AssetsNameTypeNameValueUserId), MemberType = typeof(Helper))]
         public async Task GetAssetAsync_By_AssetDto_Exists(
             string name,
             string typeName,
             decimal? value,
-            int? financeId)
+            int? userId)
         {
             var asset = await _repo.GetAssetAsync(new AssetDto
             {
                 Name = name,
                 TypeName = typeName,
                 Value = value,
-                FinanceId = financeId
+                UserId = userId
             });
 
             Assert.NotNull(asset);
@@ -66,7 +66,7 @@ namespace aiof.api.tests
             Assert.Equal(name, asset.Name);
             Assert.Equal(typeName, asset.TypeName);
             Assert.Equal(value, asset.Value);
-            Assert.Equal(financeId, asset.FinanceId);
+            Assert.Equal(userId, asset.UserId);
         }
 
         [Theory]
@@ -112,19 +112,19 @@ namespace aiof.api.tests
         }
 
         [Theory]
-        [MemberData(nameof(Helper.AssetsNameTypeNameValueFinanceId), MemberType = typeof(Helper))]
+        [MemberData(nameof(Helper.AssetsNameTypeNameValueUserId), MemberType = typeof(Helper))]
         public async Task AddAssetAsync_AlreadyExists_Throws_AiofFriendlyException(
             string name,
             string typeName,
             decimal? value,
-            int? financeId)
+            int? userId)
         {
             await Assert.ThrowsAsync<AiofFriendlyException>(() => _repo.AddAssetAsync(new AssetDto
             {
                 Name = name,
                 TypeName = typeName,
                 Value = value,
-                FinanceId = financeId
+                UserId = userId
             }));
         }
 
@@ -134,14 +134,14 @@ namespace aiof.api.tests
             string name,
             string typeName,
             decimal? value,
-            int? financeId)
+            int? userId)
         {
             var asset = await _repo.AddAssetAsync(new AssetDto
             {
                 Name = name,
                 TypeName = typeName,
                 Value = value,
-                FinanceId = financeId
+                UserId = userId
             });
 
             Assert.NotNull(asset);
@@ -151,7 +151,7 @@ namespace aiof.api.tests
             Assert.Equal(name, asset.Name);
             Assert.Equal(typeName, asset.TypeName);
             Assert.Equal(value, asset.Value);
-            Assert.Equal(financeId, asset.FinanceId);
+            Assert.Equal(userId, asset.UserId);
         }
     }
 }

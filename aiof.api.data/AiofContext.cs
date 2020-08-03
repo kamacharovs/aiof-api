@@ -52,12 +52,16 @@ namespace aiof.api.data
                 e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
                 e.Property(x => x.TypeName).HasColumnName("type_name").HasMaxLength(100).IsRequired();
                 e.Property(x => x.Value).HasColumnName("value").IsRequired();
-                e.Property(x => x.FinanceId).HasColumnName("finance_id");
+                e.Property(x => x.UserId).HasColumnName("user_id");
 
                 e.HasOne(x => x.Type)
                     .WithMany()
                     .HasForeignKey(x => x.TypeName)
                     .IsRequired();
+
+                e.HasOne(x => x.User)
+                    .WithMany()
+                    .HasForeignKey(x => x.UserId);
             });
 
             modelBuilder.Entity<Liability>(e =>
@@ -116,11 +120,6 @@ namespace aiof.api.data
                     .WithMany()
                     .HasForeignKey(x => x.UserId)
                     .IsRequired()
-                    .OnDelete(DeleteBehavior.Cascade);
-
-                e.HasMany(x => x.Assets)
-                    .WithOne()
-                    .HasForeignKey(x => x.FinanceId)
                     .OnDelete(DeleteBehavior.Cascade);
 
                 e.HasMany(x => x.Liabilities)

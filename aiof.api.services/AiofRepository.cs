@@ -179,11 +179,6 @@ namespace aiof.api.services
             await _context.SaveChangesAsync();
 
             //TODO: find a better way to do this
-            foreach (var dto in financeDto.AssetDtos)
-                dto.FinanceId = finance.Id;
-            await _context.Assets
-                .AddAsync(_mapper.Map<Asset>(financeDto.AssetDtos.First()));
-            await _context.SaveChangesAsync();
 
             return await GetFinanceAsync(
                 finance.Id,
