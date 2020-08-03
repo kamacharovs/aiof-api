@@ -4,11 +4,11 @@ namespace aiof.api.data
 {
     public class LoanPayment : ILoanPayment
     {
-        public float InitialBalance { get; set; }
-        public float EndingBalance { get; set; }
-        public float Interest { get; set; }
+        public decimal InitialBalance { get; set; }
+        public decimal EndingBalance { get; set; }
+        public decimal Interest { get; set; }
         public int Month { get; set; }
-        public float Payment { get; set; }
-        public float Principal { get; set; }
+        public decimal Payment { get; set; }
+        public decimal Principal { get; set; }
     }
 }

@@ -15,9 +15,9 @@ namespace aiof.api.services
             string jsonContent);
         Task<IEnumerable<string>> GetFrequenciesAsync();
         Task<IEnumerable<ILoanPayment>> GetLoanPaymentsAsync(
-            double loanAmount, 
-            double numberOfYears, 
-            double rateOfInterest, 
+            decimal loanAmount, 
+            decimal numberOfYears, 
+            decimal rateOfInterest, 
             string frequency = "monthly");
     }
 }

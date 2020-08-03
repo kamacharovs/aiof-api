@@ -68,9 +68,9 @@ namespace aiof.api.services
         }
 
         public async Task<IEnumerable<ILoanPayment>> GetLoanPaymentsAsync(
-            double loanAmount, 
-            double numberOfYears, 
-            double rateOfInterest, 
+            decimal loanAmount, 
+            decimal numberOfYears, 
+            decimal rateOfInterest, 
             string frequency = null)
         {
             frequency = frequency ?? _envConfig.MetadataDefaultFrequency;

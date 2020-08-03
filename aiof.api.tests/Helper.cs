@@ -73,30 +73,30 @@ namespace aiof.api.tests
                     });
 
             mockedRepo.Setup(x => x.GetLoanPaymentsAsync(
-                It.IsAny<double>(),
-                It.IsAny<double>(),
-                It.IsAny<double>(),
+                It.IsAny<decimal>(),
+                It.IsAny<decimal>(),
+                It.IsAny<decimal>(),
                 It.IsAny<string>()
             )).ReturnsAsync(
                 new List<LoanPayment>
                 {
                     new LoanPayment
                     {
-                        InitialBalance =  15000F,
-                        EndingBalance = 14818.14F,
-                        Interest = 56.25F,
+                        InitialBalance =  15000,
+                        EndingBalance = 14818.14M,
+                        Interest = 56.25M,
                         Month = 1,
-                        Payment = 238.11F,
-                        Principal = 181.86F
+                        Payment = 238.11M,
+                        Principal = 181.86M
                     },
                     new LoanPayment
                     {
-                        InitialBalance =  14818.14F,
-                        EndingBalance = 14635.6F,
-                        Interest = 55.57F,
+                        InitialBalance =  14818.14M,
+                        EndingBalance = 14635.6M,
+                        Interest = 55.57M,
                         Month = 2,
-                        Payment = 238.11F,
-                        Principal = 182.54F
+                        Payment = 238.11M,
+                        Principal = 182.54M
                     }
                 }
             );

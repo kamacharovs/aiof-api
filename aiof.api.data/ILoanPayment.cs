@@ -4,11 +4,11 @@ namespace aiof.api.data
 {
     public interface ILoanPayment
     {
-        float InitialBalance { get; set; }
-        float EndingBalance { get; set; }
-        float Interest { get; set; }
+        decimal InitialBalance { get; set; }
+        decimal EndingBalance { get; set; }
+        decimal Interest { get; set; }
         int Month { get; set; }
-        float Payment { get; set; }
-        float Principal { get; set; }
+        decimal Payment { get; set; }
+        decimal Principal { get; set; }
     }
 }
