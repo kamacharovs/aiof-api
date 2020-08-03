@@ -117,16 +117,5 @@ namespace aiof.api.tests
             }
         }
         */
-
-        [Theory]
-        [InlineData(1, 1)]
-        public async Task GetFinanceAsync_Exists(int id, int userId)
-        {
-            var finance = await _repo.GetFinanceAsync(id, userId);
-
-            Assert.NotNull(finance);
-            Assert.NotEmpty(finance.Assets);
-            Assert.NotEmpty(finance.Liabilities);
-        }
     }
 }

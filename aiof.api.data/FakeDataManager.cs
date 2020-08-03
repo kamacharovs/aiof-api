@@ -18,9 +18,6 @@ namespace aiof.api.data
             _context.Users
                 .AddRange(GetFakeUsers());
 
-            _context.Finances
-                .AddRange(GetFakeFinances());
-
             _context.AssetTypes
                 .AddRange(GetFakeAssetTypes());
 
@@ -67,18 +64,6 @@ namespace aiof.api.data
             };
         }
 
-        public IEnumerable<Finance> GetFakeFinances()
-        {
-            return new List<Finance>()
-            {
-                new Finance()
-                {
-                    Id = 1,
-                    UserId = 1
-                }
-            };
-        }
-
         public IEnumerable<Asset> GetFakeAssets()
         {
             return new List<Asset>
@@ -121,7 +106,7 @@ namespace aiof.api.data
                     Name = "car loan",
                     TypeName = "car loan",
                     Value = 24923.99M,
-                    FinanceId = 1
+                    UserId = 1
                 }
             };
         }

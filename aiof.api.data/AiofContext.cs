@@ -13,7 +13,6 @@ namespace aiof.api.data
         public virtual DbSet<Asset> Assets { get; set; }
         public virtual DbSet<Liability> Liabilities { get; set; }
         public virtual DbSet<Goal> Goals { get; set; }
-        public virtual DbSet<Finance> Finances { get; set; }
         public virtual DbSet<AssetType> AssetTypes { get; set; }
         public virtual DbSet<LiabilityType> LiabilityTypes { get; set; }
         public virtual DbSet<GoalType> GoalTypes { get; set; }
@@ -75,12 +74,16 @@ namespace aiof.api.data
                 e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
                 e.Property(x => x.TypeName).HasColumnName("type_name").HasMaxLength(100).IsRequired();
                 e.Property(x => x.Value).HasColumnName("value").IsRequired();
-                e.Property(x => x.FinanceId).HasColumnName("finance_id");
+                e.Property(x => x.UserId).HasColumnName("user_id");
 
                 e.HasOne(x => x.Type)
                     .WithMany()
                     .HasForeignKey(x => x.TypeName)
                     .IsRequired();
+
+                e.HasOne(x => x.User)
+                    .WithMany()
+                    .HasForeignKey(x => x.UserId);
             });
 
             modelBuilder.Entity<Goal>(e =>
@@ -104,28 +107,6 @@ namespace aiof.api.data
                 e.HasOne(x => x.User)
                     .WithMany()
                     .HasForeignKey(x => x.UserId);
-            });
-
-            modelBuilder.Entity<Finance>(e =>
-            {
-                e.ToTable("finance");
-
-                e.HasKey(x => x.Id);
-
-                e.Property(x => x.Id).HasColumnName("id").ValueGeneratedOnAdd().IsRequired();
-                e.Property(x => x.PublicKey).HasColumnName("public_key").IsRequired();
-                e.Property(x => x.UserId).HasColumnName("user_id").IsRequired();
-
-                e.HasOne(x => x.User)
-                    .WithMany()
-                    .HasForeignKey(x => x.UserId)
-                    .IsRequired()
-                    .OnDelete(DeleteBehavior.Cascade);
-
-                e.HasMany(x => x.Liabilities)
-                    .WithOne()
-                    .HasForeignKey(x => x.FinanceId)
-                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<AssetType>(e =>

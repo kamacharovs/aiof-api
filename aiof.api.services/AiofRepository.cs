@@ -22,18 +22,15 @@ namespace aiof.api.services
         private readonly ILogger<AiofRepository> _logger;
         private readonly IMapper _mapper;
         private readonly AiofContext _context;
-        private readonly AbstractValidator<FinanceDto> _financeDtoValidator;
 
         public AiofRepository(
             ILogger<AiofRepository> logger, 
             IMapper mapper, 
-            AiofContext context,
-            AbstractValidator<FinanceDto> financeDtoValidator)
+            AiofContext context)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _context = context ?? throw new ArgumentNullException(nameof(context));
-            _financeDtoValidator = financeDtoValidator ?? throw new ArgumentNullException(nameof(financeDtoValidator));
         }
 
         private IQueryable<User> GetUsersQuery()
@@ -54,18 +51,6 @@ namespace aiof.api.services
         private IQueryable<LiabilityType> GetLiabilityTypesQuery()
         {
             return _context.LiabilityTypes
-                .AsNoTracking()
-                .AsQueryable();
-        }
-
-        private IQueryable<Finance> GetFinancesQuery()
-        {
-            return _context.Finances
-                .Include(x => x.User)
-                .Include(x => x.Assets)
-                    .ThenInclude(x => x.Type)
-                .Include(x => x.Liabilities)
-                    .ThenInclude(x => x.Type)
                 .AsNoTracking()
                 .AsQueryable();
         }
@@ -155,35 +140,6 @@ namespace aiof.api.services
             await _context.SaveChangesAsync();
 
             return liability;
-        }
-
-        public async Task<IFinance> GetFinanceAsync(
-            int id, 
-            int userId)
-        {
-            return await GetFinancesQuery()
-                .FirstOrDefaultAsync(x => x.Id == id
-                    && x.UserId == userId)
-                ?? throw new AiofNotFoundException($"{nameof(Finance)} with Id='{id}' and UserId='{userId}' doesn't exist");
-        }
-
-        public async Task<IFinance> AddFinanceAsync(FinanceDto financeDto)
-        {
-            _financeDtoValidator.ValidateAndThrow(financeDto);
-
-            var finance = _mapper.Map<Finance>(financeDto);
-
-            await _context.Finances
-                .AddAsync(finance);
-
-            await _context.SaveChangesAsync();
-
-            //TODO: find a better way to do this
-
-            return await GetFinanceAsync(
-                finance.Id,
-                finance.UserId
-            );
         }
     }
 }

@@ -13,7 +13,8 @@ namespace aiof.api.data
         public string TypeName { get; set; }
         public LiabilityType Type { get; set; }
         public decimal Value { get; set; }
-        public int? FinanceId { get; set; }
+        public int? UserId { get; set; }
+        public User User { get; set; }
     }
 
     public class LiabilityDto
@@ -21,6 +22,6 @@ namespace aiof.api.data
         public string Name { get; set; }
         public string TypeName { get; set; }
         public decimal? Value { get; set; }
-        public int? FinanceId { get; set; }
+        public int? UserId { get; set; }
     }
 }

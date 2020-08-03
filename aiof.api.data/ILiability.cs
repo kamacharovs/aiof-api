@@ -13,6 +13,7 @@ namespace aiof.api.data
         string TypeName { get; set; }
         LiabilityType Type { get; set; }
         decimal Value { get; set; }
-        int? FinanceId { get; set; }
+        int? UserId { get; set; }
+        User User { get; set; }
     }
 }
