@@ -102,5 +102,22 @@ namespace aiof.api.tests
 
             return mockedRepo.Object;
         }
+
+
+
+        #region Unit Tests
+        static FakeDataManager _Fake
+            => Helper.GetRequiredService<FakeDataManager>() ?? throw new ArgumentNullException(nameof(FakeDataManager));
+
+        public static IEnumerable<object[]> AssetsNameTypeNameValueFinanceId()
+        {
+            return _Fake.GetFakeAssetsData(
+                name: true,
+                typeName: true,
+                value: true,
+                financeId: true
+            );
+        }
+        #endregion
     }
 }
