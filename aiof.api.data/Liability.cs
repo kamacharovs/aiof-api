@@ -14,7 +14,6 @@ namespace aiof.api.data
         [JsonIgnore] public LiabilityType Type { get; set; }
         public decimal Value { get; set; }
         [JsonIgnore] public int? UserId { get; set; }
-        [JsonIgnore] public User User { get; set; }
     }
 
     public class LiabilityDto

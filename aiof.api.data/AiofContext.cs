@@ -72,10 +72,6 @@ namespace aiof.api.data
                     .WithMany()
                     .HasForeignKey(x => x.TypeName)
                     .IsRequired();
-
-                e.HasOne(x => x.User)
-                    .WithMany()
-                    .HasForeignKey(x => x.UserId);
             });
 
             modelBuilder.Entity<Liability>(e =>
@@ -95,10 +91,6 @@ namespace aiof.api.data
                     .WithMany()
                     .HasForeignKey(x => x.TypeName)
                     .IsRequired();
-
-                e.HasOne(x => x.User)
-                    .WithMany()
-                    .HasForeignKey(x => x.UserId);
             });
 
             modelBuilder.Entity<Goal>(e =>
@@ -118,10 +110,6 @@ namespace aiof.api.data
                     .WithMany()
                     .HasForeignKey(x => x.TypeName)
                     .IsRequired();
-
-                e.HasOne(x => x.User)
-                    .WithMany()
-                    .HasForeignKey(x => x.UserId);
             });
 
             modelBuilder.Entity<AssetType>(e =>

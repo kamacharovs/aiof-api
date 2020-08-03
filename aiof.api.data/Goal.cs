@@ -14,7 +14,6 @@ namespace aiof.api.data
         [JsonIgnore] public GoalType Type { get; set; }
         public bool Savings { get; set; } = false;
         [JsonIgnore] public int? UserId { get; set; }
-        [JsonIgnore] public User User { get; set; }
     }
 
     public class GoalDto

@@ -38,12 +38,10 @@ namespace aiof.api.services
             return asNoTracking
                 ? _context.Goals
                     .Include(x => x.Type)
-                    .Include(x => x.User)
                     .AsNoTracking()
                     .AsQueryable()
                 : _context.Goals
                     .Include(x => x.Type)
-                    .Include(x => x.User)
                     .AsQueryable();
         }
 

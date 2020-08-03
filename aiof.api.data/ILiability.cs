@@ -14,6 +14,5 @@ namespace aiof.api.data
         LiabilityType Type { get; set; }
         decimal Value { get; set; }
         int? UserId { get; set; }
-        User User { get; set; }
     }
 }

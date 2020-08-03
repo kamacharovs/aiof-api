@@ -13,6 +13,5 @@ namespace aiof.api.data
         AssetType Type { get; set; }
         decimal Value { get; set; }
         int? UserId { get; set; }
-        User User { get; set; }
     }
 }

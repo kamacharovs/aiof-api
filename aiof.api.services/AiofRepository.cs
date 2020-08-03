@@ -36,6 +36,9 @@ namespace aiof.api.services
         private IQueryable<User> GetUsersQuery()
         {
             return _context.Users
+                .Include(x => x.Assets)
+                .Include(x => x.Goals)
+                .Include(x => x.Liabilities)
                 .AsNoTracking()
                 .AsQueryable();
         }

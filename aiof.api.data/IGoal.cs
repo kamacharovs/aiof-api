@@ -13,5 +13,6 @@ namespace aiof.api.data
         string TypeName { get; set; }
         GoalType Type { get; set; }
         bool Savings { get; set; }
+        int? UserId { get; set; }
     }
 }
