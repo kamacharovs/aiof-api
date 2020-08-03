@@ -131,9 +131,7 @@ namespace aiof.api.services
             int id, 
             AssetDto assetDto)
         {
-            if (assetDto == null)
-                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"Unable to update 'Asset'. '{nameof(AssetDto)}' parameter cannot be NULL");
+            await _assetDtoValidator.ValidateAndThrowAsync(assetDto);
 
             var asset = await GetAssetAsync(id);
 
@@ -141,6 +139,12 @@ namespace aiof.api.services
                 .Update(_mapper.Map(assetDto, asset as Asset));
 
             await _context.SaveChangesAsync();
+
+            await _context.Entry(asset)
+                .Reference(x => x.Type)
+                .LoadAsync();
+
+            _logger.LogInformation($"Updated {nameof(Asset)} with Id='{asset.Id}', PublicKey='{asset.PublicKey}' and FinanceId='{asset.FinanceId}'");
 
             return asset;
         }
