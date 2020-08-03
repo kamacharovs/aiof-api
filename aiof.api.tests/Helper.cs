@@ -128,6 +128,31 @@ namespace aiof.api.tests
             return _Fake.GetFakeAssetsData(
                 typeName: true);
         }
+
+        public static IEnumerable<object[]> RandomAssetDtos()
+        {
+            var fakeAssetDtos = new Faker<AssetDto>()
+                .RuleFor(x => x.Name, f => f.Random.String())
+                .RuleFor(x => x.TypeName, f => "car")
+                .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000))
+                .RuleFor(x => x.FinanceId, f => 1)
+                .Generate(3);
+
+            var toReturn = new List<object[]>();
+
+            foreach (var fakeAssetDto in fakeAssetDtos)
+            {
+                toReturn.Add(new object[] 
+                { 
+                    fakeAssetDto.Name, 
+                    fakeAssetDto.TypeName, 
+                    fakeAssetDto.Value, 
+                    fakeAssetDto.FinanceId
+                });
+            }
+
+            return toReturn;
+        }
         #endregion
     }
 }

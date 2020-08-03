@@ -127,5 +127,31 @@ namespace aiof.api.tests
                 FinanceId = financeId
             }));
         }
+
+        [Theory]
+        [MemberData(nameof(Helper.RandomAssetDtos), MemberType = typeof(Helper))]
+        public async Task AddAssetAsync_Is_Successful(
+            string name,
+            string typeName,
+            float? value,
+            int? financeId)
+        {
+            var asset = await _repo.AddAssetAsync(new AssetDto
+            {
+                Name = name,
+                TypeName = typeName,
+                Value = value,
+                FinanceId = financeId
+            });
+
+            Assert.NotNull(asset);
+            Assert.NotNull(asset.Name);
+            Assert.NotNull(asset.TypeName);
+            Assert.NotNull(asset.Type);
+            Assert.Equal(name, asset.Name);
+            Assert.Equal(typeName, asset.TypeName);
+            Assert.Equal(value, asset.Value);
+            Assert.Equal(financeId, asset.FinanceId);
+        }
     }
 }
