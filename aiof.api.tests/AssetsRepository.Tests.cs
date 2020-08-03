@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Linq;
 
 using Xunit;
 
@@ -87,6 +88,27 @@ namespace aiof.api.tests
         public async Task GetAssetAsync_By_Id_DoesntExist_Throws_AiofNotFoundException(int id)
         {
             await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.GetAssetAsync(id));
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.AssetsTypeName), MemberType = typeof(Helper))]
+        public async Task GetAssetsAsync_By_TypName_NotEmpty(string typeName)
+        {
+            var assets = await _repo.GetAssetsAsync(typeName);
+
+            Assert.NotNull(assets);
+            Assert.NotEmpty(assets);
+        }
+
+        [Fact]
+        public async Task GetAssetTypesAsync_All()
+        {
+            var assetTypes = await _repo.GetAssetTypesAsync();
+
+            Assert.NotNull(assetTypes);
+            Assert.NotEmpty(assetTypes);
+            Assert.NotNull(assetTypes.First().Name);
+            Assert.NotEqual(Guid.Empty, assetTypes.First().PublicKey);
         }
     }
 }

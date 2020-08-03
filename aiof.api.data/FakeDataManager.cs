@@ -257,6 +257,16 @@ namespace aiof.api.data
                     });
                 }
             }
+            else if (typeName)
+            {
+                foreach (var fakeAssetTypeName in fakeAssets.Select(x => x.TypeName).Distinct())
+                {
+                    toReturn.Add(new object[] 
+                    { 
+                        fakeAssetTypeName
+                    });
+                }
+            }
 
             return toReturn;
         }
