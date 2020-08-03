@@ -118,6 +118,12 @@ namespace aiof.api.tests
                 financeId: true
             );
         }
+        public static IEnumerable<object[]> AssetsId()
+        {
+            return _Fake.GetFakeAssetsData(
+                id: true
+            );
+        }
         #endregion
     }
 }

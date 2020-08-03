@@ -67,5 +67,26 @@ namespace aiof.api.tests
             Assert.Equal(value, asset.Value);
             Assert.Equal(financeId, asset.FinanceId);
         }
+
+        [Theory]
+        [MemberData(nameof(Helper.AssetsId), MemberType = typeof(Helper))]
+        public async Task GetAssetAsync_By_Id_Exists(int id)
+        {
+            var asset = await _repo.GetAssetAsync(id);
+
+            Assert.NotNull(asset);
+            Assert.NotNull(asset.Name);
+            Assert.NotNull(asset.TypeName);
+            Assert.NotNull(asset.Type);
+        }
+
+        [Theory]
+        [InlineData(7777)]
+        [InlineData(8888)]
+        [InlineData(9999)]
+        public async Task GetAssetAsync_By_Id_DoesntExist_Throws_AiofNotFoundException(int id)
+        {
+            await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.GetAssetAsync(id));
+        }
     }
 }
