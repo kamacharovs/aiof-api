@@ -49,6 +49,7 @@ namespace aiof.api.data
                 new User()
                 {
                     Id = 1,
+                    PublicKey = Guid.NewGuid(),
                     FirstName = "Georgi",
                     LastName = "Kamacharov",
                     Email = "gkama@test.com",
@@ -57,6 +58,7 @@ namespace aiof.api.data
                 new User()
                 {
                     Id = 2,
+                    PublicKey = Guid.NewGuid(),
                     FirstName = "Jessie",
                     LastName = "Brown",
                     Email = "jbro@test.com",

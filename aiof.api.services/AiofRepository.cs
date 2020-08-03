@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 using AutoMapper;
+using FluentValidation;
 
 using aiof.api.data;
 
@@ -18,19 +19,21 @@ namespace aiof.api.services
 {
     public class AiofRepository : IAiofRepository
     {
-        private readonly AiofContext _context;
-        private readonly IMapper _mapper;
         private readonly ILogger<AiofRepository> _logger;
+        private readonly IMapper _mapper;
+        private readonly AiofContext _context;
+        private readonly AbstractValidator<FinanceDto> _financeDtoValidator;
 
         public AiofRepository(
             ILogger<AiofRepository> logger, 
             IMapper mapper, 
-            IAiofMetadataRepository metadataRepo,
-            AiofContext context)
+            AiofContext context,
+            AbstractValidator<FinanceDto> financeDtoValidator)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _financeDtoValidator = financeDtoValidator ?? throw new ArgumentNullException(nameof(financeDtoValidator));
         }
 
         private IQueryable<User> GetUsersQuery()
@@ -156,22 +159,19 @@ namespace aiof.api.services
             return liability;
         }
 
-        public async Task<IFinance> GetFinanceAsync(int id, int userId)
+        public async Task<IFinance> GetFinanceAsync(
+            int id, 
+            int userId)
         {
-            var finance = await GetFinancesQuery()
+            return await GetFinancesQuery()
                 .FirstOrDefaultAsync(x => x.Id == id
-                    && x.UserId == userId);
-
-            return finance == null
-                ? throw new AiofNotFoundException($"Finance with id='{id}' and userId='{userId}' doesn't exist")
-                : finance;
+                    && x.UserId == userId)
+                ?? throw new AiofNotFoundException($"{nameof(Finance)} with Id='{id}' and UserId='{userId}' doesn't exist");
         }
 
         public async Task<IFinance> AddFinanceAsync(FinanceDto financeDto)
         {
-            if (financeDto == null)
-                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"finance dto cannot be NULL");
+            _financeDtoValidator.ValidateAndThrow(financeDto);
 
             var finance = _mapper.Map<Finance>(financeDto);
 
@@ -180,7 +180,17 @@ namespace aiof.api.services
 
             await _context.SaveChangesAsync();
 
-            return await GetFinanceAsync(finance.Id, finance.UserId);
+            //TODO: find a better way to do this
+            foreach (var dto in financeDto.AssetDtos)
+                dto.FinanceId = finance.Id;
+            await _context.Assets
+                .AddAsync(_mapper.Map<Asset>(financeDto.AssetDtos.First()));
+            await _context.SaveChangesAsync();
+
+            return await GetFinanceAsync(
+                finance.Id,
+                finance.UserId
+            );
         }
     }
 }
