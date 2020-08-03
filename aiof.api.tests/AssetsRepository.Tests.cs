@@ -110,5 +110,22 @@ namespace aiof.api.tests
             Assert.NotNull(assetTypes.First().Name);
             Assert.NotEqual(Guid.Empty, assetTypes.First().PublicKey);
         }
+
+        [Theory]
+        [MemberData(nameof(Helper.AssetsNameTypeNameValueFinanceId), MemberType = typeof(Helper))]
+        public async Task AddAssetAsync_AlreadyExists_Throws_AiofFriendlyException(
+            string name,
+            string typeName,
+            float? value,
+            int? financeId)
+        {
+            await Assert.ThrowsAsync<AiofFriendlyException>(() => _repo.AddAssetAsync(new AssetDto
+            {
+                Name = name,
+                TypeName = typeName,
+                Value = value,
+                FinanceId = financeId
+            }));
+        }
     }
 }

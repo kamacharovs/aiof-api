@@ -249,11 +249,11 @@ namespace aiof.api.data
             }
             else if (id)
             {
-                foreach (var fakeAsset in fakeAssets)
+                foreach (var fakeAssetId in fakeAssets.Select(x => x.Id))
                 {
                     toReturn.Add(new object[] 
                     { 
-                        fakeAsset.Id
+                        fakeAssetId
                     });
                 }
             }

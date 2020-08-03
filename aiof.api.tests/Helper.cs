@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using AutoMapper;
 using FluentValidation;
 using Moq;
+using Bogus;
 
 using aiof.api.data;
 using aiof.api.services;
