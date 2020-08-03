@@ -90,7 +90,7 @@ namespace aiof.api.data
                 e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
                 e.Property(x => x.TypeName).HasColumnName("type_name").HasMaxLength(100).IsRequired();
                 e.Property(x => x.Savings).HasColumnName("savings").HasColumnType("boolean");
-                e.Property(x => x.FinanceId).HasColumnName("finance_id");
+                e.Property(x => x.UserId).HasColumnName("user_id");
 
                 e.HasOne(x => x.Type)
                     .WithMany()
@@ -120,11 +120,6 @@ namespace aiof.api.data
                     .OnDelete(DeleteBehavior.Cascade);
 
                 e.HasMany(x => x.Liabilities)
-                    .WithOne()
-                    .HasForeignKey(x => x.FinanceId)
-                    .OnDelete(DeleteBehavior.Cascade);
-
-                e.HasMany(x => x.Goals)
                     .WithOne()
                     .HasForeignKey(x => x.FinanceId)
                     .OnDelete(DeleteBehavior.Cascade);

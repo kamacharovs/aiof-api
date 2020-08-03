@@ -127,7 +127,6 @@ namespace aiof.api.tests
             Assert.NotNull(finance);
             Assert.NotEmpty(finance.Assets);
             Assert.NotEmpty(finance.Liabilities);
-            Assert.NotEmpty(finance.Goals);
         }
     }
 }

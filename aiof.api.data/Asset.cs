@@ -5,7 +5,7 @@ using System.Text;
 namespace aiof.api.data
 {
     public class Asset : IAsset, 
-        IPublicKeyId, IPublicKeyName, IEntity
+        IPublicKeyId, IPublicKeyName
     {
         public int Id { get; set; }
         public Guid PublicKey { get; set; } = Guid.NewGuid();

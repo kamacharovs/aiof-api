@@ -6,7 +6,8 @@ using System.Text.Json.Serialization;
 
 namespace aiof.api.data
 {
-    public class Finance : IFinance, IPublicKeyId
+    public class Finance : IFinance, 
+        IPublicKeyId
     {
         public int Id { get; set; }
         public Guid PublicKey { get; set; } = Guid.NewGuid();
@@ -15,7 +16,6 @@ namespace aiof.api.data
 
         public List<Asset> Assets { get; set; } = new List<Asset>();
         public List<Liability> Liabilities { get; set; } = new List<Liability>();
-        public List<Goal> Goals { get; set; } = new List<Goal>();
     }
 
     public class FinanceDto
@@ -28,8 +28,5 @@ namespace aiof.api.data
 
         [JsonPropertyName("liabilities")]
         public List<LiabilityDto> LiabilityDtos { get; set; } = new List<LiabilityDto>();
-
-        [JsonPropertyName("goals")]
-        public List<GoalDto> GoalDtos { get; set; } = new List<GoalDto>();
     }
 }

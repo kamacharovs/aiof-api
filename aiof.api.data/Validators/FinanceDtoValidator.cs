@@ -25,9 +25,6 @@ namespace aiof.api.data
                 
             RuleForEach(x => x.LiabilityDtos)
                 .SetValidator(liabilityDtoValidator);
-                
-            RuleForEach(x => x.GoalDtos)
-                .SetValidator(goalDtoValidator);
         }
     }
 }

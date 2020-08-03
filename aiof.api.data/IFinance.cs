@@ -12,6 +12,5 @@ namespace aiof.api.data
         User User { get; set; }
         List<Asset> Assets { get; set; }
         List<Liability> Liabilities { get; set; }
-        List<Goal> Goals { get; set; }
     }
 }

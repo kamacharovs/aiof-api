@@ -136,7 +136,7 @@ namespace aiof.api.data
                     Name = "savings",
                     TypeName = "long term",
                     Savings = true,
-                    FinanceId = 1
+                    UserId = 1
                 }
             };
         }
