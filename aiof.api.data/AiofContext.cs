@@ -38,6 +38,21 @@ namespace aiof.api.data
                 e.Property(x => x.LastName).HasColumnName("last_name").HasMaxLength(200).IsRequired();
                 e.Property(x => x.Email).HasColumnName("email").HasMaxLength(100).IsRequired();
                 e.Property(x => x.Username).HasColumnName("username").HasMaxLength(100).IsRequired();
+
+                e.HasMany(x => x.Assets)
+                    .WithOne()
+                    .HasForeignKey(x => x.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                e.HasMany(x => x.Goals)
+                    .WithOne()
+                    .HasForeignKey(x => x.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                e.HasMany(x => x.Liabilities)
+                    .WithOne()
+                    .HasForeignKey(x => x.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Asset>(e =>

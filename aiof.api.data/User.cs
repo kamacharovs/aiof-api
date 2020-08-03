@@ -13,6 +13,10 @@ namespace aiof.api.data
         public string LastName { get; set; }
         public string Email { get; set; }
         public string Username { get; set; }
+
+        public ICollection<Asset> Assets { get; set; }
+        public ICollection<Goal> Goals { get; set; }
+        public ICollection<Liability> Liabilities { get; set; }
     }
 
     public class UserDto
