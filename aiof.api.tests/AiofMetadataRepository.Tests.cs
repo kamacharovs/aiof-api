@@ -25,5 +25,16 @@ namespace aiof.api.tests
 
             Assert.NotEmpty(frequencies);
         }
+
+        [Fact]
+        public async Task GetLoanPaymentsAsync_Valid()
+        {
+            var loanPayments = await _repo.GetLoanPaymentsAsync(
+                10000M,
+                3.5M,
+                2.5M);
+
+            Assert.NotEmpty(loanPayments);
+        }
     }
 }
