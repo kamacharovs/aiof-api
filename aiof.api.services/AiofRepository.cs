@@ -43,21 +43,6 @@ namespace aiof.api.services
                 .AsQueryable();
         }
 
-        private IQueryable<Liability> GetLiabilitiesQuery()
-        {
-            return _context.Liabilities
-                .Include(x => x.Type)
-                .AsNoTracking()
-                .AsQueryable();
-        }
-
-        private IQueryable<LiabilityType> GetLiabilityTypesQuery()
-        {
-            return _context.LiabilityTypes
-                .AsNoTracking()
-                .AsQueryable();
-        }
-
         public async Task<IUser> GetUserAsync(int id)
         {
             return await GetUsersQuery()
@@ -93,56 +78,6 @@ namespace aiof.api.services
             return user == null
                 ? true
                 : false;
-        }
-
-        public async Task<ILiability> GetLiabilityAsync(int id)
-        {
-            return await GetLiabilitiesQuery()
-                .FirstOrDefaultAsync(x => x.Id == id);
-        }
-
-        public async Task<IEnumerable<ILiabilityType>> GetLiabilityTypesAsync()
-        {
-            return await GetLiabilityTypesQuery()
-                .OrderBy(x => x.Name)
-                .ToListAsync();
-        }
-
-        public async Task<ILiability> AddLiabilityAsync(LiabilityDto liabilityDto)
-        {
-            var liability = _mapper.Map<Liability>(liabilityDto);
-
-            await _context.Liabilities
-                .AddAsync(liability);
-
-            await _context.SaveChangesAsync();
-
-            return liability;
-        }
-
-        public async IAsyncEnumerable<ILiability> AddLiabilitiesAsync(IEnumerable<LiabilityDto> liabilityDtos)
-        {
-            foreach (var liabilityDto in liabilityDtos)
-                yield return await AddLiabilityAsync(liabilityDto);
-        }
-
-        public async Task<ILiability> UpdateLiabilityAsync(int id, LiabilityDto liabilityDto)
-        {
-            if (liabilityDto == null)
-                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"Unable to update 'Liability'. '{nameof(LiabilityDto)}' parameter cannot be NULL");
-
-            var liability = await GetLiabilityAsync(id);
-
-            if (liability == null)
-                throw new AiofNotFoundException($"Unable to find 'Liability' with id='{id}'");
-
-            _context.Liabilities
-                .Update(_mapper.Map(liabilityDto, liability as Liability));
-
-            await _context.SaveChangesAsync();
-
-            return liability;
         }
     }
 }
