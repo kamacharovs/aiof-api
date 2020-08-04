@@ -33,20 +33,42 @@ namespace aiof.api.services
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        private IQueryable<User> GetUsersQuery()
+        private IQueryable<User> GetUsersQuery(bool asNoTracking = true)
         {
-            return _context.Users
-                .Include(x => x.Assets)
-                .Include(x => x.Goals)
-                .Include(x => x.Liabilities)
-                .AsNoTracking()
-                .AsQueryable();
+            return asNoTracking
+                ? _context.Users
+                    .Include(x => x.Assets)
+                    .Include(x => x.Goals)
+                    .Include(x => x.Liabilities)
+                    .AsNoTracking()
+                    .AsQueryable()
+                : _context.Users
+                    .Include(x => x.Assets)
+                    .Include(x => x.Goals)
+                    .Include(x => x.Liabilities)
+                    .AsQueryable();
+        }
+        private IQueryable<User> GetUsersBaseQuery(bool asNoTracking = true)
+        {
+            return asNoTracking
+                ? _context.Users
+                    .AsNoTracking()
+                    .AsQueryable()
+                : _context.Users
+                    .AsQueryable();
         }
 
-        public async Task<IUser> GetUserAsync(int id)
+        public async Task<IUser> GetUserAsync(
+            int id,
+            bool included = true,
+            bool asNoTracking = true)
         {
-            return await GetUsersQuery()
-                .FirstOrDefaultAsync(x => x.Id == id);
+            return included
+                ? await GetUsersQuery(asNoTracking)
+                    .FirstOrDefaultAsync(x => x.Id == id)
+                : await GetUsersBaseQuery(asNoTracking)
+                    .FirstOrDefaultAsync(x => x.Id == id)
+                ?? throw new AiofNotFoundException($"{nameof(User)} with Id='{id}' was not found");
         }
 
         public async Task<IUser> GetUserAsync(string username)
@@ -55,29 +77,17 @@ namespace aiof.api.services
                 .FirstOrDefaultAsync(x => x.Username == username);
         }
 
-        public async Task<IUser> AddUserAsync(UserDto userDto)
+        public async Task<IUser> AddFinanceAsync(
+            int userId,
+            UserDto userDto)
         {
-            var user = _mapper.Map<User>(userDto);
+            var user = await GetUserAsync(
+                userId, 
+                included: false);
 
-            await _context.Users
-                .AddAsync(user);
+            user = _mapper.Map(userDto, user);
 
-            await _context.SaveChangesAsync();
-
-            _logger.LogInformation($"added user='{JsonSerializer.Serialize(user)}'");
-
-            return user;
-        }
-
-        public async Task<bool> IsUserUniqueAsync(string username, string email)
-        {
-            var user = await _context.Users
-                .FirstOrDefaultAsync(x => x.Username == username
-                    || x.Email == email);
-            
-            return user == null
-                ? true
-                : false;
+            return await GetUserAsync(userId);
         }
     }
 }

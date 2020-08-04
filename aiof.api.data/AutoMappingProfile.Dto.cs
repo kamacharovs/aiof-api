@@ -11,11 +11,10 @@ namespace aiof.api.data
         public AutoMappingProfileDto()
         {
             CreateMap<UserDto, User>()
-                .ForMember(x => x.FirstName, o => o.Condition(s => s.FirstName != null))
-                .ForMember(x => x.LastName, o => o.Condition(s => s.LastName != null))
-                .ForMember(x => x.Email, o => o.Condition(s => s.Email != null))
-                .ForMember(x => x.Username, o => o.Condition(s => s.Username != null));
-                
+                .ForMember(x => x.Assets, o => o.MapFrom(s => s.Assets))
+                .ForMember(x => x.Goals, o => o.MapFrom(s => s.Goals))
+                .ForMember(x => x.Liabilities, o => o.MapFrom(s => s.Liabilities));
+
             CreateMap<AssetDto, Asset>()
                 .ForMember(x => x.Name, o => o.Condition(s => s.Name != null))
                 .ForMember(x => x.TypeName, o => o.Condition(s => s.TypeName != null))

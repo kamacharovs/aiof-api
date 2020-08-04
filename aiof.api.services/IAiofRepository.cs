@@ -8,9 +8,13 @@ namespace aiof.api.services
 {
     public interface IAiofRepository
     {
-        Task<IUser> GetUserAsync(int id);
+        Task<IUser> GetUserAsync(
+            int id,
+            bool included = true,
+            bool asNoTracking = true);
         Task<IUser> GetUserAsync(string username);
-        Task<IUser> AddUserAsync(UserDto userDto);
-        Task<bool> IsUserUniqueAsync(string username, string email);
+        Task<IUser> AddFinanceAsync(
+            int userId,
+            UserDto userDto);
     }
 }
