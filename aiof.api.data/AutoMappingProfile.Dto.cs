@@ -12,9 +12,9 @@ namespace aiof.api.data
         public AutoMappingProfileDto()
         {
             CreateMap<UserDto, User>()
-                .ForMember(x => x.Assets, o => o.MapFrom((s, x) => x.Assets.Except(s.Assets).ToList()))
-                .ForMember(x => x.Goals, o => o.MapFrom((s, x) => x.Goals.Except(s.Goals).ToList()))
-                .ForMember(x => x.Liabilities, o => o.MapFrom((s, x) => x.Liabilities.Except(s.Liabilities).ToList()));
+                .ForMember(x => x.Assets, o => o.MapFrom((s, x) => s.Assets.Except(x.Assets).ToList()))
+                .ForMember(x => x.Goals, o => o.MapFrom((s, x) => s.Goals.Except(x.Goals).ToList()))
+                .ForMember(x => x.Liabilities, o => o.MapFrom((s, x) => s.Liabilities.Except(x.Liabilities).ToList()));
 
             CreateMap<AssetDto, Asset>()
                 .ForMember(x => x.Name, o => o.Condition(s => s.Name != null))
