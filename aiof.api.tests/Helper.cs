@@ -146,8 +146,8 @@ namespace aiof.api.tests
                 .RuleFor(x => x.Name, f => f.Random.String())
                 .RuleFor(x => x.TypeName, f => "car")
                 .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000))
-                .RuleFor(x => x.UserId, f => 1)
-                .Generate(3);
+                .RuleFor(x => x.UserId, f => f.Random.Int(1, 2))
+                .Generate(GeneratedAmount);
 
             var toReturn = new List<object[]>();
 
@@ -164,6 +164,58 @@ namespace aiof.api.tests
 
             return toReturn;
         }
+
+        public static IEnumerable<object[]> RandomeGoalDtos()
+        {
+            var fakeGoalDtos = new Faker<GoalDto>()
+                .RuleFor(x => x.Name, f => f.Random.String())
+                .RuleFor(x => x.TypeName, f => "long term")
+                .RuleFor(x => x.Savings, f => true)
+                .RuleFor(x => x.UserId, f => f.Random.Int(1, 2))
+                .Generate(GeneratedAmount);
+
+            var toReturn = new List<object[]>();
+
+            foreach (var fakeGoalDto in fakeGoalDtos)
+            {
+                toReturn.Add(new object[] 
+                { 
+                    fakeGoalDto.Name, 
+                    fakeGoalDto.TypeName, 
+                    fakeGoalDto.Savings, 
+                    fakeGoalDto.UserId
+                });
+            }
+
+            return toReturn;
+        }
+
+        public static IEnumerable<object[]> RandomLiabilityDtos()
+        {
+            var fakeLiabilityDtos = new Faker<LiabilityDto>()
+                .RuleFor(x => x.Name, f => f.Random.String())
+                .RuleFor(x => x.TypeName, f => "car")
+                .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000))
+                .RuleFor(x => x.UserId, f => f.Random.Int(1, 2))
+                .Generate(GeneratedAmount);
+
+            var toReturn = new List<object[]>();
+
+            foreach (var fakeLiabilityDto in fakeLiabilityDtos)
+            {
+                toReturn.Add(new object[] 
+                { 
+                    fakeLiabilityDto.Name, 
+                    fakeLiabilityDto.TypeName, 
+                    fakeLiabilityDto.Value, 
+                    fakeLiabilityDto.UserId
+                });
+            }
+
+            return toReturn;
+        }
+
+        public static int GeneratedAmount = 3; 
         #endregion
     }
 }
