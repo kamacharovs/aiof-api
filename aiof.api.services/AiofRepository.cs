@@ -81,11 +81,12 @@ namespace aiof.api.services
             int userId,
             UserDto userDto)
         {
-            var user = await GetUserAsync(
-                userId, 
-                included: false);
+            var user = _mapper.Map(userDto,
+                await GetUserAsync(userId) as User);
 
-            user = _mapper.Map(userDto, user);
+            _context.Update(user);
+
+            await _context.SaveChangesAsync();
 
             return await GetUserAsync(userId);
         }

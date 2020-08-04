@@ -12,5 +12,8 @@ namespace aiof.api.data
         string LastName { get; set; }
         string Email { get; set; }
         string Username { get; set; }
+        ICollection<Asset> Assets { get; set; }
+        ICollection<Goal> Goals { get; set; }
+        ICollection<Liability> Liabilities { get; set; }
     }
 }

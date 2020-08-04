@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 using AutoMapper;
 
@@ -11,9 +12,9 @@ namespace aiof.api.data
         public AutoMappingProfileDto()
         {
             CreateMap<UserDto, User>()
-                .ForMember(x => x.Assets, o => o.MapFrom(s => s.Assets))
-                .ForMember(x => x.Goals, o => o.MapFrom(s => s.Goals))
-                .ForMember(x => x.Liabilities, o => o.MapFrom(s => s.Liabilities));
+                .ForMember(x => x.Assets, o => o.MapFrom((s, x) => x.Assets.Except(s.Assets).ToList()))
+                .ForMember(x => x.Goals, o => o.MapFrom((s, x) => x.Goals.Except(s.Goals).ToList()))
+                .ForMember(x => x.Liabilities, o => o.MapFrom((s, x) => x.Liabilities.Except(s.Liabilities).ToList()));
 
             CreateMap<AssetDto, Asset>()
                 .ForMember(x => x.Name, o => o.Condition(s => s.Name != null))
