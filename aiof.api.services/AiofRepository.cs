@@ -77,7 +77,7 @@ namespace aiof.api.services
                 .FirstOrDefaultAsync(x => x.Username == username);
         }
 
-        public async Task<IUser> AddFinanceAsync(
+        public async Task<IUser> UpsertFinanceAsync(
             int userId,
             UserDto userDto)
         {

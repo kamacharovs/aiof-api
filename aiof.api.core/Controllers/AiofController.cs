@@ -46,7 +46,7 @@ namespace aiof.api.core.Controllers
         [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
         public async Task<IActionResult> AddUserAsync([FromRoute]int id, [FromBody]UserDto userDto)
         {
-            return Created(nameof(User), await _repo.AddFinanceAsync(id, userDto));
+            return Created(nameof(User), await _repo.UpsertFinanceAsync(id, userDto));
         }
     }
 }

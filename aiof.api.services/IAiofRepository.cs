@@ -13,7 +13,7 @@ namespace aiof.api.services
             bool included = true,
             bool asNoTracking = true);
         Task<IUser> GetUserAsync(string username);
-        Task<IUser> AddFinanceAsync(
+        Task<IUser> UpsertFinanceAsync(
             int userId,
             UserDto userDto);
     }
