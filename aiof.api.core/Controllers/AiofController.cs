@@ -12,7 +12,7 @@ using aiof.api.data;
 namespace aiof.api.core.Controllers
 {
     [ApiController]
-    [Route("aiof")]
+    [Route("user")]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public class AiofController : ControllerBase
@@ -25,11 +25,20 @@ namespace aiof.api.core.Controllers
         }
 
         [HttpGet]
-        [Route("user/{id}")]
+        [Route("{id}")]
         [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetUserAsync([FromRoute]int id)
         {
             return Ok(await _repo.GetUserAsync(id));
+        }
+
+        [HttpPost]
+        [Route("{id}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpsertFinanceAsync([FromRoute]int id, [FromBody]UserDto userDto)
+        {
+            return Ok(await _repo.UpsertFinanceAsync(id, userDto));
         }
 
         [HttpGet]
@@ -38,15 +47,6 @@ namespace aiof.api.core.Controllers
         public async Task<IActionResult> GetUserAsync([FromRoute]string username)
         {
             return Ok(await _repo.GetUserAsync(username));
-        }
-
-        [HttpPost]
-        [Route("user/{id}")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
-        public async Task<IActionResult> AddUserAsync([FromRoute]int id, [FromBody]UserDto userDto)
-        {
-            return Created(nameof(User), await _repo.UpsertFinanceAsync(id, userDto));
-        }
+        }  
     }
 }
