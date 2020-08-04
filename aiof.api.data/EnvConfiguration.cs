@@ -33,6 +33,7 @@ namespace aiof.api.data
     public enum FeatureFlags
     {
         Asset,
-        Goal
+        Goal,
+        Liability
     }
 }
