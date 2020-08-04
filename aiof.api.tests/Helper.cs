@@ -110,6 +110,17 @@ namespace aiof.api.tests
         static FakeDataManager _Fake
             => Helper.GetRequiredService<FakeDataManager>() ?? throw new ArgumentNullException(nameof(FakeDataManager));
 
+        public static IEnumerable<object[]> UsersId()
+        {
+            return _Fake.GetFakeUsersData(
+                id: true);
+        }
+        public static IEnumerable<object[]> UsersUsername()
+        {
+            return _Fake.GetFakeUsersData(
+                username: true);
+        }
+
         public static IEnumerable<object[]> AssetsNameTypeNameValueUserId()
         {
             return _Fake.GetFakeAssetsData(

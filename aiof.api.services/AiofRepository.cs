@@ -81,8 +81,7 @@ namespace aiof.api.services
             int userId,
             UserDto userDto)
         {
-            var user = _mapper.Map(userDto,
-                await GetUserAsync(userId) as User);
+            var user = _mapper.Map(userDto, await GetUserAsync(userId) as User);
 
             _context.Update(user);
 

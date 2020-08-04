@@ -206,6 +206,34 @@ namespace aiof.api.data
 
 
         #region Unit Tests
+        public IEnumerable<object[]> GetFakeUsersData(
+            bool id = false,
+            bool username = false)
+        {
+            var fakeUsers = GetFakeUsers();
+
+            var toReturn = new List<object[]>();
+
+            if (id)
+            {
+                foreach (var fakeUserId in fakeUsers.Select(x => x.Id))
+                    toReturn.Add(new object[] 
+                    { 
+                        fakeUserId
+                    });
+            }
+            else if (username)
+            {
+                foreach (var fakeUserUsername in fakeUsers.Select(x => x.Username))
+                    toReturn.Add(new object[] 
+                    { 
+                        fakeUserUsername
+                    });
+            }
+
+            return toReturn;
+        }
+
         public IEnumerable<object[]> GetFakeAssetsData(
             bool id = false,
             bool name = false,

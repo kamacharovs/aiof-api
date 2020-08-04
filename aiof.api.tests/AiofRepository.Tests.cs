@@ -19,13 +19,29 @@ namespace aiof.api.tests
         }
 
         [Theory]
-        [InlineData(1)]
-        public async Task GetUserAsync_Valid(int id)
+        [MemberData(nameof(Helper.UsersId), MemberType = typeof(Helper))]
+        public async Task GetUserAsync_By_Id_Exists(int id)
         {
             var user = await _repo.GetUserAsync(id);
 
             Assert.NotNull(user);
-            Assert.Equal("Georgi", user.FirstName);
+            Assert.NotNull(user.FirstName);
+            Assert.NotNull(user.LastName);
+            Assert.NotNull(user.Email);
+            Assert.NotNull(user.Username);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.UsersUsername), MemberType = typeof(Helper))]
+        public async Task GetUserAsync_By_Username_Exists(string username)
+        {
+            var user = await _repo.GetUserAsync(username);
+
+            Assert.NotNull(user);
+            Assert.NotNull(user.FirstName);
+            Assert.NotNull(user.LastName);
+            Assert.NotNull(user.Email);
+            Assert.NotNull(user.Username);
         }
     }
 }
