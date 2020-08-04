@@ -84,7 +84,7 @@ namespace aiof.api.services
                 .Reference(x => x.Type)
                 .LoadAsync();
 
-            _logger.LogInformation($"Created {nameof(Goal)} with Id='{goal.Id}', PublicKey='{goal.PublicKey}' and FinanceId='{goal.FinanceId}'");
+            _logger.LogInformation($"Created {nameof(Goal)} with Id='{goal.Id}', PublicKey='{goal.PublicKey}' and UserId='{goal.UserId}'");
 
             return goal;
         }

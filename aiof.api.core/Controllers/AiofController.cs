@@ -50,27 +50,6 @@ namespace aiof.api.core.Controllers
         }
 
 
-        [HttpGet]
-        [Route("finance/{id}/user/{userid}")]
-        [ProducesResponseType(typeof(IFinance), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetFinanceAsync([FromRoute]int id, int userid)
-        {
-            return Ok(await _repo.GetFinanceAsync(id, userid));
-        }
-
-
-        /// <summary>
-        /// Adds a specific set of assets, liabilities and golas as a Finance object
-        /// </summary>
-        [HttpPost]
-        [Route("finance/add")]
-        [ProducesResponseType(typeof(IFinance), StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> AddFinanceAsync([FromBody]FinanceDto finance)
-        {
-            return Created("finance", await _repo.AddFinanceAsync(finance));
-        }
 
         [HttpGet]
         [Route("liability/{id}")]

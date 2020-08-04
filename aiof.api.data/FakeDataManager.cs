@@ -18,9 +18,6 @@ namespace aiof.api.data
             _context.Users
                 .AddRange(GetFakeUsers());
 
-            _context.Finances
-                .AddRange(GetFakeFinances());
-
             _context.AssetTypes
                 .AddRange(GetFakeAssetTypes());
 
@@ -67,18 +64,6 @@ namespace aiof.api.data
             };
         }
 
-        public IEnumerable<Finance> GetFakeFinances()
-        {
-            return new List<Finance>()
-            {
-                new Finance()
-                {
-                    Id = 1,
-                    UserId = 1
-                }
-            };
-        }
-
         public IEnumerable<Asset> GetFakeAssets()
         {
             return new List<Asset>
@@ -89,7 +74,7 @@ namespace aiof.api.data
                     Name = "car",
                     TypeName = "car",
                     Value = 14762.12M,
-                    FinanceId = 1
+                    UserId = 1
                 },
                 new Asset()
                 {
@@ -97,7 +82,7 @@ namespace aiof.api.data
                     Name = "house",
                     TypeName = "house",
                     Value = 250550M,
-                    FinanceId = 1
+                    UserId = 1
                 },
                 new Asset
                 {
@@ -106,7 +91,7 @@ namespace aiof.api.data
                     Name = "hardcoded guid",
                     TypeName = "house",
                     Value = 999999M,
-                    FinanceId = 1
+                    UserId = 1
                 }
             };
         }
@@ -121,7 +106,7 @@ namespace aiof.api.data
                     Name = "car loan",
                     TypeName = "car loan",
                     Value = 24923.99M,
-                    FinanceId = 1
+                    UserId = 1
                 }
             };
         }
@@ -136,7 +121,7 @@ namespace aiof.api.data
                     Name = "savings",
                     TypeName = "long term",
                     Savings = true,
-                    FinanceId = 1
+                    UserId = 1
                 }
             };
         }
@@ -226,7 +211,7 @@ namespace aiof.api.data
             bool name = false,
             bool typeName = false,
             bool value = false,
-            bool financeId = false)
+            bool userId = false)
         {
             var fakeAssets = GetFakeAssets()
                 .ToArray();
@@ -236,7 +221,7 @@ namespace aiof.api.data
             if (name
                 && typeName
                 && value
-                && financeId)
+                && userId)
             {
                 foreach (var fakeAsset in fakeAssets)
                 {
@@ -245,7 +230,7 @@ namespace aiof.api.data
                         fakeAsset.Name, 
                         fakeAsset.TypeName, 
                         fakeAsset.Value, 
-                        fakeAsset.FinanceId
+                        fakeAsset.UserId
                     });
                 }
             }

@@ -66,13 +66,13 @@ namespace aiof.api.services
             string name,
             string typeName,
             decimal? value,
-            int? financeId)
+            int? userId)
         {
             return await GetAssetsQuery()
                 .FirstOrDefaultAsync(x => x.Name == name
                     && x.TypeName == typeName
                     && x.Value == value
-                    && x.FinanceId == financeId);
+                    && x.UserId == userId);
         }
         public async Task<IAsset> GetAssetAsync(AssetDto assetDto)
         {
@@ -80,7 +80,7 @@ namespace aiof.api.services
                 assetDto.Name,
                 assetDto.TypeName,
                 assetDto.Value,
-                assetDto.FinanceId);
+                assetDto.UserId);
         }
 
         public async Task<IEnumerable<IAsset>> GetAssetsAsync(string typeName)
@@ -117,7 +117,7 @@ namespace aiof.api.services
                 .Reference(x => x.Type)
                 .LoadAsync();
             
-            _logger.LogInformation($"Created {nameof(Asset)} with Id='{asset.Id}', PublicKey='{asset.PublicKey}' and FinanceId='{asset.FinanceId}'");
+            _logger.LogInformation($"Created {nameof(Asset)} with Id='{asset.Id}', PublicKey='{asset.PublicKey}' and UserId='{asset.UserId}'");
 
             return asset;
         }
@@ -144,7 +144,7 @@ namespace aiof.api.services
                 .Reference(x => x.Type)
                 .LoadAsync();
 
-            _logger.LogInformation($"Updated {nameof(Asset)} with Id='{asset.Id}', PublicKey='{asset.PublicKey}' and FinanceId='{asset.FinanceId}'");
+            _logger.LogInformation($"Updated {nameof(Asset)} with Id='{asset.Id}', PublicKey='{asset.PublicKey}' and UserId='{asset.UserId}'");
 
             return asset;
         }

@@ -15,14 +15,12 @@ namespace aiof.api.tests
         private readonly AbstractValidator<AssetDto> _assetDtoValidator;
         private readonly AbstractValidator<GoalDto> _goalDtoValidator;
         private readonly AbstractValidator<LiabilityDto> _liabilityDtoValidator;
-        private readonly AbstractValidator<FinanceDto> _financeDtoValidator;
 
         public ValidatorsTests()
         {
             _assetDtoValidator = Helper.GetRequiredService<AbstractValidator<AssetDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<AssetDto>));
             _goalDtoValidator = Helper.GetRequiredService<AbstractValidator<GoalDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<GoalDto>));
             _liabilityDtoValidator = Helper.GetRequiredService<AbstractValidator<LiabilityDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<LiabilityDto>));
-            _financeDtoValidator = Helper.GetRequiredService<AbstractValidator<FinanceDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<FinanceDto>));
         }
 
         [Theory]
@@ -85,25 +83,6 @@ namespace aiof.api.tests
                 TypeName = typeName
             };
             Assert.False(_goalDtoValidator.Validate(goalDto).IsValid);
-        }
-
-        [Fact]
-        public void FinanceDto_Valid()
-        {
-            var financeDto = new FinanceDto
-            {
-                UserId = 1,
-                AssetDtos = new List<AssetDto>
-                {
-                    new AssetDto { Name = "car", TypeName = "car", Value = 1500M }
-                },
-                LiabilityDtos = new List<LiabilityDto>
-                {
-                    new LiabilityDto { Name = "car loan", TypeName = "car loan", Value = 1500M }
-                }
-            };
-
-            Assert.True(_financeDtoValidator.Validate(financeDto).IsValid);
         }
     }
 }
