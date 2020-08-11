@@ -17,7 +17,7 @@ namespace aiof.api.core.Controllers
     [Route("liability")]
     [Produces(Keys.ApplicationJson)]
     [Consumes(Keys.ApplicationJson)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status500InternalServerError)]
     public class LiabilityController : ControllerBase
     {
         public readonly ILiabilityRepository _repo;
@@ -29,7 +29,7 @@ namespace aiof.api.core.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ILiability), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetLiabilityAsync([FromRoute]int id)
         {
@@ -38,8 +38,8 @@ namespace aiof.api.core.Controllers
 
         [HttpPut]
         [Route("{id}")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ILiability), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpdateLiabilityAsync([FromRoute]int id, [FromBody]LiabilityDto liabilityDto)
         {
@@ -55,7 +55,7 @@ namespace aiof.api.core.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ILiability), StatusCodes.Status201Created)]
         public async Task<IActionResult> AddLiabilityAsync([FromBody]LiabilityDto liabilityDto)
         {

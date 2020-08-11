@@ -75,8 +75,8 @@ namespace aiof.api.services
         {
             frequency = frequency ?? _envConfig.MetadataDefaultFrequency;
             
-            _logger.LogInformation($"getting loan payments information. loanAmount='{loanAmount}', numberOfYears='{numberOfYears}', " +
-                $"rateOfInterest='{rateOfInterest}', frequency='{frequency}'");
+            _logger.LogInformation($"getting loan payments information. {nameof(loanAmount)}='{loanAmount}', {nameof(numberOfYears)}='{numberOfYears}', " +
+                $"{nameof(rateOfInterest)}='{rateOfInterest}', {nameof(frequency)}='{frequency}'");
 
             return JsonSerializer.Deserialize<List<LoanPayment>>(
                 await PostMetadataAsync($"loan/payments/{frequency}",

@@ -17,7 +17,7 @@ namespace aiof.api.core.Controllers
     [Route("asset")]
     [Produces(Keys.ApplicationJson)]
     [Consumes(Keys.ApplicationJson)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status500InternalServerError)]
     public class AssetController : ControllerBase
     {
         public readonly IAssetRepository _repo;
@@ -29,7 +29,7 @@ namespace aiof.api.core.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IAsset), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAssetAsync([FromRoute]int id)
         {
@@ -38,8 +38,8 @@ namespace aiof.api.core.Controllers
 
         [HttpPut]
         [Route("{id}")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(IAsset), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpdateAssetAsync([FromRoute]int id, [FromBody]AssetDto assetDto)
         {
@@ -55,6 +55,7 @@ namespace aiof.api.core.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(IAsset), StatusCodes.Status201Created)]
         public async Task<IActionResult> AddAssetAsync([FromBody]AssetDto assetDto)
         {

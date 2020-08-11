@@ -23,7 +23,7 @@ namespace aiof.api.core.Controllers
     {
         [HttpGet]
         [Route("throw/500")]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status500InternalServerError)]
         public void Throw500()
         {
             throw new AiofFriendlyException("InternalServerError");
@@ -31,7 +31,7 @@ namespace aiof.api.core.Controllers
 
         [HttpGet]
         [Route("throw/400")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
         public void Throw400()
         {
             throw new AiofFriendlyException(HttpStatusCode.BadRequest, "BadRequest");
@@ -39,7 +39,7 @@ namespace aiof.api.core.Controllers
 
         [HttpGet]
         [Route("throw/401")]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status401Unauthorized)]
         public void Throw401()
         {
             throw new AiofFriendlyException(HttpStatusCode.Unauthorized, "Unauthorized");
@@ -47,7 +47,7 @@ namespace aiof.api.core.Controllers
 
         [HttpGet]
         [Route("throw/403")]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status403Forbidden)]
         public void Throw403()
         {
             throw new AiofFriendlyException(HttpStatusCode.Forbidden, "Forbidden");
@@ -55,7 +55,7 @@ namespace aiof.api.core.Controllers
 
         [HttpGet]
         [Route("throw/validation")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
         public void ThrowValidation()
         {
             throw new ValidationException($"Validation error", 

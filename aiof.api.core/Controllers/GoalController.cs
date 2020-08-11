@@ -17,7 +17,7 @@ namespace aiof.api.core.Controllers
     [Route("goal")]
     [Produces(Keys.ApplicationJson)]
     [Consumes(Keys.ApplicationJson)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status500InternalServerError)]
     public class GoalController : ControllerBase
     {
         public readonly IGoalRepository _repo;
@@ -29,7 +29,7 @@ namespace aiof.api.core.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IGoal), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetGoalAsync([FromRoute]int id)
         {
@@ -38,8 +38,8 @@ namespace aiof.api.core.Controllers
 
         [HttpPut]
         [Route("{id}")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(IGoal), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpdateGoalAsync([FromRoute]int id, [FromBody]GoalDto goalDto)
         {
@@ -55,7 +55,7 @@ namespace aiof.api.core.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(IGoal), StatusCodes.Status201Created)]
         public async Task<IActionResult> AddGoalAsync([FromBody]GoalDto goalDto)
         {

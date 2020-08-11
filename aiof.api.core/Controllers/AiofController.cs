@@ -15,7 +15,7 @@ namespace aiof.api.core.Controllers
     [Route("user")]
     [Produces(Keys.ApplicationJson)]
     [Consumes(Keys.ApplicationJson)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status500InternalServerError)]
     public class AiofController : ControllerBase
     {
         public readonly IAiofRepository _repo;
@@ -27,6 +27,7 @@ namespace aiof.api.core.Controllers
 
         [HttpGet]
         [Route("{id}")]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetUserAsync([FromRoute]int id)
         {
@@ -35,7 +36,7 @@ namespace aiof.api.core.Controllers
 
         [HttpPost]
         [Route("{id}")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpsertFinanceAsync([FromRoute]int id, [FromBody]UserDto userDto)
         {
@@ -44,6 +45,8 @@ namespace aiof.api.core.Controllers
 
         [HttpGet]
         [Route("user/username/{username}")]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetUserAsync([FromRoute]string username)
         {

@@ -15,7 +15,7 @@ namespace aiof.api.core.Controllers
     [Route("aiof/metadata")]
     [Produces(Keys.ApplicationJson)]
     [Consumes(Keys.ApplicationJson)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status500InternalServerError)]
     public class AiofMetadataController : ControllerBase
     {
         public readonly IAiofMetadataRepository _repo;
