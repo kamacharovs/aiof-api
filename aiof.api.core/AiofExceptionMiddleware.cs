@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Hosting;
 
+using FluentValidation;
+
 using aiof.api.data;
 
 namespace aiof.api.core
@@ -73,6 +75,8 @@ namespace aiof.api.core
 
             if (e is AiofException ae)
                 problem.Status = ae.StatusCode;
+            else if (e is ValidationException ve)
+                problem.Status = StatusCodes.Status400BadRequest;
             else
                 problem.Status = StatusCodes.Status500InternalServerError;
 
