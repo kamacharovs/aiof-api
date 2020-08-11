@@ -7,15 +7,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.FeatureManagement.Mvc;
 
-using aiof.api.services;
 using aiof.api.data;
+using aiof.api.services;
 
 namespace aiof.api.core.Controllers
 {
     [FeatureGate(FeatureFlags.Goal)]
     [ApiController]
     [Route("goal")]
-    [Produces("application/json")]
+    [Produces(Keys.ApplicationJson)]
+    [Consumes(Keys.ApplicationJson)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public class GoalController : ControllerBase
     {

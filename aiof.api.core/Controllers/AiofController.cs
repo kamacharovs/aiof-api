@@ -13,7 +13,8 @@ namespace aiof.api.core.Controllers
 {
     [ApiController]
     [Route("user")]
-    [Produces("application/json")]
+    [Produces(Keys.ApplicationJson)]
+    [Consumes(Keys.ApplicationJson)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public class AiofController : ControllerBase
     {

@@ -6,13 +6,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 
+using aiof.api.data;
 using aiof.api.services;
 
 namespace aiof.api.core.Controllers
 {
     [ApiController]
     [Route("aiof/metadata")]
-    [Produces("application/json")]
+    [Produces(Keys.ApplicationJson)]
+    [Consumes(Keys.ApplicationJson)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public class AiofMetadataController : ControllerBase
     {

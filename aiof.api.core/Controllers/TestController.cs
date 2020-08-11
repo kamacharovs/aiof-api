@@ -7,14 +7,15 @@ using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-using aiof.api.services;
 using aiof.api.data;
+using aiof.api.services;
 
 namespace aiof.api.core.Controllers
 {
     [ApiController]
-    [Produces("application/json")]
     [Route("test")]
+    [Produces(Keys.ApplicationJson)]
+    [Consumes(Keys.ApplicationJson)]
     public class TestController : ControllerBase
     {
         [HttpGet]
