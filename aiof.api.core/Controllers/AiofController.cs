@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 
-using aiof.api.services;
 using aiof.api.data;
+using aiof.api.services;
 
 namespace aiof.api.core.Controllers
 {

@@ -23,7 +23,7 @@ namespace aiof.api.core.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public void Throw500()
         {
-            throw new AiofFriendlyException("test 500");
+            throw new AiofFriendlyException("InternalServerError");
         }
 
         [HttpGet]
@@ -31,7 +31,23 @@ namespace aiof.api.core.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public void Throw400()
         {
-            throw new AiofFriendlyException(HttpStatusCode.BadRequest, "test 400");
+            throw new AiofFriendlyException(HttpStatusCode.BadRequest, "BadRequest");
+        }
+
+        [HttpGet]
+        [Route("throw/401")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public void Throw401()
+        {
+            throw new AiofFriendlyException(HttpStatusCode.Unauthorized, "Unauthorized");
+        }
+
+        [HttpGet]
+        [Route("throw/403")]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public void Throw403()
+        {
+            throw new AiofFriendlyException(HttpStatusCode.Forbidden, "Forbidden");
         }
     }
 }
