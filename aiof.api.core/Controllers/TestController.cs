@@ -7,6 +7,9 @@ using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
+using FluentValidation;
+using FluentValidation.Results;
+
 using aiof.api.data;
 using aiof.api.services;
 
@@ -48,6 +51,19 @@ namespace aiof.api.core.Controllers
         public void Throw403()
         {
             throw new AiofFriendlyException(HttpStatusCode.Forbidden, "Forbidden");
+        }
+
+        [HttpGet]
+        [Route("throw/validation")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public void ThrowValidation()
+        {
+            throw new ValidationException($"Validation error", 
+            new List<ValidationFailure>
+            {
+                new ValidationFailure("Username", "Username must be present"),
+                new ValidationFailure("Password", "Password must contain an upper case letter")
+            });
         }
     }
 }

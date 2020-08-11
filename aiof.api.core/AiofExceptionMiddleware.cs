@@ -20,14 +20,17 @@ namespace aiof.api.core
 {
     public class AiofExceptionMiddleware
     {
-        private readonly RequestDelegate _next;
         private readonly ILogger _logger;
         private readonly IWebHostEnvironment _env;
+        private readonly RequestDelegate _next;
 
         private const string _defaultMessage = "An unexpected error has occurred";
-        private const string _defaultValidationMessage = "One or more validation errors have occurred";
+        private const string _defaultValidationMessage = "One or more validation errors have occurred. Please see errors for details";
 
-        public AiofExceptionMiddleware(RequestDelegate next, ILogger<AiofExceptionMiddleware> logger, IWebHostEnvironment env)
+        public AiofExceptionMiddleware(
+            ILogger<AiofExceptionMiddleware> logger, 
+            IWebHostEnvironment env, 
+            RequestDelegate next)
         {
             _next = next ?? throw new ArgumentNullException(nameof(next));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -58,7 +61,10 @@ namespace aiof.api.core
             }
         }
 
-        private async Task WriteExceptionResponseAsync(HttpContext httpContext, Exception e, string id)
+        private async Task WriteExceptionResponseAsync(
+            HttpContext httpContext, 
+            Exception e, 
+            string id)
         {
             var canViewSensitiveInfo = _env
                 .IsDevelopment();
@@ -82,7 +88,7 @@ namespace aiof.api.core
             }
 
             var problemjson = JsonSerializer
-                .Serialize(problem);
+                .Serialize(problem, new JsonSerializerOptions { IgnoreNullValues = true });
 
             httpContext.Response.StatusCode = problem.Code ?? StatusCodes.Status500InternalServerError;
             httpContext.Response.ContentType = "application/problem+json";
