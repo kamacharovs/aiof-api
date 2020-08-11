@@ -1,13 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IO;
+using System.Reflection;
 using System.Text.Json;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -74,23 +72,24 @@ namespace aiof.api.core
 
             services.AddSwaggerGen(x =>
             {
-                x.SwaggerDoc(_configuration[$"{Keys.OpenApi}:{Keys.Version}"], new OpenApiInfo
+                x.SwaggerDoc(_configuration[Keys.OpenApiVersion], new OpenApiInfo
                 {
-                    Title = _configuration[$"{Keys.OpenApi}:{Keys.Title}"],
-                    Version = _configuration[$"{Keys.OpenApi}:{Keys.Version}"],
-                    Description = _configuration[$"{Keys.OpenApi}:{Keys.Description}"],
+                    Title = _configuration[Keys.OpenApiTitle],
+                    Version = _configuration[Keys.OpenApiVersion],
+                    Description = _configuration[Keys.OpenApiDescription],
                     Contact = new OpenApiContact
                     {
-                        Name = _configuration[$"{Keys.OpenApi}:{Keys.Contact}:{Keys.Name}"],
-                        Email = _configuration[$"{Keys.OpenApi}:{Keys.Contact}:{Keys.Email}"],
-                        Url = new Uri(_configuration[$"{Keys.OpenApi}:{Keys.Contact}:{Keys.Url}"])
+                        Name = _configuration[Keys.OpenApiContactName],
+                        Email = _configuration[Keys.OpenApiContactEmail],
+                        Url = new Uri(_configuration[Keys.OpenApiContactUrl])
                     },
                     License = new OpenApiLicense
                     {
-                        Name = _configuration[$"{Keys.OpenApi}:{Keys.License}:{Keys.Name}"],
-                        Url = new Uri(_configuration[$"{Keys.OpenApi}:{Keys.License}:{Keys.Url}"]),
+                        Name = _configuration[Keys.OpenApiLicenseName],
+                        Url = new Uri(_configuration[Keys.OpenApiLicenseUrl]),
                     }
                 });
+                //x.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
             });
         }
 
@@ -108,12 +107,6 @@ namespace aiof.api.core
             app.UseAiofExceptionMiddleware();
 
             app.UseSwagger();
-            app.UseSwaggerUI(x =>
-            {
-                x.SwaggerEndpoint($"/swagger/{_configuration[$"{Keys.OpenApi}:{Keys.Version}"]}/swagger.json",
-                    $"{_configuration[$"{Keys.OpenApi}:{Keys.Title}"]} {_configuration[$"{Keys.OpenApi}:{Keys.Version}"]}");
-                x.RoutePrefix = string.Empty;
-            });
 
             app.UseRouting();
             app.UseAuthorization();
