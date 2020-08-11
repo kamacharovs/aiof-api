@@ -8,7 +8,7 @@ namespace aiof.api.data
     {
         public AssetDtoValidator()
         {
-            ValidatorOptions.Global.CascadeMode = CascadeMode.StopOnFirstFailure;
+            ValidatorOptions.Global.CascadeMode = CascadeMode.Stop;
 
             RuleFor(x => x)
                 .NotNull();
