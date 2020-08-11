@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Diagnostics;
@@ -24,7 +24,8 @@ namespace aiof.api.core
         private readonly ILogger _logger;
         private readonly IWebHostEnvironment _env;
 
-        private const string _defaultMessage = "An unexpected error has occurred.";
+        private const string _defaultMessage = "An unexpected error has occurred";
+        private const string _defaultValidationMessage = "One or more validation errors have occurred";
 
         public AiofExceptionMiddleware(RequestDelegate next, ILogger<AiofExceptionMiddleware> logger, IWebHostEnvironment env)
         {
@@ -62,28 +63,28 @@ namespace aiof.api.core
             var canViewSensitiveInfo = _env
                 .IsDevelopment();
 
-            var problem = new ProblemDetails()
+            var problem = new AiofProblemDetail()
             {
-                Title = canViewSensitiveInfo
+                Message = canViewSensitiveInfo
                     ? e.Message
                     : _defaultMessage,
-                Detail = canViewSensitiveInfo
-                    ? e.Demystify().ToString()
-                    : null,
-                Instance = $"aiof:api:error:{id}"
+                Code = StatusCodes.Status500InternalServerError,
+                TraceId = $"aiof:api:error:{id}"
             };
 
             if (e is AiofException ae)
-                problem.Status = ae.StatusCode;
+                problem.Code = ae.StatusCode;
             else if (e is ValidationException ve)
-                problem.Status = StatusCodes.Status400BadRequest;
-            else
-                problem.Status = StatusCodes.Status500InternalServerError;
+            {
+                problem.Code = StatusCodes.Status400BadRequest;
+                problem.Message = _defaultValidationMessage;
+                problem.Errors = ve.Errors.Select(x => x.ErrorMessage);
+            }
 
             var problemjson = JsonSerializer
                 .Serialize(problem);
 
-            httpContext.Response.StatusCode = problem.Status ?? StatusCodes.Status500InternalServerError;
+            httpContext.Response.StatusCode = problem.Code ?? StatusCodes.Status500InternalServerError;
             httpContext.Response.ContentType = "application/problem+json";
 
             await httpContext.Response
