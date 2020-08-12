@@ -32,12 +32,12 @@ namespace aiof.api.data
                 e.HasIndex(x => x.Username)
                     .IsUnique();
 
-                e.Property(x => x.Id).HasColumnName("id").ValueGeneratedOnAdd().IsRequired();
-                e.Property(x => x.PublicKey).HasColumnName("public_key").IsRequired();
-                e.Property(x => x.FirstName).HasColumnName("first_name").HasMaxLength(200).IsRequired();
-                e.Property(x => x.LastName).HasColumnName("last_name").HasMaxLength(200).IsRequired();
-                e.Property(x => x.Email).HasColumnName("email").HasMaxLength(100).IsRequired();
-                e.Property(x => x.Username).HasColumnName("username").HasMaxLength(100).IsRequired();
+                e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
+                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.FirstName).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
+                e.Property(x => x.LastName).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
+                e.Property(x => x.Email).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
+                e.Property(x => x.Username).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
 
                 e.HasMany(x => x.Assets)
                     .WithOne()
@@ -61,12 +61,12 @@ namespace aiof.api.data
 
                 e.HasKey(x => x.Id);
 
-                e.Property(x => x.Id).HasColumnName("id").ValueGeneratedOnAdd().IsRequired();
-                e.Property(x => x.PublicKey).HasColumnName("public_key").IsRequired();
-                e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
-                e.Property(x => x.TypeName).HasColumnName("type_name").HasMaxLength(100).IsRequired();
-                e.Property(x => x.Value).HasColumnName("value").IsRequired();
-                e.Property(x => x.UserId).HasColumnName("user_id");
+                e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
+                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
+                e.Property(x => x.TypeName).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
+                e.Property(x => x.Value).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.UserId).HasSnakeCaseColumnName();
 
                 e.HasOne(x => x.Type)
                     .WithMany()
@@ -80,12 +80,12 @@ namespace aiof.api.data
 
                 e.HasKey(x => x.Id);
 
-                e.Property(x => x.Id).HasColumnName("id").ValueGeneratedOnAdd().IsRequired();
-                e.Property(x => x.PublicKey).HasColumnName("public_key").IsRequired();
-                e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
-                e.Property(x => x.TypeName).HasColumnName("type_name").HasMaxLength(100).IsRequired();
-                e.Property(x => x.Value).HasColumnName("value").IsRequired();
-                e.Property(x => x.UserId).HasColumnName("user_id");
+                e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
+                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
+                e.Property(x => x.TypeName).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
+                e.Property(x => x.Value).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.UserId).HasSnakeCaseColumnName();
 
                 e.HasOne(x => x.Type)
                     .WithMany()
@@ -99,12 +99,12 @@ namespace aiof.api.data
 
                 e.HasKey(x => x.Id);
 
-                e.Property(x => x.Id).HasColumnName("id").ValueGeneratedOnAdd().IsRequired();
-                e.Property(x => x.PublicKey).HasColumnName("public_key").IsRequired();
-                e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
-                e.Property(x => x.TypeName).HasColumnName("type_name").HasMaxLength(100).IsRequired();
-                e.Property(x => x.Savings).HasColumnName("savings").HasColumnType("boolean");
-                e.Property(x => x.UserId).HasColumnName("user_id");
+                e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
+                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
+                e.Property(x => x.TypeName).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
+                e.Property(x => x.Savings).HasSnakeCaseColumnName();
+                e.Property(x => x.UserId).HasSnakeCaseColumnName();
 
                 e.HasOne(x => x.Type)
                     .WithMany()
@@ -121,8 +121,8 @@ namespace aiof.api.data
                 e.HasIndex(x => x.Name)
                     .IsUnique();
 
-                e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
-                e.Property(x => x.PublicKey).HasColumnName("public_key").IsRequired();
+                e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
+                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
             });
 
             modelBuilder.Entity<LiabilityType>(e =>
@@ -134,8 +134,8 @@ namespace aiof.api.data
                 e.HasIndex(x => x.Name)
                     .IsUnique();
 
-                e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
-                e.Property(x => x.PublicKey).HasColumnName("public_key").IsRequired();
+                e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
+                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
             });
 
             modelBuilder.Entity<GoalType>(e =>
@@ -147,8 +147,8 @@ namespace aiof.api.data
                 e.HasIndex(x => x.Name)
                     .IsUnique();
 
-                e.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
-                e.Property(x => x.PublicKey).HasColumnName("public_key").IsRequired();
+                e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
+                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
             });
         }
     }
