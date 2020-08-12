@@ -25,7 +25,6 @@ namespace aiof.api.data
             CreateMap<GoalDto, Goal>()
                 .ForMember(x => x.Name, o => o.Condition(s => s.Name != null))
                 .ForMember(x => x.TypeName, o => o.Condition(s => s.TypeName != null))
-                .ForMember(x => x.Savings, o => o.Condition(s => s.Savings != null))
                 .ForMember(x => x.UserId, o => o.Condition(s => s.UserId != null));
 
             CreateMap<LiabilityDto, Liability>()

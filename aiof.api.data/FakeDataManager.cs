@@ -120,7 +120,6 @@ namespace aiof.api.data
                     Id = 1,
                     Name = "savings",
                     TypeName = "long term",
-                    Savings = true,
                     UserId = 1
                 }
             };

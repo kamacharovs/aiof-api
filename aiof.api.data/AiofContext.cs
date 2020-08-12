@@ -103,7 +103,6 @@ namespace aiof.api.data
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
                 e.Property(x => x.TypeName).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
-                e.Property(x => x.Savings).HasSnakeCaseColumnName();
                 e.Property(x => x.UserId).HasSnakeCaseColumnName();
 
                 e.HasOne(x => x.Type)
