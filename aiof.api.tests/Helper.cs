@@ -169,8 +169,11 @@ namespace aiof.api.tests
         {
             var fakeGoalDtos = new Faker<GoalDto>()
                 .RuleFor(x => x.Name, f => f.Random.String())
-                .RuleFor(x => x.TypeName, f => "long term")
-                .RuleFor(x => x.Savings, f => true)
+                .RuleFor(x => x.TypeName, f => "save for a rainy day")
+                .RuleFor(x => x.Amount, f => f.Random.Decimal(5000, 10000))
+                .RuleFor(x => x.CurrentAmount, f => f.Random.Decimal(1000, 4000))
+                .RuleFor(x => x.Contribution, f => f.Random.Decimal(700, 900))
+                .RuleFor(x => x.ContributionFrequency, f => Frequency.Monthly.ToString())
                 .RuleFor(x => x.UserId, f => f.Random.Int(1, 2))
                 .Generate(GeneratedAmount);
 
@@ -181,8 +184,12 @@ namespace aiof.api.tests
                 toReturn.Add(new object[] 
                 { 
                     fakeGoalDto.Name, 
-                    fakeGoalDto.TypeName, 
-                    fakeGoalDto.Savings, 
+                    fakeGoalDto.TypeName,
+                    fakeGoalDto.Amount,
+                    fakeGoalDto.CurrentAmount,
+                    fakeGoalDto.Contribution,
+                    fakeGoalDto.ContributionFrequency,
+                    fakeGoalDto.PlannedDate,
                     fakeGoalDto.UserId
                 });
             }
