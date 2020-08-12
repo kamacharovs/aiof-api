@@ -194,11 +194,51 @@ namespace aiof.api.data
             {
                 new GoalType()
                 {
+                    Name = "crush credit card debt"
+                },
+                new GoalType()
+                {
+                    Name = "conquer my loans"
+                },
+                new GoalType()
+                {
+                    Name = "save for a rainy day"
+                },
+                new GoalType()
+                {
+                    Name = "prepare for retirement"
+                },
+                new GoalType()
+                {
+                    Name = "buy a home"
+                },
+                new GoalType()
+                {
+                    Name = "buy a car"
+                },
+                new GoalType()
+                {
+                    Name = "save for college"
+                },
+                new GoalType()
+                {
+                    Name = "take a trip"
+                },
+                new GoalType()
+                {
+                    Name = "improve my home"
+                },
+                new GoalType()
+                {
                     Name = "short term"
                 },
                 new GoalType()
                 {
                     Name = "long term"
+                },
+                new GoalType()
+                {
+                    Name = "other"
                 }
             };
         }
