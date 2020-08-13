@@ -51,7 +51,7 @@ namespace aiof.api.tests
                 Amount = 10M,
                 CurrentAmount = 1M,
                 Contribution = 1M,
-                ContributionFrequency = Frequency.Monthly.ToString()
+                ContributionFrequency = FrequencyEnum.Monthly.ToString()
             };
             Assert.True(_goalDtoValidator.Validate(goalDto).IsValid);
         }

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace aiof.api.data
 {
-    public enum Frequency
+    public enum FrequencyEnum
     {
         Daily   = 365,
         Weekly  = 52,

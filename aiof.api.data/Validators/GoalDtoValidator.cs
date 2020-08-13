@@ -40,10 +40,10 @@ namespace aiof.api.data
                 {
                     return x.IsValidFrequency();
                 })
-                .WithMessage($"Frequency is invalid. It must be '{Frequency.Daily}', " +
-                    $"'{Frequency.Weekly}', " +
-                    $"'{Frequency.Monthly}', or " +
-                    $"'{Frequency.Yearly}', ");
+                .WithMessage($"Frequency is invalid. It must be '{FrequencyEnum.Daily}', " +
+                    $"'{FrequencyEnum.Weekly}', " +
+                    $"'{FrequencyEnum.Monthly}', or " +
+                    $"'{FrequencyEnum.Yearly}', ");
         }
     }
 }

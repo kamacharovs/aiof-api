@@ -28,7 +28,7 @@ namespace aiof.api.data
 
         public static bool IsValidFrequency(this string value)
         {
-            return Enum.TryParse<Frequency>(value, true, out _);
+            return Enum.TryParse<FrequencyEnum>(value, true, out _);
         }
     }
 }
