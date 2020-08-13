@@ -61,16 +61,16 @@ namespace aiof.api.services
                 .FirstOrDefaultAsync(x => x.Id == id)
                 ?? throw new AiofNotFoundException($"{nameof(Goal)} with Id='{id}' was not found");
         }
-        public async Task<bool> GoalExistsAsync(IGoal goal)
+        public async Task<bool> GoalExistsAsync(GoalDto goalDto)
         {
             return await _context.Goals
-                .FirstOrDefaultAsync(x => x.Name == goal.Name
-                    && x.TypeName == goal.TypeName
-                    && x.Amount == goal.Amount
-                    && x.CurrentAmount == goal.CurrentAmount
-                    && x.Contribution == goal.Contribution
-                    && x.ContributionFrequency == goal.ContributionFrequency
-                    && x.UserId == goal.UserId) is null
+                .FirstOrDefaultAsync(x => x.Name == goalDto.Name
+                    && x.TypeName == goalDto.TypeName
+                    && x.Amount == goalDto.Amount
+                    && x.CurrentAmount == goalDto.CurrentAmount
+                    && x.Contribution == goalDto.Contribution
+                    && x.ContributionFrequencyName == goalDto.ContributionFrequencyName
+                    && x.UserId == goalDto.UserId) is null
                 ? false
                 : true;
         }
@@ -81,18 +81,15 @@ namespace aiof.api.services
                 .OrderBy(x => x.Name)
                 .ToListAsync();
         }
-        public async Task<bool> GoalTypeExistsAsync(string name)
-        {
-            return (await GetGoalTypesAsync())
-                .Any(x => x.Name == name);
-        }
 
         public async Task<IGoal> AddGoalAsync(GoalDto goalDto)
         {
-            var goal = await ValidateDtoAsync(goalDto) as Goal;
+            await _goalDtoValidator.ValidateAndThrowAsync(goalDto);
 
-            await _context.Goals
-                .AddAsync(goal);
+            var goal = await GoalExistsAsync(goalDto)
+                ? throw new AiofFriendlyException(HttpStatusCode.BadRequest,
+                    $"{nameof(Goal)} already exists")
+                : _mapper.Map<Goal>(goalDto);
 
             await _context.SaveChangesAsync();
 
@@ -125,27 +122,6 @@ namespace aiof.api.services
                 .Update(_mapper.Map(goalDto, goal as Goal));
 
             await _context.SaveChangesAsync();
-
-            return goal;
-        }
-
-        public async Task<IGoal> ValidateDtoAsync(GoalDto goalDto)
-        {
-            await _goalDtoValidator.ValidateAndThrowAsync(goalDto);
-
-            if (await GoalTypeExistsAsync(goalDto.TypeName) == false)
-            {
-                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"{nameof(Goal.TypeName)} is invalid. Accepted values can be found at '/goal/types' endpoint");
-            }
-
-            var goal = _mapper.Map<Goal>(goalDto);
-
-            if (await GoalExistsAsync(goal))
-            {
-                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"{nameof(Goal)} already exists");
-            }
 
             return goal;
         }
