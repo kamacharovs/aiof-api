@@ -102,8 +102,12 @@ namespace aiof.api.data
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
+                e.Property(x => x.Amount).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.CurrentAmount).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.Contribution).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.ContributionFrequency).HasSnakeCaseColumnName().HasMaxLength(20).IsRequired();
                 e.Property(x => x.TypeName).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
-                e.Property(x => x.Savings).HasSnakeCaseColumnName();
+                e.Property(x => x.PlannedDate).HasSnakeCaseColumnName();
                 e.Property(x => x.UserId).HasSnakeCaseColumnName();
 
                 e.HasOne(x => x.Type)

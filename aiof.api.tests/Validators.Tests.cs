@@ -47,7 +47,11 @@ namespace aiof.api.tests
             var goalDto = new GoalDto
             {
                 Name = name,
-                TypeName = typeName
+                TypeName = typeName,
+                Amount = 10M,
+                CurrentAmount = 1M,
+                Contribution = 1M,
+                ContributionFrequency = Frequency.Monthly.ToString()
             };
             Assert.True(_goalDtoValidator.Validate(goalDto).IsValid);
         }

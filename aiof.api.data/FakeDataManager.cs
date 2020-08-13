@@ -118,9 +118,12 @@ namespace aiof.api.data
                 new Goal()
                 {
                     Id = 1,
-                    Name = "savings",
-                    TypeName = "long term",
-                    Savings = true,
+                    Name = "buy a home by 2021",
+                    Amount = 345000M,
+                    CurrentAmount = 50000M,
+                    Contribution = 2000M,
+                    ContributionFrequency = Frequency.Monthly.ToString(),
+                    TypeName = "buy a home",
                     UserId = 1
                 }
             };

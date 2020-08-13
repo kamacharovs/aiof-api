@@ -25,7 +25,11 @@ namespace aiof.api.data
             CreateMap<GoalDto, Goal>()
                 .ForMember(x => x.Name, o => o.Condition(s => s.Name != null))
                 .ForMember(x => x.TypeName, o => o.Condition(s => s.TypeName != null))
-                .ForMember(x => x.Savings, o => o.Condition(s => s.Savings != null))
+                .ForMember(x => x.Amount, o => o.MapFrom(s => s.Amount))
+                .ForMember(x => x.CurrentAmount, o => o.MapFrom(s => s.CurrentAmount))
+                .ForMember(x => x.Contribution, o => o.MapFrom(s => s.Contribution))
+                .ForMember(x => x.ContributionFrequency, o => o.MapFrom(s => s.ContributionFrequency.ToLowerInvariant()))
+                .ForMember(x => x.PlannedDate, o => o.Condition(s => s.PlannedDate != null))
                 .ForMember(x => x.UserId, o => o.Condition(s => s.UserId != null));
 
             CreateMap<LiabilityDto, Liability>()
