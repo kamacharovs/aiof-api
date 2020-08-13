@@ -53,11 +53,13 @@ namespace aiof.api.data
             return this.Name == other.Name
                 && this.TypeName == other.TypeName
                 && this.Amount == other.Amount
-                && this.UserId == other.UserId;
+                && this.CurrentAmount == other.CurrentAmount
+                && this.Contribution == other.Contribution
+                && this.ContributionFrequency == other.ContributionFrequency;
         }
 
         public override bool Equals(object obj) => Equals(obj as Goal);
-        public override int GetHashCode() => (Name, TypeName, Amount, UserId).GetHashCode();
+        public override int GetHashCode() => (Name, TypeName, Amount, CurrentAmount, Contribution, ContributionFrequency).GetHashCode();
     }
 
     public class GoalDto

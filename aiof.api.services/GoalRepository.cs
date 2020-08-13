@@ -61,11 +61,18 @@ namespace aiof.api.services
                 .FirstOrDefaultAsync(x => x.Id == id)
                 ?? throw new AiofNotFoundException($"{nameof(Goal)} with Id='{id}' was not found");
         }
-        public async Task<bool> GoalExistsAsync(Goal goal)
+        public async Task<bool> GoalExistsAsync(IGoal goal)
         {
             return await _context.Goals
-                .AsNoTracking()
-                .AnyAsync(x => x.Equals(goal));
+                .FirstOrDefaultAsync(x => x.Name == goal.Name
+                    && x.TypeName == goal.TypeName
+                    && x.Amount == goal.Amount
+                    && x.CurrentAmount == goal.CurrentAmount
+                    && x.Contribution == goal.Contribution
+                    && x.ContributionFrequency == goal.ContributionFrequency
+                    && x.UserId == goal.UserId) is null
+                ? false
+                : true;
         }
 
         public async Task<IEnumerable<IGoalType>> GetGoalTypesAsync()
