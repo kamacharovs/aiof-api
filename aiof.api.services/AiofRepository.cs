@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -92,6 +93,12 @@ namespace aiof.api.services
             await _context.SaveChangesAsync();
 
             return await GetUserAsync(userId);
+        }
+
+        public async Task<IEnumerable<IFrequency>> GetFrequenciesAsync()
+        {
+            return await GetFrequenciesQuery()
+                .ToListAsync();
         }
     }
 }
