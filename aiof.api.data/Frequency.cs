@@ -20,6 +20,7 @@ namespace aiof.api.data
         /// <summary>
         /// Value compared to a Year. For example, a Day is 365, a Week is 52, a Month is 12, etc. This will also be used to support custom frequencies
         /// </summary>
+        [JsonIgnore]
         [Required]
         public int Value { get; set; }
     }
