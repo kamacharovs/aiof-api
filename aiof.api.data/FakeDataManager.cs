@@ -125,7 +125,7 @@ namespace aiof.api.data
                     Amount = 345000M,
                     CurrentAmount = 50000M,
                     Contribution = 2000M,
-                    ContributionFrequency = FrequencyEnum.Monthly.ToString(),
+                    ContributionFrequencyName = "monthly",
                     TypeName = "buy a home",
                     UserId = 1
                 }

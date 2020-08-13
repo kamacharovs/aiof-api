@@ -33,17 +33,9 @@ namespace aiof.api.data
                 .NotNull()
                 .NotEmpty();
 
-            RuleFor(x => x.ContributionFrequency)
+            RuleFor(x => x.ContributionFrequencyName)
                 .NotNull()
-                .NotEmpty()
-                .Must(x =>
-                {
-                    return x.IsValidFrequency();
-                })
-                .WithMessage($"Frequency is invalid. It must be '{FrequencyEnum.Daily}', " +
-                    $"'{FrequencyEnum.Weekly}', " +
-                    $"'{FrequencyEnum.Monthly}', or " +
-                    $"'{FrequencyEnum.Yearly}', ");
+                .NotEmpty();
         }
     }
 }

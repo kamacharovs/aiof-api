@@ -25,10 +25,5 @@ namespace aiof.api.data
 
             return propertyBuilder;
         }
-
-        public static bool IsValidFrequency(this string value)
-        {
-            return Enum.TryParse<FrequencyEnum>(value, true, out _);
-        }
     }
 }

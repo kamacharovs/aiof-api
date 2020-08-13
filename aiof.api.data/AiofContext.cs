@@ -105,7 +105,7 @@ namespace aiof.api.data
                 e.Property(x => x.Amount).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.CurrentAmount).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.Contribution).HasSnakeCaseColumnName().IsRequired();
-                e.Property(x => x.ContributionFrequency).HasSnakeCaseColumnName().HasMaxLength(20).IsRequired();
+                e.Property(x => x.ContributionFrequencyName).HasSnakeCaseColumnName().HasMaxLength(20).IsRequired();
                 e.Property(x => x.TypeName).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
                 e.Property(x => x.PlannedDate).HasSnakeCaseColumnName();
                 e.Property(x => x.UserId).HasSnakeCaseColumnName();
@@ -113,6 +113,11 @@ namespace aiof.api.data
                 e.HasOne(x => x.Type)
                     .WithMany()
                     .HasForeignKey(x => x.TypeName)
+                    .IsRequired();
+
+                e.HasOne(x => x.ContributionFrequency)
+                    .WithMany()
+                    .HasForeignKey(x => x.ContributionFrequencyName)
                     .IsRequired();
             });
 
