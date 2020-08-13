@@ -25,7 +25,6 @@ namespace aiof.api.data
         public string TypeName { get; set; }
 
         [JsonIgnore]
-        [Required]
         public GoalType Type { get; set; }
 
         [Required]
@@ -53,11 +52,12 @@ namespace aiof.api.data
 
             return this.Name == other.Name
                 && this.TypeName == other.TypeName
-                && this.Amount == other.Amount;
+                && this.Amount == other.Amount
+                && this.UserId == other.UserId;
         }
 
-        public override bool Equals(object obj) => Equals(obj as Asset);
-        public override int GetHashCode() => (Name, TypeName, Amount).GetHashCode();
+        public override bool Equals(object obj) => Equals(obj as Goal);
+        public override int GetHashCode() => (Name, TypeName, Amount, UserId).GetHashCode();
     }
 
     public class GoalDto

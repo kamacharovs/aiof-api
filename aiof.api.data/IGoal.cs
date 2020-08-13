@@ -24,7 +24,6 @@ namespace aiof.api.data
         string TypeName { get; set; }
 
         [JsonIgnore]
-        [Required]
         GoalType Type { get; set; }
 
         [Required]

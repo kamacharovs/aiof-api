@@ -61,6 +61,12 @@ namespace aiof.api.services
                 .FirstOrDefaultAsync(x => x.Id == id)
                 ?? throw new AiofNotFoundException($"{nameof(Goal)} with Id='{id}' was not found");
         }
+        public async Task<bool> GoalExistsAsync(Goal goal)
+        {
+            return await _context.Goals
+                .AsNoTracking()
+                .AnyAsync(x => x.Equals(goal));
+        }
 
         public async Task<IEnumerable<IGoalType>> GetGoalTypesAsync()
         {
@@ -68,12 +74,15 @@ namespace aiof.api.services
                 .OrderBy(x => x.Name)
                 .ToListAsync();
         }
+        public async Task<bool> GoalTypeExistsAsync(string name)
+        {
+            return (await GetGoalTypesAsync())
+                .Any(x => x.Name == name);
+        }
 
         public async Task<IGoal> AddGoalAsync(GoalDto goalDto)
         {
-            await _goalDtoValidator.ValidateAndThrowAsync(goalDto);
-
-            var goal = _mapper.Map<Goal>(goalDto);
+            var goal = await ValidateDtoAsync(goalDto) as Goal;
 
             await _context.Goals
                 .AddAsync(goal);
@@ -109,6 +118,27 @@ namespace aiof.api.services
                 .Update(_mapper.Map(goalDto, goal as Goal));
 
             await _context.SaveChangesAsync();
+
+            return goal;
+        }
+
+        public async Task<IGoal> ValidateDtoAsync(GoalDto goalDto)
+        {
+            await _goalDtoValidator.ValidateAndThrowAsync(goalDto);
+
+            if (await GoalTypeExistsAsync(goalDto.TypeName) == false)
+            {
+                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
+                    $"{nameof(Goal.TypeName)} is invalid. Accepted values can be found at '/goal/types' endpoint");
+            }
+
+            var goal = _mapper.Map<Goal>(goalDto);
+
+            if (await GoalExistsAsync(goal))
+            {
+                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
+                    $"{nameof(Goal)} already exists");
+            }
 
             return goal;
         }
