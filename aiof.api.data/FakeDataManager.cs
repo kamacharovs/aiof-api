@@ -36,6 +36,9 @@ namespace aiof.api.data
             _context.Goals
                 .AddRange(GetFakeGoals());
 
+            _context.Frequencies
+                .AddRange(GetFakeFrequencies());
+
             _context.SaveChanges();
         }
 
@@ -43,7 +46,7 @@ namespace aiof.api.data
         {
             return new List<User>()
             {
-                new User()
+                new User
                 {
                     Id = 1,
                     PublicKey = Guid.NewGuid(),
@@ -52,7 +55,7 @@ namespace aiof.api.data
                     Email = "gkama@test.com",
                     Username = "gkama"
                 },
-                new User()
+                new User
                 {
                     Id = 2,
                     PublicKey = Guid.NewGuid(),
@@ -68,7 +71,7 @@ namespace aiof.api.data
         {
             return new List<Asset>
             {
-                new Asset()
+                new Asset
                 {
                     Id = 1,
                     Name = "car",
@@ -76,7 +79,7 @@ namespace aiof.api.data
                     Value = 14762.12M,
                     UserId = 1
                 },
-                new Asset()
+                new Asset
                 {
                     Id = 2,
                     Name = "house",
@@ -100,7 +103,7 @@ namespace aiof.api.data
         {
             return new List<Liability>()
             {
-                new Liability()
+                new Liability
                 {
                     Id = 1,
                     Name = "car loan",
@@ -115,14 +118,14 @@ namespace aiof.api.data
         {
             return new List<Goal>()
             {
-                new Goal()
+                new Goal
                 {
                     Id = 1,
                     Name = "buy a home by 2021",
                     Amount = 345000M,
                     CurrentAmount = 50000M,
                     Contribution = 2000M,
-                    ContributionFrequency = Frequency.Monthly.ToString(),
+                    ContributionFrequency = FrequencyEnum.Monthly.ToString(),
                     TypeName = "buy a home",
                     UserId = 1
                 }
@@ -133,27 +136,27 @@ namespace aiof.api.data
         {
             return new List<AssetType>()
             {
-                new AssetType()
+                new AssetType
                 {
                     Name = "car"
                 },
-                new AssetType()
+                new AssetType
                 {
                     Name = "house"
                 },
-                new AssetType()
+                new AssetType
                 {
                     Name = "investment"
                 },
-                new AssetType()
+                new AssetType
                 {
                     Name = "stock"
                 },
-                new AssetType()
+                new AssetType
                 {
                     Name = "cash"
                 },
-                new AssetType()
+                new AssetType
                 {
                     Name = "other"
                 }
@@ -164,27 +167,27 @@ namespace aiof.api.data
         {
             return new List<LiabilityType>()
             {
-                new LiabilityType()
+                new LiabilityType
                 {
                     Name = "personal loan"
                 },
-                new LiabilityType()
+                new LiabilityType
                 {
                     Name = "car loan"
                 },
-                new LiabilityType()
+                new LiabilityType
                 {
                     Name = "credit card"
                 },
-                new LiabilityType()
+                new LiabilityType
                 {
                     Name = "mortgage"
                 },
-                new LiabilityType()
+                new LiabilityType
                 {
                     Name = "house renovation"
                 },
-                new LiabilityType()
+                new LiabilityType
                 {
                     Name = "other"
                 }
@@ -195,53 +198,84 @@ namespace aiof.api.data
         {
             return new List<GoalType>()
             {
-                new GoalType()
+                new GoalType
                 {
                     Name = "crush credit card debt"
                 },
-                new GoalType()
+                new GoalType
                 {
                     Name = "conquer my loans"
                 },
-                new GoalType()
+                new GoalType
                 {
                     Name = "save for a rainy day"
                 },
-                new GoalType()
+                new GoalType
                 {
                     Name = "prepare for retirement"
                 },
-                new GoalType()
+                new GoalType
                 {
                     Name = "buy a home"
                 },
-                new GoalType()
+                new GoalType
                 {
                     Name = "buy a car"
                 },
-                new GoalType()
+                new GoalType
                 {
                     Name = "save for college"
                 },
-                new GoalType()
+                new GoalType
                 {
                     Name = "take a trip"
                 },
-                new GoalType()
+                new GoalType
                 {
                     Name = "improve my home"
                 },
-                new GoalType()
+                new GoalType
                 {
                     Name = "short term"
                 },
-                new GoalType()
+                new GoalType
                 {
                     Name = "long term"
                 },
-                new GoalType()
+                new GoalType
                 {
                     Name = "other"
+                }
+            };
+        }
+
+        public IEnumerable<Frequency> GetFakeFrequencies()
+        {
+            return new List<Frequency>
+            {
+                new Frequency
+                {
+                    Id = 1,
+                    Name = "yearly",
+                    Value = 1
+                },
+                new Frequency
+                {
+                    Id = 2,
+                    Name = "monthly",
+                    Value = 12
+                },
+                new Frequency
+                {
+                    Id = 3,
+                    Name = "weekly",
+                    Value = 52
+                },
+                new Frequency
+                {
+                    Id = 4,
+                    Name = "daily",
+                    Value = 365
                 }
             };
         }
