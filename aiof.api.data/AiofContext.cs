@@ -159,11 +159,10 @@ namespace aiof.api.data
             {
                 e.ToTable("frequency");
 
-                e.HasKey(x => x.Id);
+                e.HasKey(x => x.Name);
 
-                e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
-                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(20).IsRequired();
+                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.Value).HasSnakeCaseColumnName().IsRequired();
             });
         }

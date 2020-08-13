@@ -255,25 +255,21 @@ namespace aiof.api.data
             {
                 new Frequency
                 {
-                    Id = 1,
                     Name = "yearly",
                     Value = 1
                 },
                 new Frequency
                 {
-                    Id = 2,
                     Name = "monthly",
                     Value = 12
                 },
                 new Frequency
                 {
-                    Id = 3,
                     Name = "weekly",
                     Value = 52
                 },
                 new Frequency
                 {
-                    Id = 4,
                     Name = "daily",
                     Value = 365
                 }

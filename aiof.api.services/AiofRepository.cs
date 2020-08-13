@@ -52,16 +52,26 @@ namespace aiof.api.services
                     .AsQueryable();
         }
 
+        private IQueryable<Frequency> GetFrequenciesQuery(bool asNoTracking = true)
+        {
+            return asNoTracking
+                ? _context.Frequencies
+                    .AsNoTracking()
+                    .AsQueryable()
+                : _context.Frequencies
+                    .AsQueryable();
+        }
+
         public async Task<IUser> GetUserAsync(
             int id,
             bool included = true,
             bool asNoTracking = true)
         {
-            return included
+            return (included
                 ? await GetUsersQuery(asNoTracking)
                     .FirstOrDefaultAsync(x => x.Id == id)
                 : await GetUsersBaseQuery(asNoTracking)
-                    .FirstOrDefaultAsync(x => x.Id == id)
+                    .FirstOrDefaultAsync(x => x.Id == id))
                 ?? throw new AiofNotFoundException($"{nameof(User)} with Id='{id}' was not found");
         }
 
