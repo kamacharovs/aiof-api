@@ -34,6 +34,15 @@ namespace aiof.api.core.Controllers
             return Ok(await _repo.GetUserAsync(id));
         }
 
+        [HttpGet]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetUserAsync([FromQuery]string username)
+        {
+            return Ok(await _repo.GetUserAsync(username));
+        }
+
         [HttpPost]
         [Route("{id}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
@@ -41,16 +50,6 @@ namespace aiof.api.core.Controllers
         public async Task<IActionResult> UpsertFinanceAsync([FromRoute]int id, [FromBody]UserDto userDto)
         {
             return Ok(await _repo.UpsertFinanceAsync(id, userDto));
-        }
-
-        [HttpGet]
-        [Route("user/username/{username}")]
-        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetUserAsync([FromRoute]string username)
-        {
-            return Ok(await _repo.GetUserAsync(username));
-        }  
+        } 
     }
 }
