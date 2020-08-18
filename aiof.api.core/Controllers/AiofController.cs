@@ -43,11 +43,10 @@ namespace aiof.api.core.Controllers
         }
 
         [HttpGet]
-        [Route("user/username/{username}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetUserAsync([FromRoute]string username)
+        public async Task<IActionResult> GetUserAsync([FromQuery] string username)
         {
             return Ok(await _repo.GetUserAsync(username));
         }
