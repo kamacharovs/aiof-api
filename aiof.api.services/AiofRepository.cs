@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -52,16 +53,26 @@ namespace aiof.api.services
                     .AsQueryable();
         }
 
+        private IQueryable<Frequency> GetFrequenciesQuery(bool asNoTracking = true)
+        {
+            return asNoTracking
+                ? _context.Frequencies
+                    .AsNoTracking()
+                    .AsQueryable()
+                : _context.Frequencies
+                    .AsQueryable();
+        }
+
         public async Task<IUser> GetUserAsync(
             int id,
             bool included = true,
             bool asNoTracking = true)
         {
-            return included
+            return (included
                 ? await GetUsersQuery(asNoTracking)
                     .FirstOrDefaultAsync(x => x.Id == id)
                 : await GetUsersBaseQuery(asNoTracking)
-                    .FirstOrDefaultAsync(x => x.Id == id)
+                    .FirstOrDefaultAsync(x => x.Id == id))
                 ?? throw new AiofNotFoundException($"{nameof(User)} with Id='{id}' was not found");
         }
 
@@ -82,6 +93,12 @@ namespace aiof.api.services
             await _context.SaveChangesAsync();
 
             return await GetUserAsync(userId);
+        }
+
+        public async Task<IEnumerable<IFrequency>> GetFrequenciesAsync()
+        {
+            return await GetFrequenciesQuery()
+                .ToListAsync();
         }
     }
 }

@@ -28,7 +28,7 @@ namespace aiof.api.data
                 .ForMember(x => x.Amount, o => o.MapFrom(s => s.Amount))
                 .ForMember(x => x.CurrentAmount, o => o.MapFrom(s => s.CurrentAmount))
                 .ForMember(x => x.Contribution, o => o.MapFrom(s => s.Contribution))
-                .ForMember(x => x.ContributionFrequency, o => o.MapFrom(s => s.ContributionFrequency.ToLowerInvariant()))
+                .ForMember(x => x.ContributionFrequencyName, o => o.MapFrom(s => s.ContributionFrequencyName.ToLowerInvariant()))
                 .ForMember(x => x.PlannedDate, o => o.Condition(s => s.PlannedDate != null))
                 .ForMember(x => x.UserId, o => o.Condition(s => s.UserId != null));
 

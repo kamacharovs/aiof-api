@@ -37,7 +37,10 @@ namespace aiof.api.data
 
         [Required]
         [MaxLength(20)]
-        string ContributionFrequency { get; set; }
+        string ContributionFrequencyName { get; set; }
+
+        [JsonIgnore]
+        Frequency ContributionFrequency { get; set; }
 
         DateTime? PlannedDate { get; set; }
 

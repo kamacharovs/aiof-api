@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +15,7 @@ namespace aiof.api.data
         public virtual DbSet<AssetType> AssetTypes { get; set; }
         public virtual DbSet<LiabilityType> LiabilityTypes { get; set; }
         public virtual DbSet<GoalType> GoalTypes { get; set; }
+        public virtual DbSet<Frequency> Frequencies { get; set; }
 
         public AiofContext(DbContextOptions<AiofContext> options)
             : base(options)
@@ -105,7 +105,7 @@ namespace aiof.api.data
                 e.Property(x => x.Amount).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.CurrentAmount).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.Contribution).HasSnakeCaseColumnName().IsRequired();
-                e.Property(x => x.ContributionFrequency).HasSnakeCaseColumnName().HasMaxLength(20).IsRequired();
+                e.Property(x => x.ContributionFrequencyName).HasSnakeCaseColumnName().HasMaxLength(20).IsRequired();
                 e.Property(x => x.TypeName).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
                 e.Property(x => x.PlannedDate).HasSnakeCaseColumnName();
                 e.Property(x => x.UserId).HasSnakeCaseColumnName();
@@ -113,6 +113,11 @@ namespace aiof.api.data
                 e.HasOne(x => x.Type)
                     .WithMany()
                     .HasForeignKey(x => x.TypeName)
+                    .IsRequired();
+
+                e.HasOne(x => x.ContributionFrequency)
+                    .WithMany()
+                    .HasForeignKey(x => x.ContributionFrequencyName)
                     .IsRequired();
             });
 
@@ -153,6 +158,17 @@ namespace aiof.api.data
 
                 e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
+            });
+
+            modelBuilder.Entity<Frequency>(e =>
+            {
+                e.ToTable("frequency");
+
+                e.HasKey(x => x.Name);
+
+                e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(20).IsRequired();
+                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.Value).HasSnakeCaseColumnName().IsRequired();
             });
         }
     }

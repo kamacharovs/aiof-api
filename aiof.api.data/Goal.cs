@@ -38,7 +38,10 @@ namespace aiof.api.data
 
         [Required]
         [MaxLength(20)]
-        public string ContributionFrequency { get; set; }
+        public string ContributionFrequencyName { get; set; }
+
+        [JsonIgnore]
+        public Frequency ContributionFrequency { get; set; }
 
         public DateTime? PlannedDate { get; set; } = DateTime.UtcNow.AddYears(1);
 
@@ -55,7 +58,7 @@ namespace aiof.api.data
                 && this.Amount == other.Amount
                 && this.CurrentAmount == other.CurrentAmount
                 && this.Contribution == other.Contribution
-                && this.ContributionFrequency == other.ContributionFrequency;
+                && this.ContributionFrequencyName == other.ContributionFrequencyName;
         }
 
         public override bool Equals(object obj) => Equals(obj as Goal);
@@ -69,7 +72,7 @@ namespace aiof.api.data
         public decimal Amount { get; set; }
         public decimal CurrentAmount { get; set; }
         public decimal Contribution { get; set; }
-        public string ContributionFrequency { get; set; }
+        public string ContributionFrequencyName { get; set; }
         public DateTime? PlannedDate { get; set; }
         public int? UserId { get; set; }
     }

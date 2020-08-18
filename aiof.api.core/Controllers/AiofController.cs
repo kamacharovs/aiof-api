@@ -12,7 +12,6 @@ using aiof.api.services;
 namespace aiof.api.core.Controllers
 {
     [ApiController]
-    [Route("user")]
     [Produces(Keys.ApplicationJson)]
     [Consumes(Keys.ApplicationJson)]
     [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status500InternalServerError)]
@@ -26,7 +25,7 @@ namespace aiof.api.core.Controllers
         }
 
         [HttpGet]
-        [Route("{id}")]
+        [Route("user/{id}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetUserAsync([FromRoute]int id)
@@ -34,22 +33,30 @@ namespace aiof.api.core.Controllers
             return Ok(await _repo.GetUserAsync(id));
         }
 
-        [HttpGet]
-        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetUserAsync([FromQuery]string username)
-        {
-            return Ok(await _repo.GetUserAsync(username));
-        }
-
         [HttpPost]
-        [Route("{id}")]
+        [Route("user/{id}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpsertFinanceAsync([FromRoute]int id, [FromBody]UserDto userDto)
         {
             return Ok(await _repo.UpsertFinanceAsync(id, userDto));
-        } 
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetUserAsync([FromQuery] string username)
+        {
+            return Ok(await _repo.GetUserAsync(username));
+        }
+
+        [HttpGet]
+        [Route("frequencies")]
+        [ProducesResponseType(typeof(IEnumerable<IFrequency>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetFrequenciesAsync()
+        {
+            return Ok(await _repo.GetFrequenciesAsync());
+        }
     }
 }
