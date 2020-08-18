@@ -43,6 +43,7 @@ namespace aiof.api.core.Controllers
         }
 
         [HttpGet]
+        [Route("user")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]

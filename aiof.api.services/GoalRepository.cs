@@ -93,6 +93,8 @@ namespace aiof.api.services
                     $"{nameof(Goal)} already exists")
                 : _mapper.Map<Goal>(goalDto);
 
+            await _context.AddAsync(goal);
+
             await _context.SaveChangesAsync();
 
             await _context.Entry(goal)
