@@ -11,6 +11,7 @@ using AutoMapper;
 using FluentValidation;
 
 using aiof.api.data;
+using System.Text.Json;
 
 namespace aiof.api.services
 {
@@ -92,6 +93,9 @@ namespace aiof.api.services
                 .Update(user);
 
             await _context.SaveChangesAsync();
+
+            _logger.LogInformation($"Upserted {nameof(User)} with {nameof(User.Username)}='{username}' " +
+                $"{nameof(UserProfile)}='{JsonSerializer.Serialize(user.Profile)}'");
 
             return await GetUserAsync(username);
         }
