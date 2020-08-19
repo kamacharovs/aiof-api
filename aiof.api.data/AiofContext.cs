@@ -40,6 +40,12 @@ namespace aiof.api.data
                 e.Property(x => x.Email).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
                 e.Property(x => x.Username).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
 
+                e.HasOne(x => x.Profile)
+                    .WithOne(x => x.User)
+                    .HasForeignKey<UserProfile>(x => x.UserId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+
                 e.HasMany(x => x.Assets)
                     .WithOne()
                     .HasForeignKey(x => x.UserId)
@@ -65,12 +71,6 @@ namespace aiof.api.data
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.UserId).HasSnakeCaseColumnName().IsRequired();
-
-                e.HasOne(x => x.User)
-                    .WithMany()
-                    .HasForeignKey(x => x.UserId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired();
             });
 
             modelBuilder.Entity<Asset>(e =>

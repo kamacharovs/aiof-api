@@ -30,6 +30,24 @@ namespace aiof.api.services
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
+        private IQueryable<User> GetUsersQuery(bool asNoTracking = true)
+        {
+            return asNoTracking
+                ? _context.Users
+                    .Include(x => x.Profile)
+                    .Include(x => x.Assets)
+                    .Include(x => x.Goals)
+                    .Include(x => x.Liabilities)
+                    .AsNoTracking()
+                    .AsQueryable()
+                : _context.Users
+                    .Include(x => x.Profile)
+                    .Include(x => x.Assets)
+                    .Include(x => x.Goals)
+                    .Include(x => x.Liabilities)
+                    .AsQueryable();
+        }
+
         private IQueryable<UserProfile> GetUserProfilesQuery(bool asNoTracking = true)
         {
             return asNoTracking
@@ -40,6 +58,15 @@ namespace aiof.api.services
                 : _context.UserProfiles
                     .Include(x => x.User)
                     .AsQueryable();
+        }
+
+        public async Task<IUser> GetUserAsync(
+            string username,
+            bool asNoTracking = true)
+        {
+            return await GetUsersQuery()
+                .FirstOrDefaultAsync(x => x.Username == username)
+                ?? throw new AiofNotFoundException($"{nameof(User)} with Username='{username}' was not found");
         }
 
         public async Task<UserProfile> GetUserProfileAsync(

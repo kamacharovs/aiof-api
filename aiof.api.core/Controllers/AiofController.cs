@@ -43,16 +43,6 @@ namespace aiof.api.core.Controllers
         }
 
         [HttpGet]
-        [Route("user")]
-        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetUserAsync([FromQuery] string username)
-        {
-            return Ok(await _repo.GetUserAsync(username));
-        }
-
-        [HttpGet]
         [Route("frequencies")]
         [ProducesResponseType(typeof(IEnumerable<IFrequency>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetFrequenciesAsync()

@@ -25,6 +25,15 @@ namespace aiof.api.core.Controllers
         {
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
         }
+        
+        [HttpGet]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetUserAsync([FromQuery] string username)
+        {
+            return Ok(await _repo.GetUserAsync(username));
+        }
 
         [HttpPost]
         [Route("profile")]
