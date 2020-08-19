@@ -1,6 +1,5 @@
 using System;
-using System.IO;
-using System.Reflection;
+using System.Net.Http;
 using System.Text.Json;
 
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +13,7 @@ using Microsoft.OpenApi.Models;
 
 using AutoMapper;
 using FluentValidation;
+using Polly;
 
 using aiof.api.data;
 using aiof.api.services;
@@ -41,11 +41,13 @@ namespace aiof.api.core
             services.AddScoped<FakeDataManager>();
             services.AddScoped<IEnvConfiguration, EnvConfiguration>();
             services.AddAutoMapper(typeof(AutoMappingProfileDto).Assembly);
-            
-            services.AddHttpClient<IAiofMetadataRepository, AiofMetadataRepository>(Keys.Metadata, c =>
+
+            services.AddSingleton(Policy.HandleResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)
+                .RetryAsync(int.Parse(_configuration[Keys.PollyDefaultRetry])));
+            services.AddHttpClient<IAiofMetadataRepository, AiofMetadataRepository>(Keys.Metadata, x =>
                 {
-                    c.BaseAddress = new Uri(_configuration[Keys.MetadataBaseUrl]);
-                    c.DefaultRequestHeaders.Add("Accept", "application/json");
+                    x.BaseAddress = new Uri(_configuration[Keys.MetadataBaseUrl]);
+                    x.DefaultRequestHeaders.Add("Accept", "application/json");
                 })
                 .SetHandlerLifetime(TimeSpan.FromMinutes(5));
 
