@@ -69,7 +69,7 @@ namespace aiof.api.services
                 ?? throw new AiofNotFoundException($"{nameof(User)} with Username='{username}' was not found");
         }
 
-        public async Task<UserProfile> GetUserProfileAsync(
+        public async Task<IUserProfile> GetUserProfileAsync(
             string username,
             bool asNoTracking = true)
         {
@@ -78,15 +78,20 @@ namespace aiof.api.services
                 ?? throw new AiofNotFoundException($"{nameof(UserProfile)} for {nameof(User)} with Username='{username}' was not found");
         }
 
-        public async Task<UserProfile> UpdateUserProfileAsync(
+        public async Task<IUserProfile> UpdateUserProfileAsync(
             string username,
             UserProfileDto userProfileDto)
         {
-            var userProfile = await GetUserProfileAsync(
+            var userProfileInDb = await GetUserProfileAsync(
                 username, 
-                asNoTracking: false);
+                asNoTracking: false) as UserProfile;
 
-            userProfile = _mapper.Map<UserProfile>(userProfileDto);
+            var userProfile = _mapper.Map(userProfileDto, userProfileInDb);
+
+            _context.UserProfiles
+                .Update(userProfile);
+
+            await _context.SaveChangesAsync();
 
             return userProfile;
         }

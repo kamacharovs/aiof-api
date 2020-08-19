@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace aiof.api.data
 {
-    public class UserProfile :
+    public class UserProfile : IUserProfile,
         IPublicKeyId
     {
         [JsonIgnore]

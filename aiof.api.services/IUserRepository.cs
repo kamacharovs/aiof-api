@@ -11,10 +11,10 @@ namespace aiof.api.services
         Task<IUser> GetUserAsync(
             string username,
             bool asNoTracking = true);
-        Task<UserProfile> GetUserProfileAsync(
+        Task<IUserProfile> GetUserProfileAsync(
             string username,
             bool asNoTracking = true);
-        Task<UserProfile> UpdateUserProfileAsync(
+        Task<IUserProfile> UpdateUserProfileAsync(
             string username,
             UserProfileDto userProfileDto);
     }
