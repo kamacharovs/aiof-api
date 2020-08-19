@@ -108,7 +108,7 @@ namespace aiof.api.tests
 
         #region Unit Tests
         static FakeDataManager _Fake
-            => Helper.GetRequiredService<FakeDataManager>() ?? throw new ArgumentNullException(nameof(FakeDataManager));
+            => GetRequiredService<FakeDataManager>() ?? throw new ArgumentNullException(nameof(FakeDataManager));
 
         public static IEnumerable<object[]> UsersId()
         {
@@ -118,6 +118,11 @@ namespace aiof.api.tests
         public static IEnumerable<object[]> UsersUsername()
         {
             return _Fake.GetFakeUsersData(
+                username: true);
+        }
+        public static IEnumerable<object[]> UserProfilesUsername()
+        {
+            return _Fake.GetFakeUserProfilesData(
                 username: true);
         }
 
@@ -220,6 +225,15 @@ namespace aiof.api.tests
             }
 
             return toReturn;
+        }
+
+        public static UserProfileDto RandomUserProfileDto()
+        {
+            return new Faker<UserProfileDto>()
+                .RuleFor(x => x.Gender, f => f.Person.Gender.ToString())
+                .RuleFor(x => x.DateOfBirth, f => f.Date.Past(f.Random.Int(18, 99)))
+                .RuleFor(x => x.EducationLevel, f => "Bachelors")
+                .Generate();
         }
 
         public static int GeneratedAmount = 3; 

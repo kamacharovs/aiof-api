@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -78,6 +79,7 @@ namespace aiof.api.data
                 {
                     Id = 1,
                     UserId = 1,
+                    MaritalStatus = "single"
                 }
             };
         }
@@ -316,6 +318,27 @@ namespace aiof.api.data
                     toReturn.Add(new object[] 
                     { 
                         fakeUserUsername
+                    });
+            }
+
+            return toReturn;
+        }
+
+        public IEnumerable<object[]> GetFakeUserProfilesData(
+            bool username = false)
+        {
+            var fakeUserProfiles = _context.UserProfiles
+                .Include(x => x.User)
+                .AsNoTracking();
+
+            var toReturn = new List<object[]>();
+
+            if (username)
+            {
+                foreach (var fakeUsername in fakeUserProfiles.Select(x => x.User.Username))
+                    toReturn.Add(new object[]
+                    {
+                        fakeUsername
                     });
             }
 

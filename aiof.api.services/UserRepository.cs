@@ -83,13 +83,13 @@ namespace aiof.api.services
             UserProfileDto userProfileDto)
         {
             var user = await GetUserAsync(username) as User;
-            var userProfile = _mapper.Map(userProfileDto, user.Profile);
 
-            userProfile.UserId = user.Id;
-            userProfile.Age = userProfile.DateOfBirth is null ? null : (int?)(DateTime.UtcNow.Year - userProfile.DateOfBirth.Value.Year);
+            user.Profile = _mapper.Map(userProfileDto, user.Profile);
+            user.Profile.UserId = user.Id;
+            user.Profile.Age = user.Profile.DateOfBirth is null ? null : (int?)(DateTime.UtcNow.Year - user.Profile.DateOfBirth.Value.Year);
 
-            _context.UserProfiles
-                .Update(userProfile);
+            _context.Users
+                .Update(user);
 
             await _context.SaveChangesAsync();
 
