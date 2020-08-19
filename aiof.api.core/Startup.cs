@@ -13,7 +13,6 @@ using Microsoft.OpenApi.Models;
 
 using AutoMapper;
 using FluentValidation;
-using Polly;
 
 using aiof.api.data;
 using aiof.api.services;
@@ -42,8 +41,6 @@ namespace aiof.api.core
             services.AddScoped<IEnvConfiguration, EnvConfiguration>();
             services.AddAutoMapper(typeof(AutoMappingProfileDto).Assembly);
 
-            services.AddSingleton(Policy.HandleResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)
-                .RetryAsync(int.Parse(_configuration[Keys.PollyDefaultRetry])));
             services.AddHttpClient<IAiofMetadataRepository, AiofMetadataRepository>(Keys.Metadata, x =>
                 {
                     x.BaseAddress = new Uri(_configuration[Keys.MetadataBaseUrl]);

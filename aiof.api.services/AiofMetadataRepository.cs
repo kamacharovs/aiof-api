@@ -20,7 +20,7 @@ namespace aiof.api.services
         private readonly HttpClient _client;
 
         public AiofMetadataRepository(
-            ILogger<AiofMetadataRepository> logger, 
+            ILogger<AiofMetadataRepository> logger,
             IEnvConfiguration envConfig,
             HttpClient client)
         {
@@ -33,7 +33,13 @@ namespace aiof.api.services
         {
             try
             {
-                return await (await _client.GetAsync(endpoint))
+                var resp = await _envConfig.DefaultRetryPolicy(_logger)
+                    .ExecuteAsync(async () =>
+                {
+                    return await _client.GetAsync(endpoint);
+                });
+
+                return await resp
                     .EnsureSuccessStatusCode()
                     .Content
                     .ReadAsStringAsync();
@@ -45,12 +51,18 @@ namespace aiof.api.services
         }
 
         public async Task<string> PostMetadataAsync(
-            string endpoint, 
+            string endpoint,
             string jsonContent)
         {
             try
             {
-                return await (await _client.PostAsync(endpoint, new StringContent(jsonContent, Encoding.UTF8, "application/json")))
+                var resp = await _envConfig.DefaultRetryPolicy(_logger)
+                    .ExecuteAsync(async () =>
+                {
+                    return await _client.PostAsync(endpoint, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
+                });
+
+                return await resp
                     .EnsureSuccessStatusCode()
                     .Content
                     .ReadAsStringAsync();
@@ -68,13 +80,13 @@ namespace aiof.api.services
         }
 
         public async Task<IEnumerable<ILoanPayment>> GetLoanPaymentsAsync(
-            decimal loanAmount, 
-            decimal numberOfYears, 
-            decimal rateOfInterest, 
+            decimal loanAmount,
+            decimal numberOfYears,
+            decimal rateOfInterest,
             string frequency = null)
         {
             frequency = frequency ?? _envConfig.MetadataDefaultFrequency;
-            
+
             _logger.LogInformation($"getting loan payments information. {nameof(loanAmount)}='{loanAmount}', {nameof(numberOfYears)}='{numberOfYears}', " +
                 $"{nameof(rateOfInterest)}='{rateOfInterest}', {nameof(frequency)}='{frequency}'");
 
