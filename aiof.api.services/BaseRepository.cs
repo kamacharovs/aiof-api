@@ -16,7 +16,7 @@ using aiof.api.data;
 
 namespace aiof.api.services
 {
-    public class BaseRepository<T> : IBaseRepository<T>
+    public abstract class BaseRepository<T> : IBaseRepository<T>
         where T : class, IPublicKeyId
     {
         private readonly AiofContext _context;

@@ -33,18 +33,17 @@ namespace aiof.api.core
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IEnvConfiguration, EnvConfiguration>();
             services.AddScoped<IAiofRepository, AiofRepository>();
             services.AddScoped<IAssetRepository, AssetRepository>();
             services.AddScoped<IGoalRepository, GoalRepository>();
             services.AddScoped<ILiabilityRepository, LiabilityRepository>();
-            services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddScoped<FakeDataManager>();
-
-            services.AddSingleton(new MapperConfiguration(x => { x.AddProfile(new AutoMappingProfileDto()); }).CreateMapper());
-            services.AddHttpClient<IAiofMetadataRepository, AiofMetadataRepository>("metadata", c =>
+            services.AddScoped<IEnvConfiguration, EnvConfiguration>();
+            services.AddAutoMapper(typeof(AutoMappingProfileDto).Assembly);
+            
+            services.AddHttpClient<IAiofMetadataRepository, AiofMetadataRepository>(Keys.Metadata, c =>
                 {
-                    c.BaseAddress = new Uri(_configuration[$"{Keys.Metadata}:{Keys.BaseUrl}"]);
+                    c.BaseAddress = new Uri(_configuration[Keys.MetadataBaseUrl]);
                     c.DefaultRequestHeaders.Add("Accept", "application/json");
                 })
                 .SetHandlerLifetime(TimeSpan.FromMinutes(5));

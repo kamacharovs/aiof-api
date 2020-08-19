@@ -40,7 +40,6 @@ namespace aiof.api.tests
             services.AddScoped<IAssetRepository, AssetRepository>();
             services.AddScoped<IGoalRepository, GoalRepository>();
             services.AddScoped<ILiabilityRepository, LiabilityRepository>();
-            services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddScoped<FakeDataManager>();
             services.AddSingleton(GetMockedMetadataRepo());
 
