@@ -99,23 +99,5 @@ namespace aiof.api.services
 
             return await GetUserAsync(username);
         }
-
-        public async Task<IUserProfile> UpdateUserProfileAsync(
-            string username,
-            UserProfileDto userProfileDto)
-        {
-            var userProfileInDb = await GetUserProfileAsync(
-                username, 
-                asNoTracking: false) as UserProfile;
-
-            var userProfile = _mapper.Map(userProfileDto, userProfileInDb);
-
-            _context.UserProfiles
-                .Update(userProfile);
-
-            await _context.SaveChangesAsync();
-
-            return userProfile;
-        }
     }
 }

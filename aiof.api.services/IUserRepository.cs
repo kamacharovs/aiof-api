@@ -17,8 +17,5 @@ namespace aiof.api.services
         Task<IUser> UpsertUserProfileAsync(
             string username,
             UserProfileDto userProfileDto);
-        Task<IUserProfile> UpdateUserProfileAsync(
-            string username,
-            UserProfileDto userProfileDto);
     }
 }
