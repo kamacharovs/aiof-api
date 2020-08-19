@@ -47,9 +47,21 @@ namespace aiof.api.services
             bool asNoTracking = true)
         {
             return await GetUserProfilesQuery(asNoTracking)
-                .FirstOrDefaultAsync(x => x.User.Username == username);
+                .FirstOrDefaultAsync(x => x.User.Username == username)
+                ?? throw new AiofNotFoundException($"{nameof(UserProfile)} for {nameof(User)} with Username='{username}' was not found");
         }
 
+        public async Task<UserProfile> UpdateUserProfileAsync(
+            string username,
+            UserProfileDto userProfileDto)
+        {
+            var userProfile = await GetUserProfileAsync(
+                username, 
+                asNoTracking: false);
 
+            userProfile = _mapper.Map<UserProfile>(userProfileDto);
+
+            return userProfile;
+        }
     }
 }
