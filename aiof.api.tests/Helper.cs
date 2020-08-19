@@ -35,12 +35,13 @@ namespace aiof.api.tests
         {
             var services = new ServiceCollection();
 
-            services.AddScoped<IEnvConfiguration, EnvConfiguration>();
             services.AddScoped<IAiofRepository, AiofRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAssetRepository, AssetRepository>();
             services.AddScoped<IGoalRepository, GoalRepository>();
             services.AddScoped<ILiabilityRepository, LiabilityRepository>();
             services.AddScoped<FakeDataManager>();
+            services.AddScoped<IEnvConfiguration, EnvConfiguration>();
             services.AddSingleton(GetMockedMetadataRepo());
 
             services.AddSingleton(new MapperConfiguration(x => { x.AddProfile(new AutoMappingProfileDto()); }).CreateMapper());

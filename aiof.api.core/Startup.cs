@@ -34,6 +34,7 @@ namespace aiof.api.core
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IAiofRepository, AiofRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAssetRepository, AssetRepository>();
             services.AddScoped<IGoalRepository, GoalRepository>();
             services.AddScoped<ILiabilityRepository, LiabilityRepository>();
