@@ -37,9 +37,18 @@ namespace aiof.api.core.Controllers
 
         [HttpPost]
         [Route("profile")]
+        public async Task<IActionResult> AddUserProfileAsync(
+            [FromQuery, Required] string username,
+            [FromBody, Required] UserProfileDto userProfileDto)
+        {
+            return Ok(await _repo.AddUserProfileAsync(username, userProfileDto));
+        }
+
+        [HttpPut]
+        [Route("profile")]
         public async Task<IActionResult> UpdateUserProfileAsync(
-            [FromBody, Required] UserProfileDto userProfileDto,
-            [FromQuery, Required] string username)
+            [FromQuery, Required] string username, 
+            [FromBody, Required] UserProfileDto userProfileDto)
         {
             return Ok(await _repo.UpdateUserProfileAsync(username, userProfileDto));
         }

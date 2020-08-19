@@ -71,6 +71,19 @@ namespace aiof.api.data
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.UserId).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.Gender).HasSnakeCaseColumnName();
+                e.Property(x => x.DateOfBirth).HasSnakeCaseColumnName();
+                e.Property(x => x.Age).HasSnakeCaseColumnName();
+                e.Property(x => x.Occupation).HasSnakeCaseColumnName();
+                e.Property(x => x.OccupationIndustry).HasSnakeCaseColumnName();
+                e.Property(x => x.GrossSalary).HasSnakeCaseColumnName();
+                e.Property(x => x.MaritalStatus).HasSnakeCaseColumnName();
+                e.Property(x => x.EducationLevel).HasSnakeCaseColumnName();
+                e.Property(x => x.ResidentialStatus).HasSnakeCaseColumnName();
+                e.Property(x => x.HouseholdIncome).HasSnakeCaseColumnName();
+                e.Property(x => x.HouseholdAdults).HasSnakeCaseColumnName();
+                e.Property(x => x.HouseholdChildren).HasSnakeCaseColumnName();
+                e.Property(x => x.RetirementContributionsPreTax).HasSnakeCaseColumnName();
             });
 
             modelBuilder.Entity<Asset>(e =>
