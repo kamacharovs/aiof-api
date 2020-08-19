@@ -9,6 +9,7 @@ namespace aiof.api.data
     public class AiofContext : DbContext
     {
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<UserProfile> UserProfiles { get; set; }
         public virtual DbSet<Asset> Assets { get; set; }
         public virtual DbSet<Liability> Liabilities { get; set; }
         public virtual DbSet<Goal> Goals { get; set; }
@@ -53,6 +54,23 @@ namespace aiof.api.data
                     .WithOne()
                     .HasForeignKey(x => x.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<UserProfile>(e =>
+            {
+                e.ToTable("user_profile");
+
+                e.HasKey(x => x.Id);
+
+                e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
+                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.UserId).HasSnakeCaseColumnName().IsRequired();
+
+                e.HasOne(x => x.User)
+                    .WithMany()
+                    .HasForeignKey(x => x.UserId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
             });
 
             modelBuilder.Entity<Asset>(e =>
