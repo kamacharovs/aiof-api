@@ -39,23 +39,5 @@ namespace aiof.api.tests
 
             Assert.NotNull(userProfile);
         }
-
-        //[Theory]
-        //[MemberData(nameof(Helper.UsersUsername), MemberType = typeof(Helper))]
-        //public async Task UpsertUserProfileAsync_Valid(string username)
-        //{
-        //    var userBefore = await _repo.GetUserAsync(username);
-        //
-        //    Assert.Null(userBefore.Profile?.Gender);
-        //    Assert.Null(userBefore.Profile?.Age);
-        //    Assert.Null(userBefore.Profile?.EducationLevel);
-        //
-        //    var dto = Helper.RandomUserProfileDto();
-        //    var userAfter = await _repo.UpsertUserProfileAsync(username, dto);
-        //
-        //    Assert.NotNull(userAfter.Profile?.Age);
-        //    Assert.NotNull(userAfter.Profile?.EducationLevel);
-        //    Assert.NotNull(userAfter.Profile?.Gender);
-        //}
     }
 }
