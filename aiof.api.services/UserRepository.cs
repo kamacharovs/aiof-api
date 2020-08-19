@@ -78,18 +78,18 @@ namespace aiof.api.services
                 ?? throw new AiofNotFoundException($"{nameof(UserProfile)} for {nameof(User)} with Username='{username}' was not found");
         }
 
-        public async Task<IUser> AddUserProfileAsync(
+        public async Task<IUser> UpsertUserProfileAsync(
             string username, 
             UserProfileDto userProfileDto)
         {
-            var user = await GetUserAsync(username);
-            var userProfile = _mapper.Map<UserProfile>(userProfileDto);
+            var user = await GetUserAsync(username) as User;
+            var userProfile = _mapper.Map(userProfileDto, user.Profile);
 
             userProfile.UserId = user.Id;
             userProfile.Age = userProfile.DateOfBirth is null ? null : (int?)(DateTime.UtcNow.Year - userProfile.DateOfBirth.Value.Year);
 
-            await _context.UserProfiles
-                .AddAsync(userProfile);
+            _context.UserProfiles
+                .Update(userProfile);
 
             await _context.SaveChangesAsync();
 
