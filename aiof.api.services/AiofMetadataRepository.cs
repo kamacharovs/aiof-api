@@ -33,11 +33,12 @@ namespace aiof.api.services
         {
             try
             {
-                var resp = await _envConfig.DefaultRetryPolicy(_logger)
+                var resp = await _envConfig
+                    .DefaultRetryPolicy(_logger)
                     .ExecuteAsync(async () =>
-                {
-                    return await _client.GetAsync(endpoint);
-                });
+                    {
+                        return await _client.GetAsync(endpoint);
+                    });
 
                 return await resp
                     .EnsureSuccessStatusCode()
@@ -56,11 +57,12 @@ namespace aiof.api.services
         {
             try
             {
-                var resp = await _envConfig.DefaultRetryPolicy(_logger)
+                var resp = await _envConfig
+                    .DefaultRetryPolicy(_logger)
                     .ExecuteAsync(async () =>
-                {
-                    return await _client.PostAsync(endpoint, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
-                });
+                    {
+                        return await _client.PostAsync(endpoint, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
+                    });
 
                 return await resp
                     .EnsureSuccessStatusCode()
