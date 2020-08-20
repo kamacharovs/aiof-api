@@ -4,4 +4,6 @@ All in one finance API
 
 ## Docker
 
-`docker pull gkama/aiof-api`
+```ps
+docker pull gkama/aiof-api:latest
+```
