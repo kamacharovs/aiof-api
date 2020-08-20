@@ -53,7 +53,7 @@ namespace aiof.api.data
                 new User
                 {
                     Id = 1,
-                    PublicKey = Guid.NewGuid(),
+                    PublicKey = Guid.Parse("581f3ce6-cf2a-42a5-828f-157a2bfab763"),
                     FirstName = "Georgi",
                     LastName = "Kamacharov",
                     Email = "gkama@test.com",
@@ -62,11 +62,20 @@ namespace aiof.api.data
                 new User
                 {
                     Id = 2,
-                    PublicKey = Guid.NewGuid(),
+                    PublicKey = Guid.Parse("8e17276c-88ac-43bd-a9e8-5fdf5381dbd5"),
                     FirstName = "Jessie",
                     LastName = "Brown",
-                    Email = "jbro@test.com",
+                    Email = "jessie@test.com",
                     Username = "jbro"
+                },
+                new User
+                {
+                    Id = 3,
+                    PublicKey = Guid.Parse("7c135230-2889-4cbb-bb0e-ab4237d89367"),
+                    FirstName = "George",
+                    LastName = "Best",
+                    Email = "george.best@auth.com",
+                    Username = "gbest"
                 }
             };
         }
