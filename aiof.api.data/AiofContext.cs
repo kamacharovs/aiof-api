@@ -28,17 +28,13 @@ namespace aiof.api.data
             {
                 e.ToTable("user");
 
-                e.HasKey(x => x.Id);
-
-                e.HasIndex(x => x.Username)
-                    .IsUnique();
-
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.FirstName).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
                 e.Property(x => x.LastName).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
-                e.Property(x => x.Email).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
-                e.Property(x => x.Username).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
+                e.Property(x => x.Email).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
+                e.Property(x => x.Username).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
+                e.Property(x => x.Created).HasColumnType("timestamp").HasSnakeCaseColumnName().IsRequired();
 
                 e.HasOne(x => x.Profile)
                     .WithOne(x => x.User)
