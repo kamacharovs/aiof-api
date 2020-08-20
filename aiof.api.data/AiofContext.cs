@@ -27,7 +27,7 @@ namespace aiof.api.data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql("host=127.0.0.1;database=aiof;port=5432;username=postgres;password=root");
+            optionsBuilder.UseNpgsql("host=127.0.0.1;database=aiof;port=5432;username=postgres;password=postgres");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
