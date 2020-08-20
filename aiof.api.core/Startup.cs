@@ -1,6 +1,5 @@
 using System;
-using System.IO;
-using System.Reflection;
+using System.Net.Http;
 using System.Text.Json;
 
 using Microsoft.EntityFrameworkCore;
@@ -33,19 +32,19 @@ namespace aiof.api.core
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IEnvConfiguration, EnvConfiguration>();
             services.AddScoped<IAiofRepository, AiofRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAssetRepository, AssetRepository>();
             services.AddScoped<IGoalRepository, GoalRepository>();
             services.AddScoped<ILiabilityRepository, LiabilityRepository>();
-            services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddScoped<FakeDataManager>();
+            services.AddScoped<IEnvConfiguration, EnvConfiguration>();
+            services.AddAutoMapper(typeof(AutoMappingProfileDto).Assembly);
 
-            services.AddSingleton(new MapperConfiguration(x => { x.AddProfile(new AutoMappingProfileDto()); }).CreateMapper());
-            services.AddHttpClient<IAiofMetadataRepository, AiofMetadataRepository>("metadata", c =>
+            services.AddHttpClient<IAiofMetadataRepository, AiofMetadataRepository>(Keys.Metadata, x =>
                 {
-                    c.BaseAddress = new Uri(_configuration[$"{Keys.Metadata}:{Keys.BaseUrl}"]);
-                    c.DefaultRequestHeaders.Add("Accept", "application/json");
+                    x.BaseAddress = new Uri(_configuration[Keys.MetadataBaseUrl]);
+                    x.DefaultRequestHeaders.Add("Accept", "application/json");
                 })
                 .SetHandlerLifetime(TimeSpan.FromMinutes(5));
 

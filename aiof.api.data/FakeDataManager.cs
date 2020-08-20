@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,6 +18,9 @@ namespace aiof.api.data
         {
             _context.Users
                 .AddRange(GetFakeUsers());
+
+            _context.UserProfiles
+                .AddRange(GetFakeUserProfiles());
 
             _context.AssetTypes
                 .AddRange(GetFakeAssetTypes());
@@ -44,7 +48,7 @@ namespace aiof.api.data
 
         public IEnumerable<User> GetFakeUsers()
         {
-            return new List<User>()
+            return new List<User>
             {
                 new User
                 {
@@ -63,6 +67,19 @@ namespace aiof.api.data
                     LastName = "Brown",
                     Email = "jbro@test.com",
                     Username = "jbro"
+                }
+            };
+        }
+
+        public IEnumerable<UserProfile> GetFakeUserProfiles()
+        {
+            return new List<UserProfile>
+            {
+                new UserProfile
+                {
+                    Id = 1,
+                    UserId = 1,
+                    MaritalStatus = "single"
                 }
             };
         }
@@ -101,7 +118,7 @@ namespace aiof.api.data
 
         public IEnumerable<Liability> GetFakeLiabilities()
         {
-            return new List<Liability>()
+            return new List<Liability>
             {
                 new Liability
                 {
@@ -116,7 +133,7 @@ namespace aiof.api.data
 
         public IEnumerable<Goal> GetFakeGoals()
         {
-            return new List<Goal>()
+            return new List<Goal>
             {
                 new Goal
                 {
@@ -134,7 +151,7 @@ namespace aiof.api.data
 
         public IEnumerable<AssetType> GetFakeAssetTypes()
         {
-            return new List<AssetType>()
+            return new List<AssetType>
             {
                 new AssetType
                 {
@@ -165,7 +182,7 @@ namespace aiof.api.data
 
         public IEnumerable<LiabilityType> GetFakeLiabilityTypes()
         {
-            return new List<LiabilityType>()
+            return new List<LiabilityType>
             {
                 new LiabilityType
                 {
@@ -196,7 +213,7 @@ namespace aiof.api.data
 
         public IEnumerable<GoalType> GetFakeGoalTypes()
         {
-            return new List<GoalType>()
+            return new List<GoalType>
             {
                 new GoalType
                 {
@@ -301,6 +318,27 @@ namespace aiof.api.data
                     toReturn.Add(new object[] 
                     { 
                         fakeUserUsername
+                    });
+            }
+
+            return toReturn;
+        }
+
+        public IEnumerable<object[]> GetFakeUserProfilesData(
+            bool username = false)
+        {
+            var fakeUserProfiles = _context.UserProfiles
+                .Include(x => x.User)
+                .AsNoTracking();
+
+            var toReturn = new List<object[]>();
+
+            if (username)
+            {
+                foreach (var fakeUsername in fakeUserProfiles.Select(x => x.User.Username))
+                    toReturn.Add(new object[]
+                    {
+                        fakeUsername
                     });
             }
 

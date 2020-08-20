@@ -9,6 +9,7 @@ namespace aiof.api.data
     public class AiofContext : DbContext
     {
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<UserProfile> UserProfiles { get; set; }
         public virtual DbSet<Asset> Assets { get; set; }
         public virtual DbSet<Liability> Liabilities { get; set; }
         public virtual DbSet<Goal> Goals { get; set; }
@@ -39,6 +40,12 @@ namespace aiof.api.data
                 e.Property(x => x.Email).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
                 e.Property(x => x.Username).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
 
+                e.HasOne(x => x.Profile)
+                    .WithOne(x => x.User)
+                    .HasForeignKey<UserProfile>(x => x.UserId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+
                 e.HasMany(x => x.Assets)
                     .WithOne()
                     .HasForeignKey(x => x.UserId)
@@ -53,6 +60,30 @@ namespace aiof.api.data
                     .WithOne()
                     .HasForeignKey(x => x.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<UserProfile>(e =>
+            {
+                e.ToTable("user_profile");
+
+                e.HasKey(x => x.Id);
+
+                e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
+                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.UserId).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.Gender).HasSnakeCaseColumnName();
+                e.Property(x => x.DateOfBirth).HasSnakeCaseColumnName();
+                e.Property(x => x.Age).HasSnakeCaseColumnName();
+                e.Property(x => x.Occupation).HasSnakeCaseColumnName();
+                e.Property(x => x.OccupationIndustry).HasSnakeCaseColumnName();
+                e.Property(x => x.GrossSalary).HasSnakeCaseColumnName();
+                e.Property(x => x.MaritalStatus).HasSnakeCaseColumnName();
+                e.Property(x => x.EducationLevel).HasSnakeCaseColumnName();
+                e.Property(x => x.ResidentialStatus).HasSnakeCaseColumnName();
+                e.Property(x => x.HouseholdIncome).HasSnakeCaseColumnName();
+                e.Property(x => x.HouseholdAdults).HasSnakeCaseColumnName();
+                e.Property(x => x.HouseholdChildren).HasSnakeCaseColumnName();
+                e.Property(x => x.RetirementContributionsPreTax).HasSnakeCaseColumnName();
             });
 
             modelBuilder.Entity<Asset>(e =>

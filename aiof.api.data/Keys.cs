@@ -10,10 +10,16 @@ namespace aiof.api.data
 
         public const string Database = nameof(Database);
 
+        public const string Polly = nameof(Polly);
+        public const string DefaultRetry = nameof(DefaultRetry);
+        public const string PollyDefaultRetry = nameof(Polly) + ":" + nameof(DefaultRetry);
+
         public const string Metadata = nameof(Metadata);
         public const string BaseUrl = nameof(BaseUrl);
         public const string DefaultFrequency = nameof(DefaultFrequency);
-        
+        public const string MetadataBaseUrl = nameof(Metadata) + ":" + nameof(BaseUrl);
+        public const string MetadataDefaultFrequency = nameof(Metadata) + ":" + nameof(DefaultFrequency);
+
         public const string OpenApi = nameof(OpenApi);
         public const string Version = nameof(Version);
         public const string Title = nameof(Title);

@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Net.Http;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.FeatureManagement;
+
+using Polly;
 
 namespace aiof.api.data
 {
@@ -22,7 +26,19 @@ namespace aiof.api.data
 
         public string DatabaseConString => _config.GetConnectionString(Keys.Database) ?? throw new KeyNotFoundException();
 
-        public string MetadataDefaultFrequency => _config[$"{Keys.Metadata}:{Keys.DefaultFrequency}"] ?? throw new KeyNotFoundException();
+        public int PollyDefaultRetry => int.Parse(_config[Keys.PollyDefaultRetry] ?? throw new KeyNotFoundException());
+
+        public string MetadataBaseUrl => _config[Keys.MetadataBaseUrl] ?? throw new KeyNotFoundException();
+        public string MetadataDefaultFrequency => _config[Keys.MetadataDefaultFrequency] ?? throw new KeyNotFoundException();
+
+        public IAsyncPolicy<HttpResponseMessage> DefaultRetryPolicy(ILogger logger)
+        {
+            return Policy.HandleResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)
+                .RetryAsync(PollyDefaultRetry, onRetry: (status, retryCount, context) =>
+                {
+                    logger.LogError($"Error while calling. Status code='{status}'");
+                });
+        }
 
         public async Task<bool> IsEnabledAsync(FeatureFlags featureFlag)
         {
