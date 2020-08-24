@@ -88,7 +88,9 @@ namespace aiof.api.data
                 {
                     Id = 1,
                     UserId = 1,
-                    MaritalStatus = "single"
+                    MaritalStatus = "single",
+                    Occupation = "Sr. Software Engineer",
+                    OccupationIndustry = "IT"
                 }
             };
         }
