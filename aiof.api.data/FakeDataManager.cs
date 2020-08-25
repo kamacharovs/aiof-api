@@ -361,6 +361,7 @@ namespace aiof.api.data
 
         public IEnumerable<object[]> GetFakeAssetsData(
             bool id = false,
+            bool publicKey = false,
             bool name = false,
             bool typeName = false,
             bool value = false,
@@ -394,6 +395,16 @@ namespace aiof.api.data
                     toReturn.Add(new object[] 
                     { 
                         fakeAssetId
+                    });
+                }
+            }
+            else if (publicKey)
+            {
+                foreach (var fakeAssetPublicKey in fakeAssets.Select(x => x.PublicKey))
+                {
+                    toReturn.Add(new object[] 
+                    { 
+                        fakeAssetPublicKey
                     });
                 }
             }

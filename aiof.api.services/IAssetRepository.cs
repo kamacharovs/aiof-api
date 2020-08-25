@@ -15,6 +15,9 @@ namespace aiof.api.services
             decimal? value,
             int? userId = null,
             bool asNoTracking = true);
+        Task<IAsset> GetAsync(
+            Guid publicKey, 
+            bool asNoTracking = true);
         Task<IAsset> GetAssetAsync(AssetDto assetDto);
         Task<IEnumerable<IAsset>> GetAssetsAsync(string typeName);
         Task<IEnumerable<IAssetType>> GetAssetTypesAsync();
@@ -23,11 +26,7 @@ namespace aiof.api.services
         Task<IAsset> UpdateAssetAsync(
             int id, 
             AssetDto assetDto);
-        Task DeleteAsync(
-            string name,
-            string typeName,
-            decimal? value,
-            int? userId = null);
+        Task DeleteAsync(Guid publicKey);
         Task DeleteAsync(IAsset asset);
     }
 }

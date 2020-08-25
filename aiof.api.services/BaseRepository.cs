@@ -48,10 +48,12 @@ namespace aiof.api.services
                 ?? throw new AiofNotFoundException($"{typeof(T).Name} with Id='{id}' was not found");
         }
 
-        public async Task<T> GetEntityAsync<T>(Guid publicKey)
+        public async Task<T> GetAsync<T>(
+            Guid publicKey,
+            bool asNoTracking = true)
             where T : class, IPublicKeyId
         {
-            return await GetEntityQuery<T>()
+            return await GetEntityQuery<T>(asNoTracking)
                 .FirstOrDefaultAsync(x => x.PublicKey == publicKey)
                 ?? throw new AiofNotFoundException($"{typeof(T).Name} with PublicKey='{publicKey}' was not found");
         }
@@ -59,24 +61,26 @@ namespace aiof.api.services
         public async Task<T> GetEntityAsync<T>(string publicKey)
             where T : class, IPublicKeyId
         {
-            return await GetEntityAsync<T>(Guid.Parse(publicKey));
+            return await GetAsync<T>(Guid.Parse(publicKey));
         }
 
-        public async Task DeleteAsync<T>(int id)
+        public async Task DeleteAsync<T>(Guid publicKey)
             where T : class, IPublicKeyId
         {
-            var entity = await GetEntityQuery<T>()
-                .FirstOrDefaultAsync(x => x.Id == id);
-
+            var entity = await GetAsync<T>(publicKey, false);
             _context.Set<T>().Remove(entity);
+
             await _context.SaveChangesAsync();
+
             _logger.LogInformation($"Deleted {typeof(T).Name}='{JsonSerializer.Serialize(entity)}'");
         }
         public async Task DeleteAsync<T>(T entity)
             where T : class, IPublicKeyId
         {
              _context.Set<T>().Remove(entity);
+
             await _context.SaveChangesAsync();
+
             _logger.LogInformation($"Deleted {typeof(T).Name}='{JsonSerializer.Serialize(entity)}'");
         }
     }

@@ -176,16 +176,12 @@ namespace aiof.api.tests
         }
 
         [Theory]
-        [MemberData(nameof(Helper.Assets), MemberType = typeof(Helper))]
-        public async Task DeleteAsync_Existing_Is_Successful(
-            string name,
-            string typeName,
-            decimal? value,
-            int? userId)
+        [MemberData(nameof(Helper.AssetsPublicKey), MemberType = typeof(Helper))]
+        public async Task DeleteAsync_Existing_Is_Successful(Guid publicKey)
         {
-            await _repo.DeleteAsync(name, typeName, value, userId);
+            await _repo.DeleteAsync(publicKey);
 
-            Assert.Null(await _repo.GetAssetAsync(name, typeName, value));
+            await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.GetAsync(publicKey));
         }
     }
 }

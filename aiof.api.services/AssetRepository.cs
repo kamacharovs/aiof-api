@@ -15,7 +15,7 @@ using aiof.api.data;
 
 namespace aiof.api.services
 {
-    public class AssetRepository : IAssetRepository
+    public class AssetRepository : BaseRepository, IAssetRepository
     {
         private readonly ILogger<AssetRepository> _logger;
         private readonly IMapper _mapper;
@@ -27,6 +27,7 @@ namespace aiof.api.services
             IMapper mapper, 
             AiofContext context,
             AbstractValidator<AssetDto> assetDtoValidator)
+            : base(logger, context)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -61,6 +62,14 @@ namespace aiof.api.services
             return await GetAssetsQuery()
                 .FirstOrDefaultAsync(x => x.Id == id)
                 ?? throw new AiofNotFoundException($"{nameof(Asset)} with Id='{id}' was not found");
+        }
+        public async Task<IAsset> GetAsync(
+            Guid publicKey, 
+            bool asNoTracking = true)
+        {
+            return await GetAssetsQuery(asNoTracking)
+                .FirstOrDefaultAsync(x => x.PublicKey == publicKey)
+                ?? throw new AiofNotFoundException($"{nameof(Asset)} with PublicKey='{publicKey}' was not found");
         }
 
         public async Task<IAsset> GetAssetAsync(
@@ -156,33 +165,13 @@ namespace aiof.api.services
             return asset;
         }
 
-        public async Task DeleteAsync(
-            string name,
-            string typeName,
-            decimal? value,
-            int? userId = null)
+        public async Task DeleteAsync(Guid publicKey)
         {
-            var asset = await GetAssetAsync(name, typeName, value, asNoTracking: false) as Asset
-                ?? throw new AiofNotFoundException($"{nameof(Asset)} with Name='{name}', TypeName='{typeName}' and Value='{value}' was not found");
-
-            _context.Assets.Remove(asset);
-
-            await _context.SaveChangesAsync();
-
-            _logger.LogInformation($"Deleted {nameof(Asset)}='{JsonSerializer.Serialize(asset)}'");
+            await base.DeleteAsync<Asset>(publicKey);
         }
-        
         public async Task DeleteAsync(IAsset asset)
         {
-            if (asset is null)
-                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"{nameof(asset)} cannot be null");
-
-            _context.Assets.Remove(asset as Asset);
-
-            await _context.SaveChangesAsync();
-
-            _logger.LogInformation($"Deleted {nameof(Asset)}='{JsonSerializer.Serialize(asset)}'");
+            await base.DeleteAsync<Asset>(asset as Asset);
         }
     }
 }
