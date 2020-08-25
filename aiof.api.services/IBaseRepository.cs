@@ -7,12 +7,17 @@ using aiof.api.data;
 
 namespace aiof.api.services
 {
-    public interface IBaseRepository<T>
-        where T : class, IPublicKeyId
+    public interface IBaseRepository
     {
-        IQueryable<T> GetEntityQuery(bool asNoTracking = true);
-        Task<T> GetEntityAsync(int id);
-        Task<T> GetEntityAsync(Guid publicKey);
-        Task<T> GetEntityAsync(string publicKey);
+        IQueryable<T> GetEntityQuery<T>(bool asNoTracking = true)
+            where T : class, IPublicKeyId;
+        Task<T> GetEntityAsync<T>(int id)
+            where T : class, IPublicKeyId;
+        Task<T> GetEntityAsync<T>(Guid publicKey)
+            where T : class, IPublicKeyId;
+        Task<T> GetEntityAsync<T>(string publicKey)
+            where T : class, IPublicKeyId;
+        Task DeleteEntityAsync<T>(int id)
+            where T : class, IPublicKeyId;
     }
 }

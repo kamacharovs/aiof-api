@@ -16,15 +16,14 @@ using aiof.api.data;
 
 namespace aiof.api.services
 {
-    public abstract class BaseRepository<T> : IBaseRepository<T>
-        where T : class, IPublicKeyId
+    public abstract class BaseRepository : IBaseRepository
     {
         private readonly AiofContext _context;
         private readonly IMapper _mapper;
-        private readonly ILogger<BaseRepository<T>> _logger;
+        private readonly ILogger<BaseRepository> _logger;
 
         public BaseRepository(
-            ILogger<BaseRepository<T>> logger,
+            ILogger<BaseRepository> logger,
             IMapper mapper,
             AiofContext context)
         {
@@ -33,7 +32,8 @@ namespace aiof.api.services
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public IQueryable<T> GetEntityQuery(bool asNoTracking = true)
+        public IQueryable<T> GetEntityQuery<T>(bool asNoTracking = true)
+            where T : class, IPublicKeyId
         {
             return asNoTracking
                 ? _context.Set<T>()
@@ -43,23 +43,37 @@ namespace aiof.api.services
                     .AsQueryable();
         }
 
-        public async Task<T> GetEntityAsync(int id)
+        public async Task<T> GetEntityAsync<T>(int id)
+            where T : class, IPublicKeyId
         {
-            return await GetEntityQuery()
+            return await GetEntityQuery<T>()
                 .FirstOrDefaultAsync(x => x.Id == id)
                 ?? throw new AiofNotFoundException($"{typeof(T).Name} with Id='{id}' was not found");
         }
 
-        public async Task<T> GetEntityAsync(Guid publicKey)
+        public async Task<T> GetEntityAsync<T>(Guid publicKey)
+            where T : class, IPublicKeyId
         {
-            return await GetEntityQuery()
+            return await GetEntityQuery<T>()
                 .FirstOrDefaultAsync(x => x.PublicKey == publicKey)
                 ?? throw new AiofNotFoundException($"{typeof(T).Name} with PublicKey='{publicKey}' was not found");
         }
 
-        public async Task<T> GetEntityAsync(string publicKey)
+        public async Task<T> GetEntityAsync<T>(string publicKey)
+            where T : class, IPublicKeyId
         {
-            return await GetEntityAsync(Guid.Parse(publicKey));
+            return await GetEntityAsync<T>(Guid.Parse(publicKey));
+        }
+
+        public async Task DeleteEntityAsync<T>(int id)
+            where T : class, IPublicKeyId
+        {
+            var entity = await GetEntityQuery<T>()
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            _context.Set<T>().Remove(entity);
+
+            await _context.SaveChangesAsync();
         }
     }
 }
