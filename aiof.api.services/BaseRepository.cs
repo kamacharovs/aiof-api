@@ -16,19 +16,16 @@ using aiof.api.data;
 
 namespace aiof.api.services
 {
-    public abstract class BaseRepository : IBaseRepository
+    public abstract class BaseRepository
     {
         private readonly AiofContext _context;
-        private readonly IMapper _mapper;
         private readonly ILogger<BaseRepository> _logger;
 
         public BaseRepository(
             ILogger<BaseRepository> logger,
-            IMapper mapper,
             AiofContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -65,15 +62,22 @@ namespace aiof.api.services
             return await GetEntityAsync<T>(Guid.Parse(publicKey));
         }
 
-        public async Task DeleteEntityAsync<T>(int id)
+        public async Task DeleteAsync<T>(int id)
             where T : class, IPublicKeyId
         {
             var entity = await GetEntityQuery<T>()
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             _context.Set<T>().Remove(entity);
-
             await _context.SaveChangesAsync();
+            _logger.LogInformation($"Deleted {typeof(T).Name}='{JsonSerializer.Serialize(entity)}'");
+        }
+        public async Task DeleteAsync<T>(T entity)
+            where T : class, IPublicKeyId
+        {
+             _context.Set<T>().Remove(entity);
+            await _context.SaveChangesAsync();
+            _logger.LogInformation($"Deleted {typeof(T).Name}='{JsonSerializer.Serialize(entity)}'");
         }
     }
 }
