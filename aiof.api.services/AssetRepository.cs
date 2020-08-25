@@ -67,13 +67,18 @@ namespace aiof.api.services
             string name,
             string typeName,
             decimal? value,
-            int? userId)
+            int? userId = null)
         {
-            return await GetAssetsQuery()
-                .FirstOrDefaultAsync(x => x.Name == name
-                    && x.TypeName == typeName
-                    && x.Value == value
-                    && x.UserId == userId);
+            return userId is null
+                ? await GetAssetsQuery()
+                    .FirstOrDefaultAsync(x => x.Name == name
+                        && x.TypeName == typeName
+                        && x.Value == value)
+                : await GetAssetsQuery()
+                    .FirstOrDefaultAsync(x => x.Name == name
+                        && x.TypeName == typeName
+                        && x.Value == value
+                        && x.UserId == userId);
         }
         public async Task<IAsset> GetAssetAsync(AssetDto assetDto)
         {
@@ -153,15 +158,25 @@ namespace aiof.api.services
         public async Task DeleteAsync(
             string name,
             string typeName,
-            decimal value)
+            decimal value,
+            int? userId = null)
         {
-            var asset = await _context.Assets
-                .FirstOrDefaultAsync(x => x.Name == name
-                    && x.TypeName == typeName
-                    && x.Value == value)
+            var asset = await GetAssetAsync(name, typeName, value) as Asset
                 ?? throw new AiofNotFoundException($"{nameof(Asset)} with Name='{name}', TypeName='{typeName}' and Value='{value}' was not found");
 
             _context.Assets.Remove(asset);
+
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation($"Deleted {nameof(Asset)}='{JsonSerializer.Serialize(asset)}'");
+        }
+        public async Task DeleteAsync(IAsset asset)
+        {
+            if (asset is null)
+                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
+                    $"{nameof(asset)} cannot be null");
+
+            _context.Assets.Remove(asset as Asset);
 
             await _context.SaveChangesAsync();
 

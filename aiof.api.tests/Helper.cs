@@ -148,7 +148,7 @@ namespace aiof.api.tests
         public static IEnumerable<object[]> RandomAssetDtos()
         {
             var fakeAssetDtos = new Faker<AssetDto>()
-                .RuleFor(x => x.Name, f => f.Random.String())
+                .RuleFor(x => x.Name, f => "car to buy")
                 .RuleFor(x => x.TypeName, f => "car")
                 .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000))
                 .RuleFor(x => x.UserId, f => f.Random.Int(1, 2))

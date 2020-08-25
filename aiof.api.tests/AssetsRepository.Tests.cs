@@ -153,5 +153,26 @@ namespace aiof.api.tests
             Assert.Equal(value, asset.Value);
             Assert.Equal(userId, asset.UserId);
         }
+
+        [Theory]
+        [MemberData(nameof(Helper.RandomAssetDtos), MemberType = typeof(Helper))]
+        public async Task DeleteAsync_Is_Successful(
+            string name,
+            string typeName,
+            decimal? value,
+            int? userId)
+        {
+            var asset = await _repo.AddAssetAsync(new AssetDto
+            {
+                Name = name,
+                TypeName = typeName,
+                Value = value,
+                UserId = userId
+            });
+            Assert.NotNull(await _repo.GetAssetAsync(asset.Name, asset.TypeName, asset.Value));
+
+            await _repo.DeleteAsync(asset);
+            Assert.Null(await _repo.GetAssetAsync(asset.Name, asset.TypeName, asset.Value));
+        }
     }
 }
