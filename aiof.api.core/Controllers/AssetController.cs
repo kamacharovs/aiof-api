@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
@@ -60,6 +61,17 @@ namespace aiof.api.core.Controllers
         public async Task<IActionResult> AddAssetAsync([FromBody]AssetDto assetDto)
         {
             return Created(nameof(Asset), await _repo.AddAssetAsync(assetDto));
+        }
+
+        [HttpDelete]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IEnumerable<IAssetType>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> DeleteAsync([FromQuery, Required]string name, string typeName, decimal value)
+        {
+            await _repo.DeleteAsync(name, typeName, value);
+
+            return Ok();
         }
     }
 }

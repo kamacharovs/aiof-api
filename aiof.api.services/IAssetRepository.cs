@@ -22,5 +22,9 @@ namespace aiof.api.services
         Task<IAsset> UpdateAssetAsync(
             int id, 
             AssetDto assetDto);
+        Task DeleteAsync(
+            string name,
+            string typeName,
+            decimal value);
     }
 }

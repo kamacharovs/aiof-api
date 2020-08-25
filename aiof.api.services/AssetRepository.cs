@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -147,6 +148,24 @@ namespace aiof.api.services
             _logger.LogInformation($"Updated {nameof(Asset)} with Id='{asset.Id}', PublicKey='{asset.PublicKey}' and UserId='{asset.UserId}'");
 
             return asset;
+        }
+
+        public async Task DeleteAsync(
+            string name,
+            string typeName,
+            decimal value)
+        {
+            var asset = await _context.Assets
+                .FirstOrDefaultAsync(x => x.Name == name
+                    && x.TypeName == typeName
+                    && x.Value == value)
+                ?? throw new AiofNotFoundException($"{nameof(Asset)} with Name='{name}', TypeName='{typeName}' and Value='{value}' was not found");
+
+            _context.Assets.Remove(asset);
+
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation($"Deleted {nameof(Asset)}='{JsonSerializer.Serialize(asset)}'");
         }
     }
 }
