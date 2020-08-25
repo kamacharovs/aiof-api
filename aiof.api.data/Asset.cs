@@ -8,7 +8,7 @@ namespace aiof.api.data
         IPublicKeyId, IPublicKeyName
     {
         [JsonIgnore] public int Id { get; set; }
-        [JsonIgnore] public Guid PublicKey { get; set; } = Guid.NewGuid();
+        public Guid PublicKey { get; set; } = Guid.NewGuid();
         public string Name { get; set; }
         public string TypeName { get; set; }
         [JsonIgnore] public AssetType Type { get; set; }

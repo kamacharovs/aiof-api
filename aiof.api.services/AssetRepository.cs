@@ -67,9 +67,7 @@ namespace aiof.api.services
             Guid publicKey, 
             bool asNoTracking = true)
         {
-            return await GetAssetsQuery(asNoTracking)
-                .FirstOrDefaultAsync(x => x.PublicKey == publicKey)
-                ?? throw new AiofNotFoundException($"{nameof(Asset)} with PublicKey='{publicKey}' was not found");
+            return await base.GetAsync<Asset>(publicKey, asNoTracking);
         }
 
         public async Task<IAsset> GetAssetAsync(
@@ -144,12 +142,10 @@ namespace aiof.api.services
         }
 
         public async Task<IAsset> UpdateAssetAsync(
-            int id, 
+            Guid publicKey, 
             AssetDto assetDto)
         {
-            await _assetDtoValidator.ValidateAndThrowAsync(assetDto);
-
-            var asset = await GetAssetAsync(id);
+            var asset = await GetAsync(publicKey, false);
 
             _context.Assets
                 .Update(_mapper.Map(assetDto, asset as Asset));

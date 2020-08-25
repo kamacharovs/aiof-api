@@ -29,22 +29,22 @@ namespace aiof.api.core.Controllers
         }
 
         [HttpGet]
-        [Route("{id}")]
+        [Route("{publicKey}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IAsset), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAssetAsync([FromRoute]int id)
+        public async Task<IActionResult> GetAssetAsync([FromRoute] Guid publicKey)
         {
-            return Ok(await _repo.GetAssetAsync(id));
+            return Ok(await _repo.GetAsync(publicKey));
         }
 
         [HttpPut]
-        [Route("{id}")]
+        [Route("{publicKey}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(IAsset), StatusCodes.Status200OK)]
-        public async Task<IActionResult> UpdateAssetAsync([FromRoute]int id, [FromBody]AssetDto assetDto)
+        public async Task<IActionResult> UpdateAssetAsync([FromRoute] Guid publicKey, [FromBody] AssetDto assetDto)
         {
-            return Ok(await _repo.UpdateAssetAsync(id, assetDto));
+            return Ok(await _repo.UpdateAssetAsync(publicKey, assetDto));
         }
 
         [HttpGet]
@@ -58,18 +58,18 @@ namespace aiof.api.core.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(IAsset), StatusCodes.Status201Created)]
-        public async Task<IActionResult> AddAssetAsync([FromBody]AssetDto assetDto)
+        public async Task<IActionResult> AddAssetAsync([FromBody] AssetDto assetDto)
         {
             return Created(nameof(Asset), await _repo.AddAssetAsync(assetDto));
         }
 
         [HttpDelete]
+        [Route("{publicKey}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(IEnumerable<IAssetType>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> DeleteAsync([FromQuery, Required]string name, string typeName, decimal value)
+        public async Task<IActionResult> DeleteAsync([FromRoute, Required] Guid publicKey)
         {
-            await _repo.DeleteAsync(name, typeName, value);
+            await _repo.DeleteAsync(publicKey);
 
             return Ok();
         }

@@ -24,7 +24,7 @@ namespace aiof.api.services
         Task<IAsset> AddAssetAsync(AssetDto assetDto);
         IAsyncEnumerable<IAsset> AddAssetsAsync(IEnumerable<AssetDto> assetsDto);
         Task<IAsset> UpdateAssetAsync(
-            int id, 
+            Guid publicKey, 
             AssetDto assetDto);
         Task DeleteAsync(Guid publicKey);
         Task DeleteAsync(IAsset asset);
