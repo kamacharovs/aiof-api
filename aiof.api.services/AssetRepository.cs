@@ -171,6 +171,7 @@ namespace aiof.api.services
 
             _logger.LogInformation($"Deleted {nameof(Asset)}='{JsonSerializer.Serialize(asset)}'");
         }
+        
         public async Task DeleteAsync(IAsset asset)
         {
             if (asset is null)
