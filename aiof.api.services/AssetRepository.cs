@@ -67,14 +67,15 @@ namespace aiof.api.services
             string name,
             string typeName,
             decimal? value,
-            int? userId = null)
+            int? userId = null,
+            bool asNoTracking = true)
         {
             return userId is null
-                ? await GetAssetsQuery()
+                ? await GetAssetsQuery(asNoTracking)
                     .FirstOrDefaultAsync(x => x.Name == name
                         && x.TypeName == typeName
                         && x.Value == value)
-                : await GetAssetsQuery()
+                : await GetAssetsQuery(asNoTracking)
                     .FirstOrDefaultAsync(x => x.Name == name
                         && x.TypeName == typeName
                         && x.Value == value
@@ -158,10 +159,10 @@ namespace aiof.api.services
         public async Task DeleteAsync(
             string name,
             string typeName,
-            decimal value,
+            decimal? value,
             int? userId = null)
         {
-            var asset = await GetAssetAsync(name, typeName, value) as Asset
+            var asset = await GetAssetAsync(name, typeName, value, asNoTracking: false) as Asset
                 ?? throw new AiofNotFoundException($"{nameof(Asset)} with Name='{name}', TypeName='{typeName}' and Value='{value}' was not found");
 
             _context.Assets.Remove(asset);

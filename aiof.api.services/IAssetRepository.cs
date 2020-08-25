@@ -13,7 +13,8 @@ namespace aiof.api.services
             string name,
             string typeName,
             decimal? value,
-            int? userId = null);
+            int? userId = null,
+            bool asNoTracking = true);
         Task<IAsset> GetAssetAsync(AssetDto assetDto);
         Task<IEnumerable<IAsset>> GetAssetsAsync(string typeName);
         Task<IEnumerable<IAssetType>> GetAssetTypesAsync();
@@ -25,7 +26,7 @@ namespace aiof.api.services
         Task DeleteAsync(
             string name,
             string typeName,
-            decimal value,
+            decimal? value,
             int? userId = null);
         Task DeleteAsync(IAsset asset);
     }

@@ -144,6 +144,14 @@ namespace aiof.api.tests
             return _Fake.GetFakeAssetsData(
                 typeName: true);
         }
+        public static IEnumerable<object[]> Assets()
+        {
+            return _Fake.GetFakeAssetsData(
+                name: true,
+                typeName: true,
+                value: true,
+                userId: true);
+        }
 
         public static IEnumerable<object[]> RandomAssetDtos()
         {

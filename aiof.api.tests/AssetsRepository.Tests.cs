@@ -156,7 +156,7 @@ namespace aiof.api.tests
 
         [Theory]
         [MemberData(nameof(Helper.RandomAssetDtos), MemberType = typeof(Helper))]
-        public async Task DeleteAsync_Is_Successful(
+        public async Task DeleteAsync_By_Asset_Is_Successful(
             string name,
             string typeName,
             decimal? value,
@@ -173,6 +173,19 @@ namespace aiof.api.tests
 
             await _repo.DeleteAsync(asset);
             Assert.Null(await _repo.GetAssetAsync(asset.Name, asset.TypeName, asset.Value));
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.Assets), MemberType = typeof(Helper))]
+        public async Task DeleteAsync_Existing_Is_Successful(
+            string name,
+            string typeName,
+            decimal? value,
+            int? userId)
+        {
+            await _repo.DeleteAsync(name, typeName, value, userId);
+
+            Assert.Null(await _repo.GetAssetAsync(name, typeName, value));
         }
     }
 }
