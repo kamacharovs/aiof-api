@@ -15,5 +15,7 @@ namespace aiof.api.services
         Task<IGoal> UpdateGoalAsync(
             int id, 
             GoalDto goalDto);
+        Task DeleteAsync(Guid publicKey);
+        Task DeleteAsync(IGoal goal);
     }
 }

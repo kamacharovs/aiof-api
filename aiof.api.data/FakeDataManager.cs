@@ -102,6 +102,7 @@ namespace aiof.api.data
                 new Asset
                 {
                     Id = 1,
+                    PublicKey = Guid.Parse("1ada5134-0290-4ec6-9933-53040906b255"),
                     Name = "car",
                     TypeName = "car",
                     Value = 14762.12M,
@@ -110,6 +111,7 @@ namespace aiof.api.data
                 new Asset
                 {
                     Id = 2,
+                    PublicKey = Guid.Parse("242948e5-6760-43c6-b6ff-21c40de3f9af"),
                     Name = "house",
                     TypeName = "house",
                     Value = 250550M,
@@ -149,6 +151,7 @@ namespace aiof.api.data
                 new Goal
                 {
                     Id = 1,
+                    PublicKey = Guid.Parse("446b2d9b-6d63-4021-946c-d9b0fd99d3fe"),
                     Name = "buy a home by 2021",
                     Amount = 345000M,
                     CurrentAmount = 50000M,
