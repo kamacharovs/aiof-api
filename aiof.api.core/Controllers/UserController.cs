@@ -43,5 +43,14 @@ namespace aiof.api.core.Controllers
         {
             return Ok(await _repo.UpsertUserProfileAsync(username, userProfileDto));
         }
+
+        [HttpGet]
+        [Route("subscriptions/{publicKey}")]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(Subscription), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetSubscriptionAsync([FromRoute, Required] Guid publicKey)
+        {
+            return Ok(await _repo.GetSubscriptionAsync(publicKey));
+        }
     }
 }

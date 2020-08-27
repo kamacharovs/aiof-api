@@ -15,7 +15,8 @@ using System.Text.Json;
 
 namespace aiof.api.services
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : BaseRepository,
+        IUserRepository
     {
         private readonly ILogger<UserRepository> _logger;
         private readonly IMapper _mapper;
@@ -25,6 +26,7 @@ namespace aiof.api.services
             ILogger<UserRepository> logger,
             IMapper mapper, 
             AiofContext context)
+            : base(logger, context)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -101,5 +103,12 @@ namespace aiof.api.services
 
             return await GetUserAsync(username);
         }
+
+        #region Subscription
+        public async Task<Subscription> GetSubscriptionAsync(Guid publicKey)
+        {
+            return await base.GetAsync<Subscription>(publicKey);
+        }
+        #endregion
     }
 }
