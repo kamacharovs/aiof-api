@@ -42,4 +42,15 @@ namespace aiof.api.data
         [Required]
         public int UserId { get; set; }
     }
+
+    public class SubscriptionDto
+    {
+        public string Name { get; set; }
+        public decimal Amount { get; set; }
+        public string PaymentFrequencyName { get; set; }
+        public int PaymentLength { get; set; }
+        public string From { get; set; }
+        public string Url { get; set; }
+        public int UserId { get; set; }
+    }
 }
