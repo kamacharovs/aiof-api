@@ -17,6 +17,7 @@ namespace aiof.api.data
         public virtual DbSet<LiabilityType> LiabilityTypes { get; set; }
         public virtual DbSet<GoalType> GoalTypes { get; set; }
         public virtual DbSet<Frequency> Frequencies { get; set; }
+        public virtual DbSet<Subscription> Subscriptions { get; set; }
 
         public AiofContext(DbContextOptions<AiofContext> options)
             : base(options)
@@ -196,6 +197,27 @@ namespace aiof.api.data
                 e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(20).IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.Value).HasSnakeCaseColumnName().IsRequired();
+            });
+
+            modelBuilder.Entity<Subscription>(e =>
+            {
+                e.ToTable("subscription");
+
+                e.HasKey(x => x.Id);
+
+                e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
+                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
+                e.Property(x => x.Amount).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.FrequencyName).HasSnakeCaseColumnName().HasMaxLength(20).IsRequired();
+                e.Property(x => x.From).HasSnakeCaseColumnName().HasMaxLength(200);
+                e.Property(x => x.Url).HasSnakeCaseColumnName().HasMaxLength(500);
+                e.Property(x => x.UserId).HasSnakeCaseColumnName().IsRequired();
+
+                e.HasOne(x => x.Frequency)
+                    .WithMany()
+                    .HasForeignKey(x => x.FrequencyName)
+                    .IsRequired();
             });
         }
     }
