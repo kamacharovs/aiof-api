@@ -39,6 +39,7 @@ namespace aiof.api.services
                     .Include(x => x.Assets)
                     .Include(x => x.Goals)
                     .Include(x => x.Liabilities)
+                    .Include(x => x.Subscriptions)
                     .AsNoTracking()
                     .AsQueryable()
                 : _context.Users
@@ -46,6 +47,7 @@ namespace aiof.api.services
                     .Include(x => x.Assets)
                     .Include(x => x.Goals)
                     .Include(x => x.Liabilities)
+                    .Include(x => x.Subscriptions)
                     .AsQueryable();
         }
 

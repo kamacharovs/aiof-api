@@ -57,6 +57,12 @@ namespace aiof.api.data
                     .WithOne()
                     .HasForeignKey(x => x.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
+
+                e.HasMany(x => x.Subscriptions)
+                    .WithOne()
+                    .HasForeignKey(x => x.UserId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
             });
 
             modelBuilder.Entity<UserProfile>(e =>

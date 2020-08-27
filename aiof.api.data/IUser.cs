@@ -41,5 +41,6 @@ namespace aiof.api.data
         ICollection<Asset> Assets { get; set; }
         ICollection<Goal> Goals { get; set; }
         ICollection<Liability> Liabilities { get; set; }
+        ICollection<Subscription> Subscriptions { get; set; }
     }
 }
