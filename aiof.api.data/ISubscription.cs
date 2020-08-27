@@ -18,6 +18,9 @@ namespace aiof.api.data
         [MaxLength(200)]
         string Name { get; set; }
 
+        [MaxLength(500)]
+        string Description { get; set; }
+
         [Required]
         decimal Amount { get; set; }
 

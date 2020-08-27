@@ -19,6 +19,9 @@ namespace aiof.api.data
         [MaxLength(200)]
         public string Name { get; set; }
 
+        [MaxLength(500)]
+        public string Description { get; set; }
+
         [Required]
         public decimal Amount { get; set; }
 
@@ -46,6 +49,7 @@ namespace aiof.api.data
     public class SubscriptionDto
     {
         public string Name { get; set; }
+        public string Description { get; set; }
         public decimal Amount { get; set; }
         public string PaymentFrequencyName { get; set; }
         public int PaymentLength { get; set; }

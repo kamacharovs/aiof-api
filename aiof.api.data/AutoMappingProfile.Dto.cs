@@ -43,8 +43,9 @@ namespace aiof.api.data
 
             CreateMap<SubscriptionDto, Subscription>()
                 .ForMember(x => x.Name, o => o.MapFrom(s => s.Name))
+                .ForMember(x => x.Description, o => o.Condition(s => s.Description != null)
                 .ForMember(x => x.Amount, o => o.MapFrom(s => s.Amount))
-                .ForMember(x => x.PaymentFrequencyName, o => o.MapFrom(s => s.Name))
+                .ForMember(x => x.PaymentFrequencyName, o => o.MapFrom(s => s.PaymentFrequencyName))
                 .ForMember(x => x.PaymentLength, o => o.MapFrom(s => s.PaymentLength))
                 .ForMember(x => x.From, o => o.Condition(s => s.From != null))
                 .ForMember(x => x.Url, o => o.Condition(s => s.Url != null))
