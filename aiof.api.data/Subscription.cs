@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace aiof.api.data
 {
-    public class Subscription :
+    public class Subscription : ISubscription,
         IPublicKeyId, IPublicKeyName
     {
         [JsonIgnore]

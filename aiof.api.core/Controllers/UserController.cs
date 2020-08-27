@@ -47,10 +47,20 @@ namespace aiof.api.core.Controllers
         [HttpGet]
         [Route("subscriptions/{publicKey}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(Subscription), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ISubscription), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetSubscriptionAsync([FromRoute, Required] Guid publicKey)
         {
             return Ok(await _repo.GetSubscriptionAsync(publicKey));
+        }
+
+        [HttpPost]
+        [Route("subscription")]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ISubscription), StatusCodes.Status200OK)]
+        public async Task<IActionResult> AddSubscriptionAsync([FromBody, Required] SubscriptionDto subscriptionDto)
+        {
+            return Ok(await _repo.AddSubscriptionAsync(subscriptionDto));
         }
     }
 }

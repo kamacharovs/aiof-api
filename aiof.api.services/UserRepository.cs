@@ -21,16 +21,19 @@ namespace aiof.api.services
         private readonly ILogger<UserRepository> _logger;
         private readonly IMapper _mapper;
         private readonly AiofContext _context;
+        private readonly AbstractValidator<SubscriptionDto> _subscriptionDtoValidator;
 
         public UserRepository(
             ILogger<UserRepository> logger,
             IMapper mapper, 
-            AiofContext context)
+            AiofContext context,
+            AbstractValidator<SubscriptionDto> subscriptionDtoValidator)
             : base(logger, context)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _context = context ?? throw new ArgumentNullException(nameof(context));
+            _subscriptionDtoValidator = subscriptionDtoValidator ?? throw new ArgumentNullException(nameof(subscriptionDtoValidator));
         }
 
         private IQueryable<User> GetUsersQuery(bool asNoTracking = true)
@@ -105,9 +108,24 @@ namespace aiof.api.services
         }
 
         #region Subscription
-        public async Task<Subscription> GetSubscriptionAsync(Guid publicKey)
+        public async Task<ISubscription> GetSubscriptionAsync(Guid publicKey)
         {
             return await base.GetAsync<Subscription>(publicKey);
+        }
+
+        public async Task<ISubscription> AddSubscriptionAsync(SubscriptionDto subscriptionDto)
+        {
+            await _subscriptionDtoValidator.ValidateAndThrowAsync(subscriptionDto);
+
+            var subscription = _mapper.Map<Subscription>(subscriptionDto);
+
+            await _context.Subscriptions
+                .AddAsync(subscription);
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation($"Added {nameof(Subscription)}='{JsonSerializer.Serialize(subscription)}'");
+
+            return subscription;
         }
         #endregion
     }
