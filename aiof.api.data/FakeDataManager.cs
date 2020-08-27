@@ -43,6 +43,9 @@ namespace aiof.api.data
             _context.Frequencies
                 .AddRange(GetFakeFrequencies());
 
+            _context.Subscriptions
+                .AddRange(GetFakeSubscriptions());
+
             _context.SaveChanges();
         }
 
@@ -303,6 +306,37 @@ namespace aiof.api.data
                 {
                     Name = "daily",
                     Value = 365
+                }
+            };
+        }
+
+        public IEnumerable<Subscription> GetFakeSubscriptions()
+        {
+            return new List<Subscription>
+            {
+                new Subscription
+                {
+                    Id = 1,
+                    PublicKey = Guid.Parse("89a0109a-f255-4b2d-b486-76d9efe6347b"),
+                    Name = "Amazon Prime",
+                    Amount = 99M,
+                    PaymentFrequencyName = "yearly",
+                    PaymentLength = 1,
+                    From = "Amazon",
+                    Url = "https://amazon.com/",
+                    UserId = 1
+                },
+                new Subscription
+                {
+                    Id = 2,
+                    PublicKey = Guid.Parse("8297bed8-c13e-4ea0-9e23-88e25ec2829d"),
+                    Name = "Spotify",
+                    Amount = 10.99M,
+                    PaymentFrequencyName = "monthly",
+                    PaymentLength = 12,
+                    From = "Spotify",
+                    Url = "https://spotify.com/",
+                    UserId = 1
                 }
             };
         }

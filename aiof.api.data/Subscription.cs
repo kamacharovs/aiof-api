@@ -24,10 +24,13 @@ namespace aiof.api.data
 
         [Required]
         [MaxLength(20)]
-        public string FrequencyName { get; set; }
+        public string PaymentFrequencyName { get; set; }
 
         [JsonIgnore]
-        public Frequency Frequency { get; set; }
+        public Frequency PaymentFrequency { get; set; }
+        
+        [Required]
+        public int PaymentLength { get; set; }
 
         [MaxLength(200)]
         public string From { get; set; }

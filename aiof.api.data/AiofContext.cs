@@ -209,14 +209,15 @@ namespace aiof.api.data
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
                 e.Property(x => x.Amount).HasSnakeCaseColumnName().IsRequired();
-                e.Property(x => x.FrequencyName).HasSnakeCaseColumnName().HasMaxLength(20).IsRequired();
+                e.Property(x => x.PaymentFrequencyName).HasSnakeCaseColumnName().HasMaxLength(20).IsRequired();
+                e.Property(x => x.PaymentLength).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.From).HasSnakeCaseColumnName().HasMaxLength(200);
                 e.Property(x => x.Url).HasSnakeCaseColumnName().HasMaxLength(500);
                 e.Property(x => x.UserId).HasSnakeCaseColumnName().IsRequired();
 
-                e.HasOne(x => x.Frequency)
+                e.HasOne(x => x.PaymentFrequency)
                     .WithMany()
-                    .HasForeignKey(x => x.FrequencyName)
+                    .HasForeignKey(x => x.PaymentFrequencyName)
                     .IsRequired();
             });
         }
