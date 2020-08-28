@@ -7,11 +7,9 @@ namespace aiof.api.data
     public class Subscription : ISubscription,
         IPublicKeyId, IPublicKeyName
     {
-        [JsonIgnore]
         [Required]
         public int Id { get; set; }
 
-        [JsonIgnore]
         [Required]
         public Guid PublicKey { get; set; } = Guid.NewGuid();
 

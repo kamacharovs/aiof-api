@@ -19,5 +19,6 @@ namespace aiof.api.services
             UserProfileDto userProfileDto);
         Task<ISubscription> GetSubscriptionAsync(Guid publicKey);
         Task<ISubscription> AddSubscriptionAsync(SubscriptionDto subscriptionDto);
+        Task DeleteSubscriptionAsync(int id);
     }
 }

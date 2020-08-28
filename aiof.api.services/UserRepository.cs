@@ -150,6 +150,11 @@ namespace aiof.api.services
 
             return subscription;
         }
+
+        public async Task DeleteSubscriptionAsync(int id)
+        {
+            await base.DeleteAsync<Subscription>(id);
+        }
         #endregion
     }
 }
