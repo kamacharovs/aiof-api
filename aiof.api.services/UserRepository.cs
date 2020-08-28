@@ -113,9 +113,32 @@ namespace aiof.api.services
             return await base.GetAsync<Subscription>(publicKey);
         }
 
+        public async Task<ISubscription> GetSubscriptionAsync(
+            string name, 
+            decimal amount,
+            int userId,
+            bool asNoTracking = true)
+        {
+            var subscriptions = asNoTracking
+                ? _context.Subscriptions.AsNoTracking().AsQueryable()
+                : _context.Subscriptions.AsQueryable();
+
+            return await subscriptions.FirstOrDefaultAsync(x => x.UserId == userId
+                && x.Name == name
+                && x.Amount == amount);
+        }
+
         public async Task<ISubscription> AddSubscriptionAsync(SubscriptionDto subscriptionDto)
         {
             await _subscriptionDtoValidator.ValidateAndThrowAsync(subscriptionDto);
+
+            var name = subscriptionDto.Name;
+            var amount = subscriptionDto.Amount;
+            var userId = subscriptionDto.UserId;
+
+            if (await GetSubscriptionAsync(name, amount, userId) != null)
+                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
+                    $"{nameof(Subscription)} with UserId='{userId}', Name='{name}' and Amount='{amount}' already exists");
 
             var subscription = _mapper.Map<Subscription>(subscriptionDto);
 
