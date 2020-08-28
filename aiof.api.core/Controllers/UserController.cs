@@ -62,5 +62,16 @@ namespace aiof.api.core.Controllers
         {
             return Ok(await _repo.AddSubscriptionAsync(subscriptionDto));
         }
+        [HttpPut]
+        [Route("subscription/{id}")]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ISubscription), StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpdateSubscriptionAsync(
+            [FromRoute, Required] int id,
+            [FromBody, Required] SubscriptionDto subscriptionDto)
+        {
+            return Ok(await _repo.UpdateSubscriptionAsync(id, subscriptionDto));
+        }
     }
 }

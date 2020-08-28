@@ -41,6 +41,8 @@ namespace aiof.api.data
                 .ForMember(x => x.Value, o => o.Condition(s => s.Value != null))
                 .ForMember(x => x.UserId, o => o.Condition(s => s.UserId != null));
 
+            CreateMap<Subscription, Subscription>()
+                .ForAllMembers(x => x.Condition((source, destination, member) => member != null));
             CreateMap<SubscriptionDto, Subscription>()
                 .ForMember(x => x.Name, o => o.MapFrom(s => s.Name))
                 .ForMember(x => x.Description, o => o.Condition(s => s.Description != null))

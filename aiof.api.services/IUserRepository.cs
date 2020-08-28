@@ -17,8 +17,12 @@ namespace aiof.api.services
         Task<IUser> UpsertUserProfileAsync(
             string username,
             UserProfileDto userProfileDto);
+        Task<ISubscription> GetSubscriptionAsync(int id);
         Task<ISubscription> GetSubscriptionAsync(Guid publicKey);
         Task<ISubscription> AddSubscriptionAsync(SubscriptionDto subscriptionDto);
+        Task<ISubscription> UpdateSubscriptionAsync(
+            int id,
+            SubscriptionDto subscriptionDto);
         Task DeleteSubscriptionAsync(int id);
     }
 }

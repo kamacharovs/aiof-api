@@ -108,11 +108,14 @@ namespace aiof.api.services
         }
 
         #region Subscription
+        public async Task<ISubscription> GetSubscriptionAsync(int id)
+        {
+            return await base.GetAsync<Subscription>(id);
+        }
         public async Task<ISubscription> GetSubscriptionAsync(Guid publicKey)
         {
             return await base.GetAsync<Subscription>(publicKey);
         }
-
         public async Task<ISubscription> GetSubscriptionAsync(
             string name, 
             decimal amount,
@@ -149,6 +152,22 @@ namespace aiof.api.services
             _logger.LogInformation($"Added {nameof(Subscription)}='{JsonSerializer.Serialize(subscription)}'");
 
             return subscription;
+        }
+
+        public async Task<ISubscription> UpdateSubscriptionAsync(
+            int id,
+            SubscriptionDto subscriptionDto)
+        {
+            var subscriptionInDb = await GetSubscriptionAsync(id);
+            var mappedDto = _mapper.Map<Subscription>(subscriptionDto);
+            var subcription = _mapper.Map(subscriptionInDb as Subscription, mappedDto);
+            
+            _context.Subscriptions.Update(subcription);
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation($"Updated {nameof(Subscription)}='{JsonSerializer.Serialize(subcription)}'");
+
+            return subcription;
         }
 
         public async Task DeleteSubscriptionAsync(int id)
