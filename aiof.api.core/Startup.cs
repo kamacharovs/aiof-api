@@ -105,7 +105,6 @@ namespace aiof.api.core
 
             app.UseHealthChecks("/ping");
             app.UseAiofExceptionMiddleware();
-
             app.UseSwagger();
 
             app.UseRouting();
