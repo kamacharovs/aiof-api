@@ -45,12 +45,12 @@ namespace aiof.api.core.Controllers
         }
 
         [HttpGet]
-        [Route("subscriptions/{publicKey}")]
+        [Route("subscription/{id}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ISubscription), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetSubscriptionAsync([FromRoute, Required] Guid publicKey)
+        public async Task<IActionResult> GetSubscriptionAsync([FromRoute, Required] int id)
         {
-            return Ok(await _repo.GetSubscriptionAsync(publicKey));
+            return Ok(await _repo.GetSubscriptionAsync(id));
         }
 
         [HttpPost]
@@ -62,6 +62,7 @@ namespace aiof.api.core.Controllers
         {
             return Ok(await _repo.AddSubscriptionAsync(subscriptionDto));
         }
+
         [HttpPut]
         [Route("subscription/{id}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
@@ -72,6 +73,19 @@ namespace aiof.api.core.Controllers
             [FromBody, Required] SubscriptionDto subscriptionDto)
         {
             return Ok(await _repo.UpdateSubscriptionAsync(id, subscriptionDto));
+        }
+
+        [HttpDelete]
+        [Route("subscription/{id}")]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ISubscription), StatusCodes.Status200OK)]
+        public async Task<IActionResult> DeleteSubscriptionAsync(
+            [FromRoute, Required] int id)
+        {
+            await _repo.DeleteSubscriptionAsync(id);
+
+            return Ok();
         }
     }
 }
