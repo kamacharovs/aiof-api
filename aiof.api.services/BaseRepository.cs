@@ -29,7 +29,7 @@ namespace aiof.api.services
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public IQueryable<T> GetEntityQuery<T>(bool asNoTracking = true)
+        public IQueryable<T> GetQuery<T>(bool asNoTracking = true)
             where T : class, IPublicKeyId
         {
             return asNoTracking
@@ -40,10 +40,12 @@ namespace aiof.api.services
                     .AsQueryable();
         }
 
-        public async Task<T> GetEntityAsync<T>(int id)
+        public async Task<T> GetAsync<T>(
+            int id,
+            bool asNoTracking = true)
             where T : class, IPublicKeyId
         {
-            return await GetEntityQuery<T>()
+            return await GetQuery<T>(asNoTracking)
                 .FirstOrDefaultAsync(x => x.Id == id)
                 ?? throw new AiofNotFoundException($"{typeof(T).Name} with Id='{id}' was not found");
         }
@@ -53,7 +55,7 @@ namespace aiof.api.services
             bool asNoTracking = true)
             where T : class, IPublicKeyId
         {
-            return await GetEntityQuery<T>(asNoTracking)
+            return await GetQuery<T>(asNoTracking)
                 .FirstOrDefaultAsync(x => x.PublicKey == publicKey)
                 ?? throw new AiofNotFoundException($"{typeof(T).Name} with PublicKey='{publicKey}' was not found");
         }
@@ -64,23 +66,21 @@ namespace aiof.api.services
             return await GetAsync<T>(Guid.Parse(publicKey));
         }
 
+        public async Task DeleteAsync<T>(int id)
+            where T : class, IPublicKeyId
+        {
+            await DeleteAsync(await GetAsync<T>(id, false));
+        }
         public async Task DeleteAsync<T>(Guid publicKey)
             where T : class, IPublicKeyId
         {
-            var entity = await GetAsync<T>(publicKey, false);
-            _context.Set<T>().Remove(entity);
-
-            await _context.SaveChangesAsync();
-
-            _logger.LogInformation($"Deleted {typeof(T).Name}='{JsonSerializer.Serialize(entity)}'");
+            await DeleteAsync(await GetAsync<T>(publicKey, false));
         }
         public async Task DeleteAsync<T>(T entity)
             where T : class, IPublicKeyId
         {
              _context.Set<T>().Remove(entity);
-
             await _context.SaveChangesAsync();
-
             _logger.LogInformation($"Deleted {typeof(T).Name}='{JsonSerializer.Serialize(entity)}'");
         }
     }

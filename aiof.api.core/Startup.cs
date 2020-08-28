@@ -51,6 +51,7 @@ namespace aiof.api.core
             services.AddScoped<AbstractValidator<AssetDto>, AssetDtoValidator>();
             services.AddScoped<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>();
             services.AddScoped<AbstractValidator<GoalDto>, GoalDtoValidator>();
+            services.AddScoped<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>();
 
             if (_env.IsDevelopment())
                 services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(nameof(AiofContext)));
@@ -104,7 +105,6 @@ namespace aiof.api.core
 
             app.UseHealthChecks("/ping");
             app.UseAiofExceptionMiddleware();
-
             app.UseSwagger();
 
             app.UseRouting();
