@@ -14,7 +14,7 @@ using aiof.api.data;
 
 namespace aiof.api.services
 {
-    public class GoalRepository : IGoalRepository
+    public class GoalRepository : BaseRepository, IGoalRepository
     {
         private readonly ILogger<GoalRepository> _logger;
         private readonly IMapper _mapper;
@@ -26,6 +26,7 @@ namespace aiof.api.services
             IMapper mapper, 
             AiofContext context,
             AbstractValidator<GoalDto> goalDtoValidator)
+            : base(logger, context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -62,6 +63,14 @@ namespace aiof.api.services
             return await GetGoalsQuery()
                 .FirstOrDefaultAsync(x => x.Id == id)
                 ?? throw new AiofNotFoundException($"{nameof(Goal)} with Id='{id}' was not found");
+        }
+        public async Task<IGoal> GetAsync(
+            Guid publicKey, 
+            bool asNoTracking = true)
+        {
+            return await GetGoalsQuery(asNoTracking)
+                .FirstOrDefaultAsync(x => x.PublicKey == publicKey)
+                ?? throw new AiofNotFoundException($"{nameof(Goal)} with PublicKey='{publicKey}' was not found");
         }
         public async Task<bool> GoalExistsAsync(GoalDto goalDto)
         {
@@ -128,6 +137,16 @@ namespace aiof.api.services
             await _context.SaveChangesAsync();
 
             return goal;
+        }
+
+        public async Task DeleteAsync(Guid publicKey)
+        {
+            var goal = await GetAsync(publicKey, false);
+            await base.DeleteAsync(goal as Goal);
+        }
+        public async Task DeleteAsync(IGoal goal)
+        {
+            await base.DeleteAsync<Goal>(goal as Goal);
         }
     }
 }

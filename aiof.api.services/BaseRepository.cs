@@ -16,24 +16,21 @@ using aiof.api.data;
 
 namespace aiof.api.services
 {
-    public abstract class BaseRepository<T> : IBaseRepository<T>
-        where T : class, IPublicKeyId
+    public abstract class BaseRepository
     {
         private readonly AiofContext _context;
-        private readonly IMapper _mapper;
-        private readonly ILogger<BaseRepository<T>> _logger;
+        private readonly ILogger<BaseRepository> _logger;
 
         public BaseRepository(
-            ILogger<BaseRepository<T>> logger,
-            IMapper mapper,
+            ILogger<BaseRepository> logger,
             AiofContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public IQueryable<T> GetEntityQuery(bool asNoTracking = true)
+        public IQueryable<T> GetQuery<T>(bool asNoTracking = true)
+            where T : class, IPublicKeyId
         {
             return asNoTracking
                 ? _context.Set<T>()
@@ -43,23 +40,48 @@ namespace aiof.api.services
                     .AsQueryable();
         }
 
-        public async Task<T> GetEntityAsync(int id)
+        public async Task<T> GetAsync<T>(
+            int id,
+            bool asNoTracking = true)
+            where T : class, IPublicKeyId
         {
-            return await GetEntityQuery()
+            return await GetQuery<T>(asNoTracking)
                 .FirstOrDefaultAsync(x => x.Id == id)
                 ?? throw new AiofNotFoundException($"{typeof(T).Name} with Id='{id}' was not found");
         }
 
-        public async Task<T> GetEntityAsync(Guid publicKey)
+        public async Task<T> GetAsync<T>(
+            Guid publicKey,
+            bool asNoTracking = true)
+            where T : class, IPublicKeyId
         {
-            return await GetEntityQuery()
+            return await GetQuery<T>(asNoTracking)
                 .FirstOrDefaultAsync(x => x.PublicKey == publicKey)
                 ?? throw new AiofNotFoundException($"{typeof(T).Name} with PublicKey='{publicKey}' was not found");
         }
 
-        public async Task<T> GetEntityAsync(string publicKey)
+        public async Task<T> GetEntityAsync<T>(string publicKey)
+            where T : class, IPublicKeyId
         {
-            return await GetEntityAsync(Guid.Parse(publicKey));
+            return await GetAsync<T>(Guid.Parse(publicKey));
+        }
+
+        public async Task DeleteAsync<T>(int id)
+            where T : class, IPublicKeyId
+        {
+            await DeleteAsync(await GetAsync<T>(id, false));
+        }
+        public async Task DeleteAsync<T>(Guid publicKey)
+            where T : class, IPublicKeyId
+        {
+            await DeleteAsync(await GetAsync<T>(publicKey, false));
+        }
+        public async Task DeleteAsync<T>(T entity)
+            where T : class, IPublicKeyId
+        {
+             _context.Set<T>().Remove(entity);
+            await _context.SaveChangesAsync();
+            _logger.LogInformation($"Deleted {typeof(T).Name}='{JsonSerializer.Serialize(entity)}'");
         }
     }
 }

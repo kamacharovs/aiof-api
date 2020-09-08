@@ -43,6 +43,9 @@ namespace aiof.api.data
             _context.Frequencies
                 .AddRange(GetFakeFrequencies());
 
+            _context.Subscriptions
+                .AddRange(GetFakeSubscriptions());
+
             _context.SaveChanges();
         }
 
@@ -53,7 +56,7 @@ namespace aiof.api.data
                 new User
                 {
                     Id = 1,
-                    PublicKey = Guid.NewGuid(),
+                    PublicKey = Guid.Parse("581f3ce6-cf2a-42a5-828f-157a2bfab763"),
                     FirstName = "Georgi",
                     LastName = "Kamacharov",
                     Email = "gkama@test.com",
@@ -62,11 +65,20 @@ namespace aiof.api.data
                 new User
                 {
                     Id = 2,
-                    PublicKey = Guid.NewGuid(),
+                    PublicKey = Guid.Parse("8e17276c-88ac-43bd-a9e8-5fdf5381dbd5"),
                     FirstName = "Jessie",
                     LastName = "Brown",
-                    Email = "jbro@test.com",
+                    Email = "jessie@test.com",
                     Username = "jbro"
+                },
+                new User
+                {
+                    Id = 3,
+                    PublicKey = Guid.Parse("7c135230-2889-4cbb-bb0e-ab4237d89367"),
+                    FirstName = "George",
+                    LastName = "Best",
+                    Email = "george.best@auth.com",
+                    Username = "gbest"
                 }
             };
         }
@@ -79,7 +91,9 @@ namespace aiof.api.data
                 {
                     Id = 1,
                     UserId = 1,
-                    MaritalStatus = "single"
+                    MaritalStatus = "single",
+                    Occupation = "Sr. Software Engineer",
+                    OccupationIndustry = "IT"
                 }
             };
         }
@@ -91,6 +105,7 @@ namespace aiof.api.data
                 new Asset
                 {
                     Id = 1,
+                    PublicKey = Guid.Parse("1ada5134-0290-4ec6-9933-53040906b255"),
                     Name = "car",
                     TypeName = "car",
                     Value = 14762.12M,
@@ -99,6 +114,7 @@ namespace aiof.api.data
                 new Asset
                 {
                     Id = 2,
+                    PublicKey = Guid.Parse("242948e5-6760-43c6-b6ff-21c40de3f9af"),
                     Name = "house",
                     TypeName = "house",
                     Value = 250550M,
@@ -138,6 +154,7 @@ namespace aiof.api.data
                 new Goal
                 {
                     Id = 1,
+                    PublicKey = Guid.Parse("446b2d9b-6d63-4021-946c-d9b0fd99d3fe"),
                     Name = "buy a home by 2021",
                     Amount = 345000M,
                     CurrentAmount = 50000M,
@@ -293,6 +310,39 @@ namespace aiof.api.data
             };
         }
 
+        public IEnumerable<Subscription> GetFakeSubscriptions()
+        {
+            return new List<Subscription>
+            {
+                new Subscription
+                {
+                    Id = 1,
+                    PublicKey = Guid.Parse("89a0109a-f255-4b2d-b486-76d9efe6347b"),
+                    Name = "Amazon Prime",
+                    Description = "Yearly Amazon Prime subscription",
+                    Amount = 99M,
+                    PaymentFrequencyName = "yearly",
+                    PaymentLength = 1,
+                    From = "Amazon",
+                    Url = "https://amazon.com/",
+                    UserId = 1
+                },
+                new Subscription
+                {
+                    Id = 2,
+                    PublicKey = Guid.Parse("8297bed8-c13e-4ea0-9e23-88e25ec2829d"),
+                    Name = "Spotify",
+                    Description = "My monthly Spotify subscription",
+                    Amount = 10.99M,
+                    PaymentFrequencyName = "monthly",
+                    PaymentLength = 12,
+                    From = "Spotify",
+                    Url = "https://spotify.com/",
+                    UserId = 1
+                }
+            };
+        }
+
 
 
         #region Unit Tests
@@ -347,6 +397,7 @@ namespace aiof.api.data
 
         public IEnumerable<object[]> GetFakeAssetsData(
             bool id = false,
+            bool publicKey = false,
             bool name = false,
             bool typeName = false,
             bool value = false,
@@ -380,6 +431,16 @@ namespace aiof.api.data
                     toReturn.Add(new object[] 
                     { 
                         fakeAssetId
+                    });
+                }
+            }
+            else if (publicKey)
+            {
+                foreach (var fakeAssetPublicKey in fakeAssets.Select(x => x.PublicKey))
+                {
+                    toReturn.Add(new object[] 
+                    { 
+                        fakeAssetPublicKey
                     });
                 }
             }

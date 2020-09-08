@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -14,7 +15,7 @@ using aiof.api.data;
 
 namespace aiof.api.services
 {
-    public class AssetRepository : IAssetRepository
+    public class AssetRepository : BaseRepository, IAssetRepository
     {
         private readonly ILogger<AssetRepository> _logger;
         private readonly IMapper _mapper;
@@ -26,6 +27,7 @@ namespace aiof.api.services
             IMapper mapper, 
             AiofContext context,
             AbstractValidator<AssetDto> assetDtoValidator)
+            : base(logger, context)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -61,18 +63,30 @@ namespace aiof.api.services
                 .FirstOrDefaultAsync(x => x.Id == id)
                 ?? throw new AiofNotFoundException($"{nameof(Asset)} with Id='{id}' was not found");
         }
+        public async Task<IAsset> GetAsync(
+            Guid publicKey, 
+            bool asNoTracking = true)
+        {
+            return await base.GetAsync<Asset>(publicKey, asNoTracking);
+        }
 
         public async Task<IAsset> GetAssetAsync(
             string name,
             string typeName,
             decimal? value,
-            int? userId)
+            int? userId = null,
+            bool asNoTracking = true)
         {
-            return await GetAssetsQuery()
-                .FirstOrDefaultAsync(x => x.Name == name
-                    && x.TypeName == typeName
-                    && x.Value == value
-                    && x.UserId == userId);
+            return userId is null
+                ? await GetAssetsQuery(asNoTracking)
+                    .FirstOrDefaultAsync(x => x.Name == name
+                        && x.TypeName == typeName
+                        && x.Value == value)
+                : await GetAssetsQuery(asNoTracking)
+                    .FirstOrDefaultAsync(x => x.Name == name
+                        && x.TypeName == typeName
+                        && x.Value == value
+                        && x.UserId == userId);
         }
         public async Task<IAsset> GetAssetAsync(AssetDto assetDto)
         {
@@ -128,12 +142,10 @@ namespace aiof.api.services
         }
 
         public async Task<IAsset> UpdateAssetAsync(
-            int id, 
+            Guid publicKey, 
             AssetDto assetDto)
         {
-            await _assetDtoValidator.ValidateAndThrowAsync(assetDto);
-
-            var asset = await GetAssetAsync(id);
+            var asset = await GetAsync(publicKey, false);
 
             _context.Assets
                 .Update(_mapper.Map(assetDto, asset as Asset));
@@ -147,6 +159,15 @@ namespace aiof.api.services
             _logger.LogInformation($"Updated {nameof(Asset)} with Id='{asset.Id}', PublicKey='{asset.PublicKey}' and UserId='{asset.UserId}'");
 
             return asset;
+        }
+
+        public async Task DeleteAsync(Guid publicKey)
+        {
+            await base.DeleteAsync<Asset>(publicKey);
+        }
+        public async Task DeleteAsync(IAsset asset)
+        {
+            await base.DeleteAsync<Asset>(asset as Asset);
         }
     }
 }

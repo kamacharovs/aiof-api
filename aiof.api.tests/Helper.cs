@@ -49,6 +49,7 @@ namespace aiof.api.tests
             services.AddScoped<AbstractValidator<AssetDto>, AssetDtoValidator>();
             services.AddScoped<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>();
             services.AddScoped<AbstractValidator<GoalDto>, GoalDtoValidator>();
+            services.AddScoped<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>();
 
             services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
@@ -139,16 +140,29 @@ namespace aiof.api.tests
             return _Fake.GetFakeAssetsData(
                 id: true);
         }
+        public static IEnumerable<object[]> AssetsPublicKey()
+        {
+            return _Fake.GetFakeAssetsData(
+                publicKey: true);
+        }
         public static IEnumerable<object[]> AssetsTypeName()
         {
             return _Fake.GetFakeAssetsData(
                 typeName: true);
         }
+        public static IEnumerable<object[]> Assets()
+        {
+            return _Fake.GetFakeAssetsData(
+                name: true,
+                typeName: true,
+                value: true,
+                userId: true);
+        }
 
         public static IEnumerable<object[]> RandomAssetDtos()
         {
             var fakeAssetDtos = new Faker<AssetDto>()
-                .RuleFor(x => x.Name, f => f.Random.String())
+                .RuleFor(x => x.Name, f => "car to buy")
                 .RuleFor(x => x.TypeName, f => "car")
                 .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000))
                 .RuleFor(x => x.UserId, f => f.Random.Int(1, 2))

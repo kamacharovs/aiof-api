@@ -153,5 +153,35 @@ namespace aiof.api.tests
             Assert.Equal(value, asset.Value);
             Assert.Equal(userId, asset.UserId);
         }
+
+        [Theory]
+        [MemberData(nameof(Helper.RandomAssetDtos), MemberType = typeof(Helper))]
+        public async Task DeleteAsync_By_Asset_Is_Successful(
+            string name,
+            string typeName,
+            decimal? value,
+            int? userId)
+        {
+            var asset = await _repo.AddAssetAsync(new AssetDto
+            {
+                Name = name,
+                TypeName = typeName,
+                Value = value,
+                UserId = userId
+            });
+            Assert.NotNull(await _repo.GetAssetAsync(asset.Name, asset.TypeName, asset.Value));
+
+            await _repo.DeleteAsync(asset);
+            Assert.Null(await _repo.GetAssetAsync(asset.Name, asset.TypeName, asset.Value));
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.AssetsPublicKey), MemberType = typeof(Helper))]
+        public async Task DeleteAsync_Existing_Is_Successful(Guid publicKey)
+        {
+            await _repo.DeleteAsync(publicKey);
+
+            await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.GetAsync(publicKey));
+        }
     }
 }

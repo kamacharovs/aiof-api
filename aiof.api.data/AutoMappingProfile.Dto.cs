@@ -40,6 +40,18 @@ namespace aiof.api.data
                 .ForMember(x => x.TypeName, o => o.Condition(s => s.TypeName != null))
                 .ForMember(x => x.Value, o => o.Condition(s => s.Value != null))
                 .ForMember(x => x.UserId, o => o.Condition(s => s.UserId != null));
+
+            CreateMap<Subscription, Subscription>()
+                .ForAllMembers(x => x.Condition((source, destination, member) => member != null));
+            CreateMap<SubscriptionDto, Subscription>()
+                .ForMember(x => x.Name, o => o.MapFrom(s => s.Name))
+                .ForMember(x => x.Description, o => o.Condition(s => s.Description != null))
+                .ForMember(x => x.Amount, o => o.MapFrom(s => s.Amount))
+                .ForMember(x => x.PaymentFrequencyName, o => o.MapFrom(s => s.PaymentFrequencyName))
+                .ForMember(x => x.PaymentLength, o => o.MapFrom(s => s.PaymentLength))
+                .ForMember(x => x.From, o => o.Condition(s => s.From != null))
+                .ForMember(x => x.Url, o => o.Condition(s => s.Url != null))
+                .ForMember(x => x.UserId, o => o.MapFrom(s => s.UserId));
         }
     }
 }

@@ -61,5 +61,15 @@ namespace aiof.api.core.Controllers
         {
             return Created(nameof(Goal), await _repo.AddGoalAsync(goalDto));
         }
+
+        [HttpDelete]
+        [Route("{publicKey}")]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> DeleteAsync([FromRoute] Guid publicKey)
+        {
+            await _repo.DeleteAsync(publicKey);
+            return Ok();
+        }
     }
 }
