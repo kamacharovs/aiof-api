@@ -22,4 +22,20 @@ namespace aiof.api.data
                 .NotEmpty();
         }
     }
+
+    public class LiabilityTypeValidator : AbstractValidator<LiabilityType>
+    {
+        public LiabilityTypeValidator()
+        {
+            ValidatorOptions.Global.CascadeMode = CascadeMode.Stop;
+
+            RuleFor(x => x)
+                .NotNull();
+
+            RuleFor(x => x.Name)
+                .NotNull()
+                .NotEmpty()
+                .MaximumLength(100);
+        }
+    }
 }

@@ -20,17 +20,20 @@ namespace aiof.api.services
         private readonly IMapper _mapper;
         private readonly AiofContext _context;
         private readonly AbstractValidator<LiabilityDto> _liabilityDtoValidator;
+        private readonly AbstractValidator<LiabilityType> _liabilityTypeValidator;
 
         public LiabilityRepository(
             ILogger<LiabilityRepository> logger,
             IMapper mapper, 
             AiofContext context,
-            AbstractValidator<LiabilityDto> liabilityDtoValidator)
+            AbstractValidator<LiabilityDto> liabilityDtoValidator,
+            AbstractValidator<LiabilityType> liabilityTypeValidator)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _liabilityDtoValidator = liabilityDtoValidator ?? throw new ArgumentNullException(nameof(liabilityDtoValidator));
+            _liabilityTypeValidator = liabilityTypeValidator ?? throw new ArgumentNullException(nameof(liabilityTypeValidator));
         }
 
         private IQueryable<Liability> GetLiabilitiesQuery(bool asNoTracking = true)
@@ -109,6 +112,26 @@ namespace aiof.api.services
             await _context.SaveChangesAsync();
 
             return liability;
+        }
+
+        public async Task<ILiabilityType> AddLiabilityTypeAsync(string name)
+        {
+            var liabilityType = new LiabilityType
+            { 
+                Name = name 
+            };
+
+            await _liabilityTypeValidator.ValidateAndThrowAsync(liabilityType);
+
+            if ((await GetLiabilityTypesAsync()).Any(x => x.Name == name))
+                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
+                    $"{nameof(LiabilityType)} with Name='{name}' already exists");
+
+            await _context.LiabilityTypes
+                .AddAsync(liabilityType);
+            await _context.SaveChangesAsync();
+
+            return liabilityType;
         }
     }
 }

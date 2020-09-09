@@ -15,5 +15,6 @@ namespace aiof.api.services
         Task<ILiability> UpdateLiabilityAsync(
             int id, 
             LiabilityDto liabilityDto);
+        Task<ILiabilityType> AddLiabilityTypeAsync(string name);
     }
 }
