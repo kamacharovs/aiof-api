@@ -35,21 +35,21 @@ namespace aiof.api.tests
         {
             var services = new ServiceCollection();
 
-            services.AddScoped<IAiofRepository, AiofRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IAssetRepository, AssetRepository>();
-            services.AddScoped<IGoalRepository, GoalRepository>();
-            services.AddScoped<ILiabilityRepository, LiabilityRepository>();
-            services.AddScoped<FakeDataManager>();
-            services.AddScoped<IEnvConfiguration, EnvConfiguration>();
-            services.AddSingleton(GetMockedMetadataRepo());
+            services.AddScoped<IAiofRepository, AiofRepository>()
+                .AddScoped<IUserRepository, UserRepository>()
+                .AddScoped<IAssetRepository, AssetRepository>()
+                .AddScoped<IGoalRepository, GoalRepository>()
+                .AddScoped<ILiabilityRepository, LiabilityRepository>()
+                .AddScoped<IEnvConfiguration, EnvConfiguration>()
+                .AddScoped<FakeDataManager>()
+                .AddSingleton(GetMockedMetadataRepo());
 
             services.AddSingleton(new MapperConfiguration(x => { x.AddProfile(new AutoMappingProfileDto()); }).CreateMapper());
 
-            services.AddScoped<AbstractValidator<AssetDto>, AssetDtoValidator>();
-            services.AddScoped<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>();
-            services.AddScoped<AbstractValidator<GoalDto>, GoalDtoValidator>();
-            services.AddScoped<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>();
+            services.AddScoped<AbstractValidator<AssetDto>, AssetDtoValidator>()
+                .AddScoped<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>()
+                .AddScoped<AbstractValidator<GoalDto>, GoalDtoValidator>()
+                .AddScoped<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>();
 
             services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
