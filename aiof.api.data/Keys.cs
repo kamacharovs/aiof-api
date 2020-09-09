@@ -4,6 +4,7 @@ namespace aiof.api.data
 {
     public static class Keys
     {
+        public const string Accept = nameof(Accept);
         public const string ApplicationJson = "application/json";
 
         public const string FeatureManagement = nameof(FeatureManagement);

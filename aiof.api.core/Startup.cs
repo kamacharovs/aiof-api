@@ -32,26 +32,26 @@ namespace aiof.api.core
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IAiofRepository, AiofRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IAssetRepository, AssetRepository>();
-            services.AddScoped<IGoalRepository, GoalRepository>();
-            services.AddScoped<ILiabilityRepository, LiabilityRepository>();
-            services.AddScoped<FakeDataManager>();
-            services.AddScoped<IEnvConfiguration, EnvConfiguration>();
-            services.AddAutoMapper(typeof(AutoMappingProfileDto).Assembly);
+            services.AddScoped<IAiofRepository, AiofRepository>()
+                .AddScoped<IUserRepository, UserRepository>()
+                .AddScoped<IAssetRepository, AssetRepository>()
+                .AddScoped<IGoalRepository, GoalRepository>()
+                .AddScoped<ILiabilityRepository, LiabilityRepository>()
+                .AddScoped<IEnvConfiguration, EnvConfiguration>()
+                .AddScoped<FakeDataManager>()
+                .AddAutoMapper(typeof(AutoMappingProfileDto).Assembly);
 
             services.AddHttpClient<IAiofMetadataRepository, AiofMetadataRepository>(Keys.Metadata, x =>
                 {
                     x.BaseAddress = new Uri(_configuration[Keys.MetadataBaseUrl]);
-                    x.DefaultRequestHeaders.Add("Accept", "application/json");
+                    x.DefaultRequestHeaders.Add(Keys.Accept, Keys.ApplicationJson);
                 })
                 .SetHandlerLifetime(TimeSpan.FromMinutes(5));
 
-            services.AddScoped<AbstractValidator<AssetDto>, AssetDtoValidator>();
-            services.AddScoped<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>();
-            services.AddScoped<AbstractValidator<GoalDto>, GoalDtoValidator>();
-            services.AddScoped<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>();
+            services.AddScoped<AbstractValidator<AssetDto>, AssetDtoValidator>()
+                .AddScoped<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>()
+                .AddScoped<AbstractValidator<GoalDto>, GoalDtoValidator>()
+                .AddScoped<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>();
 
             if (_env.IsDevelopment())
                 services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(nameof(AiofContext)));
