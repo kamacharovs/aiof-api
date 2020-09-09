@@ -48,6 +48,7 @@ namespace aiof.api.tests
 
             services.AddScoped<AbstractValidator<AssetDto>, AssetDtoValidator>()
                 .AddScoped<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>()
+                .AddScoped<AbstractValidator<LiabilityType>, LiabilityTypeValidator>()
                 .AddScoped<AbstractValidator<GoalDto>, GoalDtoValidator>()
                 .AddScoped<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>();
 
