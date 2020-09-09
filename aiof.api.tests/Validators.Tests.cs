@@ -15,12 +15,14 @@ namespace aiof.api.tests
         private readonly AbstractValidator<AssetDto> _assetDtoValidator;
         private readonly AbstractValidator<GoalDto> _goalDtoValidator;
         private readonly AbstractValidator<LiabilityDto> _liabilityDtoValidator;
+        private readonly AbstractValidator<SubscriptionDto> _subscriptionDtoValidator;
 
         public ValidatorsTests()
         {
             _assetDtoValidator = Helper.GetRequiredService<AbstractValidator<AssetDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<AssetDto>));
             _goalDtoValidator = Helper.GetRequiredService<AbstractValidator<GoalDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<GoalDto>));
             _liabilityDtoValidator = Helper.GetRequiredService<AbstractValidator<LiabilityDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<LiabilityDto>));
+            _subscriptionDtoValidator = Helper.GetRequiredService<AbstractValidator<SubscriptionDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<SubscriptionDto>));
         }
 
         [Theory]
@@ -87,6 +89,29 @@ namespace aiof.api.tests
                 TypeName = typeName
             };
             Assert.False(_goalDtoValidator.Validate(goalDto).IsValid);
+        }
+
+        [Theory]
+        [InlineData("Netflix", 10, "monthly", 12, 1)]
+        [InlineData("Hulu", 8.99, "monthly", 24, 1)]
+        [InlineData("Subscription", 99.88, "monthly", 36, 1)]
+        public void Subscription_Dto_Validate_IsSuccessful(
+            string name,
+            decimal amount,
+            string paymentFrequencyName,
+            int paymentLength,
+            int userId)
+        {
+            var subscriptionDto = new SubscriptionDto
+            {
+                Name = name,
+                Amount = amount,
+                PaymentFrequencyName = paymentFrequencyName,
+                PaymentLength = paymentLength,
+                UserId = userId
+            };
+
+            Assert.True(_subscriptionDtoValidator.Validate(subscriptionDto).IsValid);
         }
     }
 }

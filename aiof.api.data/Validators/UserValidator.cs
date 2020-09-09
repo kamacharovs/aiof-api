@@ -29,6 +29,19 @@ namespace aiof.api.data
 
             RuleFor(x => x.UserId)
                 .NotNull();
+
+
+            RuleFor(x => x.From)
+                .MaximumLength(200)
+                .When(x => !string.IsNullOrWhiteSpace(x.From));
+
+            RuleFor(x => x.Url)
+                .MaximumLength(500)
+                .When(x => !string.IsNullOrWhiteSpace(x.Url));
+
+            RuleFor(x => x.Description)
+                .MaximumLength(500)
+                .When(x => !string.IsNullOrWhiteSpace(x.Description));
         }
     }
 }

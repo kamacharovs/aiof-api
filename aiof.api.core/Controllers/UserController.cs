@@ -26,6 +26,9 @@ namespace aiof.api.core.Controllers
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
         }
         
+        /// <summary>
+        /// Get User by username
+        /// </summary>
         [HttpGet]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
@@ -35,6 +38,9 @@ namespace aiof.api.core.Controllers
             return Ok(await _repo.GetUserAsync(username));
         }
 
+        /// <summary>
+        /// Upsert a User profile
+        /// </summary>
         [HttpPut]
         [Route("profile")]
         public async Task<IActionResult> AddUserProfileAsync(
@@ -44,6 +50,9 @@ namespace aiof.api.core.Controllers
             return Ok(await _repo.UpsertUserProfileAsync(username, userProfileDto));
         }
 
+        /// <summary>
+        /// Get Subscriptions by public key
+        /// </summary>
         [HttpGet]
         [Route("subscription/{id}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
@@ -53,6 +62,9 @@ namespace aiof.api.core.Controllers
             return Ok(await _repo.GetSubscriptionAsync(id));
         }
 
+        /// <summary>
+        /// Add a Subscription
+        /// </summary>
         [HttpPost]
         [Route("subscription")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
@@ -63,6 +75,9 @@ namespace aiof.api.core.Controllers
             return Ok(await _repo.AddSubscriptionAsync(subscriptionDto));
         }
 
+        /// <summary>
+        /// Upsert a Subscription
+        /// </summary>
         [HttpPut]
         [Route("subscription/{id}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
