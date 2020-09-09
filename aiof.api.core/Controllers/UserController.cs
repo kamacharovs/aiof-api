@@ -90,6 +90,9 @@ namespace aiof.api.core.Controllers
             return Ok(await _repo.UpdateSubscriptionAsync(id, subscriptionDto));
         }
 
+        /// <summary>
+        /// Delete a Subscription
+        /// </summary>
         [HttpDelete]
         [Route("subscription/{id}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
