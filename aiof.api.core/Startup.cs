@@ -1,6 +1,7 @@
 using System;
-using System.Net.Http;
 using System.Text.Json;
+using System.IO;
+using System.Reflection;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
@@ -89,7 +90,7 @@ namespace aiof.api.core
                         Url = new Uri(_configuration[Keys.OpenApiLicenseUrl]),
                     }
                 });
-                //x.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
+                x.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
             });
         }
 
