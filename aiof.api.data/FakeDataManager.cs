@@ -211,6 +211,10 @@ namespace aiof.api.data
                 },
                 new LiabilityType
                 {
+                    Name = "student loan"
+                },
+                new LiabilityType
+                {
                     Name = "credit card"
                 },
                 new LiabilityType
@@ -220,6 +224,10 @@ namespace aiof.api.data
                 new LiabilityType
                 {
                     Name = "house renovation"
+                },
+                new LiabilityType
+                {
+                    Name = "rv"
                 },
                 new LiabilityType
                 {

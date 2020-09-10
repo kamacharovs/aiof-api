@@ -51,6 +51,7 @@ namespace aiof.api.core
 
             services.AddScoped<AbstractValidator<AssetDto>, AssetDtoValidator>()
                 .AddScoped<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>()
+                .AddScoped<AbstractValidator<LiabilityType>, LiabilityTypeValidator>()
                 .AddScoped<AbstractValidator<GoalDto>, GoalDtoValidator>()
                 .AddScoped<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>();
 
@@ -90,7 +91,7 @@ namespace aiof.api.core
                         Url = new Uri(_configuration[Keys.OpenApiLicenseUrl]),
                     }
                 });
-                x.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
+                //x.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
             });
         }
 

@@ -15,6 +15,7 @@ namespace aiof.api.tests
         private readonly AbstractValidator<AssetDto> _assetDtoValidator;
         private readonly AbstractValidator<GoalDto> _goalDtoValidator;
         private readonly AbstractValidator<LiabilityDto> _liabilityDtoValidator;
+        private readonly AbstractValidator<LiabilityType> _liabilityTypeValidator;
         private readonly AbstractValidator<SubscriptionDto> _subscriptionDtoValidator;
 
         public ValidatorsTests()
@@ -22,6 +23,7 @@ namespace aiof.api.tests
             _assetDtoValidator = Helper.GetRequiredService<AbstractValidator<AssetDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<AssetDto>));
             _goalDtoValidator = Helper.GetRequiredService<AbstractValidator<GoalDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<GoalDto>));
             _liabilityDtoValidator = Helper.GetRequiredService<AbstractValidator<LiabilityDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<LiabilityDto>));
+            _liabilityTypeValidator = Helper.GetRequiredService<AbstractValidator<LiabilityType>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<LiabilityType>));
             _subscriptionDtoValidator = Helper.GetRequiredService<AbstractValidator<SubscriptionDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<SubscriptionDto>));
         }
 
@@ -90,6 +92,18 @@ namespace aiof.api.tests
             };
             Assert.False(_goalDtoValidator.Validate(goalDto).IsValid);
         }
+
+        [Theory]
+        [InlineData("test")]
+        [InlineData("definitely doesn't exist yet")]
+        [InlineData("something financial")]
+        public void LiabilityType_Validate_IsSuccessful(string name)
+        {
+            var liabilityType = new LiabilityType { Name = name };
+
+            Assert.True(_liabilityTypeValidator.Validate(liabilityType).IsValid);
+        }
+
 
         [Theory]
         [InlineData("Netflix", 10, "monthly", 12, 1)]
