@@ -128,4 +128,33 @@ namespace aiof.api.tests
             Assert.True(_subscriptionDtoValidator.Validate(subscriptionDto).IsValid);
         }
     }
+
+    [Trait(Helper.Category, Helper.UnitTest)]
+    public class UserDtoValidatorTests
+    {
+        private readonly AbstractValidator<UserDto2> _userDtoValidator;
+
+        public UserDtoValidatorTests()
+        {
+            _userDtoValidator = Helper.GetRequiredService<AbstractValidator<UserDto2>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<UserDto2>));
+        }
+
+        [Fact]
+        public void UserDto2()
+        {
+            var assets = new List<AssetDto>
+            {
+                new AssetDto
+                {
+                    Name = "asset-1",
+                    TypeName = "car",
+                    Value = 15000
+                }
+            };
+
+            var userDto = new UserDto2 { Assets = assets };
+
+            Assert.True(_userDtoValidator.Validate(userDto).IsValid);
+        }
+    }
 }

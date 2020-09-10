@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 using FluentValidation;
 
@@ -42,6 +43,21 @@ namespace aiof.api.data
             RuleFor(x => x.Description)
                 .MaximumLength(500)
                 .When(x => !string.IsNullOrWhiteSpace(x.Description));
+        }
+    }
+
+    public class UserDtoValidator : AbstractValidator<UserDto2>
+    {
+        public UserDtoValidator()
+        {
+            RuleForEach(x => x.Assets)
+                .SetValidator(new AssetDtoValidator());
+            RuleForEach(x => x.Liabilities)
+                .SetValidator(new LiabilityDtoValidator());
+            RuleForEach(x => x.Goals)
+                .SetValidator(new GoalDtoValidator());
+            RuleForEach(x => x.Subscriptions)
+                .SetValidator(new SubscriptionDtoValidator());
         }
     }
 }
