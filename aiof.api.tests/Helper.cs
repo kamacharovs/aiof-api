@@ -20,7 +20,7 @@ namespace aiof.api.tests
         public const string Category = nameof(Category);
         public const string UnitTest = nameof(UnitTest);
         public const string IntegrationTest = nameof(IntegrationTest);
-        
+
         public static T GetRequiredService<T>()
         {
             var provider = Provider();
@@ -174,11 +174,11 @@ namespace aiof.api.tests
 
             foreach (var fakeAssetDto in fakeAssetDtos)
             {
-                toReturn.Add(new object[] 
-                { 
-                    fakeAssetDto.Name, 
-                    fakeAssetDto.TypeName, 
-                    fakeAssetDto.Value, 
+                toReturn.Add(new object[]
+                {
+                    fakeAssetDto.Name,
+                    fakeAssetDto.TypeName,
+                    fakeAssetDto.Value,
                     fakeAssetDto.UserId
                 });
             }
@@ -186,7 +186,7 @@ namespace aiof.api.tests
             return toReturn;
         }
 
-        public static IEnumerable<object[]> RandomeGoalDtos()
+        public static IEnumerable<object[]> RandomeGoalDtosList()
         {
             var fakeGoalDtos = new Faker<GoalDto>()
                 .RuleFor(x => x.Name, f => f.Random.String())
@@ -198,27 +198,16 @@ namespace aiof.api.tests
                 .RuleFor(x => x.UserId, f => f.Random.Int(1, 2))
                 .Generate(GeneratedAmount);
 
-            var toReturn = new List<object[]>();
-
-            foreach (var fakeGoalDto in fakeGoalDtos)
+            return new List<object[]>
             {
-                toReturn.Add(new object[] 
-                { 
-                    fakeGoalDto.Name, 
-                    fakeGoalDto.TypeName,
-                    fakeGoalDto.Amount,
-                    fakeGoalDto.CurrentAmount,
-                    fakeGoalDto.Contribution,
-                    fakeGoalDto.ContributionFrequencyName,
-                    fakeGoalDto.PlannedDate,
-                    fakeGoalDto.UserId
-                });
-            }
-
-            return toReturn;
+                new object[]
+                {
+                    fakeGoalDtos
+                }
+            };
         }
 
-        public static IEnumerable<object[]> RandomLiabilityDtos()
+        public static IEnumerable<object[]> RandomLiabilityDtosList()
         {
             var fakeLiabilityDtos = new Faker<LiabilityDto>()
                 .RuleFor(x => x.Name, f => f.Random.String())
@@ -227,20 +216,13 @@ namespace aiof.api.tests
                 .RuleFor(x => x.UserId, f => f.Random.Int(1, 2))
                 .Generate(GeneratedAmount);
 
-            var toReturn = new List<object[]>();
-
-            foreach (var fakeLiabilityDto in fakeLiabilityDtos)
+            return new List<object[]>
             {
-                toReturn.Add(new object[] 
-                { 
-                    fakeLiabilityDto.Name, 
-                    fakeLiabilityDto.TypeName, 
-                    fakeLiabilityDto.Value, 
-                    fakeLiabilityDto.UserId
-                });
-            }
-
-            return toReturn;
+                new object[]
+                {
+                    fakeLiabilityDtos
+                }
+            };
         }
 
         public static UserProfileDto RandomUserProfileDto()
@@ -252,7 +234,7 @@ namespace aiof.api.tests
                 .Generate();
         }
 
-        public static int GeneratedAmount = 3; 
+        public static int GeneratedAmount = 3;
         #endregion
     }
 }
