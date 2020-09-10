@@ -91,7 +91,7 @@ namespace aiof.api.core
                         Url = new Uri(_configuration[Keys.OpenApiLicenseUrl]),
                     }
                 });
-                x.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
+                //x.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
             });
         }
 

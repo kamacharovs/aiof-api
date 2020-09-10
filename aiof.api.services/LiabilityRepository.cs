@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
@@ -65,6 +66,14 @@ namespace aiof.api.services
                 ?? throw new AiofNotFoundException($"{nameof(Liability)} with Id='{id}' was not found");
         }
 
+        public async Task<ILiability> GetLiabilityAsync(LiabilityDto liabilityDto)
+        {
+            return await GetLiabilitiesQuery()
+                .FirstOrDefaultAsync(x => x.Name == liabilityDto.Name
+                    && x.TypeName == liabilityDto.TypeName
+                    && x.Value == liabilityDto.Value);
+        }
+
         public async Task<IEnumerable<ILiabilityType>> GetLiabilityTypesAsync()
         {
             return await GetLiabilityTypesQuery()
@@ -76,18 +85,19 @@ namespace aiof.api.services
         {
             await _liabilityDtoValidator.ValidateAndThrowAsync(liabilityDto);
 
-            var liability = _mapper.Map<Liability>(liabilityDto);
+            var liability = await GetLiabilityAsync(liabilityDto) is null
+                ? _mapper.Map<Liability>(liabilityDto)
+                : throw new AiofFriendlyException(HttpStatusCode.BadRequest,
+                    $"{nameof(Liability)}='{JsonSerializer.Serialize(liabilityDto)}' already exists");
 
-            await _context.Liabilities
-                .AddAsync(liability);
-
+            await _context.Liabilities.AddAsync(liability);
             await _context.SaveChangesAsync();
 
             await _context.Entry(liability)
                 .Reference(x => x.Type)
                 .LoadAsync();
 
-            _logger.LogInformation($"Created {nameof(Liability)} with Id='{liability.Id}', PublicKey='{liability.PublicKey}' and UserId='{liability.UserId}'");
+            _logger.LogInformation($"Created {nameof(Liability)}='{JsonSerializer.Serialize(liability)}'");
 
             return liability;
         }
