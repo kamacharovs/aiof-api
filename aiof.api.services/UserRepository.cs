@@ -68,6 +68,14 @@ namespace aiof.api.services
                     .AsQueryable();
         }
 
+        public async Task<IUser> GetAsync(
+            int id,
+            bool asNoTracking = true)
+        {
+            return await GetUsersQuery(asNoTracking)
+                .FirstOrDefaultAsync(x => x.Id == id)
+                ?? throw new AiofNotFoundException($"{nameof(User)} with Id='{id}' was not found");
+        }
         public async Task<IUser> GetUserAsync(
             string username,
             bool asNoTracking = true)
@@ -84,6 +92,18 @@ namespace aiof.api.services
             return await GetUserProfilesQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.User.Username == username)
                 ?? throw new AiofNotFoundException($"{nameof(UserProfile)} for {nameof(User)} with Username='{username}' was not found");
+        }
+
+        public async Task<IUser> UpsertFinanceAsync(
+            int userId,
+            UserDto2 userDto)
+        {
+            var user = _mapper.Map(userDto, await GetAsync(userId) as User);
+
+            _context.Update(user);
+            await _context.SaveChangesAsync();
+
+            return await GetAsync(userId);
         }
 
         public async Task<IUser> UpsertUserProfileAsync(

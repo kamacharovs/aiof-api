@@ -15,6 +15,8 @@ namespace aiof.api.data
                 .ForMember(x => x.Assets, o => o.MapFrom((s, x) => s.Assets.Except(x.Assets).ToList()))
                 .ForMember(x => x.Goals, o => o.MapFrom((s, x) => s.Goals.Except(x.Goals).ToList()))
                 .ForMember(x => x.Liabilities, o => o.MapFrom((s, x) => s.Liabilities.Except(x.Liabilities).ToList()));
+            CreateMap<UserDto2, User>()
+                .ForAllMembers(x => x.Condition((source, destination, member) => member != null));
 
             CreateMap<UserProfileDto, UserProfile>()
                 .ForAllMembers(x => x.Condition((source, destination, member) => member != null));

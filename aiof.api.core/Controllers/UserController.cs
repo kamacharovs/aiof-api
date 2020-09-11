@@ -25,6 +25,19 @@ namespace aiof.api.core.Controllers
         {
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
         }
+
+        /// <summary>
+        /// Get User by id
+        /// </summary>
+        [HttpGet]
+        [Route("{id}")]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAsync([FromRoute] int id)
+        {
+            return Ok(await _repo.GetAsync(id));
+        }
         
         /// <summary>
         /// Get User by username
@@ -36,6 +49,15 @@ namespace aiof.api.core.Controllers
         public async Task<IActionResult> GetUserAsync([FromQuery] string username)
         {
             return Ok(await _repo.GetUserAsync(username));
+        }
+
+        [HttpPost]
+        [Route("{id}/finance")]
+        public async Task<IActionResult> UpsertFinanceAsync(
+            [FromRoute, Required] int id,
+            [FromBody, Required] UserDto2 userDto)
+        {
+            return Ok(await _repo.UpsertFinanceAsync(id, userDto));
         }
 
         /// <summary>
