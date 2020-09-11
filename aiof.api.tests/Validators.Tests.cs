@@ -132,11 +132,11 @@ namespace aiof.api.tests
     [Trait(Helper.Category, Helper.UnitTest)]
     public class UserDtoValidatorTests
     {
-        private readonly AbstractValidator<UserDto2> _userDtoValidator;
+        private readonly AbstractValidator<UserDto> _userDtoValidator;
 
         public UserDtoValidatorTests()
         {
-            _userDtoValidator = Helper.GetRequiredService<AbstractValidator<UserDto2>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<UserDto2>));
+            _userDtoValidator = Helper.GetRequiredService<AbstractValidator<UserDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<UserDto>));
         }
 
         [Theory]
@@ -146,7 +146,7 @@ namespace aiof.api.tests
             List<LiabilityDto> liabilities,
             List<GoalDto> goals)
         {
-            var userDto = new UserDto2
+            var userDto = new UserDto
             {
                 Assets = assets,
                 Liabilities = liabilities,
@@ -159,7 +159,7 @@ namespace aiof.api.tests
         [MemberData(nameof(Helper.RandomAssetDtosList), MemberType = typeof(Helper))]
         public void UserDto_Validation_AssetsOnly_IsSuccessful(List<AssetDto> assets)
         {
-            var userDto = new UserDto2 { Assets = assets };
+            var userDto = new UserDto { Assets = assets };
             Assert.True(_userDtoValidator.Validate(userDto).IsValid);
         }
 
@@ -167,7 +167,7 @@ namespace aiof.api.tests
         [MemberData(nameof(Helper.RandomLiabilityDtosList), MemberType = typeof(Helper))]
         public void UserDto_Validation_LiabilitiesOnly_IsSuccessful(List<LiabilityDto> liabilities)
         {
-            var userDto = new UserDto2 { Liabilities = liabilities };
+            var userDto = new UserDto { Liabilities = liabilities };
             Assert.True(_userDtoValidator.Validate(userDto).IsValid);
         }
 
@@ -175,7 +175,7 @@ namespace aiof.api.tests
         [MemberData(nameof(Helper.RandomeGoalDtosList), MemberType = typeof(Helper))]
         public void UserDto_Validation_GoalsOnly_IsSuccessful(List<GoalDto> goals)
         {
-            var userDto = new UserDto2 { Goals = goals };
+            var userDto = new UserDto { Goals = goals };
             Assert.True(_userDtoValidator.Validate(userDto).IsValid);
         }
     }

@@ -46,7 +46,7 @@ namespace aiof.api.data
         }
     }
 
-    public class UserDtoValidator : AbstractValidator<UserDto2>
+    public class UserDtoValidator : AbstractValidator<UserDto>
     {
         public UserDtoValidator()
         {

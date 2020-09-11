@@ -96,9 +96,11 @@ namespace aiof.api.services
 
         public async Task<IUser> UpsertFinanceAsync(
             int userId,
-            UserDto2 userDto)
+            UserDto userDto)
         {
-            var user = _mapper.Map(userDto, await GetAsync(userId) as User);
+            var userInDb = await GetAsync(userId) as User;
+            var userDtoMapped = _mapper.Map<User>(userDto);
+            var user = _mapper.Map(userInDb, userDtoMapped);
 
             _context.Update(user);
             await _context.SaveChangesAsync();

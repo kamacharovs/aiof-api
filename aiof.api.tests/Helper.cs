@@ -51,7 +51,7 @@ namespace aiof.api.tests
                 .AddScoped<AbstractValidator<LiabilityType>, LiabilityTypeValidator>()
                 .AddScoped<AbstractValidator<GoalDto>, GoalDtoValidator>()
                 .AddScoped<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>()
-                .AddScoped<AbstractValidator<UserDto2>, UserDtoValidator>();
+                .AddScoped<AbstractValidator<UserDto>, UserDtoValidator>();
 
             services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 

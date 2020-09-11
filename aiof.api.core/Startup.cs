@@ -53,7 +53,8 @@ namespace aiof.api.core
                 .AddScoped<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>()
                 .AddScoped<AbstractValidator<LiabilityType>, LiabilityTypeValidator>()
                 .AddScoped<AbstractValidator<GoalDto>, GoalDtoValidator>()
-                .AddScoped<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>();
+                .AddScoped<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>()
+                .AddScoped<AbstractValidator<UserDto>, UserDtoValidator>();
 
             if (_env.IsDevelopment())
                 services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(nameof(AiofContext)));

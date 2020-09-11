@@ -55,7 +55,7 @@ namespace aiof.api.core.Controllers
         [Route("{id}/finance")]
         public async Task<IActionResult> UpsertFinanceAsync(
             [FromRoute, Required] int id,
-            [FromBody, Required] UserDto2 userDto)
+            [FromBody, Required] UserDto userDto)
         {
             return Ok(await _repo.UpsertFinanceAsync(id, userDto));
         }
