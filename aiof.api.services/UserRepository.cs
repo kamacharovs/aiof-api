@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -23,6 +24,8 @@ namespace aiof.api.services
         private readonly AiofContext _context;
         private readonly AbstractValidator<SubscriptionDto> _subscriptionDtoValidator;
 
+        private readonly Stopwatch _sw;
+
         public UserRepository(
             ILogger<UserRepository> logger,
             IMapper mapper, 
@@ -34,6 +37,8 @@ namespace aiof.api.services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _subscriptionDtoValidator = subscriptionDtoValidator ?? throw new ArgumentNullException(nameof(subscriptionDtoValidator));
+
+            _sw = new Stopwatch();
         }
 
         private IQueryable<User> GetUsersQuery(bool asNoTracking = true)
@@ -100,7 +105,11 @@ namespace aiof.api.services
         {
             var userInDb = await GetAsync(userId) as User;
             var userDtoMapped = _mapper.Map<User>(userDto);
-            var user = _mapper.Map(userInDb, userDtoMapped);
+
+            _sw.Start();
+            var user = _mapper.Map(userInDb, userDtoMapped);           
+            _sw.Stop();      
+            _logger.LogInformation($"UpsertFinanceAsync algorithm took {_sw.Elapsed.TotalMilliseconds * 1000} (µs)");
 
             _context.Update(user);
             await _context.SaveChangesAsync();
