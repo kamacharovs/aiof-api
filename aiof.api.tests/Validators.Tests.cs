@@ -140,11 +140,26 @@ namespace aiof.api.tests
         }
 
         [Theory]
-        [MemberData(nameof(Helper.RandomeGoalDtosList), MemberType = typeof(Helper))]
-        public void UserDto_Validation_GoalsOnly_IsSuccessful(List<GoalDto> goals)
+        [MemberData(nameof(Helper.RandomUserDtos), MemberType = typeof(Helper))]
+        public void UserDto_Validation_IsSuccessful(
+            List<AssetDto> assets,
+            List<LiabilityDto> liabilities,
+            List<GoalDto> goals)
         {
-            var userDto = new UserDto2 { Goals = goals };
+            var userDto = new UserDto2
+            {
+                Assets = assets,
+                Liabilities = liabilities,
+                Goals = goals
+            };
+            Assert.True(_userDtoValidator.Validate(userDto).IsValid);
+        }
 
+        [Theory]
+        [MemberData(nameof(Helper.RandomAssetDtosList), MemberType = typeof(Helper))]
+        public void UserDto_Validation_AssetsOnly_IsSuccessful(List<AssetDto> assets)
+        {
+            var userDto = new UserDto2 { Assets = assets };
             Assert.True(_userDtoValidator.Validate(userDto).IsValid);
         }
 
@@ -153,7 +168,14 @@ namespace aiof.api.tests
         public void UserDto_Validation_LiabilitiesOnly_IsSuccessful(List<LiabilityDto> liabilities)
         {
             var userDto = new UserDto2 { Liabilities = liabilities };
+            Assert.True(_userDtoValidator.Validate(userDto).IsValid);
+        }
 
+        [Theory]
+        [MemberData(nameof(Helper.RandomeGoalDtosList), MemberType = typeof(Helper))]
+        public void UserDto_Validation_GoalsOnly_IsSuccessful(List<GoalDto> goals)
+        {
+            var userDto = new UserDto2 { Goals = goals };
             Assert.True(_userDtoValidator.Validate(userDto).IsValid);
         }
     }
