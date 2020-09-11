@@ -22,7 +22,7 @@ namespace aiof.api.data
                 .NotEmpty();
 
             RuleFor(x => x.Value)
-                .GreaterThan(CommonValidator.MinimumValue)
+                .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
                 .LessThan(CommonValidator.MaximumValue)
                 .When(x => x.Value != null)
                 .WithMessage(CommonValidator.ValueMessage);

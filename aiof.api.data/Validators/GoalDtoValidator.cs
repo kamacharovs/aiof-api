@@ -23,15 +23,24 @@ namespace aiof.api.data
 
             RuleFor(x => x.Amount)
                 .NotNull()
-                .NotEmpty();
+                .NotEmpty()
+                .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
+                .LessThan(CommonValidator.MaximumValue)
+                .WithMessage(CommonValidator.ValueMessage);
 
             RuleFor(x => x.CurrentAmount)
                 .NotNull()
-                .NotEmpty();
+                .NotEmpty()
+                .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
+                .LessThan(CommonValidator.MaximumValue)
+                .WithMessage(CommonValidator.ValueMessage);
 
             RuleFor(x => x.Contribution)
                 .NotNull()
-                .NotEmpty();
+                .NotEmpty()
+                .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
+                .LessThan(CommonValidator.MaximumValue)
+                .WithMessage(CommonValidator.ValueMessage);
 
             RuleFor(x => x.ContributionFrequencyName)
                 .NotNull()

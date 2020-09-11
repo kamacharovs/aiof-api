@@ -19,14 +19,14 @@ namespace aiof.api.data
                 .NotEmpty();
 
             RuleFor(x => x.Amount)
-                .GreaterThan(0);
+                .GreaterThanOrEqualTo(CommonValidator.MinimumValue);
 
             RuleFor(x => x.PaymentFrequencyName)
                 .NotNull()
                 .NotEmpty();
 
             RuleFor(x => x.PaymentLength)
-                .GreaterThan(0);
+                .GreaterThan(CommonValidator.MinimumValueInt);
 
             RuleFor(x => x.UserId)
                 .NotNull();
