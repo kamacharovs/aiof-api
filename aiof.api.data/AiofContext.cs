@@ -18,6 +18,7 @@ namespace aiof.api.data
         public virtual DbSet<GoalType> GoalTypes { get; set; }
         public virtual DbSet<Frequency> Frequencies { get; set; }
         public virtual DbSet<Subscription> Subscriptions { get; set; }
+        public virtual DbSet<Account> Accounts { get; set; }
 
         public AiofContext(DbContextOptions<AiofContext> options)
             : base(options)
@@ -226,6 +227,16 @@ namespace aiof.api.data
                     .WithMany()
                     .HasForeignKey(x => x.PaymentFrequencyName)
                     .IsRequired();
+            });
+
+            modelBuilder.Entity<Account>(e =>
+            {
+                e.ToTable(Keys.Entity.Account);
+
+                e.HasKey(x => x.Id);
+
+                e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
+                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
             });
         }
     }
