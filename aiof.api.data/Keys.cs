@@ -39,5 +39,20 @@ namespace aiof.api.data
         public const string OpenApiLicenseUrl = nameof(OpenApi) + ":" + nameof(License) + ":" + nameof(Url);
         
         public const string License = nameof(License);
+
+        public static class Entity
+        {
+            public static string User = nameof(data.User).ToSnakeCase();
+            public static string UserProfile = nameof(data.UserProfile).ToSnakeCase();
+            public static string Asset = nameof(data.Asset).ToSnakeCase();
+            public static string Liability = nameof(data.Liability).ToSnakeCase();
+            public static string Goal = nameof(data.Goal).ToSnakeCase();
+            public static string AssetType = nameof(data.AssetType).ToSnakeCase();
+            public static string LiabilityType = nameof(data.LiabilityType).ToSnakeCase();
+            public static string GoalType = nameof(data.GoalType).ToSnakeCase();
+            public static string Frequency = nameof(data.Frequency).ToSnakeCase();
+            public static string Subscription = nameof(data.Subscription).ToSnakeCase();
+            public static string Account = nameof(data.Account).ToSnakeCase();
+        }
     }
 }
