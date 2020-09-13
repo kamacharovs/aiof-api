@@ -43,22 +43,17 @@ namespace aiof.api.services
 
         private IQueryable<User> GetUsersQuery(bool asNoTracking = true)
         {
+            var usersQuery = _context.Users
+                .Include(x => x.Profile)
+                .Include(x => x.Assets)
+                .Include(x => x.Goals)
+                .Include(x => x.Liabilities)
+                .Include(x => x.Subscriptions)
+                .AsQueryable();
+
             return asNoTracking
-                ? _context.Users
-                    .Include(x => x.Profile)
-                    .Include(x => x.Assets)
-                    .Include(x => x.Goals)
-                    .Include(x => x.Liabilities)
-                    .Include(x => x.Subscriptions)
-                    .AsNoTracking()
-                    .AsQueryable()
-                : _context.Users
-                    .Include(x => x.Profile)
-                    .Include(x => x.Assets)
-                    .Include(x => x.Goals)
-                    .Include(x => x.Liabilities)
-                    .Include(x => x.Subscriptions)
-                    .AsQueryable();
+                ? usersQuery.AsNoTracking()
+                : usersQuery;
         }
 
         private IQueryable<UserProfile> GetUserProfilesQuery(bool asNoTracking = true)
