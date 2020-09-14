@@ -54,6 +54,12 @@ namespace aiof.api.tests
             Assert.NotNull(subscription.PaymentFrequencyName);
             Assert.NotNull(subscription.PaymentFrequency);
             Assert.True(subscription.PaymentLength > 0);
+
+            if (!string.IsNullOrEmpty(subscription.From))
+                Assert.True(subscription.From.Length < 200);
+
+            if (!string.IsNullOrEmpty(subscription.Url))
+                Assert.True(subscription.Url.Length < 500);
         }
     }
 }
