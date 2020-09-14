@@ -15,11 +15,14 @@ namespace aiof.api.data
         public Guid PublicKey { get; set; } = Guid.NewGuid();
 
         [Required]
+        [MaxLength(200)]
         public string Name { get; set; }
 
+        [MaxLength(500)]
         public string Description { get; set; }
 
         [Required]
+        [MaxLength(100)]
         public string TypeName { get; set; }
 
         [Required]

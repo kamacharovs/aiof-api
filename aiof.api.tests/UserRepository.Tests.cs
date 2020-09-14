@@ -39,5 +39,21 @@ namespace aiof.api.tests
 
             Assert.NotNull(userProfile);
         }
+
+        [Theory]
+        [MemberData(nameof(Helper.SubscriptionsId), MemberType = typeof(Helper))]
+        public async Task GetSubscsriptionAsync_IsSuccessful(int id)
+        {
+            var subscription = await _repo.GetSubscriptionAsync(id);
+
+            Assert.NotNull(subscription);
+            Assert.NotEqual(Guid.Empty, subscription.PublicKey);
+            Assert.NotNull(subscription.Name);
+            Assert.NotNull(subscription.Description);
+            Assert.True(subscription.Amount > 0);
+            Assert.NotNull(subscription.PaymentFrequencyName);
+            Assert.NotNull(subscription.PaymentFrequency);
+            Assert.True(subscription.PaymentLength > 0);
+        }
     }
 }

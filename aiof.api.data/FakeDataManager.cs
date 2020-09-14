@@ -465,6 +465,28 @@ namespace aiof.api.data
 
             return toReturn;
         }
+
+        public IEnumerable<object[]> GetFakeSubscriptionsData(
+            bool id = false)
+        {
+            var fakeSubscriptions = GetFakeSubscriptions()
+                .ToArray();
+
+            var toReturn = new List<object[]>();
+
+            if (id)
+            {
+                foreach(var fakeSubscriptionId in fakeSubscriptions.Select(x => x.Id))
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeSubscriptionId
+                    });
+                }
+            }
+
+            return toReturn;
+        }
         #endregion
     }
 }

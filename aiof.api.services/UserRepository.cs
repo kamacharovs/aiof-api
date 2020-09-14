@@ -133,13 +133,26 @@ namespace aiof.api.services
         }
 
         #region Subscription
+        private IQueryable<Subscription> GetSubscriptionsQuery(bool asNoTracking = true)
+        {
+            var subscriptionQuery = _context.Subscriptions
+                .Include(x => x.PaymentFrequency)
+                .AsQueryable();
+
+            return asNoTracking
+                ? subscriptionQuery.AsNoTracking()
+                : subscriptionQuery;
+        }
+
         public async Task<ISubscription> GetSubscriptionAsync(int id)
         {
-            return await base.GetAsync<Subscription>(id);
+            return await GetSubscriptionsQuery()
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
         public async Task<ISubscription> GetSubscriptionAsync(Guid publicKey)
         {
-            return await base.GetAsync<Subscription>(publicKey);
+            return await GetSubscriptionsQuery()
+                .FirstOrDefaultAsync(x => x.PublicKey == publicKey);
         }
         public async Task<ISubscription> GetSubscriptionAsync(
             string name, 
@@ -147,13 +160,10 @@ namespace aiof.api.services
             int userId,
             bool asNoTracking = true)
         {
-            var subscriptions = asNoTracking
-                ? _context.Subscriptions.AsNoTracking().AsQueryable()
-                : _context.Subscriptions.AsQueryable();
-
-            return await subscriptions.FirstOrDefaultAsync(x => x.UserId == userId
-                && x.Name == name
-                && x.Amount == amount);
+            return await GetSubscriptionsQuery(asNoTracking)
+                .FirstOrDefaultAsync(x => x.UserId == userId
+                    && x.Name == name
+                    && x.Amount == amount);
         }
 
         public async Task<ISubscription> AddSubscriptionAsync(SubscriptionDto subscriptionDto)
