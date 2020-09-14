@@ -37,14 +37,13 @@ namespace aiof.api.services
 
         private IQueryable<Asset> GetAssetsQuery(bool asNoTracking = true)
         {
+            var assetsQuery = _context.Assets
+                .Include(x => x.Type)
+                .AsQueryable();
+
             return asNoTracking
-                ? _context.Assets
-                    .Include(x => x.Type)
-                    .AsNoTracking()
-                    .AsQueryable()
-                : _context.Assets
-                    .Include(x => x.Type)
-                    .AsQueryable();
+                ? assetsQuery.AsNoTracking()
+                : assetsQuery;
         }
 
         private IQueryable<AssetType> GetAssetTypesQuery(bool asNoTracking = true)

@@ -8,12 +8,18 @@ namespace aiof.api.services
 {
     public interface IUserRepository
     {
+        Task<IUser> GetAsync(
+            int id,
+            bool asNoTracking = true);
         Task<IUser> GetUserAsync(
             string username,
             bool asNoTracking = true);
         Task<IUserProfile> GetUserProfileAsync(
             string username,
             bool asNoTracking = true);
+        Task<IUser> UpsertFinanceAsync(
+            int userId,
+            UserDto userDto);
         Task<IUser> UpsertUserProfileAsync(
             string username,
             UserProfileDto userProfileDto);

@@ -128,4 +128,55 @@ namespace aiof.api.tests
             Assert.True(_subscriptionDtoValidator.Validate(subscriptionDto).IsValid);
         }
     }
+
+    [Trait(Helper.Category, Helper.UnitTest)]
+    public class UserDtoValidatorTests
+    {
+        private readonly AbstractValidator<UserDto> _userDtoValidator;
+
+        public UserDtoValidatorTests()
+        {
+            _userDtoValidator = Helper.GetRequiredService<AbstractValidator<UserDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<UserDto>));
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.RandomUserDtos), MemberType = typeof(Helper))]
+        public void UserDto_Validation_IsSuccessful(
+            List<AssetDto> assets,
+            List<LiabilityDto> liabilities,
+            List<GoalDto> goals)
+        {
+            var userDto = new UserDto
+            {
+                Assets = assets,
+                Liabilities = liabilities,
+                Goals = goals
+            };
+            Assert.True(_userDtoValidator.Validate(userDto).IsValid);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.RandomAssetDtosList), MemberType = typeof(Helper))]
+        public void UserDto_Validation_AssetsOnly_IsSuccessful(List<AssetDto> assets)
+        {
+            var userDto = new UserDto { Assets = assets };
+            Assert.True(_userDtoValidator.Validate(userDto).IsValid);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.RandomLiabilityDtosList), MemberType = typeof(Helper))]
+        public void UserDto_Validation_LiabilitiesOnly_IsSuccessful(List<LiabilityDto> liabilities)
+        {
+            var userDto = new UserDto { Liabilities = liabilities };
+            Assert.True(_userDtoValidator.Validate(userDto).IsValid);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.RandomeGoalDtosList), MemberType = typeof(Helper))]
+        public void UserDto_Validation_GoalsOnly_IsSuccessful(List<GoalDto> goals)
+        {
+            var userDto = new UserDto { Goals = goals };
+            Assert.True(_userDtoValidator.Validate(userDto).IsValid);
+        }
+    }
 }

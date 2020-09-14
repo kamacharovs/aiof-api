@@ -47,8 +47,9 @@ namespace aiof.api.data
 
     public class UserDto
     {
-        public ICollection<Asset> Assets { get; set; }
-        public ICollection<Goal> Goals { get; set; }
-        public ICollection<Liability> Liabilities { get; set; }
+        public ICollection<AssetDto> Assets { get; set; }
+        public ICollection<GoalDto> Goals { get; set; }
+        public ICollection<LiabilityDto> Liabilities { get; set; }
+        public ICollection<SubscriptionDto> Subscriptions { get; set; }
     }
 }
