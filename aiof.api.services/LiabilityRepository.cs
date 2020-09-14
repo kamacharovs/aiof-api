@@ -39,24 +39,23 @@ namespace aiof.api.services
 
         private IQueryable<Liability> GetLiabilitiesQuery(bool asNoTracking = true)
         {
+            var liabilitiesQuery = _context.Liabilities
+                .Include(x => x.Type)
+                .AsQueryable();
+
             return asNoTracking
-                ? _context.Liabilities
-                    .Include(x => x.Type)
-                    .AsNoTracking()
-                    .AsQueryable()
-                : _context.Liabilities
-                    .Include(x => x.Type)
-                    .AsQueryable();
+                ? liabilitiesQuery.AsNoTracking()
+                : liabilitiesQuery;
         }
 
         private IQueryable<LiabilityType> GetLiabilityTypesQuery(bool asNoTracking = true)
         {
+            var liabilityTypesQuery = _context.LiabilityTypes
+                .AsQueryable();
+
             return asNoTracking
-                ? _context.LiabilityTypes
-                    .AsNoTracking()
-                    .AsQueryable()
-                : _context.LiabilityTypes
-                    .AsQueryable();
+                ? liabilityTypesQuery.AsNoTracking()
+                : liabilityTypesQuery;
         }
 
         public async Task<ILiability> GetLiabilityAsync(int id)

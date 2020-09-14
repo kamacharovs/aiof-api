@@ -32,12 +32,12 @@ namespace aiof.api.services
         public IQueryable<T> GetQuery<T>(bool asNoTracking = true)
             where T : class, IPublicKeyId
         {
+            var query = _context.Set<T>()
+                .AsQueryable();
+
             return asNoTracking
-                ? _context.Set<T>()
-                    .AsNoTracking()
-                    .AsQueryable()
-                : _context.Set<T>()
-                    .AsQueryable();
+                ? query.AsNoTracking()
+                : query;
         }
 
         public async Task<T> GetAsync<T>(
