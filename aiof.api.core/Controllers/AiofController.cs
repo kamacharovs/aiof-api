@@ -24,15 +24,6 @@ namespace aiof.api.core.Controllers
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
         }
 
-        [HttpGet]
-        [Route("user/{id}")]
-        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetUserAsync([FromRoute]int id)
-        {
-            return Ok(await _repo.GetUserAsync(id));
-        }
-
         [HttpPost]
         [Route("user/{id}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]

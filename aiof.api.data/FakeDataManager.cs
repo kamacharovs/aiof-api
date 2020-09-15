@@ -46,6 +46,9 @@ namespace aiof.api.data
             _context.Subscriptions
                 .AddRange(GetFakeSubscriptions());
 
+            _context.Accounts
+                .AddRange(GetFakeAccounts());
+
             _context.SaveChanges();
         }
 
@@ -346,6 +349,21 @@ namespace aiof.api.data
                     PaymentLength = 12,
                     From = "Spotify",
                     Url = "https://spotify.com/",
+                    UserId = 1
+                }
+            };
+        }
+
+        public IEnumerable<Account> GetFakeAccounts()
+        {
+            return new List<Account>
+            {
+                new Account
+                {
+                    Id = 1,
+                    Name = "BfA bank acount",
+                    Description = "Bank Of Amanerica bank acount",
+                    TypeName = "bank",
                     UserId = 1
                 }
             };

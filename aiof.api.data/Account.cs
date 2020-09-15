@@ -27,6 +27,7 @@ namespace aiof.api.data
         public string TypeName { get; set; }
 
         [Required]
+        [JsonIgnore]
         public int UserId { get; set; }
     }
 }

@@ -49,17 +49,23 @@ namespace aiof.api.data
                     .HasForeignKey(x => x.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
 
-                e.HasMany(x => x.Goals)
-                    .WithOne()
-                    .HasForeignKey(x => x.UserId)
-                    .OnDelete(DeleteBehavior.Cascade);
-
                 e.HasMany(x => x.Liabilities)
                     .WithOne()
                     .HasForeignKey(x => x.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
 
+                e.HasMany(x => x.Goals)
+                    .WithOne()
+                    .HasForeignKey(x => x.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
                 e.HasMany(x => x.Subscriptions)
+                    .WithOne()
+                    .HasForeignKey(x => x.UserId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+
+                e.HasMany(x => x.Accounts)
                     .WithOne()
                     .HasForeignKey(x => x.UserId)
                     .OnDelete(DeleteBehavior.Cascade)
