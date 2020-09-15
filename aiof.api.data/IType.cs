@@ -16,6 +16,7 @@ namespace aiof.api.data
         [MaxLength(100)]
         string Name { get; set; }
 
+        [Required]
         [MaxLength(500)]
         string Description { get; set; }
     }
