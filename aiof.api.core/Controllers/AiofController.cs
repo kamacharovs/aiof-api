@@ -5,12 +5,14 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 using aiof.api.data;
 using aiof.api.services;
 
 namespace aiof.api.core.Controllers
 {
+    [Authorize]
     [ApiController]
     [Produces(Keys.ApplicationJson)]
     [Consumes(Keys.ApplicationJson)]
