@@ -21,6 +21,15 @@ namespace aiof.api.data
         public const string MetadataBaseUrl = nameof(Metadata) + ":" + nameof(BaseUrl);
         public const string MetadataDefaultFrequency = nameof(Metadata) + ":" + nameof(DefaultFrequency);
 
+        public const string Jwt = nameof(Jwt);
+        public const string Bearer = nameof(Bearer);
+        public const string Issuer = nameof(Issuer);
+        public const string Audience = nameof(Audience);
+        public const string PublicKey = nameof(PublicKey);
+        public const string JwtIssuer = nameof(Jwt) + ":" + nameof(Issuer);
+        public const string JwtAudience = nameof(Jwt) + ":" + nameof(Audience);
+        public const string JwtPublicKey = nameof(Jwt) + ":" + nameof(PublicKey);
+
         public const string OpenApi = nameof(OpenApi);
         public const string Version = nameof(Version);
         public const string Title = nameof(Title);
