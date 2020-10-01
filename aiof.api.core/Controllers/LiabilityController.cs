@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.FeatureManagement.Mvc;
 
 using aiof.api.data;
@@ -13,6 +14,7 @@ using aiof.api.services;
 namespace aiof.api.core.Controllers
 {
     [FeatureGate(FeatureFlags.Liability)]
+    [Authorize]
     [ApiController]
     [Route("liability")]
     [Produces(Keys.ApplicationJson)]

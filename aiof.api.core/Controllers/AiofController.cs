@@ -5,12 +5,14 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 using aiof.api.data;
 using aiof.api.services;
 
 namespace aiof.api.core.Controllers
 {
+    [Authorize]
     [ApiController]
     [Produces(Keys.ApplicationJson)]
     [Consumes(Keys.ApplicationJson)]
@@ -22,15 +24,6 @@ namespace aiof.api.core.Controllers
         public AiofController(IAiofRepository repo)
         {
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
-        }
-
-        [HttpGet]
-        [Route("user/{id}")]
-        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetUserAsync([FromRoute]int id)
-        {
-            return Ok(await _repo.GetUserAsync(id));
         }
 
         [HttpPost]

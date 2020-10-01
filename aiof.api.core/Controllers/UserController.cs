@@ -6,12 +6,17 @@ using System.ComponentModel.DataAnnotations;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 using aiof.api.data;
 using aiof.api.services;
 
 namespace aiof.api.core.Controllers
 {
+    /// <summary>
+    /// Everything aiof user
+    /// </summary>
+    [Authorize]
     [ApiController]
     [Route("user")]
     [Produces(Keys.ApplicationJson)]
@@ -51,6 +56,9 @@ namespace aiof.api.core.Controllers
             return Ok(await _repo.GetUserAsync(username));
         }
 
+        /// <summary>
+        /// Upsert User finances
+        /// </summary>
         [HttpPost]
         [Route("{id}/finance")]
         public async Task<IActionResult> UpsertFinanceAsync(
@@ -61,7 +69,7 @@ namespace aiof.api.core.Controllers
         }
 
         /// <summary>
-        /// Upsert a User profile
+        /// Upsert User profile
         /// </summary>
         [HttpPut]
         [Route("profile")]
@@ -73,7 +81,7 @@ namespace aiof.api.core.Controllers
         }
 
         /// <summary>
-        /// Get Subscriptions by public key
+        /// Get Subscription by id
         /// </summary>
         [HttpGet]
         [Route("subscription/{id}")]
@@ -85,7 +93,7 @@ namespace aiof.api.core.Controllers
         }
 
         /// <summary>
-        /// Add a Subscription
+        /// Add Subscription
         /// </summary>
         [HttpPost]
         [Route("subscription")]
@@ -98,7 +106,7 @@ namespace aiof.api.core.Controllers
         }
 
         /// <summary>
-        /// Upsert a Subscription
+        /// Upsert Subscription
         /// </summary>
         [HttpPut]
         [Route("subscription/{id}")]
@@ -113,7 +121,7 @@ namespace aiof.api.core.Controllers
         }
 
         /// <summary>
-        /// Delete a Subscription
+        /// Delete Subscription
         /// </summary>
         [HttpDelete]
         [Route("subscription/{id}")]

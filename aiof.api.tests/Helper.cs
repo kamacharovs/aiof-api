@@ -161,6 +161,12 @@ namespace aiof.api.tests
                 userId: true);
         }
 
+        public static IEnumerable<object[]> SubscriptionsId()
+        {
+            return _Fake.GetFakeSubscriptionsData(
+                id: true);
+        }
+
         public static List<AssetDto> FakerAssetDtos()
         {
             return new Faker<AssetDto>()
