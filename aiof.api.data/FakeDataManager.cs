@@ -16,8 +16,8 @@ namespace aiof.api.data
 
         public void UseFakeContext()
         {
-            //_context.Users
-            //    .AddRange(GetFakeUsers());
+            _context.Users
+                .AddRange(GetFakeUsers());
 
             _context.UserProfiles
                 .AddRange(GetFakeUserProfiles());
@@ -40,11 +40,11 @@ namespace aiof.api.data
             _context.Goals
                 .AddRange(GetFakeGoals());
 
-            //_context.Frequencies
-            //    .AddRange(GetFakeFrequencies());
+            _context.Frequencies
+                .AddRange(GetFakeFrequencies());
 
-            //_context.Subscriptions
-            //    .AddRange(GetFakeSubscriptions());
+            _context.Subscriptions
+                .AddRange(GetFakeSubscriptions());
 
             _context.Accounts
                 .AddRange(GetFakeAccounts());
