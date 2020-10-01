@@ -59,10 +59,10 @@ namespace aiof.api.core
                 .AddScoped<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>()
                 .AddScoped<AbstractValidator<UserDto>, UserDtoValidator>();
 
-            if (_env.IsDevelopment())
-                services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(nameof(AiofContext)));
-            else
-                services.AddDbContext<AiofContext>(o => o.UseNpgsql(_config.GetConnectionString(Keys.Database)));
+            //if (_env.IsDevelopment())
+            //    services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(nameof(AiofContext)));
+            //else
+                services.AddDbContext<AiofContext>(o => o.UseNpgsql(_config[Keys.PostgreSQL]));
 
             services.AddLogging();
             services.AddHealthChecks();

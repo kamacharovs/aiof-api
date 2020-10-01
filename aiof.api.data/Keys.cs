@@ -10,6 +10,7 @@ namespace aiof.api.data
         public const string FeatureManagement = nameof(FeatureManagement);
 
         public const string Database = nameof(Database);
+        public const string PostgreSQL = nameof(PostgreSQL);
 
         public const string Polly = nameof(Polly);
         public const string DefaultRetry = nameof(DefaultRetry);
