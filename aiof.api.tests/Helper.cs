@@ -20,7 +20,7 @@ namespace aiof.api.tests
         public const string Category = nameof(Category);
         public const string UnitTest = nameof(UnitTest);
         public const string IntegrationTest = nameof(IntegrationTest);
-        
+
         public static T GetRequiredService<T>()
         {
             var provider = Provider();
@@ -35,21 +35,23 @@ namespace aiof.api.tests
         {
             var services = new ServiceCollection();
 
-            services.AddScoped<IAiofRepository, AiofRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IAssetRepository, AssetRepository>();
-            services.AddScoped<IGoalRepository, GoalRepository>();
-            services.AddScoped<ILiabilityRepository, LiabilityRepository>();
-            services.AddScoped<FakeDataManager>();
-            services.AddScoped<IEnvConfiguration, EnvConfiguration>();
-            services.AddSingleton(GetMockedMetadataRepo());
+            services.AddScoped<IAiofRepository, AiofRepository>()
+                .AddScoped<IUserRepository, UserRepository>()
+                .AddScoped<IAssetRepository, AssetRepository>()
+                .AddScoped<IGoalRepository, GoalRepository>()
+                .AddScoped<ILiabilityRepository, LiabilityRepository>()
+                .AddScoped<IEnvConfiguration, EnvConfiguration>()
+                .AddScoped<FakeDataManager>()
+                .AddSingleton(GetMockedMetadataRepo());
 
             services.AddSingleton(new MapperConfiguration(x => { x.AddProfile(new AutoMappingProfileDto()); }).CreateMapper());
 
-            services.AddScoped<AbstractValidator<AssetDto>, AssetDtoValidator>();
-            services.AddScoped<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>();
-            services.AddScoped<AbstractValidator<GoalDto>, GoalDtoValidator>();
-            services.AddScoped<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>();
+            services.AddScoped<AbstractValidator<AssetDto>, AssetDtoValidator>()
+                .AddScoped<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>()
+                .AddScoped<AbstractValidator<LiabilityType>, LiabilityTypeValidator>()
+                .AddScoped<AbstractValidator<GoalDto>, GoalDtoValidator>()
+                .AddScoped<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>()
+                .AddScoped<AbstractValidator<UserDto>, UserDtoValidator>();
 
             services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
@@ -159,34 +161,33 @@ namespace aiof.api.tests
                 userId: true);
         }
 
-        public static IEnumerable<object[]> RandomAssetDtos()
+        public static IEnumerable<object[]> SubscriptionsId()
         {
-            var fakeAssetDtos = new Faker<AssetDto>()
+            return _Fake.GetFakeSubscriptionsData(
+                id: true);
+        }
+
+        public static List<AssetDto> FakerAssetDtos()
+        {
+            return new Faker<AssetDto>()
                 .RuleFor(x => x.Name, f => "car to buy")
                 .RuleFor(x => x.TypeName, f => "car")
                 .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000))
                 .RuleFor(x => x.UserId, f => f.Random.Int(1, 2))
                 .Generate(GeneratedAmount);
-
-            var toReturn = new List<object[]>();
-
-            foreach (var fakeAssetDto in fakeAssetDtos)
-            {
-                toReturn.Add(new object[] 
-                { 
-                    fakeAssetDto.Name, 
-                    fakeAssetDto.TypeName, 
-                    fakeAssetDto.Value, 
-                    fakeAssetDto.UserId
-                });
-            }
-
-            return toReturn;
         }
-
-        public static IEnumerable<object[]> RandomeGoalDtos()
+        public static List<LiabilityDto> FakerLiabilityDtos()
         {
-            var fakeGoalDtos = new Faker<GoalDto>()
+            return new Faker<LiabilityDto>()
+                .RuleFor(x => x.Name, f => f.Random.String())
+                .RuleFor(x => x.TypeName, f => "car")
+                .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000))
+                .RuleFor(x => x.UserId, f => f.Random.Int(1, 2))
+                .Generate(GeneratedAmount);
+        }
+        public static List<GoalDto> FakerGoalDtos()
+        {
+            return new Faker<GoalDto>()
                 .RuleFor(x => x.Name, f => f.Random.String())
                 .RuleFor(x => x.TypeName, f => "save for a rainy day")
                 .RuleFor(x => x.Amount, f => f.Random.Decimal(5000, 10000))
@@ -195,50 +196,69 @@ namespace aiof.api.tests
                 .RuleFor(x => x.ContributionFrequencyName, f => "monthly")
                 .RuleFor(x => x.UserId, f => f.Random.Int(1, 2))
                 .Generate(GeneratedAmount);
+        }
 
+        public static IEnumerable<object[]> RandomUserDtos()
+        {
+            return new List<object[]>
+            {
+                new object[]
+                {
+                    FakerAssetDtos(),
+                    FakerLiabilityDtos(),
+                    FakerGoalDtos()
+                }
+            };
+        }
+
+        public static IEnumerable<object[]> RandomAssetDtos()
+        {
             var toReturn = new List<object[]>();
 
-            foreach (var fakeGoalDto in fakeGoalDtos)
+            foreach (var fakeAssetDto in FakerAssetDtos())
             {
-                toReturn.Add(new object[] 
-                { 
-                    fakeGoalDto.Name, 
-                    fakeGoalDto.TypeName,
-                    fakeGoalDto.Amount,
-                    fakeGoalDto.CurrentAmount,
-                    fakeGoalDto.Contribution,
-                    fakeGoalDto.ContributionFrequencyName,
-                    fakeGoalDto.PlannedDate,
-                    fakeGoalDto.UserId
+                toReturn.Add(new object[]
+                {
+                    fakeAssetDto.Name,
+                    fakeAssetDto.TypeName,
+                    fakeAssetDto.Value,
+                    fakeAssetDto.UserId
                 });
             }
 
             return toReturn;
         }
-
-        public static IEnumerable<object[]> RandomLiabilityDtos()
+        public static IEnumerable<object[]> RandomAssetDtosList()
         {
-            var fakeLiabilityDtos = new Faker<LiabilityDto>()
-                .RuleFor(x => x.Name, f => f.Random.String())
-                .RuleFor(x => x.TypeName, f => "car")
-                .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000))
-                .RuleFor(x => x.UserId, f => f.Random.Int(1, 2))
-                .Generate(GeneratedAmount);
-
-            var toReturn = new List<object[]>();
-
-            foreach (var fakeLiabilityDto in fakeLiabilityDtos)
+            return new List<object[]>
             {
-                toReturn.Add(new object[] 
-                { 
-                    fakeLiabilityDto.Name, 
-                    fakeLiabilityDto.TypeName, 
-                    fakeLiabilityDto.Value, 
-                    fakeLiabilityDto.UserId
-                });
-            }
+                new object[]
+                {
+                    FakerAssetDtos()
+                }
+            };
+        }
 
-            return toReturn;
+        public static IEnumerable<object[]> RandomeGoalDtosList()
+        {
+            return new List<object[]>
+            {
+                new object[]
+                {
+                    FakerGoalDtos()
+                }
+            };
+        }
+
+        public static IEnumerable<object[]> RandomLiabilityDtosList()
+        {
+            return new List<object[]>
+            {
+                new object[]
+                {
+                    FakerLiabilityDtos()
+                }
+            };
         }
 
         public static UserProfileDto RandomUserProfileDto()
@@ -250,7 +270,7 @@ namespace aiof.api.tests
                 .Generate();
         }
 
-        public static int GeneratedAmount = 3; 
+        public static int GeneratedAmount = 3;
         #endregion
     }
 }

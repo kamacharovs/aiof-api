@@ -4,9 +4,9 @@ using FluentValidation;
 
 namespace aiof.api.data
 {
-    public class AssetDtoValidator : AbstractValidator<AssetDto>
+    public class LiabilityDtoValidator : AbstractValidator<LiabilityDto>
     {
-        public AssetDtoValidator()
+        public LiabilityDtoValidator()
         {
             ValidatorOptions.Global.CascadeMode = CascadeMode.Stop;
 
@@ -20,12 +20,32 @@ namespace aiof.api.data
             RuleFor(x => x.TypeName)
                 .NotNull()
                 .NotEmpty();
-
+         
             RuleFor(x => x.Value)
                 .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
                 .LessThan(CommonValidator.MaximumValue)
                 .When(x => x.Value != null)
                 .WithMessage(CommonValidator.ValueMessage);
+        }
+    }
+
+    public class LiabilityTypeValidator : AbstractValidator<LiabilityType>
+    {
+        public LiabilityTypeValidator()
+        {
+            ValidatorOptions.Global.CascadeMode = CascadeMode.Stop;
+
+            RuleFor(x => x)
+                .NotNull();
+
+            RuleFor(x => x.Name)
+                .NotNull()
+                .NotEmpty()
+                .MaximumLength(100);
+
+            RuleFor(x => x.PublicKey)
+                .NotNull()
+                .Must(x => x != Guid.Empty);
         }
     }
 }

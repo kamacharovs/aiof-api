@@ -6,6 +6,7 @@ using System.Net;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 using FluentValidation;
 using FluentValidation.Results;
@@ -15,6 +16,7 @@ using aiof.api.services;
 
 namespace aiof.api.core.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("test")]
     [Produces(Keys.ApplicationJson)]
@@ -64,6 +66,28 @@ namespace aiof.api.core.Controllers
                 new ValidationFailure("Username", "Username must be present"),
                 new ValidationFailure("Password", "Password must contain an upper case letter")
             });
+        }
+
+        [Authorize(Roles = Roles.Admin)]
+        [HttpGet]
+        [Route("admin/authorization")]
+        public IActionResult AdminAuthorization()
+        {
+            return Ok("Admin is Authorized");
+        }
+        [Authorize(Roles = Roles.User)]
+        [HttpGet]
+        [Route("user/authorization")]
+        public IActionResult UserAuthorization()
+        {
+            return Ok("User is Authorized");
+        }
+        [Authorize(Roles = Roles.AdminOrUser)]
+        [HttpGet]
+        [Route("admin/user/authorization")]
+        public IActionResult AdminOrUserAuthorization()
+        {
+            return Ok("AdminOrUser is Authorized");
         }
     }
 }

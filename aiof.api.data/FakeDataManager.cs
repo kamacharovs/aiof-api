@@ -16,8 +16,8 @@ namespace aiof.api.data
 
         public void UseFakeContext()
         {
-            _context.Users
-                .AddRange(GetFakeUsers());
+            //_context.Users
+            //    .AddRange(GetFakeUsers());
 
             _context.UserProfiles
                 .AddRange(GetFakeUserProfiles());
@@ -40,11 +40,14 @@ namespace aiof.api.data
             _context.Goals
                 .AddRange(GetFakeGoals());
 
-            _context.Frequencies
-                .AddRange(GetFakeFrequencies());
+            //_context.Frequencies
+            //    .AddRange(GetFakeFrequencies());
 
-            _context.Subscriptions
-                .AddRange(GetFakeSubscriptions());
+            //_context.Subscriptions
+            //    .AddRange(GetFakeSubscriptions());
+
+            _context.Accounts
+                .AddRange(GetFakeAccounts());
 
             _context.SaveChanges();
         }
@@ -211,6 +214,10 @@ namespace aiof.api.data
                 },
                 new LiabilityType
                 {
+                    Name = "student loan"
+                },
+                new LiabilityType
+                {
                     Name = "credit card"
                 },
                 new LiabilityType
@@ -220,6 +227,10 @@ namespace aiof.api.data
                 new LiabilityType
                 {
                     Name = "house renovation"
+                },
+                new LiabilityType
+                {
+                    Name = "rv"
                 },
                 new LiabilityType
                 {
@@ -343,6 +354,21 @@ namespace aiof.api.data
             };
         }
 
+        public IEnumerable<Account> GetFakeAccounts()
+        {
+            return new List<Account>
+            {
+                new Account
+                {
+                    Id = 1,
+                    Name = "BfA bank acount",
+                    Description = "Bank Of Amanerica bank acount",
+                    TypeName = "bank",
+                    UserId = 1
+                }
+            };
+        }
+
 
 
         #region Unit Tests
@@ -451,6 +477,28 @@ namespace aiof.api.data
                     toReturn.Add(new object[] 
                     { 
                         fakeAssetTypeName
+                    });
+                }
+            }
+
+            return toReturn;
+        }
+
+        public IEnumerable<object[]> GetFakeSubscriptionsData(
+            bool id = false)
+        {
+            var fakeSubscriptions = GetFakeSubscriptions()
+                .ToArray();
+
+            var toReturn = new List<object[]>();
+
+            if (id)
+            {
+                foreach(var fakeSubscriptionId in fakeSubscriptions.Select(x => x.Id))
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeSubscriptionId
                     });
                 }
             }

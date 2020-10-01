@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.FeatureManagement.Mvc;
 
 using aiof.api.data;
@@ -14,6 +15,7 @@ using aiof.api.services;
 namespace aiof.api.core.Controllers
 {
     [FeatureGate(FeatureFlags.Asset)]
+    [Authorize]
     [ApiController]
     [Route("asset")]
     [Produces(Keys.ApplicationJson)]

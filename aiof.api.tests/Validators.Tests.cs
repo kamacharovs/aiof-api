@@ -15,12 +15,16 @@ namespace aiof.api.tests
         private readonly AbstractValidator<AssetDto> _assetDtoValidator;
         private readonly AbstractValidator<GoalDto> _goalDtoValidator;
         private readonly AbstractValidator<LiabilityDto> _liabilityDtoValidator;
+        private readonly AbstractValidator<LiabilityType> _liabilityTypeValidator;
+        private readonly AbstractValidator<SubscriptionDto> _subscriptionDtoValidator;
 
         public ValidatorsTests()
         {
             _assetDtoValidator = Helper.GetRequiredService<AbstractValidator<AssetDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<AssetDto>));
             _goalDtoValidator = Helper.GetRequiredService<AbstractValidator<GoalDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<GoalDto>));
             _liabilityDtoValidator = Helper.GetRequiredService<AbstractValidator<LiabilityDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<LiabilityDto>));
+            _liabilityTypeValidator = Helper.GetRequiredService<AbstractValidator<LiabilityType>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<LiabilityType>));
+            _subscriptionDtoValidator = Helper.GetRequiredService<AbstractValidator<SubscriptionDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<SubscriptionDto>));
         }
 
         [Theory]
@@ -87,6 +91,92 @@ namespace aiof.api.tests
                 TypeName = typeName
             };
             Assert.False(_goalDtoValidator.Validate(goalDto).IsValid);
+        }
+
+        [Theory]
+        [InlineData("test")]
+        [InlineData("definitely doesn't exist yet")]
+        [InlineData("something financial")]
+        public void LiabilityType_Validate_IsSuccessful(string name)
+        {
+            var liabilityType = new LiabilityType { Name = name };
+
+            Assert.True(_liabilityTypeValidator.Validate(liabilityType).IsValid);
+        }
+
+
+        [Theory]
+        [InlineData("Netflix", 10, "monthly", 12, 1)]
+        [InlineData("Hulu", 8.99, "monthly", 24, 1)]
+        [InlineData("Subscription", 99.88, "monthly", 36, 1)]
+        public void Subscription_Dto_Validate_IsSuccessful(
+            string name,
+            decimal amount,
+            string paymentFrequencyName,
+            int paymentLength,
+            int userId)
+        {
+            var subscriptionDto = new SubscriptionDto
+            {
+                Name = name,
+                Amount = amount,
+                PaymentFrequencyName = paymentFrequencyName,
+                PaymentLength = paymentLength,
+                UserId = userId
+            };
+
+            Assert.True(_subscriptionDtoValidator.Validate(subscriptionDto).IsValid);
+        }
+    }
+
+    [Trait(Helper.Category, Helper.UnitTest)]
+    public class UserDtoValidatorTests
+    {
+        private readonly AbstractValidator<UserDto> _userDtoValidator;
+
+        public UserDtoValidatorTests()
+        {
+            _userDtoValidator = Helper.GetRequiredService<AbstractValidator<UserDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<UserDto>));
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.RandomUserDtos), MemberType = typeof(Helper))]
+        public void UserDto_Validation_IsSuccessful(
+            List<AssetDto> assets,
+            List<LiabilityDto> liabilities,
+            List<GoalDto> goals)
+        {
+            var userDto = new UserDto
+            {
+                Assets = assets,
+                Liabilities = liabilities,
+                Goals = goals
+            };
+            Assert.True(_userDtoValidator.Validate(userDto).IsValid);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.RandomAssetDtosList), MemberType = typeof(Helper))]
+        public void UserDto_Validation_AssetsOnly_IsSuccessful(List<AssetDto> assets)
+        {
+            var userDto = new UserDto { Assets = assets };
+            Assert.True(_userDtoValidator.Validate(userDto).IsValid);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.RandomLiabilityDtosList), MemberType = typeof(Helper))]
+        public void UserDto_Validation_LiabilitiesOnly_IsSuccessful(List<LiabilityDto> liabilities)
+        {
+            var userDto = new UserDto { Liabilities = liabilities };
+            Assert.True(_userDtoValidator.Validate(userDto).IsValid);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.RandomeGoalDtosList), MemberType = typeof(Helper))]
+        public void UserDto_Validation_GoalsOnly_IsSuccessful(List<GoalDto> goals)
+        {
+            var userDto = new UserDto { Goals = goals };
+            Assert.True(_userDtoValidator.Validate(userDto).IsValid);
         }
     }
 }

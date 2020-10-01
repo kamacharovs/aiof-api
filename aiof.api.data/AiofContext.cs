@@ -18,6 +18,7 @@ namespace aiof.api.data
         public virtual DbSet<GoalType> GoalTypes { get; set; }
         public virtual DbSet<Frequency> Frequencies { get; set; }
         public virtual DbSet<Subscription> Subscriptions { get; set; }
+        public virtual DbSet<Account> Accounts { get; set; }
 
         public AiofContext()
         { }
@@ -56,17 +57,23 @@ namespace aiof.api.data
                     .HasForeignKey(x => x.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
 
-                e.HasMany(x => x.Goals)
-                    .WithOne()
-                    .HasForeignKey(x => x.UserId)
-                    .OnDelete(DeleteBehavior.Cascade);
-
                 e.HasMany(x => x.Liabilities)
                     .WithOne()
                     .HasForeignKey(x => x.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
 
+                e.HasMany(x => x.Goals)
+                    .WithOne()
+                    .HasForeignKey(x => x.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
                 e.HasMany(x => x.Subscriptions)
+                    .WithOne()
+                    .HasForeignKey(x => x.UserId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+
+                e.HasMany(x => x.Accounts)
                     .WithOne()
                     .HasForeignKey(x => x.UserId)
                     .OnDelete(DeleteBehavior.Cascade)
@@ -234,6 +241,20 @@ namespace aiof.api.data
                     .WithMany()
                     .HasForeignKey(x => x.PaymentFrequencyName)
                     .IsRequired();
+            });
+
+            modelBuilder.Entity<Account>(e =>
+            {
+                e.ToTable(Keys.Entity.Account);
+
+                e.HasKey(x => x.Id);
+
+                e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
+                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
+                e.Property(x => x.Description).HasSnakeCaseColumnName().HasMaxLength(500).IsRequired();
+                e.Property(x => x.TypeName).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
+                e.Property(x => x.UserId).HasSnakeCaseColumnName().IsRequired();
             });
         }
     }

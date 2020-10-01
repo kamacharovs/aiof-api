@@ -36,26 +36,24 @@ namespace aiof.api.services
 
         private IQueryable<Goal> GetGoalsQuery(bool asNoTracking = true)
         {
+            var goalsQuery = _context.Goals
+                .Include(x => x.Type)
+                .Include(x => x.ContributionFrequency)
+                .AsQueryable();
+
             return asNoTracking
-                ? _context.Goals
-                    .Include(x => x.Type)
-                    .Include(x => x.ContributionFrequency)
-                    .AsNoTracking()
-                    .AsQueryable()
-                : _context.Goals
-                    .Include(x => x.Type)
-                    .Include(x => x.ContributionFrequency)
-                    .AsQueryable();
+                ? goalsQuery.AsNoTracking()  
+                : goalsQuery;
         }
 
         private IQueryable<GoalType> GetGoalTypesQuery(bool asNoTracking = true)
         {
+            var goalTypesQuery = _context.GoalTypes
+                .AsQueryable();
+
             return asNoTracking
-                ? _context.GoalTypes
-                    .AsNoTracking()
-                    .AsQueryable()
-                : _context.GoalTypes
-                    .AsQueryable();
+                ? goalTypesQuery.AsNoTracking()
+                : goalTypesQuery;
         }
 
         public async Task<IGoal> GetGoalAsync(int id)

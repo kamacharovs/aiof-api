@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
@@ -20,39 +21,41 @@ namespace aiof.api.services
         private readonly IMapper _mapper;
         private readonly AiofContext _context;
         private readonly AbstractValidator<LiabilityDto> _liabilityDtoValidator;
+        private readonly AbstractValidator<LiabilityType> _liabilityTypeValidator;
 
         public LiabilityRepository(
             ILogger<LiabilityRepository> logger,
             IMapper mapper, 
             AiofContext context,
-            AbstractValidator<LiabilityDto> liabilityDtoValidator)
+            AbstractValidator<LiabilityDto> liabilityDtoValidator,
+            AbstractValidator<LiabilityType> liabilityTypeValidator)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _liabilityDtoValidator = liabilityDtoValidator ?? throw new ArgumentNullException(nameof(liabilityDtoValidator));
+            _liabilityTypeValidator = liabilityTypeValidator ?? throw new ArgumentNullException(nameof(liabilityTypeValidator));
         }
 
         private IQueryable<Liability> GetLiabilitiesQuery(bool asNoTracking = true)
         {
+            var liabilitiesQuery = _context.Liabilities
+                .Include(x => x.Type)
+                .AsQueryable();
+
             return asNoTracking
-                ? _context.Liabilities
-                    .Include(x => x.Type)
-                    .AsNoTracking()
-                    .AsQueryable()
-                : _context.Liabilities
-                    .Include(x => x.Type)
-                    .AsQueryable();
+                ? liabilitiesQuery.AsNoTracking()
+                : liabilitiesQuery;
         }
 
         private IQueryable<LiabilityType> GetLiabilityTypesQuery(bool asNoTracking = true)
         {
+            var liabilityTypesQuery = _context.LiabilityTypes
+                .AsQueryable();
+
             return asNoTracking
-                ? _context.LiabilityTypes
-                    .AsNoTracking()
-                    .AsQueryable()
-                : _context.LiabilityTypes
-                    .AsQueryable();
+                ? liabilityTypesQuery.AsNoTracking()
+                : liabilityTypesQuery;
         }
 
         public async Task<ILiability> GetLiabilityAsync(int id)
@@ -60,6 +63,14 @@ namespace aiof.api.services
             return await GetLiabilitiesQuery()
                 .FirstOrDefaultAsync(x => x.Id == id)
                 ?? throw new AiofNotFoundException($"{nameof(Liability)} with Id='{id}' was not found");
+        }
+
+        public async Task<ILiability> GetLiabilityAsync(LiabilityDto liabilityDto)
+        {
+            return await GetLiabilitiesQuery()
+                .FirstOrDefaultAsync(x => x.Name == liabilityDto.Name
+                    && x.TypeName == liabilityDto.TypeName
+                    && x.Value == liabilityDto.Value);
         }
 
         public async Task<IEnumerable<ILiabilityType>> GetLiabilityTypesAsync()
@@ -73,18 +84,19 @@ namespace aiof.api.services
         {
             await _liabilityDtoValidator.ValidateAndThrowAsync(liabilityDto);
 
-            var liability = _mapper.Map<Liability>(liabilityDto);
+            var liability = await GetLiabilityAsync(liabilityDto) is null
+                ? _mapper.Map<Liability>(liabilityDto)
+                : throw new AiofFriendlyException(HttpStatusCode.BadRequest,
+                    $"{nameof(Liability)}='{JsonSerializer.Serialize(liabilityDto)}' already exists");
 
-            await _context.Liabilities
-                .AddAsync(liability);
-
+            await _context.Liabilities.AddAsync(liability);
             await _context.SaveChangesAsync();
 
             await _context.Entry(liability)
                 .Reference(x => x.Type)
                 .LoadAsync();
 
-            _logger.LogInformation($"Created {nameof(Liability)} with Id='{liability.Id}', PublicKey='{liability.PublicKey}' and UserId='{liability.UserId}'");
+            _logger.LogInformation($"Created {nameof(Liability)}='{JsonSerializer.Serialize(liability)}'");
 
             return liability;
         }
@@ -109,6 +121,26 @@ namespace aiof.api.services
             await _context.SaveChangesAsync();
 
             return liability;
+        }
+
+        public async Task<ILiabilityType> AddLiabilityTypeAsync(string name)
+        {
+            var liabilityType = new LiabilityType
+            { 
+                Name = name 
+            };
+
+            await _liabilityTypeValidator.ValidateAndThrowAsync(liabilityType);
+
+            if ((await GetLiabilityTypesAsync()).Any(x => x.Name == name))
+                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
+                    $"{nameof(LiabilityType)} with Name='{name}' already exists");
+
+            await _context.LiabilityTypes
+                .AddAsync(liabilityType);
+            await _context.SaveChangesAsync();
+
+            return liabilityType;
         }
     }
 }

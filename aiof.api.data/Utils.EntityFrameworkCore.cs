@@ -27,7 +27,9 @@ namespace aiof.api.data
             string value)
             where TEntity : class
         {
-            return await context.Frequencies.AnyAsync(x => x.Name == value) ? context.Set<TEntity>() : throw new AiofFriendlyException(HttpStatusCode.BadRequest, $"Invalid {nameof(Frequency)}");
+            return await context.Frequencies.AnyAsync(x => x.Name == value) 
+                ? context.Set<TEntity>() 
+                : throw new AiofFriendlyException(HttpStatusCode.BadRequest, $"Invalid {nameof(Frequency)}");
         }
     }
 }

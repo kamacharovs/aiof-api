@@ -33,6 +33,7 @@ namespace aiof.api.data
 
         [JsonIgnore]
         public int? UserId { get; set; }
+        
 
         public bool Equals(Liability other)
         {
@@ -44,7 +45,7 @@ namespace aiof.api.data
                 && this.Value == other.Value;
         }
 
-        public override bool Equals(object obj) => Equals(obj as Asset);
+        public override bool Equals(object obj) => Equals(obj as Liability);
         public override int GetHashCode() => (Name, TypeName, Value).GetHashCode();
     }
 

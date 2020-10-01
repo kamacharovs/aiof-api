@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -23,6 +24,8 @@ namespace aiof.api.services
         private readonly AiofContext _context;
         private readonly AbstractValidator<SubscriptionDto> _subscriptionDtoValidator;
 
+        private readonly Stopwatch _sw;
+
         public UserRepository(
             ILogger<UserRepository> logger,
             IMapper mapper, 
@@ -34,40 +37,45 @@ namespace aiof.api.services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _subscriptionDtoValidator = subscriptionDtoValidator ?? throw new ArgumentNullException(nameof(subscriptionDtoValidator));
+
+            _sw = new Stopwatch();
         }
 
         private IQueryable<User> GetUsersQuery(bool asNoTracking = true)
         {
+            var usersQuery = _context.Users
+                .Include(x => x.Profile)
+                .Include(x => x.Assets)
+                .Include(x => x.Goals)
+                .Include(x => x.Liabilities)
+                .Include(x => x.Subscriptions)
+                .Include(x => x.Accounts)
+                .AsQueryable();
+
             return asNoTracking
-                ? _context.Users
-                    .Include(x => x.Profile)
-                    .Include(x => x.Assets)
-                    .Include(x => x.Goals)
-                    .Include(x => x.Liabilities)
-                    .Include(x => x.Subscriptions)
-                    .AsNoTracking()
-                    .AsQueryable()
-                : _context.Users
-                    .Include(x => x.Profile)
-                    .Include(x => x.Assets)
-                    .Include(x => x.Goals)
-                    .Include(x => x.Liabilities)
-                    .Include(x => x.Subscriptions)
-                    .AsQueryable();
+                ? usersQuery.AsNoTracking()
+                : usersQuery;
         }
 
         private IQueryable<UserProfile> GetUserProfilesQuery(bool asNoTracking = true)
         {
+            var usersProfileQuery = _context.UserProfiles
+                .Include(x => x.User)
+                .AsQueryable();
+
             return asNoTracking
-                ? _context.UserProfiles
-                    .Include(x => x.User)
-                    .AsNoTracking()
-                    .AsQueryable()
-                : _context.UserProfiles
-                    .Include(x => x.User)
-                    .AsQueryable();
+                ? usersProfileQuery.AsNoTracking()
+                : usersProfileQuery;
         }
 
+        public async Task<IUser> GetAsync(
+            int id,
+            bool asNoTracking = true)
+        {
+            return await GetUsersQuery(asNoTracking)
+                .FirstOrDefaultAsync(x => x.Id == id)
+                ?? throw new AiofNotFoundException($"{nameof(User)} with Id='{id}' was not found");
+        }
         public async Task<IUser> GetUserAsync(
             string username,
             bool asNoTracking = true)
@@ -84,6 +92,24 @@ namespace aiof.api.services
             return await GetUserProfilesQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.User.Username == username)
                 ?? throw new AiofNotFoundException($"{nameof(UserProfile)} for {nameof(User)} with Username='{username}' was not found");
+        }
+
+        public async Task<IUser> UpsertFinanceAsync(
+            int userId,
+            UserDto userDto)
+        {
+            var userInDb = await GetAsync(userId) as User;
+            var userDtoMapped = _mapper.Map<User>(userDto);
+
+            _sw.Start();
+            var user = _mapper.Map(userInDb, userDtoMapped);           
+            _sw.Stop();      
+            _logger.LogInformation($"UpsertFinanceAsync algorithm took {_sw.Elapsed.TotalMilliseconds * 1000} (µs)");
+
+            _context.Update(user);
+            await _context.SaveChangesAsync();
+
+            return await GetAsync(userId);
         }
 
         public async Task<IUser> UpsertUserProfileAsync(
@@ -108,13 +134,26 @@ namespace aiof.api.services
         }
 
         #region Subscription
+        private IQueryable<Subscription> GetSubscriptionsQuery(bool asNoTracking = true)
+        {
+            var subscriptionQuery = _context.Subscriptions
+                .Include(x => x.PaymentFrequency)
+                .AsQueryable();
+
+            return asNoTracking
+                ? subscriptionQuery.AsNoTracking()
+                : subscriptionQuery;
+        }
+
         public async Task<ISubscription> GetSubscriptionAsync(int id)
         {
-            return await base.GetAsync<Subscription>(id);
+            return await GetSubscriptionsQuery()
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
         public async Task<ISubscription> GetSubscriptionAsync(Guid publicKey)
         {
-            return await base.GetAsync<Subscription>(publicKey);
+            return await GetSubscriptionsQuery()
+                .FirstOrDefaultAsync(x => x.PublicKey == publicKey);
         }
         public async Task<ISubscription> GetSubscriptionAsync(
             string name, 
@@ -122,13 +161,10 @@ namespace aiof.api.services
             int userId,
             bool asNoTracking = true)
         {
-            var subscriptions = asNoTracking
-                ? _context.Subscriptions.AsNoTracking().AsQueryable()
-                : _context.Subscriptions.AsQueryable();
-
-            return await subscriptions.FirstOrDefaultAsync(x => x.UserId == userId
-                && x.Name == name
-                && x.Amount == amount);
+            return await GetSubscriptionsQuery(asNoTracking)
+                .FirstOrDefaultAsync(x => x.UserId == userId
+                    && x.Name == name
+                    && x.Amount == amount);
         }
 
         public async Task<ISubscription> AddSubscriptionAsync(SubscriptionDto subscriptionDto)
