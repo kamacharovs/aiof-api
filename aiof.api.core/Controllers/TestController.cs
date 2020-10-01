@@ -16,6 +16,7 @@ using aiof.api.services;
 
 namespace aiof.api.core.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("test")]
     [Produces(Keys.ApplicationJson)]
