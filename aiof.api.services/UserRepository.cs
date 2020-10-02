@@ -208,7 +208,7 @@ namespace aiof.api.services
 
         public async Task DeleteSubscriptionAsync(int id)
         {
-            await base.DeleteAsync<Subscription>(id);
+            await base.SoftDeleteAsync<Subscription>(id);
         }
         #endregion
     }

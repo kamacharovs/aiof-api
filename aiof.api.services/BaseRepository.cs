@@ -66,6 +66,18 @@ namespace aiof.api.services
             return await GetAsync<T>(Guid.Parse(publicKey));
         }
 
+        public async Task SoftDeleteAsync<T>(int id)
+            where T : class, IPublicKeyId, IIsDeleted
+        {
+            var query = _context.Set<T>();
+            var entity = await query
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            entity.IsDeleted = true;
+            query.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+        
         public async Task DeleteAsync<T>(int id)
             where T : class, IPublicKeyId
         {
@@ -79,7 +91,7 @@ namespace aiof.api.services
         public async Task DeleteAsync<T>(T entity)
             where T : class, IPublicKeyId
         {
-             _context.Set<T>().Remove(entity);
+            _context.Set<T>().Remove(entity);
             await _context.SaveChangesAsync();
             _logger.LogInformation($"Deleted {typeof(T).Name}='{JsonSerializer.Serialize(entity)}'");
         }

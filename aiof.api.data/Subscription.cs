@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace aiof.api.data
 {
     public class Subscription : ISubscription,
-        IPublicKeyId, IPublicKeyName
+        IPublicKeyId, IPublicKeyName, IIsDeleted
     {
         [Required]
         public int Id { get; set; }
