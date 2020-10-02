@@ -218,6 +218,8 @@ namespace aiof.api.data
 
                 e.HasKey(x => x.Id);
 
+                e.HasQueryFilter(x => !x.IsDeleted);
+
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();

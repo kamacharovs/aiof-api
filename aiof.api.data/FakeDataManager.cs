@@ -350,6 +350,20 @@ namespace aiof.api.data
                     From = "Spotify",
                     Url = "https://spotify.com/",
                     UserId = 1
+                },
+                new Subscription
+                {
+                    Id = 3,
+                    PublicKey = Guid.Parse("aaa011a0-48d2-4d89-b8fc-3fc22475b564"),
+                    Name = "Generic",
+                    Description = "My generic subscription",
+                    Amount = 15.99M,
+                    PaymentFrequencyName = "monthly",
+                    PaymentLength = 12,
+                    From = "Generic",
+                    Url = "https://google.com/",
+                    UserId = 1,
+                    IsDeleted = true
                 }
             };
         }
@@ -494,7 +508,7 @@ namespace aiof.api.data
 
             if (id)
             {
-                foreach(var fakeSubscriptionId in fakeSubscriptions.Select(x => x.Id))
+                foreach(var fakeSubscriptionId in fakeSubscriptions.Where(x => !x.IsDeleted).Select(x => x.Id))
                 {
                     toReturn.Add(new object[]
                     {

@@ -42,6 +42,9 @@ namespace aiof.api.data
         [JsonIgnore]
         [Required]
         public int UserId { get; set; }
+
+        [JsonIgnore]
+        public bool IsDeleted { get; set; }
     }
 
     public class SubscriptionDto
