@@ -9,3 +9,13 @@ All in one finance API
 ```ps
 docker pull gkama/aiof-api:latest
 ```
+
+### EF Core migrations
+
+Migrations are managed in the `ef-migrations` branch
+
+```powershell
+dotnet ef migrations add {migration name}
+dotnet ef migrations script
+dotnet ef migrations remove
+```
