@@ -41,6 +41,7 @@ namespace aiof.api.tests
                 .AddScoped<IGoalRepository, GoalRepository>()
                 .AddScoped<ILiabilityRepository, LiabilityRepository>()
                 .AddScoped<IEnvConfiguration, EnvConfiguration>()
+                .AddScoped<ITenant, Tenant>()
                 .AddScoped<FakeDataManager>()
                 .AddSingleton(GetMockedMetadataRepo());
 
@@ -56,6 +57,7 @@ namespace aiof.api.tests
             services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
             services.AddLogging();
+            services.AddHttpContextAccessor();
 
             return services.BuildServiceProvider();
         }

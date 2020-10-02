@@ -8,12 +8,16 @@ namespace aiof.api.data
 {
     public class Tenant : ITenant
     {
+        public IHttpContextAccessor _context { get; set; }
+
         public int? UserId { get; set; }
         public int? ClientId { get; set; }
         public Guid? PublicKey { get; set; }
 
         public Tenant(IHttpContextAccessor httpContextAccessor)
         {
+            _context = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+
             int userId, clientId;
             Guid publicKey;
 
