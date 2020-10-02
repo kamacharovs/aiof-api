@@ -33,7 +33,7 @@ namespace aiof.api.data
         {
             modelBuilder.Entity<User>(e =>
             {
-                e.ToTable("user");
+                e.ToTable(Keys.Entity.User);
 
                 e.HasQueryFilter(x => x.Id == _tenant.UserId);
 
@@ -81,9 +81,11 @@ namespace aiof.api.data
 
             modelBuilder.Entity<UserProfile>(e =>
             {
-                e.ToTable("user_profile");
+                e.ToTable(Keys.Entity.UserProfile);
 
                 e.HasKey(x => x.Id);
+
+                e.HasQueryFilter(x => x.Id == _tenant.UserId);
 
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
@@ -126,9 +128,11 @@ namespace aiof.api.data
 
             modelBuilder.Entity<Liability>(e =>
             {
-                e.ToTable("liability");
+                e.ToTable(Keys.Entity.Liability);
 
                 e.HasKey(x => x.Id);
+
+                e.HasQueryFilter(x => x.Id == _tenant.UserId);
 
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
@@ -145,9 +149,11 @@ namespace aiof.api.data
 
             modelBuilder.Entity<Goal>(e =>
             {
-                e.ToTable("goal");
+                e.ToTable(Keys.Entity.Goal);
 
                 e.HasKey(x => x.Id);
+
+                e.HasQueryFilter(x => x.Id == _tenant.UserId);
 
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
@@ -173,7 +179,7 @@ namespace aiof.api.data
 
             modelBuilder.Entity<AssetType>(e =>
             {
-                e.ToTable("asset_type");
+                e.ToTable(Keys.Entity.AssetType);
 
                 e.HasKey(x => x.Name);
 
@@ -186,7 +192,7 @@ namespace aiof.api.data
 
             modelBuilder.Entity<LiabilityType>(e =>
             {
-                e.ToTable("liability_type");
+                e.ToTable(Keys.Entity.LiabilityType);
 
                 e.HasKey(x => x.Name);
 
@@ -199,7 +205,7 @@ namespace aiof.api.data
 
             modelBuilder.Entity<GoalType>(e =>
             {
-                e.ToTable("goal_type");
+                e.ToTable(Keys.Entity.GoalType);
 
                 e.HasKey(x => x.Name);
 
@@ -212,7 +218,7 @@ namespace aiof.api.data
 
             modelBuilder.Entity<Frequency>(e =>
             {
-                e.ToTable("frequency");
+                e.ToTable(Keys.Entity.Frequency);
 
                 e.HasKey(x => x.Name);
 
@@ -227,6 +233,7 @@ namespace aiof.api.data
 
                 e.HasKey(x => x.Id);
 
+                e.HasQueryFilter(x => x.UserId == _tenant.UserId);
                 e.HasQueryFilter(x => !x.IsDeleted);
 
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
@@ -254,6 +261,7 @@ namespace aiof.api.data
                 e.HasKey(x => x.Id);
 
                 e.HasQueryFilter(x => x.UserId == _tenant.UserId);
+                e.HasQueryFilter(x => !x.IsDeleted);
 
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
