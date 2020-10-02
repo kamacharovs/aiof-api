@@ -364,6 +364,19 @@ namespace aiof.api.data
                     Url = "https://google.com/",
                     UserId = 1,
                     IsDeleted = true
+                },
+                new Subscription
+                {
+                    Id = 4,
+                    PublicKey = Guid.Parse("47bd786a-e419-4daa-b18c-7fb7023800f9"),
+                    Name = "Spotify",
+                    Description = "My monthly Spotify subscription",
+                    Amount = 10.99M,
+                    PaymentFrequencyName = "monthly",
+                    PaymentLength = 12,
+                    From = "Generic",
+                    Url = "https://spotify.com/",
+                    UserId = 2
                 }
             };
         }

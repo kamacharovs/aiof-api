@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace aiof.api.data
 {
     public class AiofContext : DbContext
     {
+        private readonly int _userId;
+
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserProfile> UserProfiles { get; set; }
         public virtual DbSet<Asset> Assets { get; set; }
@@ -20,15 +23,22 @@ namespace aiof.api.data
         public virtual DbSet<Subscription> Subscriptions { get; set; }
         public virtual DbSet<Account> Accounts { get; set; }
 
-        public AiofContext(DbContextOptions<AiofContext> options)
+        public AiofContext(DbContextOptions<AiofContext> options, IHttpContextAccessor httpContextAccessor)
             : base(options)
-        { }
+        {
+            int.TryParse(httpContextAccessor.HttpContext
+                ?.User
+                ?.FindFirst("id")?.Value,
+                out _userId);
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>(e =>
             {
                 e.ToTable("user");
+
+                e.HasQueryFilter(x => x.Id == _userId);
 
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
@@ -98,9 +108,11 @@ namespace aiof.api.data
 
             modelBuilder.Entity<Asset>(e =>
             {
-                e.ToTable("asset");
+                e.ToTable(Keys.Entity.Asset);
 
                 e.HasKey(x => x.Id);
+
+                e.HasQueryFilter(x => x.UserId == _userId);
 
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
@@ -244,7 +256,7 @@ namespace aiof.api.data
 
                 e.HasKey(x => x.Id);
 
-                e.HasQueryFilter(x => !x.IsDeleted);
+                e.HasQueryFilter(x => x.UserId == _userId);
 
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();

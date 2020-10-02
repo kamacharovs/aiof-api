@@ -67,6 +67,7 @@ namespace aiof.api.core
             services.AddLogging();
             services.AddHealthChecks();
             services.AddFeatureManagement();
+            services.AddHttpContextAccessor();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(
                 Keys.Bearer,
