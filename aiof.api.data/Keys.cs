@@ -50,6 +50,13 @@ namespace aiof.api.data
         
         public const string License = nameof(License);
 
+        public static class Claim
+        {
+            public const string UserId = "user_id";
+            public const string ClientId = "client_id";
+            public const string PublicKey = "public_key";
+        }
+
         public static class Entity
         {
             public static string User = nameof(data.User).ToSnakeCase();

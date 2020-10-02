@@ -42,6 +42,7 @@ namespace aiof.api.core
                 .AddScoped<IGoalRepository, GoalRepository>()
                 .AddScoped<ILiabilityRepository, LiabilityRepository>()
                 .AddScoped<IEnvConfiguration, EnvConfiguration>()
+                .AddScoped<ITenant, Tenant>()
                 .AddScoped<FakeDataManager>()
                 .AddAutoMapper(typeof(AutoMappingProfileDto).Assembly);
 

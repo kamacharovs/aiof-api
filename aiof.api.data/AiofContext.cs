@@ -9,7 +9,7 @@ namespace aiof.api.data
 {
     public class AiofContext : DbContext
     {
-        private readonly int _userId;
+        private readonly ITenant _tenant;
 
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserProfile> UserProfiles { get; set; }
@@ -23,13 +23,10 @@ namespace aiof.api.data
         public virtual DbSet<Subscription> Subscriptions { get; set; }
         public virtual DbSet<Account> Accounts { get; set; }
 
-        public AiofContext(DbContextOptions<AiofContext> options, IHttpContextAccessor httpContextAccessor)
+        public AiofContext(DbContextOptions<AiofContext> options, ITenant tenant)
             : base(options)
         {
-            int.TryParse(httpContextAccessor.HttpContext
-                ?.User
-                ?.FindFirst("id")?.Value,
-                out _userId);
+            _tenant = tenant ?? throw new ArgumentNullException(nameof(tenant));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -38,7 +35,7 @@ namespace aiof.api.data
             {
                 e.ToTable("user");
 
-                e.HasQueryFilter(x => x.Id == _userId);
+                e.HasQueryFilter(x => x.Id == _tenant.UserId);
 
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
@@ -112,7 +109,7 @@ namespace aiof.api.data
 
                 e.HasKey(x => x.Id);
 
-                e.HasQueryFilter(x => x.UserId == _userId);
+                e.HasQueryFilter(x => x.UserId == _tenant.UserId);
 
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
@@ -256,7 +253,7 @@ namespace aiof.api.data
 
                 e.HasKey(x => x.Id);
 
-                e.HasQueryFilter(x => x.UserId == _userId);
+                e.HasQueryFilter(x => x.UserId == _tenant.UserId);
 
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
