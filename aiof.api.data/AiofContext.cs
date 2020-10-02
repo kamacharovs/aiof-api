@@ -214,7 +214,7 @@ namespace aiof.api.data
 
             modelBuilder.Entity<Subscription>(e =>
             {
-                e.ToTable("subscription");
+                e.ToTable(Keys.Entity.Subscription);
 
                 e.HasKey(x => x.Id);
 
@@ -230,6 +230,7 @@ namespace aiof.api.data
                 e.Property(x => x.From).HasSnakeCaseColumnName().HasMaxLength(200);
                 e.Property(x => x.Url).HasSnakeCaseColumnName().HasMaxLength(500);
                 e.Property(x => x.UserId).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.IsDeleted).HasSnakeCaseColumnName();
 
                 e.HasOne(x => x.PaymentFrequency)
                     .WithMany()
@@ -243,12 +244,15 @@ namespace aiof.api.data
 
                 e.HasKey(x => x.Id);
 
+                e.HasQueryFilter(x => !x.IsDeleted);
+
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
                 e.Property(x => x.Description).HasSnakeCaseColumnName().HasMaxLength(500).IsRequired();
                 e.Property(x => x.TypeName).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
                 e.Property(x => x.UserId).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.IsDeleted).HasSnakeCaseColumnName();
             });
         }
     }

@@ -6,8 +6,9 @@ using System.ComponentModel.DataAnnotations;
 namespace aiof.api.data
 {
     public class Account : IAccount,
-        IPublicKeyId
+        IPublicKeyId, IIsDeleted
     {
+        [JsonIgnore]
         [Required]
         public int Id { get; set; }
 
@@ -26,8 +27,11 @@ namespace aiof.api.data
         [MaxLength(100)]
         public string TypeName { get; set; }
 
-        [Required]
         [JsonIgnore]
+        [Required]
         public int UserId { get; set; }
+
+        [JsonIgnore]
+        public bool IsDeleted { get; set; }
     }
 }

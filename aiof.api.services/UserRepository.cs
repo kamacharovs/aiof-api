@@ -211,5 +211,29 @@ namespace aiof.api.services
             await base.SoftDeleteAsync<Subscription>(id);
         }
         #endregion
+
+        #region Account
+        private IQueryable<Account> GetAccountsQuery(bool asNoTracking = true)
+        {
+            var query = _context.Accounts
+                .AsQueryable();
+
+            return asNoTracking
+                ? query.AsNoTracking()
+                : query;
+        }
+
+        public async Task<IAccount> GetAccountAsync(Guid publicKey)
+        {
+            return await GetAccountsQuery()
+                .FirstOrDefaultAsync(x => x.PublicKey == publicKey)
+                ?? throw new AiofNotFoundException($"{nameof(Account)} with PublicKey={publicKey} was not found");
+        }
+
+        public async Task DeleteAccountAsync(int id)
+        {
+            await base.SoftDeleteAsync<Account>(id);
+        }
+        #endregion
     }
 }
