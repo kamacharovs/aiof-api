@@ -396,6 +396,36 @@ namespace aiof.api.data
             };
         }
 
+        public IEnumerable<string> GetFakeAccountTypes()
+        {
+            return new List<string>
+            {
+                "retirement",
+                "taxable"
+            };
+        }
+        public object GetFakeAccountTypesMapping()
+        {
+            return new Dictionary<string, string>
+            {
+                { "401(k)", "retirement" },
+                { "401(a)", "retirement" },
+                { "401(b)", "retirement" },
+                { "457", "taxable" },
+                { "IRA", "retirement" },
+                { "Roth IRA", "retirement" },
+                { "Brokerage", "taxable" },
+                { "Checking/Savings", "taxable" },
+                { "Health Savings Account", "taxable" },
+                { "529 Plan", "taxable" },
+                { "SEP IRA", "retirement" },
+                { "Simple IRA", "retirement" },
+                { "Taxable", "taxable" },
+                { "Tax-Deferred", "retirement" },
+                { "Self Employed Plan", "taxable" },
+                { "UGMA/UTMA", "taxable" }
+            };
+        }
 
 
         #region Unit Tests
