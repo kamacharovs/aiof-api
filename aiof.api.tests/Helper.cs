@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Security.Claims;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Http;
 
 using AutoMapper;
 using FluentValidation;
@@ -41,10 +43,10 @@ namespace aiof.api.tests
                 .AddScoped<IGoalRepository, GoalRepository>()
                 .AddScoped<ILiabilityRepository, LiabilityRepository>()
                 .AddScoped<IEnvConfiguration, EnvConfiguration>()
-                .AddScoped<ITenant, Tenant>()
                 .AddScoped<FakeDataManager>()
                 .AddSingleton(GetMockedMetadataRepo());
 
+            services.AddScoped<ITenant>(x => new Tenant(GetMockHttpContextAccessor()));
             services.AddSingleton(new MapperConfiguration(x => { x.AddProfile(new AutoMappingProfileDto()); }).CreateMapper());
 
             services.AddScoped<AbstractValidator<AssetDto>, AssetDtoValidator>()
@@ -107,6 +109,20 @@ namespace aiof.api.tests
             );
 
             return mockedRepo.Object;
+        }
+
+        public static IHttpContextAccessor GetMockHttpContextAccessor()
+        {
+            var mockedHttpContextAccessor = new Mock<IHttpContextAccessor>();
+
+            mockedHttpContextAccessor.Setup(x => 
+                x.HttpContext.User.FindFirst(It.Is<string>(x => x == Keys.Claim.UserId)))
+                .Returns(new Claim(Keys.Claim.UserId, "1"));
+            mockedHttpContextAccessor.Setup(x => 
+                x.HttpContext.User.FindFirst(It.Is<string>(x => x == Keys.Claim.ClientId)))
+                .Returns(new Claim(Keys.Claim.ClientId, "1"));
+
+            return mockedHttpContextAccessor.Object;
         }
 
 
