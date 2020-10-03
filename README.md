@@ -8,17 +8,41 @@ All in one finance API
 
 aiof API overall documentation
 
-### EF Core
+### Application
 
-Need to address User A accessing data for user B when authenticated. Thus, this will be a multi-tenant application
+On a high level, the API is a CRUD application for `aiof` data. It is based on a multi-tenant pattern based on `user_id`. This is enforced by the interface `ITenant` which gets dependency injected. Thus, even though User A is authenticated and authorized (via JWT), they can't access data for User B who is the same, authorization-wise, to user A. Thus the authentication and authorization process flow is as follows
 
-## Docker
+- Is User Authenticated?
+- Is User Authorized to access this Endpoint? Are they in the correct Role?
+- Does access to the data the User is trying to get need to be controlled? If yes
+- Then, `user_id` gets extracted from the JWT and EF Core uses `QueryFilters` to filter the data a User can access - in the current scenario, only their own
 
-```ps
+## How to run it
+
+### Locally
+
+From the root directory
+
+```powershell
+dotnet run -p .\aiof.api.core\
+```
+
+Change directories and run from the core `.csproj`
+
+```powershell
+cd .\aiof.api.core\
+dotnet run
+```
+
+### Docker
+
+Pull the latest image from Docker Hub
+
+```powershell
 docker pull gkama/aiof-api:latest
 ```
 
-### EF Core migrations
+## EF Core migrations
 
 Migrations are managed in the `ef-migrations` branch
 
