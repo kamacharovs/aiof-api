@@ -8,10 +8,8 @@ namespace aiof.api.data
 {
     public interface ITenant
     {
-        IHttpContextAccessor _context { get; set; }
-
-        int? UserId { get; set; }
-        int? ClientId { get; set; }
-        Guid? PublicKey { get; set; }
+        int UserId { get; set; }
+        int ClientId { get; set; }
+        Guid PublicKey { get; set; }
     }
 }

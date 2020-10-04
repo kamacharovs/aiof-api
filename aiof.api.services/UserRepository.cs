@@ -24,6 +24,7 @@ namespace aiof.api.services
         private readonly AiofContext _context;
         private readonly AbstractValidator<SubscriptionDto> _subscriptionDtoValidator;
 
+        private readonly string _tenant;
         private readonly Stopwatch _sw;
 
         public UserRepository(
@@ -38,6 +39,7 @@ namespace aiof.api.services
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _subscriptionDtoValidator = subscriptionDtoValidator ?? throw new ArgumentNullException(nameof(subscriptionDtoValidator));
 
+            _tenant = $"UserId={_context._tenant.UserId}, ClientId={_context._tenant.ClientId}, PublicKey={_context._tenant.PublicKey}";
             _sw = new Stopwatch();
         }
 
@@ -104,7 +106,8 @@ namespace aiof.api.services
             _sw.Start();
             var user = _mapper.Map(userInDb, userDtoMapped);           
             _sw.Stop();      
-            _logger.LogInformation($"UpsertFinanceAsync algorithm took {_sw.Elapsed.TotalMilliseconds * 1000} (µs)");
+            _logger.LogInformation("UpsertFinanceAsync algorithm took {Time} (µs)",
+                _sw.Elapsed.TotalMilliseconds * 1000);
 
             _context.Update(user);
             await _context.SaveChangesAsync();

@@ -9,7 +9,7 @@ namespace aiof.api.data
 {
     public class AiofContext : DbContext
     {
-        private readonly ITenant _tenant;
+        public readonly ITenant _tenant;
 
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserProfile> UserProfiles { get; set; }

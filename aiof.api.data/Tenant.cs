@@ -8,22 +8,20 @@ namespace aiof.api.data
 {
     public class Tenant : ITenant
     {
-        public IHttpContextAccessor _context { get; set; }
-
-        public int? UserId { get; set; }
-        public int? ClientId { get; set; }
-        public Guid? PublicKey { get; set; }
+        public int UserId { get; set; }
+        public int ClientId { get; set; }
+        public Guid PublicKey { get; set; }
 
         public Tenant(IHttpContextAccessor httpContextAccessor)
         {
-            _context = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
-
             int userId, clientId;
             Guid publicKey;
 
-            int.TryParse(httpContextAccessor.HttpContext?.User?.FindFirst(Keys.Claim.UserId)?.Value, out userId);
-            int.TryParse(httpContextAccessor.HttpContext?.User?.FindFirst(Keys.Claim.ClientId)?.Value, out clientId);
-            Guid.TryParse(httpContextAccessor.HttpContext?.User?.FindFirst(Keys.Claim.PublicKey)?.Value, out publicKey);
+            var claimsPrincipal = httpContextAccessor.HttpContext?.User;
+
+            int.TryParse(claimsPrincipal?.FindFirst(Keys.Claim.UserId)?.Value, out userId);
+            int.TryParse(claimsPrincipal?.FindFirst(Keys.Claim.ClientId)?.Value, out clientId);
+            Guid.TryParse(claimsPrincipal?.FindFirst(Keys.Claim.PublicKey)?.Value, out publicKey);
 
             this.UserId = userId;
             this.ClientId = clientId;
