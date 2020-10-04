@@ -55,7 +55,7 @@ namespace aiof.api.core
                     ? Guid.NewGuid().ToString()
                     : httpContext.TraceIdentifier;
 
-                _logger.LogError(e, $"an exception was thrown during the request. {id}");
+                _logger.LogError(e, "An exception was thrown during the request. {Id}", id);
 
                 await WriteExceptionResponseAsync(httpContext, e, id);
             }

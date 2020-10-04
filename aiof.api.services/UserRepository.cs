@@ -39,7 +39,7 @@ namespace aiof.api.services
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _subscriptionDtoValidator = subscriptionDtoValidator ?? throw new ArgumentNullException(nameof(subscriptionDtoValidator));
 
-            _tenant = $"UserId={_context._tenant.UserId}, ClientId={_context._tenant.ClientId}, PublicKey={_context._tenant.PublicKey}";
+            _tenant = _context._tenant.Log;
             _sw = new Stopwatch();
         }
 
@@ -106,7 +106,7 @@ namespace aiof.api.services
             _sw.Start();
             var user = _mapper.Map(userInDb, userDtoMapped);           
             _sw.Stop();      
-            _logger.LogInformation("UpsertFinanceAsync algorithm took {Time} (µs)",
+            _logger.LogInformation("UpsertFinanceAsync algorithm took {AlgorithmTime} (µs)",
                 _sw.Elapsed.TotalMilliseconds * 1000);
 
             _context.Update(user);
@@ -130,8 +130,11 @@ namespace aiof.api.services
 
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation($"Upserted {nameof(User)} with {nameof(User.Username)}='{username}' " +
-                $"{nameof(UserProfile)}='{JsonSerializer.Serialize(user.Profile)}'");
+            _logger.LogInformation("{Tenant} | Upserted User with Username='{Username}' " +
+                "UserProfile='{UserProfile}'",
+                _tenant,
+                username,
+                JsonSerializer.Serialize(user.Profile));
 
             return await GetUserAsync(username);
         }
@@ -188,7 +191,9 @@ namespace aiof.api.services
                 .AddAsync(subscription);
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation($"Added {nameof(Subscription)}='{JsonSerializer.Serialize(subscription)}'");
+            _logger.LogInformation("{Tenant} | Added Subscription='{Subscription}'",
+                _tenant,
+                JsonSerializer.Serialize(subscription));
 
             return subscription;
         }
@@ -204,7 +209,9 @@ namespace aiof.api.services
             _context.Subscriptions.Update(subcription);
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation($"Updated {nameof(Subscription)}='{JsonSerializer.Serialize(subcription)}'");
+            _logger.LogInformation("{Tenant} | Updated Subscription='{Subscription}'",
+                _tenant,
+                JsonSerializer.Serialize(subcription));
 
             return subcription;
         }
