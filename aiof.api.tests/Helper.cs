@@ -5,7 +5,6 @@ using System.Security.Claims;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Http;
 
 using AutoMapper;
 using FluentValidation;
@@ -17,15 +16,14 @@ using aiof.api.services;
 
 namespace aiof.api.tests
 {
-    public static class Helper
+    public class ServiceHelper
     {
-        public const string Category = nameof(Category);
-        public const string UnitTest = nameof(UnitTest);
-        public const string IntegrationTest = nameof(IntegrationTest);
+        public int? UserId { get; set; }
+        public int? ClientId { get; set; }
 
-        public static T GetRequiredService<T>()
+        public T GetRequiredService<T>()
         {
-            var provider = Provider();
+            var provider = Services().BuildServiceProvider();
 
             provider.GetRequiredService<FakeDataManager>()
                 .UseFakeContext();
@@ -33,7 +31,7 @@ namespace aiof.api.tests
             return provider.GetRequiredService<T>();
         }
 
-        private static IServiceProvider Provider()
+        public ServiceCollection Services()
         {
             var services = new ServiceCollection();
 
@@ -45,8 +43,8 @@ namespace aiof.api.tests
                 .AddScoped<IEnvConfiguration, EnvConfiguration>()
                 .AddScoped<FakeDataManager>()
                 .AddSingleton(GetMockedMetadataRepo());
-
-            services.AddScoped<ITenant>(x => new Tenant(GetMockHttpContextAccessor()));
+            
+            services.AddScoped<ITenant>(x => GetMockTenant());
             services.AddSingleton(new MapperConfiguration(x => { x.AddProfile(new AutoMappingProfileDto()); }).CreateMapper());
 
             services.AddScoped<AbstractValidator<AssetDto>, AssetDtoValidator>()
@@ -61,7 +59,121 @@ namespace aiof.api.tests
             services.AddLogging();
             services.AddHttpContextAccessor();
 
-            return services.BuildServiceProvider();
+            return services;
+        }
+
+        public IAiofMetadataRepository GetMockedMetadataRepo()
+        {
+            var mockedRepo = new Mock<IAiofMetadataRepository>();
+
+            mockedRepo.Setup(x => x.GetFrequenciesAsync())
+                .ReturnsAsync(
+                    new List<string>
+                    {
+                        "daily",
+                        "monthly",
+                        "quarterly",
+                        "half-year",
+                        "yearly"
+                    });
+
+            mockedRepo.Setup(x => x.GetLoanPaymentsAsync(
+                It.IsAny<decimal>(),
+                It.IsAny<decimal>(),
+                It.IsAny<decimal>(),
+                It.IsAny<string>()
+            )).ReturnsAsync(
+                new List<LoanPayment>
+                {
+                    new LoanPayment
+                    {
+                        InitialBalance =  15000,
+                        EndingBalance = 14818.14M,
+                        Interest = 56.25M,
+                        Month = 1,
+                        Payment = 238.11M,
+                        Principal = 181.86M
+                    },
+                    new LoanPayment
+                    {
+                        InitialBalance =  14818.14M,
+                        EndingBalance = 14635.6M,
+                        Interest = 55.57M,
+                        Month = 2,
+                        Payment = 238.11M,
+                        Principal = 182.54M
+                    }
+                }
+            );
+
+            return mockedRepo.Object;
+        }
+
+        public ITenant GetMockTenant()
+        {
+            var mockedTenant = new Mock<ITenant>();
+            var userId = UserId ?? 1;
+            var clientId = ClientId ?? 1;
+
+            mockedTenant.Setup(x => x.UserId).Returns(userId);
+            mockedTenant.Setup(x => x.ClientId).Returns(clientId);
+
+            return mockedTenant.Object;
+        }
+    }
+
+    public static class Helper
+    {
+        public const string Category = nameof(Category);
+        public const string UnitTest = nameof(UnitTest);
+        public const string IntegrationTest = nameof(IntegrationTest);
+
+        public static T GetRequiredService<T>(
+            string tenantUserId = null,
+            string tenantClientId = null)
+        {
+            var userId = tenantUserId ?? "1";
+            var clientId = tenantClientId ?? "1";
+
+            var provider = Services(userId, clientId).BuildServiceProvider();
+
+            provider.GetRequiredService<FakeDataManager>()
+                .UseFakeContext();
+
+            return provider.GetRequiredService<T>();
+        }
+
+        public static ServiceCollection Services(
+            string tenantUserId,
+            string tenantClientId)
+        {
+            var services = new ServiceCollection();
+
+            services.AddScoped<IAiofRepository, AiofRepository>()
+                .AddScoped<IUserRepository, UserRepository>()
+                .AddScoped<IAssetRepository, AssetRepository>()
+                .AddScoped<IGoalRepository, GoalRepository>()
+                .AddScoped<ILiabilityRepository, LiabilityRepository>()
+                .AddScoped<IEnvConfiguration, EnvConfiguration>()
+                .AddScoped<FakeDataManager>()
+                .AddSingleton(GetMockedMetadataRepo());
+            
+            services.AddScoped<ITenant>(x => GetMockTenant(1, 1));
+            services.AddSingleton(new MapperConfiguration(x => { x.AddProfile(new AutoMappingProfileDto()); }).CreateMapper());
+
+            services.AddScoped<AbstractValidator<AssetDto>, AssetDtoValidator>()
+                .AddScoped<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>()
+                .AddScoped<AbstractValidator<LiabilityType>, LiabilityTypeValidator>()
+                .AddScoped<AbstractValidator<GoalDto>, GoalDtoValidator>()
+                .AddScoped<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>()
+                .AddScoped<AbstractValidator<UserDto>, UserDtoValidator>();
+
+            services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(Guid.NewGuid().ToString()));
+
+            services.AddLogging();
+            services.AddHttpContextAccessor();
+
+            return services;
         }
 
         public static IAiofMetadataRepository GetMockedMetadataRepo()
@@ -111,18 +223,16 @@ namespace aiof.api.tests
             return mockedRepo.Object;
         }
 
-        public static IHttpContextAccessor GetMockHttpContextAccessor()
+        public static ITenant GetMockTenant(
+            int userId,
+            int clientId)
         {
-            var mockedHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            var mockedTenant = new Mock<ITenant>();
 
-            mockedHttpContextAccessor.Setup(x => 
-                x.HttpContext.User.FindFirst(It.Is<string>(x => x == Keys.Claim.UserId)))
-                .Returns(new Claim(Keys.Claim.UserId, "1"));
-            mockedHttpContextAccessor.Setup(x => 
-                x.HttpContext.User.FindFirst(It.Is<string>(x => x == Keys.Claim.ClientId)))
-                .Returns(new Claim(Keys.Claim.ClientId, "1"));
+            mockedTenant.Setup(x => x.UserId).Returns(userId);
+            mockedTenant.Setup(x => x.ClientId).Returns(clientId);
 
-            return mockedHttpContextAccessor.Object;
+            return mockedTenant.Object;
         }
 
 
@@ -136,9 +246,10 @@ namespace aiof.api.tests
             return _Fake.GetFakeUsersData(
                 id: true);
         }
-        public static IEnumerable<object[]> UsersUsername()
+        public static IEnumerable<object[]> UsersIdUsername()
         {
             return _Fake.GetFakeUsersData(
+                id: true,
                 username: true);
         }
         public static IEnumerable<object[]> UserProfilesUsername()
