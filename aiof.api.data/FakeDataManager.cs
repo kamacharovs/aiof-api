@@ -435,10 +435,19 @@ namespace aiof.api.data
             bool username = false)
         {
             var fakeUsers = GetFakeUsers();
-
             var toReturn = new List<object[]>();
 
-            if (id)
+            if (id
+                & username)
+            {
+                foreach (var fakeUser in fakeUsers)
+                    toReturn.Add(new object[] 
+                    { 
+                        fakeUser.Id,
+                        fakeUser.Username
+                    });
+            }
+            else if (id)
             {
                 foreach (var fakeUserId in fakeUsers.Select(x => x.Id))
                     toReturn.Add(new object[] 

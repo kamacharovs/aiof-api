@@ -20,8 +20,8 @@ namespace aiof.api.tests
         }
 
         [Theory]
-        [MemberData(nameof(Helper.UsersUsername), MemberType = typeof(Helper))]
-        public async Task GetUserAsync_Valid(string username)
+        [MemberData(nameof(Helper.UsersIdUsername), MemberType = typeof(Helper))]
+        public async Task GetUserAsync_Valid(int id, string username)
         {
             var user = await _repo.GetUserAsync(username);
 
