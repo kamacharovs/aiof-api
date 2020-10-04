@@ -12,17 +12,11 @@ namespace aiof.api.tests
 {
     public class UserRepositoryTests
     {
-        private readonly IUserRepository _repo;
-
-        public UserRepositoryTests()
-        {
-            _repo = Helper.GetRequiredService<IUserRepository>() ?? throw new ArgumentNullException(nameof(IUserRepository));
-        }
-
         [Theory]
         [MemberData(nameof(Helper.UsersIdUsername), MemberType = typeof(Helper))]
-        public async Task GetUserAsync_Valid(int id, string username)
+        public async Task GetUserAsync_Valid(int userId, string username)
         {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
             var user = await _repo.GetUserAsync(username);
 
             Assert.NotNull(user.FirstName);
@@ -32,9 +26,10 @@ namespace aiof.api.tests
         }
 
         [Theory]
-        [MemberData(nameof(Helper.UserProfilesUsername), MemberType = typeof(Helper))]
-        public async Task GetUserProfileAsync_Valid(string username)
+        [MemberData(nameof(Helper.UserProfilesIdUsername), MemberType = typeof(Helper))]
+        public async Task GetUserProfileAsync_Valid(int userId, string username)
         {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
             var userProfile = await _repo.GetUserProfileAsync(username);
 
             Assert.NotNull(userProfile);
@@ -42,8 +37,9 @@ namespace aiof.api.tests
 
         [Theory]
         [MemberData(nameof(Helper.SubscriptionsId), MemberType = typeof(Helper))]
-        public async Task GetSubscsriptionAsync_IsSuccessful(int id)
+        public async Task GetSubscsriptionAsync_IsSuccessful(int userId, int id)
         {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
             var subscription = await _repo.GetSubscriptionAsync(id);
 
             Assert.NotNull(subscription);

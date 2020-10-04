@@ -252,9 +252,10 @@ namespace aiof.api.tests
                 id: true,
                 username: true);
         }
-        public static IEnumerable<object[]> UserProfilesUsername()
+        public static IEnumerable<object[]> UserProfilesIdUsername()
         {
             return _Fake.GetFakeUserProfilesData(
+                userId: true,
                 username: true);
         }
 
@@ -293,6 +294,7 @@ namespace aiof.api.tests
         public static IEnumerable<object[]> SubscriptionsId()
         {
             return _Fake.GetFakeSubscriptionsData(
+                userId: true,
                 id: true);
         }
 
