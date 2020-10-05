@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Security.Claims;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,15 +16,14 @@ using aiof.api.services;
 
 namespace aiof.api.tests
 {
-    public static class Helper
+    public class ServiceHelper
     {
-        public const string Category = nameof(Category);
-        public const string UnitTest = nameof(UnitTest);
-        public const string IntegrationTest = nameof(IntegrationTest);
+        public int? UserId { get; set; }
+        public int? ClientId { get; set; }
 
-        public static T GetRequiredService<T>()
+        public T GetRequiredService<T>()
         {
-            var provider = Provider();
+            var provider = Services().BuildServiceProvider();
 
             provider.GetRequiredService<FakeDataManager>()
                 .UseFakeContext();
@@ -31,7 +31,7 @@ namespace aiof.api.tests
             return provider.GetRequiredService<T>();
         }
 
-        private static IServiceProvider Provider()
+        public ServiceCollection Services()
         {
             var services = new ServiceCollection();
 
@@ -43,7 +43,8 @@ namespace aiof.api.tests
                 .AddScoped<IEnvConfiguration, EnvConfiguration>()
                 .AddScoped<FakeDataManager>()
                 .AddSingleton(GetMockedMetadataRepo());
-
+            
+            services.AddScoped<ITenant>(x => GetMockTenant());
             services.AddSingleton(new MapperConfiguration(x => { x.AddProfile(new AutoMappingProfileDto()); }).CreateMapper());
 
             services.AddScoped<AbstractValidator<AssetDto>, AssetDtoValidator>()
@@ -56,11 +57,12 @@ namespace aiof.api.tests
             services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
             services.AddLogging();
+            services.AddHttpContextAccessor();
 
-            return services.BuildServiceProvider();
+            return services;
         }
 
-        public static IAiofMetadataRepository GetMockedMetadataRepo()
+        public IAiofMetadataRepository GetMockedMetadataRepo()
         {
             var mockedRepo = new Mock<IAiofMetadataRepository>();
 
@@ -107,25 +109,45 @@ namespace aiof.api.tests
             return mockedRepo.Object;
         }
 
+        public ITenant GetMockTenant()
+        {
+            var mockedTenant = new Mock<ITenant>();
+            var userId = UserId ?? 1;
+            var clientId = ClientId ?? 1;
+
+            mockedTenant.Setup(x => x.UserId).Returns(userId);
+            mockedTenant.Setup(x => x.ClientId).Returns(clientId);
+
+            return mockedTenant.Object;
+        }
+    }
+
+    public static class Helper
+    {
+        public const string Category = nameof(Category);
+        public const string UnitTest = nameof(UnitTest);
+        public const string IntegrationTest = nameof(IntegrationTest);
 
 
         #region Unit Tests
         static FakeDataManager _Fake
-            => GetRequiredService<FakeDataManager>() ?? throw new ArgumentNullException(nameof(FakeDataManager));
+            => new ServiceHelper().GetRequiredService<FakeDataManager>() ?? throw new ArgumentNullException(nameof(FakeDataManager));
 
         public static IEnumerable<object[]> UsersId()
         {
             return _Fake.GetFakeUsersData(
                 id: true);
         }
-        public static IEnumerable<object[]> UsersUsername()
+        public static IEnumerable<object[]> UsersIdUsername()
         {
             return _Fake.GetFakeUsersData(
+                id: true,
                 username: true);
         }
-        public static IEnumerable<object[]> UserProfilesUsername()
+        public static IEnumerable<object[]> UserProfilesIdUsername()
         {
             return _Fake.GetFakeUserProfilesData(
+                userId: true,
                 username: true);
         }
 
@@ -137,20 +159,22 @@ namespace aiof.api.tests
                 value: true,
                 userId: true);
         }
-        public static IEnumerable<object[]> AssetsId()
+        public static IEnumerable<object[]> AssetsIdUsersId()
         {
             return _Fake.GetFakeAssetsData(
-                id: true);
+                id: true,
+                userId: true);
         }
         public static IEnumerable<object[]> AssetsPublicKey()
         {
             return _Fake.GetFakeAssetsData(
                 publicKey: true);
         }
-        public static IEnumerable<object[]> AssetsTypeName()
+        public static IEnumerable<object[]> AssetsTypeNameUserId()
         {
             return _Fake.GetFakeAssetsData(
-                typeName: true);
+                typeName: true,
+                userId: true);
         }
         public static IEnumerable<object[]> Assets()
         {
@@ -164,6 +188,7 @@ namespace aiof.api.tests
         public static IEnumerable<object[]> SubscriptionsId()
         {
             return _Fake.GetFakeSubscriptionsData(
+                userId: true,
                 id: true);
         }
 

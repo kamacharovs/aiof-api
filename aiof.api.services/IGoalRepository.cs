@@ -8,14 +8,15 @@ namespace aiof.api.services
 {
     public interface IGoalRepository
     {
-        Task<IGoal> GetGoalAsync(int id);
-        Task<IEnumerable<IGoalType>> GetGoalTypesAsync();
-        Task<IGoal> AddGoalAsync(GoalDto goalDto);
-        IAsyncEnumerable<IGoal> AddGoalsAsync(IEnumerable<GoalDto> goalDtos);
-        Task<IGoal> UpdateGoalAsync(
+        Task<IGoal> GetAsync(
+            int id,
+            bool asNoTracking = true);
+        Task<IEnumerable<IGoalType>> GetTypesAsync();
+        Task<IGoal> AddAsync(GoalDto goalDto);
+        IAsyncEnumerable<IGoal> AddAsync(IEnumerable<GoalDto> goalDtos);
+        Task<IGoal> UpdateAsync(
             int id, 
             GoalDto goalDto);
-        Task DeleteAsync(Guid publicKey);
-        Task DeleteAsync(IGoal goal);
+        Task DeleteAsync(int id);
     }
 }

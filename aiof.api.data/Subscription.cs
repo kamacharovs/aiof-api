@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace aiof.api.data
 {
     public class Subscription : ISubscription,
-        IPublicKeyId, IPublicKeyName
+        IPublicKeyId, IPublicKeyName, IIsDeleted
     {
         [Required]
         public int Id { get; set; }
@@ -42,6 +42,9 @@ namespace aiof.api.data
         [JsonIgnore]
         [Required]
         public int UserId { get; set; }
+
+        [JsonIgnore]
+        public bool IsDeleted { get; set; } = false;
     }
 
     public class SubscriptionDto

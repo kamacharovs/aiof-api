@@ -7,7 +7,6 @@ namespace aiof.api.data
 {
     public interface IAsset
     {
-        [JsonIgnore]
         [Required]
         int Id { get; set; }
 
@@ -30,5 +29,8 @@ namespace aiof.api.data
 
         [JsonIgnore]
         int? UserId { get; set; }
+
+        [JsonIgnore]
+        public bool IsDeleted { get; set; }
     }
 }

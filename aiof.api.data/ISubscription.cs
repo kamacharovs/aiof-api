@@ -41,5 +41,8 @@ namespace aiof.api.data
         [JsonIgnore]
         [Required]
         int UserId { get; set; }
+
+        [JsonIgnore]
+        bool IsDeleted { get; set; }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
@@ -33,9 +34,9 @@ namespace aiof.api.core.Controllers
         [Route("{id}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ILiability), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetLiabilityAsync([FromRoute]int id)
+        public async Task<IActionResult> GetLiabilityAsync([FromRoute, Required] int id)
         {
-            return Ok(await _repo.GetLiabilityAsync(id));
+            return Ok(await _repo.GetAsync(id));
         }
 
         [HttpPut]
@@ -43,9 +44,30 @@ namespace aiof.api.core.Controllers
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ILiability), StatusCodes.Status200OK)]
-        public async Task<IActionResult> UpdateLiabilityAsync([FromRoute]int id, [FromBody]LiabilityDto liabilityDto)
+        public async Task<IActionResult> UpdateLiabilityAsync(
+            [FromRoute, Required] int id, 
+            [FromBody, Required] LiabilityDto liabilityDto)
         {
-            return Ok(await _repo.UpdateLiabilityAsync(id, liabilityDto));
+            return Ok(await _repo.UpdateAsync(id, liabilityDto));
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ILiability), StatusCodes.Status201Created)]
+        public async Task<IActionResult> AddLiabilityAsync([FromBody, Required] LiabilityDto liabilityDto)
+        {
+            return Created(nameof(Liability), await _repo.AddAsync(liabilityDto));
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> DeleteAsync([FromRoute, Required] int id)
+        {
+            await _repo.DeleteAsync(id);
+
+            return Ok();
         }
 
         [HttpGet]
@@ -53,15 +75,7 @@ namespace aiof.api.core.Controllers
         [ProducesResponseType(typeof(IEnumerable<ILiabilityType>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetLiabilityTypesAsync()
         {
-            return Ok(await _repo.GetLiabilityTypesAsync());
-        }
-
-        [HttpPost]
-        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ILiability), StatusCodes.Status201Created)]
-        public async Task<IActionResult> AddLiabilityAsync([FromBody]LiabilityDto liabilityDto)
-        {
-            return Created(nameof(Liability), await _repo.AddLiabilityAsync(liabilityDto));
+            return Ok(await _repo.GetTypesAsync());
         }
     }
 }

@@ -11,6 +11,7 @@ using AutoMapper;
 using FluentValidation;
 
 using aiof.api.data;
+using System.Text.Json;
 
 namespace aiof.api.services
 {
@@ -34,7 +35,7 @@ namespace aiof.api.services
             _goalDtoValidator = goalDtoValidator ?? throw new ArgumentNullException(nameof(goalDtoValidator));
         }
 
-        private IQueryable<Goal> GetGoalsQuery(bool asNoTracking = true)
+        private IQueryable<Goal> GetQuery(bool asNoTracking = true)
         {
             var goalsQuery = _context.Goals
                 .Include(x => x.Type)
@@ -45,8 +46,7 @@ namespace aiof.api.services
                 ? goalsQuery.AsNoTracking()  
                 : goalsQuery;
         }
-
-        private IQueryable<GoalType> GetGoalTypesQuery(bool asNoTracking = true)
+        private IQueryable<GoalType> GetTypesQuery(bool asNoTracking = true)
         {
             var goalTypesQuery = _context.GoalTypes
                 .AsQueryable();
@@ -56,21 +56,23 @@ namespace aiof.api.services
                 : goalTypesQuery;
         }
 
-        public async Task<IGoal> GetGoalAsync(int id)
+        public async Task<IGoal> GetAsync(
+            int id, 
+            bool asNoTracking = true)
         {
-            return await GetGoalsQuery()
+            return await GetQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.Id == id)
-                ?? throw new AiofNotFoundException($"{nameof(Goal)} with Id='{id}' was not found");
+                ?? throw new AiofNotFoundException($"{nameof(Goal)} with Id={id} was not found");
         }
         public async Task<IGoal> GetAsync(
             Guid publicKey, 
             bool asNoTracking = true)
         {
-            return await GetGoalsQuery(asNoTracking)
+            return await GetQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.PublicKey == publicKey)
-                ?? throw new AiofNotFoundException($"{nameof(Goal)} with PublicKey='{publicKey}' was not found");
+                ?? throw new AiofNotFoundException($"{nameof(Goal)} with PublicKey={publicKey} was not found");
         }
-        public async Task<bool> GoalExistsAsync(GoalDto goalDto)
+        public async Task<bool> ExistsAsync(GoalDto goalDto)
         {
             return await _context.Goals
                 .FirstOrDefaultAsync(x => x.Name == goalDto.Name
@@ -84,18 +86,18 @@ namespace aiof.api.services
                 : true;
         }
 
-        public async Task<IEnumerable<IGoalType>> GetGoalTypesAsync()
+        public async Task<IEnumerable<IGoalType>> GetTypesAsync()
         {
-            return await GetGoalTypesQuery()
+            return await GetTypesQuery()
                 .OrderBy(x => x.Name)
                 .ToListAsync();
         }
 
-        public async Task<IGoal> AddGoalAsync(GoalDto goalDto)
+        public async Task<IGoal> AddAsync(GoalDto goalDto)
         {
             await _goalDtoValidator.ValidateAndThrowAsync(goalDto);
 
-            var goal = await GoalExistsAsync(goalDto)
+            var goal = await ExistsAsync(goalDto)
                 ? throw new AiofFriendlyException(HttpStatusCode.BadRequest,
                     $"{nameof(Goal)} already exists")
                 : _mapper.Map<Goal>(goalDto);
@@ -108,43 +110,46 @@ namespace aiof.api.services
                 .Reference(x => x.Type)
                 .LoadAsync();
 
-            _logger.LogInformation($"Created {nameof(Goal)} with Id='{goal.Id}', PublicKey='{goal.PublicKey}' and UserId='{goal.UserId}'");
+            _logger.LogInformation("{Tenant} | Created Goal with Id={GoalId}, PublicKey={GoalPublicKey} and UserId={GoalUserId}",
+                _context._tenant.Log,
+                goal.Id,
+                goal.PublicKey,
+                goal.UserId);
 
             return goal;
         }
 
-        public async IAsyncEnumerable<IGoal> AddGoalsAsync(IEnumerable<GoalDto> goalDtos)
+        public async IAsyncEnumerable<IGoal> AddAsync(IEnumerable<GoalDto> goalDtos)
         {
             foreach (var goalDto in goalDtos)
-                yield return await AddGoalAsync(goalDto);
+                yield return await AddAsync(goalDto);
         }
 
-        public async Task<IGoal> UpdateGoalAsync(
+        public async Task<IGoal> UpdateAsync(
             int id, 
             GoalDto goalDto)
         {
             if (goalDto == null)
                 throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"Unable to update 'Goal'. '{nameof(GoalDto)}' parameter cannot be NULL");
+                    $"Unable to update Goal. {nameof(GoalDto)} parameter cannot be NULL");
 
-            var goal = await GetGoalAsync(id);
+            var goal = await GetAsync(id);
 
             _context.Goals
                 .Update(_mapper.Map(goalDto, goal as Goal));
 
             await _context.SaveChangesAsync();
 
+            _logger.LogInformation("{Tenant} | Update Goal={Goal}",
+                _context._tenant.Log,
+                JsonSerializer.Serialize(goal));
+
             return goal;
         }
 
-        public async Task DeleteAsync(Guid publicKey)
+        public async Task DeleteAsync(int id)
         {
-            var goal = await GetAsync(publicKey, false);
-            await base.DeleteAsync(goal as Goal);
-        }
-        public async Task DeleteAsync(IGoal goal)
-        {
-            await base.DeleteAsync<Goal>(goal as Goal);
+            await base.SoftDeleteAsync<Goal>(id);
         }
     }
 }

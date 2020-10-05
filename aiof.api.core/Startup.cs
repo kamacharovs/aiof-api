@@ -42,6 +42,7 @@ namespace aiof.api.core
                 .AddScoped<IGoalRepository, GoalRepository>()
                 .AddScoped<ILiabilityRepository, LiabilityRepository>()
                 .AddScoped<IEnvConfiguration, EnvConfiguration>()
+                .AddScoped<ITenant, Tenant>()
                 .AddScoped<FakeDataManager>()
                 .AddAutoMapper(typeof(AutoMappingProfileDto).Assembly);
 
@@ -67,6 +68,7 @@ namespace aiof.api.core
             services.AddLogging();
             services.AddHealthChecks();
             services.AddFeatureManagement();
+            services.AddHttpContextAccessor();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(
                 Keys.Bearer,

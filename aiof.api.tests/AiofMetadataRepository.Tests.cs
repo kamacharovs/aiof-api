@@ -11,16 +11,10 @@ namespace aiof.api.tests
 {
     public class AiofMetadataRepositoryTests
     {
-        private readonly IAiofMetadataRepository _repo;
-
-        public AiofMetadataRepositoryTests()
-        {
-            _repo = Helper.GetRequiredService<IAiofMetadataRepository>() ?? throw new ArgumentNullException(nameof(IAiofMetadataRepository));
-        }
-
         [Fact]
         public async Task GetFrequencies_Valid()
         {
+            var _repo = new ServiceHelper().GetRequiredService<IAiofMetadataRepository>();
             var frequencies = await _repo.GetFrequenciesAsync();
 
             Assert.NotEmpty(frequencies);
@@ -29,6 +23,7 @@ namespace aiof.api.tests
         [Fact]
         public async Task GetLoanPaymentsAsync_Valid()
         {
+            var _repo = new ServiceHelper().GetRequiredService<IAiofMetadataRepository>();
             var loanPayments = await _repo.GetLoanPaymentsAsync(
                 10000M,
                 3.5M,
