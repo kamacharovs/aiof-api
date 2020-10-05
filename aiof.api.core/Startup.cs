@@ -42,6 +42,7 @@ namespace aiof.api.core
                 .AddScoped<IGoalRepository, GoalRepository>()
                 .AddScoped<ILiabilityRepository, LiabilityRepository>()
                 .AddScoped<IEnvConfiguration, EnvConfiguration>()
+                .AddScoped<ITenant, Tenant>()
                 .AddScoped<FakeDataManager>()
                 .AddAutoMapper(typeof(AutoMappingProfileDto).Assembly);
 
@@ -59,14 +60,15 @@ namespace aiof.api.core
                 .AddScoped<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>()
                 .AddScoped<AbstractValidator<UserDto>, UserDtoValidator>();
 
-            //if (_env.IsDevelopment())
-            //    services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(nameof(AiofContext)));
-            //else
+            if (_env.IsDevelopment())
+                services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(nameof(AiofContext)));
+            else
                 services.AddDbContext<AiofContext>(o => o.UseNpgsql(_config[Keys.PostgreSQL]));
 
             services.AddLogging();
             services.AddHealthChecks();
             services.AddFeatureManagement();
+            services.AddHttpContextAccessor();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(
                 Keys.Bearer,

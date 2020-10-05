@@ -24,6 +24,7 @@ namespace aiof.api.services
         private readonly AiofContext _context;
         private readonly AbstractValidator<SubscriptionDto> _subscriptionDtoValidator;
 
+        private readonly string _tenant;
         private readonly Stopwatch _sw;
 
         public UserRepository(
@@ -38,6 +39,7 @@ namespace aiof.api.services
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _subscriptionDtoValidator = subscriptionDtoValidator ?? throw new ArgumentNullException(nameof(subscriptionDtoValidator));
 
+            _tenant = _context._tenant.Log;
             _sw = new Stopwatch();
         }
 
@@ -74,7 +76,7 @@ namespace aiof.api.services
         {
             return await GetUsersQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.Id == id)
-                ?? throw new AiofNotFoundException($"{nameof(User)} with Id='{id}' was not found");
+                ?? throw new AiofNotFoundException($"{nameof(User)} with Id={id} was not found");
         }
         public async Task<IUser> GetUserAsync(
             string username,
@@ -82,7 +84,7 @@ namespace aiof.api.services
         {
             return await GetUsersQuery()
                 .FirstOrDefaultAsync(x => x.Username == username)
-                ?? throw new AiofNotFoundException($"{nameof(User)} with Username='{username}' was not found");
+                ?? throw new AiofNotFoundException($"{nameof(User)} with Username={username} was not found");
         }
 
         public async Task<IUserProfile> GetUserProfileAsync(
@@ -91,7 +93,7 @@ namespace aiof.api.services
         {
             return await GetUserProfilesQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.User.Username == username)
-                ?? throw new AiofNotFoundException($"{nameof(UserProfile)} for {nameof(User)} with Username='{username}' was not found");
+                ?? throw new AiofNotFoundException($"{nameof(UserProfile)} for {nameof(User)} with Username={username} was not found");
         }
 
         public async Task<IUser> UpsertFinanceAsync(
@@ -104,7 +106,8 @@ namespace aiof.api.services
             _sw.Start();
             var user = _mapper.Map(userInDb, userDtoMapped);           
             _sw.Stop();      
-            _logger.LogInformation($"UpsertFinanceAsync algorithm took {_sw.Elapsed.TotalMilliseconds * 1000} (µs)");
+            _logger.LogInformation("UpsertFinanceAsync algorithm took {AlgorithmTime} (µs)",
+                _sw.Elapsed.TotalMilliseconds * 1000);
 
             _context.Update(user);
             await _context.SaveChangesAsync();
@@ -127,8 +130,10 @@ namespace aiof.api.services
 
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation($"Upserted {nameof(User)} with {nameof(User.Username)}='{username}' " +
-                $"{nameof(UserProfile)}='{JsonSerializer.Serialize(user.Profile)}'");
+            _logger.LogInformation("{Tenant} | Upserted User with Username={Username}. UserProfile={UserProfile}",
+                _tenant,
+                username,
+                JsonSerializer.Serialize(user.Profile));
 
             return await GetUserAsync(username);
         }
@@ -177,7 +182,7 @@ namespace aiof.api.services
 
             if (await GetSubscriptionAsync(name, amount, userId) != null)
                 throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"{nameof(Subscription)} with UserId='{userId}', Name='{name}' and Amount='{amount}' already exists");
+                    $"{nameof(Subscription)} with UserId={userId}, Name='{name}' and Amount={amount} already exists");
 
             var subscription = _mapper.Map<Subscription>(subscriptionDto);
 
@@ -185,7 +190,9 @@ namespace aiof.api.services
                 .AddAsync(subscription);
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation($"Added {nameof(Subscription)}='{JsonSerializer.Serialize(subscription)}'");
+            _logger.LogInformation("{Tenant} | Added Subscription={Subscription}",
+                _tenant,
+                JsonSerializer.Serialize(subscription));
 
             return subscription;
         }
@@ -201,14 +208,41 @@ namespace aiof.api.services
             _context.Subscriptions.Update(subcription);
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation($"Updated {nameof(Subscription)}='{JsonSerializer.Serialize(subcription)}'");
+            _logger.LogInformation("{Tenant} | Updated Subscription={Subscription}",
+                _tenant,
+                JsonSerializer.Serialize(subcription));
 
             return subcription;
         }
 
         public async Task DeleteSubscriptionAsync(int id)
         {
-            await base.DeleteAsync<Subscription>(id);
+            await base.SoftDeleteAsync<Subscription>(id);
+        }
+        #endregion
+
+
+        #region Account
+        private IQueryable<Account> GetAccountsQuery(bool asNoTracking = true)
+        {
+            var query = _context.Accounts
+                .AsQueryable();
+
+            return asNoTracking
+                ? query.AsNoTracking()
+                : query;
+        }
+
+        public async Task<IAccount> GetAccountAsync(Guid publicKey)
+        {
+            return await GetAccountsQuery()
+                .FirstOrDefaultAsync(x => x.PublicKey == publicKey)
+                ?? throw new AiofNotFoundException($"{nameof(Account)} with PublicKey={publicKey} was not found");
+        }
+
+        public async Task DeleteAccountAsync(int id)
+        {
+            await base.SoftDeleteAsync<Account>(id);
         }
         #endregion
     }

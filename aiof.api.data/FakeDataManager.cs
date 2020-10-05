@@ -16,8 +16,8 @@ namespace aiof.api.data
 
         public void UseFakeContext()
         {
-            //_context.Users
-            //    .AddRange(GetFakeUsers());
+            _context.Users
+                .AddRange(GetFakeUsers());
 
             _context.UserProfiles
                 .AddRange(GetFakeUserProfiles());
@@ -40,11 +40,11 @@ namespace aiof.api.data
             _context.Goals
                 .AddRange(GetFakeGoals());
 
-            //_context.Frequencies
-            //    .AddRange(GetFakeFrequencies());
+            _context.Frequencies
+                .AddRange(GetFakeFrequencies());
 
-            //_context.Subscriptions
-            //    .AddRange(GetFakeSubscriptions());
+            _context.Subscriptions
+                .AddRange(GetFakeSubscriptions());
 
             _context.Accounts
                 .AddRange(GetFakeAccounts());
@@ -131,6 +131,15 @@ namespace aiof.api.data
                     TypeName = "house",
                     Value = 999999M,
                     UserId = 1
+                },
+                new Asset
+                {
+                    Id = 4,
+                    PublicKey = Guid.Parse("97bedb5b-c49e-484a-8bd0-1d7cb474e217"),
+                    Name = "asset",
+                    TypeName = "cash",
+                    Value = 99M,
+                    UserId = 2
                 }
             };
         }
@@ -350,6 +359,33 @@ namespace aiof.api.data
                     From = "Spotify",
                     Url = "https://spotify.com/",
                     UserId = 1
+                },
+                new Subscription
+                {
+                    Id = 3,
+                    PublicKey = Guid.Parse("aaa011a0-48d2-4d89-b8fc-3fc22475b564"),
+                    Name = "Generic",
+                    Description = "My generic subscription",
+                    Amount = 15.99M,
+                    PaymentFrequencyName = "monthly",
+                    PaymentLength = 12,
+                    From = "Generic",
+                    Url = "https://google.com/",
+                    UserId = 1,
+                    IsDeleted = true
+                },
+                new Subscription
+                {
+                    Id = 4,
+                    PublicKey = Guid.Parse("47bd786a-e419-4daa-b18c-7fb7023800f9"),
+                    Name = "Spotify",
+                    Description = "My monthly Spotify subscription",
+                    Amount = 10.99M,
+                    PaymentFrequencyName = "monthly",
+                    PaymentLength = 12,
+                    From = "Generic",
+                    Url = "https://spotify.com/",
+                    UserId = 2
                 }
             };
         }
@@ -369,6 +405,37 @@ namespace aiof.api.data
             };
         }
 
+        //TODO: add entities for these 2
+        public IEnumerable<string> GetFakeAccountTypes()
+        {
+            return new List<string>
+            {
+                "retirement",
+                "taxable"
+            };
+        }
+        public object GetFakeAccountTypesMapping()
+        {
+            return new Dictionary<string, string>
+            {
+                { "401(k)", "retirement" },
+                { "401(a)", "retirement" },
+                { "401(b)", "retirement" },
+                { "457", "taxable" },
+                { "IRA", "retirement" },
+                { "Roth IRA", "retirement" },
+                { "Brokerage", "taxable" },
+                { "Checking/Savings", "taxable" },
+                { "Health Savings Account", "taxable" },
+                { "529 Plan", "taxable" },
+                { "SEP IRA", "retirement" },
+                { "Simple IRA", "retirement" },
+                { "Taxable", "taxable" },
+                { "Tax-Deferred", "retirement" },
+                { "Self Employed Plan", "taxable" },
+                { "UGMA/UTMA", "taxable" }
+            };
+        }
 
 
         #region Unit Tests
@@ -377,10 +444,19 @@ namespace aiof.api.data
             bool username = false)
         {
             var fakeUsers = GetFakeUsers();
-
             var toReturn = new List<object[]>();
 
-            if (id)
+            if (id
+                & username)
+            {
+                foreach (var fakeUser in fakeUsers)
+                    toReturn.Add(new object[] 
+                    { 
+                        fakeUser.Id,
+                        fakeUser.Username
+                    });
+            }
+            else if (id)
             {
                 foreach (var fakeUserId in fakeUsers.Select(x => x.Id))
                     toReturn.Add(new object[] 
@@ -401,6 +477,7 @@ namespace aiof.api.data
         }
 
         public IEnumerable<object[]> GetFakeUserProfilesData(
+            bool userId = false,
             bool username = false)
         {
             var fakeUserProfiles = _context.UserProfiles
@@ -409,7 +486,17 @@ namespace aiof.api.data
 
             var toReturn = new List<object[]>();
 
-            if (username)
+            if (userId
+                && username)
+            {
+                foreach (var fakeUser in fakeUserProfiles.Select(x => x.User))
+                    toReturn.Add(new object[]
+                    {
+                        fakeUser.Id,
+                        fakeUser.Username,
+                    });
+            }
+            else if (username)
             {
                 foreach (var fakeUsername in fakeUserProfiles.Select(x => x.User.Username))
                     toReturn.Add(new object[]
@@ -450,6 +537,30 @@ namespace aiof.api.data
                     });
                 }
             }
+            else if (id
+                && userId)
+            {
+                foreach (var fakeAsset in fakeAssets)
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeAsset.Id,
+                        fakeAsset.UserId
+                    });
+                }
+            }
+            else if (typeName
+                && userId)
+            {
+                foreach (var fakeAsset in fakeAssets)
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeAsset.TypeName,
+                        fakeAsset.UserId
+                    });
+                }
+            }
             else if (id)
             {
                 foreach (var fakeAssetId in fakeAssets.Select(x => x.Id))
@@ -485,6 +596,7 @@ namespace aiof.api.data
         }
 
         public IEnumerable<object[]> GetFakeSubscriptionsData(
+            bool userId = false,
             bool id = false)
         {
             var fakeSubscriptions = GetFakeSubscriptions()
@@ -492,9 +604,21 @@ namespace aiof.api.data
 
             var toReturn = new List<object[]>();
 
-            if (id)
+            if (userId
+                && id)
             {
-                foreach(var fakeSubscriptionId in fakeSubscriptions.Select(x => x.Id))
+                foreach(var fakeSubscription in fakeSubscriptions.Where(x => !x.IsDeleted))
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeSubscription.UserId,
+                        fakeSubscription.Id
+                    });
+                }
+            }
+            else if (id)
+            {
+                foreach(var fakeSubscriptionId in fakeSubscriptions.Where(x => !x.IsDeleted).Select(x => x.Id))
                 {
                     toReturn.Add(new object[]
                     {

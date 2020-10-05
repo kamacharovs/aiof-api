@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 namespace aiof.api.data
 {
     public class Goal : IEquatable<Goal>, IGoal, 
-        IPublicKeyId, IPublicKeyName
+        IPublicKeyId, IPublicKeyName, IIsDeleted
     {
         [JsonIgnore]
         [Required]
@@ -47,6 +47,9 @@ namespace aiof.api.data
 
         [JsonIgnore]
         public int? UserId { get; set; }
+
+        [JsonIgnore]
+        public bool IsDeleted { get; set; } = false;
 
         public bool Equals(Goal other)
         {

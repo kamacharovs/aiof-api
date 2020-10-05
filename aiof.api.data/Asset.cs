@@ -6,9 +6,8 @@ using System.ComponentModel.DataAnnotations;
 namespace aiof.api.data
 {
     public class Asset : IEquatable<Asset>, IAsset, 
-        IPublicKeyId, IPublicKeyName
+        IPublicKeyId, IPublicKeyName, IIsDeleted
     {
-        [JsonIgnore]
         [Required]
         public int Id { get; set; }
 
@@ -32,6 +31,8 @@ namespace aiof.api.data
         [JsonIgnore]
         public int? UserId { get; set; }
 
+        [JsonIgnore]
+        public bool IsDeleted { get; set; } = false;
 
         public bool Equals(Asset other)
         {

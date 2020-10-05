@@ -54,8 +54,9 @@ namespace aiof.api.core
                 var id = string.IsNullOrEmpty(httpContext?.TraceIdentifier)
                     ? Guid.NewGuid().ToString()
                     : httpContext.TraceIdentifier;
+                var tenant = new Tenant(httpContext).Log;
 
-                _logger.LogError(e, $"an exception was thrown during the request. {id}");
+                _logger.LogError(e, "{Tenant} | An exception was thrown during the request. {Id}", tenant, id);
 
                 await WriteExceptionResponseAsync(httpContext, e, id);
             }
