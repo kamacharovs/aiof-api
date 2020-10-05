@@ -18,6 +18,6 @@ namespace aiof.api.data
         Guid PublicKey { get; set; }
 
         [JsonIgnore]
-        string Log { get; set; }
+        string Log { get; }
     }
 }

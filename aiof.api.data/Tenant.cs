@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Security.Claims;
 
 using Microsoft.AspNetCore.Http;
 
@@ -19,24 +20,35 @@ namespace aiof.api.data
         public Guid PublicKey { get; set; }
 
         [JsonIgnore]
-        public string Log { get; set; }
+        public string Log
+        {
+            get
+            {
+                return JsonSerializer.Serialize(this);
+            }
+        }
 
         public Tenant(IHttpContextAccessor httpContextAccessor)
+        {
+            Set(httpContextAccessor.HttpContext?.User);
+        }
+        public Tenant(HttpContext httpContext)
+        {
+            Set(httpContext?.User);
+        }
+
+        public void Set(ClaimsPrincipal user)
         {
             int userId, clientId;
             Guid publicKey;
 
-            var claimsPrincipal = httpContextAccessor.HttpContext?.User;
-
-            int.TryParse(claimsPrincipal?.FindFirst(Keys.Claim.UserId)?.Value, out userId);
-            int.TryParse(claimsPrincipal?.FindFirst(Keys.Claim.ClientId)?.Value, out clientId);
-            Guid.TryParse(claimsPrincipal?.FindFirst(Keys.Claim.PublicKey)?.Value, out publicKey);
+            int.TryParse(user?.FindFirst(Keys.Claim.UserId)?.Value, out userId);
+            int.TryParse(user?.FindFirst(Keys.Claim.ClientId)?.Value, out clientId);
+            Guid.TryParse(user?.FindFirst(Keys.Claim.PublicKey)?.Value, out publicKey);
 
             this.UserId = userId;
             this.ClientId = clientId;
             this.PublicKey = publicKey;
-
-            this.Log = JsonSerializer.Serialize(this);
         }
     }
 }
