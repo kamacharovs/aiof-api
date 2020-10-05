@@ -8,7 +8,9 @@ namespace aiof.api.services
 {
     public interface IAssetRepository
     {
-        Task<IAsset> GetAssetAsync(int id);
+        Task<IAsset> GetAssetAsync(
+            int id,
+            bool asNoTracking = true);
         Task<IAsset> GetAssetAsync(
             string name,
             string typeName,
@@ -26,6 +28,7 @@ namespace aiof.api.services
         Task<IAsset> UpdateAssetAsync(
             Guid publicKey, 
             AssetDto assetDto);
+        Task DeleteAsync(int id);
         Task DeleteAsync(Guid publicKey);
         Task DeleteAsync(IAsset asset);
     }

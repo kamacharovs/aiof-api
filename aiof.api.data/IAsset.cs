@@ -30,5 +30,8 @@ namespace aiof.api.data
 
         [JsonIgnore]
         int? UserId { get; set; }
+
+        [JsonIgnore]
+        public bool IsDeleted { get; set; }
     }
 }

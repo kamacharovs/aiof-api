@@ -48,17 +48,19 @@ namespace aiof.api.services
 
         private IQueryable<AssetType> GetAssetTypesQuery(bool asNoTracking = true)
         {
+            var query = _context.AssetTypes
+                .AsQueryable();
+
             return asNoTracking
-                ? _context.AssetTypes
-                    .AsNoTracking()
-                    .AsQueryable()
-                : _context.AssetTypes
-                    .AsQueryable();
+                ? query.AsNoTracking()
+                : query;
         }
 
-        public async Task<IAsset> GetAssetAsync(int id)
+        public async Task<IAsset> GetAssetAsync(
+            int id, 
+            bool asNoTracking = true)
         {
-            return await GetAssetsQuery()
+            return await GetAssetsQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.Id == id)
                 ?? throw new AiofNotFoundException($"{nameof(Asset)} with Id={id} was not found");
         }
@@ -153,7 +155,6 @@ namespace aiof.api.services
                 .Update(_mapper.Map(assetDto, asset as Asset));
 
             await _context.SaveChangesAsync();
-
             await _context.Entry(asset)
                 .Reference(x => x.Type)
                 .LoadAsync();
@@ -166,6 +167,10 @@ namespace aiof.api.services
             return asset;
         }
 
+        public async Task DeleteAsync(int id)
+        {
+            await base.SoftDeleteAsync<Asset>(id);
+        }
         public async Task DeleteAsync(Guid publicKey)
         {
             await base.DeleteAsync<Asset>(publicKey);
