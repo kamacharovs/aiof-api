@@ -159,20 +159,22 @@ namespace aiof.api.tests
                 value: true,
                 userId: true);
         }
-        public static IEnumerable<object[]> AssetsId()
+        public static IEnumerable<object[]> AssetsIdUsersId()
         {
             return _Fake.GetFakeAssetsData(
-                id: true);
+                id: true,
+                userId: true);
         }
         public static IEnumerable<object[]> AssetsPublicKey()
         {
             return _Fake.GetFakeAssetsData(
                 publicKey: true);
         }
-        public static IEnumerable<object[]> AssetsTypeName()
+        public static IEnumerable<object[]> AssetsTypeNameUserId()
         {
             return _Fake.GetFakeAssetsData(
-                typeName: true);
+                typeName: true,
+                userId: true);
         }
         public static IEnumerable<object[]> Assets()
         {

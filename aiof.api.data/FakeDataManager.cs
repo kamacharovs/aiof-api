@@ -537,6 +537,30 @@ namespace aiof.api.data
                     });
                 }
             }
+            else if (id
+                && userId)
+            {
+                foreach (var fakeAsset in fakeAssets)
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeAsset.Id,
+                        fakeAsset.UserId
+                    });
+                }
+            }
+            else if (typeName
+                && userId)
+            {
+                foreach (var fakeAsset in fakeAssets)
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeAsset.TypeName,
+                        fakeAsset.UserId
+                    });
+                }
+            }
             else if (id)
             {
                 foreach (var fakeAssetId in fakeAssets.Select(x => x.Id))
