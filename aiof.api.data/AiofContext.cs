@@ -23,10 +23,22 @@ namespace aiof.api.data
         public virtual DbSet<Subscription> Subscriptions { get; set; }
         public virtual DbSet<Account> Accounts { get; set; }
 
+        public AiofContext()
+        { }
+
+        public AiofContext(DbContextOptions<AiofContext> options)
+            : base(options)
+        { }
+
         public AiofContext(DbContextOptions<AiofContext> options, ITenant tenant)
             : base(options)
         {
             _tenant = tenant ?? throw new ArgumentNullException(nameof(tenant));
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseNpgsql("host=127.0.0.1;database=aiof;port=5432;username=postgres;password=postgres");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
