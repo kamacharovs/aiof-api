@@ -60,7 +60,7 @@ namespace aiof.api.services
         {
             return await GetGoalsQuery()
                 .FirstOrDefaultAsync(x => x.Id == id)
-                ?? throw new AiofNotFoundException($"{nameof(Goal)} with Id='{id}' was not found");
+                ?? throw new AiofNotFoundException($"{nameof(Goal)} with Id={id} was not found");
         }
         public async Task<IGoal> GetAsync(
             Guid publicKey, 
@@ -68,7 +68,7 @@ namespace aiof.api.services
         {
             return await GetGoalsQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.PublicKey == publicKey)
-                ?? throw new AiofNotFoundException($"{nameof(Goal)} with PublicKey='{publicKey}' was not found");
+                ?? throw new AiofNotFoundException($"{nameof(Goal)} with PublicKey={publicKey} was not found");
         }
         public async Task<bool> GoalExistsAsync(GoalDto goalDto)
         {
@@ -108,7 +108,10 @@ namespace aiof.api.services
                 .Reference(x => x.Type)
                 .LoadAsync();
 
-            _logger.LogInformation($"Created {nameof(Goal)} with Id='{goal.Id}', PublicKey='{goal.PublicKey}' and UserId='{goal.UserId}'");
+            _logger.LogInformation("Created Goal with Id={GoalId}, PublicKey={GoalPublicKey} and UserId={GoalUserId}",
+                goal.Id,
+                goal.PublicKey,
+                goal.UserId);
 
             return goal;
         }
@@ -125,7 +128,7 @@ namespace aiof.api.services
         {
             if (goalDto == null)
                 throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"Unable to update 'Goal'. '{nameof(GoalDto)}' parameter cannot be NULL");
+                    $"Unable to update Goal. {nameof(GoalDto)} parameter cannot be NULL");
 
             var goal = await GetGoalAsync(id);
 

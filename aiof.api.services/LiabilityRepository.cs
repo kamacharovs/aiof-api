@@ -62,7 +62,7 @@ namespace aiof.api.services
         {
             return await GetLiabilitiesQuery()
                 .FirstOrDefaultAsync(x => x.Id == id)
-                ?? throw new AiofNotFoundException($"{nameof(Liability)} with Id='{id}' was not found");
+                ?? throw new AiofNotFoundException($"{nameof(Liability)} with Id={id} was not found");
         }
 
         public async Task<ILiability> GetLiabilityAsync(LiabilityDto liabilityDto)
@@ -87,7 +87,7 @@ namespace aiof.api.services
             var liability = await GetLiabilityAsync(liabilityDto) is null
                 ? _mapper.Map<Liability>(liabilityDto)
                 : throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"{nameof(Liability)}='{JsonSerializer.Serialize(liabilityDto)}' already exists");
+                    $"{nameof(Liability)}={JsonSerializer.Serialize(liabilityDto)} already exists");
 
             await _context.Liabilities.AddAsync(liability);
             await _context.SaveChangesAsync();
@@ -96,7 +96,7 @@ namespace aiof.api.services
                 .Reference(x => x.Type)
                 .LoadAsync();
 
-            _logger.LogInformation($"Created {nameof(Liability)}='{JsonSerializer.Serialize(liability)}'");
+            _logger.LogInformation($"Created {nameof(Liability)}={JsonSerializer.Serialize(liability)}");
 
             return liability;
         }
@@ -134,7 +134,7 @@ namespace aiof.api.services
 
             if ((await GetLiabilityTypesAsync()).Any(x => x.Name == name))
                 throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"{nameof(LiabilityType)} with Name='{name}' already exists");
+                    $"{nameof(LiabilityType)} with Name={name} already exists");
 
             await _context.LiabilityTypes
                 .AddAsync(liabilityType);

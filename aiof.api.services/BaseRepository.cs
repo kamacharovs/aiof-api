@@ -47,7 +47,7 @@ namespace aiof.api.services
         {
             return await GetQuery<T>(asNoTracking)
                 .FirstOrDefaultAsync(x => x.Id == id)
-                ?? throw new AiofNotFoundException($"{typeof(T).Name} with Id='{id}' was not found");
+                ?? throw new AiofNotFoundException($"{typeof(T).Name} with Id={id} was not found");
         }
 
         public async Task<T> GetAsync<T>(
@@ -57,7 +57,7 @@ namespace aiof.api.services
         {
             return await GetQuery<T>(asNoTracking)
                 .FirstOrDefaultAsync(x => x.PublicKey == publicKey)
-                ?? throw new AiofNotFoundException($"{typeof(T).Name} with PublicKey='{publicKey}' was not found");
+                ?? throw new AiofNotFoundException($"{typeof(T).Name} with PublicKey={publicKey} was not found");
         }
 
         public async Task<T> GetEntityAsync<T>(string publicKey)
@@ -70,12 +70,16 @@ namespace aiof.api.services
             where T : class, IPublicKeyId, IIsDeleted
         {
             var query = _context.Set<T>();
-            var entity = await query
-                .FirstOrDefaultAsync(x => x.Id == id);
+            var entity = await GetAsync<T>(id, false);
 
             entity.IsDeleted = true;
             query.Update(entity);
             await _context.SaveChangesAsync();
+
+            _logger.LogInformation("{Tenant} | Soft Deleted {EntityName} with Id={EntityId}",
+                _context._tenant.Log,
+                typeof(T).Name,
+                id);
         }
         
         public async Task DeleteAsync<T>(int id)
@@ -93,7 +97,10 @@ namespace aiof.api.services
         {
             _context.Set<T>().Remove(entity);
             await _context.SaveChangesAsync();
-            _logger.LogInformation($"Deleted {typeof(T).Name}='{JsonSerializer.Serialize(entity)}'");
+            _logger.LogInformation("{Tenant} | Deleted {EntityName}={Entity}",
+                _context._tenant.Log,
+                typeof(T).Name,
+                JsonSerializer.Serialize(entity));
         }
     }
 }

@@ -76,7 +76,7 @@ namespace aiof.api.services
         {
             return await GetUsersQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.Id == id)
-                ?? throw new AiofNotFoundException($"{nameof(User)} with Id='{id}' was not found");
+                ?? throw new AiofNotFoundException($"{nameof(User)} with Id={id} was not found");
         }
         public async Task<IUser> GetUserAsync(
             string username,
@@ -84,7 +84,7 @@ namespace aiof.api.services
         {
             return await GetUsersQuery()
                 .FirstOrDefaultAsync(x => x.Username == username)
-                ?? throw new AiofNotFoundException($"{nameof(User)} with Username='{username}' was not found");
+                ?? throw new AiofNotFoundException($"{nameof(User)} with Username={username} was not found");
         }
 
         public async Task<IUserProfile> GetUserProfileAsync(
@@ -93,7 +93,7 @@ namespace aiof.api.services
         {
             return await GetUserProfilesQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.User.Username == username)
-                ?? throw new AiofNotFoundException($"{nameof(UserProfile)} for {nameof(User)} with Username='{username}' was not found");
+                ?? throw new AiofNotFoundException($"{nameof(UserProfile)} for {nameof(User)} with Username={username} was not found");
         }
 
         public async Task<IUser> UpsertFinanceAsync(
@@ -130,7 +130,7 @@ namespace aiof.api.services
 
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("{Tenant} | Upserted User with Username='{Username}'. UserProfile='{UserProfile}'",
+            _logger.LogInformation("{Tenant} | Upserted User with Username={Username}. UserProfile={UserProfile}",
                 _tenant,
                 username,
                 JsonSerializer.Serialize(user.Profile));
@@ -182,7 +182,7 @@ namespace aiof.api.services
 
             if (await GetSubscriptionAsync(name, amount, userId) != null)
                 throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"{nameof(Subscription)} with UserId='{userId}', Name='{name}' and Amount='{amount}' already exists");
+                    $"{nameof(Subscription)} with UserId={userId}, Name='{name}' and Amount={amount} already exists");
 
             var subscription = _mapper.Map<Subscription>(subscriptionDto);
 
@@ -190,7 +190,7 @@ namespace aiof.api.services
                 .AddAsync(subscription);
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("{Tenant} | Added Subscription='{Subscription}'",
+            _logger.LogInformation("{Tenant} | Added Subscription={Subscription}",
                 _tenant,
                 JsonSerializer.Serialize(subscription));
 
@@ -208,7 +208,7 @@ namespace aiof.api.services
             _context.Subscriptions.Update(subcription);
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("{Tenant} | Updated Subscription='{Subscription}'",
+            _logger.LogInformation("{Tenant} | Updated Subscription={Subscription}",
                 _tenant,
                 JsonSerializer.Serialize(subcription));
 

@@ -60,7 +60,7 @@ namespace aiof.api.services
         {
             return await GetAssetsQuery()
                 .FirstOrDefaultAsync(x => x.Id == id)
-                ?? throw new AiofNotFoundException($"{nameof(Asset)} with Id='{id}' was not found");
+                ?? throw new AiofNotFoundException($"{nameof(Asset)} with Id={id} was not found");
         }
         public async Task<IAsset> GetAsync(
             Guid publicKey, 
@@ -130,7 +130,10 @@ namespace aiof.api.services
                 .Reference(x => x.Type)
                 .LoadAsync();
             
-            _logger.LogInformation($"Created {nameof(Asset)} with Id='{asset.Id}', PublicKey='{asset.PublicKey}' and UserId='{asset.UserId}'");
+            _logger.LogInformation("Created Asset with Id={AssetId}, PublicKey={AssetPublicKey} and UserId={AssetUserId}",
+                asset.Id,
+                asset.PublicKey,
+                asset.UserId);
 
             return asset;
         }
@@ -155,7 +158,10 @@ namespace aiof.api.services
                 .Reference(x => x.Type)
                 .LoadAsync();
 
-            _logger.LogInformation($"Updated {nameof(Asset)} with Id='{asset.Id}', PublicKey='{asset.PublicKey}' and UserId='{asset.UserId}'");
+            _logger.LogInformation("Updated Asset with Id={AssetId}, PublicKey={AssetPublicKey} and UserId={AssetUserId}",
+                asset.Id,
+                asset.PublicKey,
+                asset.UserId);
 
             return asset;
         }
