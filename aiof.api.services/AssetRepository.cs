@@ -56,19 +56,13 @@ namespace aiof.api.services
                 : query;
         }
 
-        public async Task<IAsset> GetAssetAsync(
+        public async Task<IAsset> GetAsync(
             int id, 
             bool asNoTracking = true)
         {
             return await GetAssetsQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.Id == id)
                 ?? throw new AiofNotFoundException($"{nameof(Asset)} with Id={id} was not found");
-        }
-        public async Task<IAsset> GetAsync(
-            Guid publicKey, 
-            bool asNoTracking = true)
-        {
-            return await base.GetAsync<Asset>(publicKey, asNoTracking);
         }
 
         public async Task<IAsset> GetAssetAsync(
@@ -123,16 +117,15 @@ namespace aiof.api.services
 
             var asset = _mapper.Map<Asset>(assetDto);
 
-            await _context.Assets
-                .AddAsync(asset);
-
+            await _context.Assets.AddAsync(asset);
             await _context.SaveChangesAsync();
 
             await _context.Entry(asset)
                 .Reference(x => x.Type)
                 .LoadAsync();
             
-            _logger.LogInformation("Created Asset with Id={AssetId}, PublicKey={AssetPublicKey} and UserId={AssetUserId}",
+            _logger.LogInformation("{Tenant} | Created Asset with Id={AssetId}, PublicKey={AssetPublicKey} and UserId={AssetUserId}",
+                _context._tenant.Log,
                 asset.Id,
                 asset.PublicKey,
                 asset.UserId);
@@ -146,20 +139,22 @@ namespace aiof.api.services
         }
 
         public async Task<IAsset> UpdateAssetAsync(
-            Guid publicKey, 
+            int id, 
             AssetDto assetDto)
         {
-            var asset = await GetAsync(publicKey, false);
+            var asset = await GetAsync(id, asNoTracking: false);
+            var assetToAdd = _mapper.Map(assetDto, asset as Asset);
 
             _context.Assets
-                .Update(_mapper.Map(assetDto, asset as Asset));
+                .Update(assetToAdd);
 
             await _context.SaveChangesAsync();
             await _context.Entry(asset)
                 .Reference(x => x.Type)
                 .LoadAsync();
 
-            _logger.LogInformation("Updated Asset with Id={AssetId}, PublicKey={AssetPublicKey} and UserId={AssetUserId}",
+            _logger.LogInformation("{Tenant} | Updated Asset with Id={AssetId}, PublicKey={AssetPublicKey} and UserId={AssetUserId}",
+                _context._tenant.Log,
                 asset.Id,
                 asset.PublicKey,
                 asset.UserId);
@@ -170,14 +165,6 @@ namespace aiof.api.services
         public async Task DeleteAsync(int id)
         {
             await base.SoftDeleteAsync<Asset>(id);
-        }
-        public async Task DeleteAsync(Guid publicKey)
-        {
-            await base.DeleteAsync<Asset>(publicKey);
-        }
-        public async Task DeleteAsync(IAsset asset)
-        {
-            await base.DeleteAsync<Asset>(asset as Asset);
         }
     }
 }

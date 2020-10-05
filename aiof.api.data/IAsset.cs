@@ -7,7 +7,6 @@ namespace aiof.api.data
 {
     public interface IAsset
     {
-        [JsonIgnore]
         [Required]
         int Id { get; set; }
 

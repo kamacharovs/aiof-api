@@ -8,7 +8,7 @@ namespace aiof.api.services
 {
     public interface IAssetRepository
     {
-        Task<IAsset> GetAssetAsync(
+        Task<IAsset> GetAsync(
             int id,
             bool asNoTracking = true);
         Task<IAsset> GetAssetAsync(
@@ -17,19 +17,14 @@ namespace aiof.api.services
             decimal? value,
             int? userId = null,
             bool asNoTracking = true);
-        Task<IAsset> GetAsync(
-            Guid publicKey, 
-            bool asNoTracking = true);
         Task<IAsset> GetAssetAsync(AssetDto assetDto);
         Task<IEnumerable<IAsset>> GetAssetsAsync(string typeName);
         Task<IEnumerable<IAssetType>> GetAssetTypesAsync();
         Task<IAsset> AddAssetAsync(AssetDto assetDto);
         IAsyncEnumerable<IAsset> AddAssetsAsync(IEnumerable<AssetDto> assetsDto);
         Task<IAsset> UpdateAssetAsync(
-            Guid publicKey, 
+            int id, 
             AssetDto assetDto);
         Task DeleteAsync(int id);
-        Task DeleteAsync(Guid publicKey);
-        Task DeleteAsync(IAsset asset);
     }
 }

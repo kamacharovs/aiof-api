@@ -131,6 +131,15 @@ namespace aiof.api.data
                     TypeName = "house",
                     Value = 999999M,
                     UserId = 1
+                },
+                new Asset
+                {
+                    Id = 4,
+                    PublicKey = Guid.Parse("97bedb5b-c49e-484a-8bd0-1d7cb474e217"),
+                    Name = "asset",
+                    TypeName = "cash",
+                    Value = 99M,
+                    UserId = 2
                 }
             };
         }

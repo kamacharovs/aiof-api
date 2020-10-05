@@ -8,7 +8,6 @@ namespace aiof.api.data
     public class Asset : IEquatable<Asset>, IAsset, 
         IPublicKeyId, IPublicKeyName, IIsDeleted
     {
-        [JsonIgnore]
         [Required]
         public int Id { get; set; }
 
