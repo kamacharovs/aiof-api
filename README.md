@@ -49,5 +49,6 @@ Migrations are managed in the `ef-migrations` branch
 ```powershell
 dotnet ef migrations add {migration name}
 dotnet ef migrations script
+dotnet ef migrations script 20180904195021_InitialCreate
 dotnet ef migrations remove
 ```
