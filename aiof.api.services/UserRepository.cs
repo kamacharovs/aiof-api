@@ -130,8 +130,7 @@ namespace aiof.api.services
 
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("{Tenant} | Upserted User with Username='{Username}' " +
-                "UserProfile='{UserProfile}'",
+            _logger.LogInformation("{Tenant} | Upserted User with Username='{Username}'. UserProfile='{UserProfile}'",
                 _tenant,
                 username,
                 JsonSerializer.Serialize(user.Profile));
