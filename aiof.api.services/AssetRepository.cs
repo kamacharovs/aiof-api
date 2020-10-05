@@ -35,7 +35,7 @@ namespace aiof.api.services
             _assetDtoValidator = assetDtoValidator ?? throw new ArgumentNullException(nameof(assetDtoValidator));
         }
 
-        private IQueryable<Asset> GetAssetsQuery(bool asNoTracking = true)
+        private IQueryable<Asset> GetQuery(bool asNoTracking = true)
         {
             var assetsQuery = _context.Assets
                 .Include(x => x.Type)
@@ -45,8 +45,7 @@ namespace aiof.api.services
                 ? assetsQuery.AsNoTracking()
                 : assetsQuery;
         }
-
-        private IQueryable<AssetType> GetAssetTypesQuery(bool asNoTracking = true)
+        private IQueryable<AssetType> GetTypesQuery(bool asNoTracking = true)
         {
             var query = _context.AssetTypes
                 .AsQueryable();
@@ -60,12 +59,12 @@ namespace aiof.api.services
             int id, 
             bool asNoTracking = true)
         {
-            return await GetAssetsQuery(asNoTracking)
+            return await GetQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.Id == id)
                 ?? throw new AiofNotFoundException($"{nameof(Asset)} with Id={id} was not found");
         }
 
-        public async Task<IAsset> GetAssetAsync(
+        public async Task<IAsset> GetAsync(
             string name,
             string typeName,
             decimal? value,
@@ -73,45 +72,45 @@ namespace aiof.api.services
             bool asNoTracking = true)
         {
             return userId is null
-                ? await GetAssetsQuery(asNoTracking)
+                ? await GetQuery(asNoTracking)
                     .FirstOrDefaultAsync(x => x.Name == name
                         && x.TypeName == typeName
                         && x.Value == value)
-                : await GetAssetsQuery(asNoTracking)
+                : await GetQuery(asNoTracking)
                     .FirstOrDefaultAsync(x => x.Name == name
                         && x.TypeName == typeName
                         && x.Value == value
                         && x.UserId == userId);
         }
-        public async Task<IAsset> GetAssetAsync(AssetDto assetDto)
+        public async Task<IAsset> GetAsync(AssetDto assetDto)
         {
-            return await GetAssetAsync(
+            return await GetAsync(
                 assetDto.Name,
                 assetDto.TypeName,
                 assetDto.Value,
                 assetDto.UserId);
         }
 
-        public async Task<IEnumerable<IAsset>> GetAssetsAsync(string typeName)
+        public async Task<IEnumerable<IAsset>> GetAsync(string typeName)
         {
-            return await GetAssetsQuery()
+            return await GetQuery()
                 .Where(x => x.TypeName == typeName)
                 .OrderBy(x => x.TypeName)
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<IAssetType>> GetAssetTypesAsync()
+        public async Task<IEnumerable<IAssetType>> GetTypesAsync()
         {
-            return await GetAssetTypesQuery()
+            return await GetTypesQuery()
                 .OrderBy(x => x.Name)
                 .ToListAsync();
         }
 
-        public async Task<IAsset> AddAssetAsync(AssetDto assetDto)
+        public async Task<IAsset> AddAsync(AssetDto assetDto)
         {
             await _assetDtoValidator.ValidateAndThrowAsync(assetDto);
 
-            if (await GetAssetAsync(assetDto) != null)
+            if (await GetAsync(assetDto) != null)
                 throw new AiofFriendlyException(HttpStatusCode.BadRequest,
                     $"{nameof(Asset)} with the provided information already exists");
 
@@ -132,13 +131,13 @@ namespace aiof.api.services
 
             return asset;
         }
-        public async IAsyncEnumerable<IAsset> AddAssetsAsync(IEnumerable<AssetDto> assetsDto)
+        public async IAsyncEnumerable<IAsset> AddAsync(IEnumerable<AssetDto> assetsDto)
         {
             foreach (var assetDto in assetsDto)
-                yield return await AddAssetAsync(assetDto);
+                yield return await AddAsync(assetDto);
         }
 
-        public async Task<IAsset> UpdateAssetAsync(
+        public async Task<IAsset> UpdateAsync(
             int id, 
             AssetDto assetDto)
         {

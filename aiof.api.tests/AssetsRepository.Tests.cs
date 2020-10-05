@@ -21,7 +21,7 @@ namespace aiof.api.tests
             int? userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
-            var asset = await _repo.GetAssetAsync(
+            var asset = await _repo.GetAsync(
                 name,
                 typeName,
                 value,
@@ -47,7 +47,7 @@ namespace aiof.api.tests
             int? userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
-            var asset = await _repo.GetAssetAsync(new AssetDto
+            var asset = await _repo.GetAsync(new AssetDto
             {
                 Name = name,
                 TypeName = typeName,
@@ -94,7 +94,7 @@ namespace aiof.api.tests
         public async Task GetAssetsAsync_By_TypeName_NotEmpty(string typeName, int userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
-            var assets = await _repo.GetAssetsAsync(typeName);
+            var assets = await _repo.GetAsync(typeName);
 
             Assert.NotNull(assets);
             Assert.NotEmpty(assets);
@@ -104,7 +104,7 @@ namespace aiof.api.tests
         public async Task GetAssetTypesAsync_All()
         {
             var _repo = new ServiceHelper().GetRequiredService<IAssetRepository>();
-            var assetTypes = await _repo.GetAssetTypesAsync();
+            var assetTypes = await _repo.GetTypesAsync();
 
             Assert.NotNull(assetTypes);
             Assert.NotEmpty(assetTypes);
@@ -121,7 +121,7 @@ namespace aiof.api.tests
             int? userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
-            await Assert.ThrowsAsync<AiofFriendlyException>(() => _repo.AddAssetAsync(new AssetDto
+            await Assert.ThrowsAsync<AiofFriendlyException>(() => _repo.AddAsync(new AssetDto
             {
                 Name = name,
                 TypeName = typeName,
@@ -139,7 +139,7 @@ namespace aiof.api.tests
             int? userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
-            var asset = await _repo.AddAssetAsync(new AssetDto
+            var asset = await _repo.AddAsync(new AssetDto
             {
                 Name = name,
                 TypeName = typeName,
@@ -166,17 +166,17 @@ namespace aiof.api.tests
             int? userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
-            var asset = await _repo.AddAssetAsync(new AssetDto
+            var asset = await _repo.AddAsync(new AssetDto
             {
                 Name = name,
                 TypeName = typeName,
                 Value = value,
                 UserId = userId
             });
-            Assert.NotNull(await _repo.GetAssetAsync(asset.Name, asset.TypeName, asset.Value));
+            Assert.NotNull(await _repo.GetAsync(asset.Name, asset.TypeName, asset.Value));
 
             await _repo.DeleteAsync(asset.Id);
-            Assert.Null(await _repo.GetAssetAsync(asset.Name, asset.TypeName, asset.Value));
+            Assert.Null(await _repo.GetAsync(asset.Name, asset.TypeName, asset.Value));
         }
 
         [Theory]

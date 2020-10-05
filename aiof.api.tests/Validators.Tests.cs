@@ -75,14 +75,18 @@ namespace aiof.api.tests
             var assetDto = new AssetDto
             {
                 Name = name,
-                TypeName = typeName
+                TypeName = typeName,
+                Value = 15000M,
+                UserId = null
             };
             Assert.False(_assetDtoValidator.Validate(assetDto).IsValid);
 
             var liabilityDto = new LiabilityDto
             {
                 Name = name,
-                TypeName = typeName
+                TypeName = typeName,
+                Value = 15000M,
+                UserId = null
             };
             Assert.False(_liabilityDtoValidator.Validate(liabilityDto).IsValid);
 

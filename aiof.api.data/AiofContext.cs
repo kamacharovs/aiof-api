@@ -134,7 +134,8 @@ namespace aiof.api.data
 
                 e.HasKey(x => x.Id);
 
-                e.HasQueryFilter(x => x.Id == _tenant.UserId);
+                e.HasQueryFilter(x => x.Id == _tenant.UserId
+                    && !x.IsDeleted);
 
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
@@ -142,6 +143,7 @@ namespace aiof.api.data
                 e.Property(x => x.TypeName).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
                 e.Property(x => x.Value).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.UserId).HasSnakeCaseColumnName();
+                e.Property(x => x.IsDeleted).HasSnakeCaseColumnName();
 
                 e.HasOne(x => x.Type)
                     .WithMany()

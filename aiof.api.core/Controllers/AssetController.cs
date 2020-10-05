@@ -48,7 +48,7 @@ namespace aiof.api.core.Controllers
             [FromRoute, Required] int id, 
             [FromBody, Required] AssetDto assetDto)
         {
-            return Ok(await _repo.UpdateAssetAsync(id, assetDto));
+            return Ok(await _repo.UpdateAsync(id, assetDto));
         }
 
         [HttpPost]
@@ -56,7 +56,7 @@ namespace aiof.api.core.Controllers
         [ProducesResponseType(typeof(IAsset), StatusCodes.Status201Created)]
         public async Task<IActionResult> AddAssetAsync([FromBody] AssetDto assetDto)
         {
-            return Created(nameof(Asset), await _repo.AddAssetAsync(assetDto));
+            return Created(nameof(Asset), await _repo.AddAsync(assetDto));
         }
 
         [HttpDelete]
@@ -75,7 +75,7 @@ namespace aiof.api.core.Controllers
         [ProducesResponseType(typeof(IEnumerable<IAssetType>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAssetTypesAsync()
         {
-            return Ok(await _repo.GetAssetTypesAsync());
+            return Ok(await _repo.GetTypesAsync());
         }
     }
 }
