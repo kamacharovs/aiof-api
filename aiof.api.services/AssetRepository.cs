@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -14,7 +15,7 @@ using aiof.api.data;
 
 namespace aiof.api.services
 {
-    public class AssetRepository : IAssetRepository
+    public class AssetRepository : BaseRepository, IAssetRepository
     {
         private readonly ILogger<AssetRepository> _logger;
         private readonly IMapper _mapper;
@@ -26,127 +27,143 @@ namespace aiof.api.services
             IMapper mapper, 
             AiofContext context,
             AbstractValidator<AssetDto> assetDtoValidator)
+            : base(logger, context)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
             _assetDtoValidator = assetDtoValidator ?? throw new ArgumentNullException(nameof(assetDtoValidator));
         }
 
-        private IQueryable<Asset> GetAssetsQuery(bool asNoTracking = true)
+        private IQueryable<Asset> GetQuery(bool asNoTracking = true)
         {
+            var assetsQuery = _context.Assets
+                .Include(x => x.Type)
+                .AsQueryable();
+
             return asNoTracking
-                ? _context.Assets
-                    .Include(x => x.Type)
-                    .AsNoTracking()
-                    .AsQueryable()
-                : _context.Assets
-                    .Include(x => x.Type)
-                    .AsQueryable();
+                ? assetsQuery.AsNoTracking()
+                : assetsQuery;
+        }
+        private IQueryable<AssetType> GetTypesQuery(bool asNoTracking = true)
+        {
+            var query = _context.AssetTypes
+                .AsQueryable();
+
+            return asNoTracking
+                ? query.AsNoTracking()
+                : query;
         }
 
-        private IQueryable<AssetType> GetAssetTypesQuery(bool asNoTracking = true)
+        public async Task<IAsset> GetAsync(
+            int id, 
+            bool asNoTracking = true)
         {
-            return asNoTracking
-                ? _context.AssetTypes
-                    .AsNoTracking()
-                    .AsQueryable()
-                : _context.AssetTypes
-                    .AsQueryable();
-        }
-
-        public async Task<IAsset> GetAssetAsync(int id)
-        {
-            return await GetAssetsQuery()
+            return await GetQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.Id == id)
-                ?? throw new AiofNotFoundException($"{nameof(Asset)} with Id='{id}' was not found");
+                ?? throw new AiofNotFoundException($"{nameof(Asset)} with Id={id} was not found");
         }
 
-        public async Task<IAsset> GetAssetAsync(
+        public async Task<IAsset> GetAsync(
             string name,
             string typeName,
             decimal? value,
-            int? userId)
+            int? userId = null,
+            bool asNoTracking = true)
         {
-            return await GetAssetsQuery()
-                .FirstOrDefaultAsync(x => x.Name == name
-                    && x.TypeName == typeName
-                    && x.Value == value
-                    && x.UserId == userId);
+            return userId is null
+                ? await GetQuery(asNoTracking)
+                    .FirstOrDefaultAsync(x => x.Name == name
+                        && x.TypeName == typeName
+                        && x.Value == value)
+                : await GetQuery(asNoTracking)
+                    .FirstOrDefaultAsync(x => x.Name == name
+                        && x.TypeName == typeName
+                        && x.Value == value
+                        && x.UserId == userId);
         }
-        public async Task<IAsset> GetAssetAsync(AssetDto assetDto)
+        public async Task<IAsset> GetAsync(AssetDto assetDto)
         {
-            return await GetAssetAsync(
+            return await GetAsync(
                 assetDto.Name,
                 assetDto.TypeName,
                 assetDto.Value,
                 assetDto.UserId);
         }
 
-        public async Task<IEnumerable<IAsset>> GetAssetsAsync(string typeName)
+        public async Task<IEnumerable<IAsset>> GetAsync(string typeName)
         {
-            return await GetAssetsQuery()
+            return await GetQuery()
                 .Where(x => x.TypeName == typeName)
                 .OrderBy(x => x.TypeName)
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<IAssetType>> GetAssetTypesAsync()
+        public async Task<IEnumerable<IAssetType>> GetTypesAsync()
         {
-            return await GetAssetTypesQuery()
+            return await GetTypesQuery()
                 .OrderBy(x => x.Name)
                 .ToListAsync();
         }
 
-        public async Task<IAsset> AddAssetAsync(AssetDto assetDto)
+        public async Task<IAsset> AddAsync(AssetDto assetDto)
         {
             await _assetDtoValidator.ValidateAndThrowAsync(assetDto);
 
-            if (await GetAssetAsync(assetDto) != null)
+            if (await GetAsync(assetDto) != null)
                 throw new AiofFriendlyException(HttpStatusCode.BadRequest,
                     $"{nameof(Asset)} with the provided information already exists");
 
             var asset = _mapper.Map<Asset>(assetDto);
 
-            await _context.Assets
-                .AddAsync(asset);
-
+            await _context.Assets.AddAsync(asset);
             await _context.SaveChangesAsync();
 
             await _context.Entry(asset)
                 .Reference(x => x.Type)
                 .LoadAsync();
             
-            _logger.LogInformation($"Created {nameof(Asset)} with Id='{asset.Id}', PublicKey='{asset.PublicKey}' and UserId='{asset.UserId}'");
+            _logger.LogInformation("{Tenant} | Created Asset with Id={AssetId}, PublicKey={AssetPublicKey} and UserId={AssetUserId}",
+                _context._tenant.Log,
+                asset.Id,
+                asset.PublicKey,
+                asset.UserId);
 
             return asset;
         }
-        public async IAsyncEnumerable<IAsset> AddAssetsAsync(IEnumerable<AssetDto> assetsDto)
+        public async IAsyncEnumerable<IAsset> AddAsync(IEnumerable<AssetDto> assetsDto)
         {
             foreach (var assetDto in assetsDto)
-                yield return await AddAssetAsync(assetDto);
+                yield return await AddAsync(assetDto);
         }
 
-        public async Task<IAsset> UpdateAssetAsync(
+        public async Task<IAsset> UpdateAsync(
             int id, 
             AssetDto assetDto)
         {
-            await _assetDtoValidator.ValidateAndThrowAsync(assetDto);
-
-            var asset = await GetAssetAsync(id);
+            var asset = await GetAsync(id, asNoTracking: false);
+            var assetToAdd = _mapper.Map(assetDto, asset as Asset);
 
             _context.Assets
-                .Update(_mapper.Map(assetDto, asset as Asset));
+                .Update(assetToAdd);
 
             await _context.SaveChangesAsync();
-
             await _context.Entry(asset)
                 .Reference(x => x.Type)
                 .LoadAsync();
 
-            _logger.LogInformation($"Updated {nameof(Asset)} with Id='{asset.Id}', PublicKey='{asset.PublicKey}' and UserId='{asset.UserId}'");
+            _logger.LogInformation("{Tenant} | Updated Asset with Id={AssetId}, PublicKey={AssetPublicKey} and UserId={AssetUserId}",
+                _context._tenant.Log,
+                asset.Id,
+                asset.PublicKey,
+                asset.UserId);
 
             return asset;
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            await base.SoftDeleteAsync<Asset>(id);
         }
     }
 }

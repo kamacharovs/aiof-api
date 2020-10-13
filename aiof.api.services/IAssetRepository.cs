@@ -8,19 +8,23 @@ namespace aiof.api.services
 {
     public interface IAssetRepository
     {
-        Task<IAsset> GetAssetAsync(int id);
-        Task<IAsset> GetAssetAsync(
+        Task<IAsset> GetAsync(
+            int id,
+            bool asNoTracking = true);
+        Task<IAsset> GetAsync(
             string name,
             string typeName,
             decimal? value,
-            int? financeId);
-        Task<IAsset> GetAssetAsync(AssetDto assetDto);
-        Task<IEnumerable<IAsset>> GetAssetsAsync(string typeName);
-        Task<IEnumerable<IAssetType>> GetAssetTypesAsync();
-        Task<IAsset> AddAssetAsync(AssetDto assetDto);
-        IAsyncEnumerable<IAsset> AddAssetsAsync(IEnumerable<AssetDto> assetsDto);
-        Task<IAsset> UpdateAssetAsync(
+            int? userId = null,
+            bool asNoTracking = true);
+        Task<IAsset> GetAsync(AssetDto assetDto);
+        Task<IEnumerable<IAsset>> GetAsync(string typeName);
+        Task<IEnumerable<IAssetType>> GetTypesAsync();
+        Task<IAsset> AddAsync(AssetDto assetDto);
+        IAsyncEnumerable<IAsset> AddAsync(IEnumerable<AssetDto> assetsDto);
+        Task<IAsset> UpdateAsync(
             int id, 
             AssetDto assetDto);
+        Task DeleteAsync(int id);
     }
 }

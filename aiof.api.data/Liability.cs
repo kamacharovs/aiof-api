@@ -1,19 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using System.ComponentModel.DataAnnotations;
 
 namespace aiof.api.data
 {
     public class Liability : IEquatable<Liability>, ILiability, 
-        IPublicKeyId, IPublicKeyName
+        IPublicKeyId, IPublicKeyName, IIsDeleted
     {
-        [JsonIgnore] public int Id { get; set; }
-        [JsonIgnore] public Guid PublicKey { get; set; } = Guid.NewGuid();
+        [JsonIgnore]
+        [Required]
+        public int Id { get; set; }
+
+        [JsonIgnore]
+        [Required]
+        public Guid PublicKey { get; set; } = Guid.NewGuid();
+
+        [Required]
+        [MaxLength(100)]
         public string Name { get; set; }
+
+        [Required]
+        [MaxLength(100)]
         public string TypeName { get; set; }
-        [JsonIgnore] public LiabilityType Type { get; set; }
+
+        [JsonIgnore]
+        [Required]
+        public LiabilityType Type { get; set; }
+
+        [Required]
         public decimal Value { get; set; }
-        [JsonIgnore] public int? UserId { get; set; }
+
+        [JsonIgnore]
+        public int? UserId { get; set; }
+
+        [JsonIgnore]
+        public bool IsDeleted { get; set; } = false;
+
 
         public bool Equals(Liability other)
         {
@@ -25,7 +48,7 @@ namespace aiof.api.data
                 && this.Value == other.Value;
         }
 
-        public override bool Equals(object obj) => Equals(obj as Asset);
+        public override bool Equals(object obj) => Equals(obj as Liability);
         public override int GetHashCode() => (Name, TypeName, Value).GetHashCode();
     }
 

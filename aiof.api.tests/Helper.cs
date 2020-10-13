@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Security.Claims;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,15 +16,14 @@ using aiof.api.services;
 
 namespace aiof.api.tests
 {
-    public static class Helper
+    public class ServiceHelper
     {
-        public const string Category = nameof(Category);
-        public const string UnitTest = nameof(UnitTest);
-        public const string IntegrationTest = nameof(IntegrationTest);
-        
-        public static T GetRequiredService<T>()
+        public int? UserId { get; set; }
+        public int? ClientId { get; set; }
+
+        public T GetRequiredService<T>()
         {
-            var provider = Provider();
+            var provider = Services().BuildServiceProvider();
 
             provider.GetRequiredService<FakeDataManager>()
                 .UseFakeContext();
@@ -31,33 +31,38 @@ namespace aiof.api.tests
             return provider.GetRequiredService<T>();
         }
 
-        private static IServiceProvider Provider()
+        public ServiceCollection Services()
         {
             var services = new ServiceCollection();
 
-            services.AddScoped<IEnvConfiguration, EnvConfiguration>();
-            services.AddScoped<IAiofRepository, AiofRepository>();
-            services.AddScoped<IAssetRepository, AssetRepository>();
-            services.AddScoped<IGoalRepository, GoalRepository>();
-            services.AddScoped<ILiabilityRepository, LiabilityRepository>();
-            services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
-            services.AddScoped<FakeDataManager>();
-            services.AddSingleton(GetMockedMetadataRepo());
-
+            services.AddScoped<IAiofRepository, AiofRepository>()
+                .AddScoped<IUserRepository, UserRepository>()
+                .AddScoped<IAssetRepository, AssetRepository>()
+                .AddScoped<IGoalRepository, GoalRepository>()
+                .AddScoped<ILiabilityRepository, LiabilityRepository>()
+                .AddScoped<IEnvConfiguration, EnvConfiguration>()
+                .AddScoped<FakeDataManager>()
+                .AddSingleton(GetMockedMetadataRepo());
+            
+            services.AddScoped<ITenant>(x => GetMockTenant());
             services.AddSingleton(new MapperConfiguration(x => { x.AddProfile(new AutoMappingProfileDto()); }).CreateMapper());
 
-            services.AddScoped<AbstractValidator<AssetDto>, AssetDtoValidator>();
-            services.AddScoped<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>();
-            services.AddScoped<AbstractValidator<GoalDto>, GoalDtoValidator>();
+            services.AddScoped<AbstractValidator<AssetDto>, AssetDtoValidator>()
+                .AddScoped<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>()
+                .AddScoped<AbstractValidator<LiabilityType>, LiabilityTypeValidator>()
+                .AddScoped<AbstractValidator<GoalDto>, GoalDtoValidator>()
+                .AddScoped<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>()
+                .AddScoped<AbstractValidator<UserDto>, UserDtoValidator>();
 
             services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
             services.AddLogging();
+            services.AddHttpContextAccessor();
 
-            return services.BuildServiceProvider();
+            return services;
         }
 
-        public static IAiofMetadataRepository GetMockedMetadataRepo()
+        public IAiofMetadataRepository GetMockedMetadataRepo()
         {
             var mockedRepo = new Mock<IAiofMetadataRepository>();
 
@@ -104,20 +109,45 @@ namespace aiof.api.tests
             return mockedRepo.Object;
         }
 
+        public ITenant GetMockTenant()
+        {
+            var mockedTenant = new Mock<ITenant>();
+            var userId = UserId ?? 1;
+            var clientId = ClientId ?? 1;
+
+            mockedTenant.Setup(x => x.UserId).Returns(userId);
+            mockedTenant.Setup(x => x.ClientId).Returns(clientId);
+
+            return mockedTenant.Object;
+        }
+    }
+
+    public static class Helper
+    {
+        public const string Category = nameof(Category);
+        public const string UnitTest = nameof(UnitTest);
+        public const string IntegrationTest = nameof(IntegrationTest);
 
 
         #region Unit Tests
         static FakeDataManager _Fake
-            => Helper.GetRequiredService<FakeDataManager>() ?? throw new ArgumentNullException(nameof(FakeDataManager));
+            => new ServiceHelper().GetRequiredService<FakeDataManager>() ?? throw new ArgumentNullException(nameof(FakeDataManager));
 
         public static IEnumerable<object[]> UsersId()
         {
             return _Fake.GetFakeUsersData(
                 id: true);
         }
-        public static IEnumerable<object[]> UsersUsername()
+        public static IEnumerable<object[]> UsersIdUsername()
         {
             return _Fake.GetFakeUsersData(
+                id: true,
+                username: true);
+        }
+        public static IEnumerable<object[]> UserProfilesIdUsername()
+        {
+            return _Fake.GetFakeUserProfilesData(
+                userId: true,
                 username: true);
         }
 
@@ -129,93 +159,143 @@ namespace aiof.api.tests
                 value: true,
                 userId: true);
         }
-        public static IEnumerable<object[]> AssetsId()
+        public static IEnumerable<object[]> AssetsIdUsersId()
         {
             return _Fake.GetFakeAssetsData(
-                id: true);
+                id: true,
+                userId: true);
         }
-        public static IEnumerable<object[]> AssetsTypeName()
+        public static IEnumerable<object[]> AssetsPublicKey()
         {
             return _Fake.GetFakeAssetsData(
-                typeName: true);
+                publicKey: true);
+        }
+        public static IEnumerable<object[]> AssetsTypeNameUserId()
+        {
+            return _Fake.GetFakeAssetsData(
+                typeName: true,
+                userId: true);
+        }
+        public static IEnumerable<object[]> Assets()
+        {
+            return _Fake.GetFakeAssetsData(
+                name: true,
+                typeName: true,
+                value: true,
+                userId: true);
         }
 
-        public static IEnumerable<object[]> RandomAssetDtos()
+        public static IEnumerable<object[]> SubscriptionsId()
         {
-            var fakeAssetDtos = new Faker<AssetDto>()
+            return _Fake.GetFakeSubscriptionsData(
+                userId: true,
+                id: true);
+        }
+
+        public static List<AssetDto> FakerAssetDtos()
+        {
+            return new Faker<AssetDto>()
+                .RuleFor(x => x.Name, f => "car to buy")
+                .RuleFor(x => x.TypeName, f => "car")
+                .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000))
+                .RuleFor(x => x.UserId, f => f.Random.Int(1, 2))
+                .Generate(GeneratedAmount);
+        }
+        public static List<LiabilityDto> FakerLiabilityDtos()
+        {
+            return new Faker<LiabilityDto>()
                 .RuleFor(x => x.Name, f => f.Random.String())
                 .RuleFor(x => x.TypeName, f => "car")
                 .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000))
                 .RuleFor(x => x.UserId, f => f.Random.Int(1, 2))
                 .Generate(GeneratedAmount);
+        }
+        public static List<GoalDto> FakerGoalDtos()
+        {
+            return new Faker<GoalDto>()
+                .RuleFor(x => x.Name, f => f.Random.String())
+                .RuleFor(x => x.TypeName, f => "save for a rainy day")
+                .RuleFor(x => x.Amount, f => f.Random.Decimal(5000, 10000))
+                .RuleFor(x => x.CurrentAmount, f => f.Random.Decimal(1000, 4000))
+                .RuleFor(x => x.Contribution, f => f.Random.Decimal(700, 900))
+                .RuleFor(x => x.ContributionFrequencyName, f => "monthly")
+                .RuleFor(x => x.UserId, f => f.Random.Int(1, 2))
+                .Generate(GeneratedAmount);
+        }
 
+        public static IEnumerable<object[]> RandomUserDtos()
+        {
+            return new List<object[]>
+            {
+                new object[]
+                {
+                    FakerAssetDtos(),
+                    FakerLiabilityDtos(),
+                    FakerGoalDtos()
+                }
+            };
+        }
+
+        public static IEnumerable<object[]> RandomAssetDtos()
+        {
             var toReturn = new List<object[]>();
 
-            foreach (var fakeAssetDto in fakeAssetDtos)
+            foreach (var fakeAssetDto in FakerAssetDtos())
             {
-                toReturn.Add(new object[] 
-                { 
-                    fakeAssetDto.Name, 
-                    fakeAssetDto.TypeName, 
-                    fakeAssetDto.Value, 
+                toReturn.Add(new object[]
+                {
+                    fakeAssetDto.Name,
+                    fakeAssetDto.TypeName,
+                    fakeAssetDto.Value,
                     fakeAssetDto.UserId
                 });
             }
 
             return toReturn;
         }
-
-        public static IEnumerable<object[]> RandomeGoalDtos()
+        public static IEnumerable<object[]> RandomAssetDtosList()
         {
-            var fakeGoalDtos = new Faker<GoalDto>()
-                .RuleFor(x => x.Name, f => f.Random.String())
-                .RuleFor(x => x.TypeName, f => "long term")
-                .RuleFor(x => x.Savings, f => true)
-                .RuleFor(x => x.UserId, f => f.Random.Int(1, 2))
-                .Generate(GeneratedAmount);
-
-            var toReturn = new List<object[]>();
-
-            foreach (var fakeGoalDto in fakeGoalDtos)
+            return new List<object[]>
             {
-                toReturn.Add(new object[] 
-                { 
-                    fakeGoalDto.Name, 
-                    fakeGoalDto.TypeName, 
-                    fakeGoalDto.Savings, 
-                    fakeGoalDto.UserId
-                });
-            }
-
-            return toReturn;
+                new object[]
+                {
+                    FakerAssetDtos()
+                }
+            };
         }
 
-        public static IEnumerable<object[]> RandomLiabilityDtos()
+        public static IEnumerable<object[]> RandomeGoalDtosList()
         {
-            var fakeLiabilityDtos = new Faker<LiabilityDto>()
-                .RuleFor(x => x.Name, f => f.Random.String())
-                .RuleFor(x => x.TypeName, f => "car")
-                .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000))
-                .RuleFor(x => x.UserId, f => f.Random.Int(1, 2))
-                .Generate(GeneratedAmount);
-
-            var toReturn = new List<object[]>();
-
-            foreach (var fakeLiabilityDto in fakeLiabilityDtos)
+            return new List<object[]>
             {
-                toReturn.Add(new object[] 
-                { 
-                    fakeLiabilityDto.Name, 
-                    fakeLiabilityDto.TypeName, 
-                    fakeLiabilityDto.Value, 
-                    fakeLiabilityDto.UserId
-                });
-            }
-
-            return toReturn;
+                new object[]
+                {
+                    FakerGoalDtos()
+                }
+            };
         }
 
-        public static int GeneratedAmount = 3; 
+        public static IEnumerable<object[]> RandomLiabilityDtosList()
+        {
+            return new List<object[]>
+            {
+                new object[]
+                {
+                    FakerLiabilityDtos()
+                }
+            };
+        }
+
+        public static UserProfileDto RandomUserProfileDto()
+        {
+            return new Faker<UserProfileDto>()
+                .RuleFor(x => x.Gender, f => f.Person.Gender.ToString())
+                .RuleFor(x => x.DateOfBirth, f => f.Date.Past(f.Random.Int(18, 99)))
+                .RuleFor(x => x.EducationLevel, f => "Bachelors")
+                .Generate();
+        }
+
+        public static int GeneratedAmount = 3;
         #endregion
     }
 }

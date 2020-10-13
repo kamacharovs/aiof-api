@@ -5,14 +5,15 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 using aiof.api.data;
 using aiof.api.services;
 
 namespace aiof.api.core.Controllers
 {
+    [Authorize]
     [ApiController]
-    [Route("user")]
     [Produces(Keys.ApplicationJson)]
     [Consumes(Keys.ApplicationJson)]
     [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status500InternalServerError)]
@@ -25,17 +26,8 @@ namespace aiof.api.core.Controllers
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
         }
 
-        [HttpGet]
-        [Route("{id}")]
-        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetUserAsync([FromRoute]int id)
-        {
-            return Ok(await _repo.GetUserAsync(id));
-        }
-
         [HttpPost]
-        [Route("{id}")]
+        [Route("user/{id}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpsertFinanceAsync([FromRoute]int id, [FromBody]UserDto userDto)
@@ -44,13 +36,11 @@ namespace aiof.api.core.Controllers
         }
 
         [HttpGet]
-        [Route("user/username/{username}")]
-        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetUserAsync([FromRoute]string username)
+        [Route("frequencies")]
+        [ProducesResponseType(typeof(IEnumerable<IFrequency>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetFrequenciesAsync()
         {
-            return Ok(await _repo.GetUserAsync(username));
-        }  
+            return Ok(await _repo.GetFrequenciesAsync());
+        }
     }
 }

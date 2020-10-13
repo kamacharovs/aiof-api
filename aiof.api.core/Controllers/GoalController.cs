@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.FeatureManagement.Mvc;
 
 using aiof.api.data;
@@ -13,6 +15,7 @@ using aiof.api.services;
 namespace aiof.api.core.Controllers
 {
     [FeatureGate(FeatureFlags.Goal)]
+    [Authorize]
     [ApiController]
     [Route("goal")]
     [Produces(Keys.ApplicationJson)]
@@ -31,9 +34,9 @@ namespace aiof.api.core.Controllers
         [Route("{id}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IGoal), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetGoalAsync([FromRoute]int id)
+        public async Task<IActionResult> GetGoalAsync([FromRoute, Required] int id)
         {
-            return Ok(await _repo.GetGoalAsync(id));
+            return Ok(await _repo.GetAsync(id));
         }
 
         [HttpPut]
@@ -41,9 +44,29 @@ namespace aiof.api.core.Controllers
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(IGoal), StatusCodes.Status200OK)]
-        public async Task<IActionResult> UpdateGoalAsync([FromRoute]int id, [FromBody]GoalDto goalDto)
+        public async Task<IActionResult> UpdateGoalAsync(
+            [FromRoute, Required] int id, 
+            [FromBody, Required] GoalDto goalDto)
         {
-            return Ok(await _repo.UpdateGoalAsync(id, goalDto));
+            return Ok(await _repo.UpdateAsync(id, goalDto));
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IGoal), StatusCodes.Status201Created)]
+        public async Task<IActionResult> AddGoalAsync([FromBody, Required] GoalDto goalDto)
+        {
+            return Created(nameof(Goal), await _repo.AddAsync(goalDto));
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> DeleteAsync([FromRoute, Required] int id)
+        {
+            await _repo.DeleteAsync(id);
+            return Ok();
         }
 
         [HttpGet]
@@ -51,15 +74,7 @@ namespace aiof.api.core.Controllers
         [ProducesResponseType(typeof(IEnumerable<IGoalType>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetGoalTypesAsync()
         {
-            return Ok(await _repo.GetGoalTypesAsync());
-        }
-
-        [HttpPost]
-        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(IGoal), StatusCodes.Status201Created)]
-        public async Task<IActionResult> AddGoalAsync([FromBody]GoalDto goalDto)
-        {
-            return Created(nameof(Goal), await _repo.AddGoalAsync(goalDto));
+            return Ok(await _repo.GetTypesAsync());
         }
     }
 }

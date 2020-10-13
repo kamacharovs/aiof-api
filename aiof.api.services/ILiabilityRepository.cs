@@ -8,12 +8,17 @@ namespace aiof.api.services
 {
     public interface ILiabilityRepository
     {
-        Task<ILiability> GetLiabilityAsync(int id);
-        Task<IEnumerable<ILiabilityType>> GetLiabilityTypesAsync();
-        Task<ILiability> AddLiabilityAsync(LiabilityDto liabilityDto);
-        IAsyncEnumerable<ILiability> AddLiabilitiesAsync(IEnumerable<LiabilityDto> liabilityDtos);
-        Task<ILiability> UpdateLiabilityAsync(
+        Task<ILiability> GetAsync(
+            int id,
+            bool asNoTracking = true);
+        Task<ILiability> GetAsync(LiabilityDto liabilityDto);
+        Task<IEnumerable<ILiabilityType>> GetTypesAsync();
+        Task<ILiability> AddAsync(LiabilityDto liabilityDto);
+        IAsyncEnumerable<ILiability> AddAsync(IEnumerable<LiabilityDto> liabilityDtos);
+        Task<ILiability> UpdateAsync(
             int id, 
             LiabilityDto liabilityDto);
+        Task<ILiabilityType> AddTypeAsync(string name);
+        Task DeleteAsync(int id);
     }
 }

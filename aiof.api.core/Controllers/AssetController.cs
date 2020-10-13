@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.FeatureManagement.Mvc;
 
 using aiof.api.data;
@@ -13,6 +15,7 @@ using aiof.api.services;
 namespace aiof.api.core.Controllers
 {
     [FeatureGate(FeatureFlags.Asset)]
+    [Authorize]
     [ApiController]
     [Route("asset")]
     [Produces(Keys.ApplicationJson)]
@@ -31,9 +34,9 @@ namespace aiof.api.core.Controllers
         [Route("{id}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IAsset), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAssetAsync([FromRoute]int id)
+        public async Task<IActionResult> GetAssetAsync([FromRoute, Required] int id)
         {
-            return Ok(await _repo.GetAssetAsync(id));
+            return Ok(await _repo.GetAsync(id));
         }
 
         [HttpPut]
@@ -41,9 +44,30 @@ namespace aiof.api.core.Controllers
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(IAsset), StatusCodes.Status200OK)]
-        public async Task<IActionResult> UpdateAssetAsync([FromRoute]int id, [FromBody]AssetDto assetDto)
+        public async Task<IActionResult> UpdateAssetAsync(
+            [FromRoute, Required] int id, 
+            [FromBody, Required] AssetDto assetDto)
         {
-            return Ok(await _repo.UpdateAssetAsync(id, assetDto));
+            return Ok(await _repo.UpdateAsync(id, assetDto));
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IAsset), StatusCodes.Status201Created)]
+        public async Task<IActionResult> AddAssetAsync([FromBody] AssetDto assetDto)
+        {
+            return Created(nameof(Asset), await _repo.AddAsync(assetDto));
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> DeleteAsync([FromRoute, Required] int id)
+        {
+            await _repo.DeleteAsync(id);
+
+            return Ok();
         }
 
         [HttpGet]
@@ -51,15 +75,7 @@ namespace aiof.api.core.Controllers
         [ProducesResponseType(typeof(IEnumerable<IAssetType>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAssetTypesAsync()
         {
-            return Ok(await _repo.GetAssetTypesAsync());
-        }
-
-        [HttpPost]
-        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(IAsset), StatusCodes.Status201Created)]
-        public async Task<IActionResult> AddAssetAsync([FromBody]AssetDto assetDto)
-        {
-            return Created(nameof(Asset), await _repo.AddAssetAsync(assetDto));
+            return Ok(await _repo.GetTypesAsync());
         }
     }
 }
