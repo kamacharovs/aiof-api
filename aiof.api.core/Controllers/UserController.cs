@@ -16,7 +16,7 @@ namespace aiof.api.core.Controllers
     /// <summary>
     /// Everything aiof user
     /// </summary>
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("user")]
     [Produces(Keys.ApplicationJson)]
