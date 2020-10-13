@@ -405,7 +405,6 @@ namespace aiof.api.data
             };
         }
 
-        //TODO: add entities for these 2
         public IEnumerable<string> GetFakeAccountTypes()
         {
             return new List<string>
