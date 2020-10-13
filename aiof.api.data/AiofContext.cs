@@ -22,6 +22,8 @@ namespace aiof.api.data
         public virtual DbSet<Frequency> Frequencies { get; set; }
         public virtual DbSet<Subscription> Subscriptions { get; set; }
         public virtual DbSet<Account> Accounts { get; set; }
+        public virtual DbSet<AccountType> AccountTypes { get; set; }
+        public virtual DbSet<AccountTypeMap> AccountTypeMaps { get; set; }
 
         public AiofContext()
         { }
@@ -201,9 +203,6 @@ namespace aiof.api.data
 
                 e.HasKey(x => x.Name);
 
-                e.HasIndex(x => x.Name)
-                    .IsUnique();
-
                 e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
             });
@@ -214,9 +213,6 @@ namespace aiof.api.data
 
                 e.HasKey(x => x.Name);
 
-                e.HasIndex(x => x.Name)
-                    .IsUnique();
-
                 e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
             });
@@ -226,9 +222,6 @@ namespace aiof.api.data
                 e.ToTable(Keys.Entity.GoalType);
 
                 e.HasKey(x => x.Name);
-
-                e.HasIndex(x => x.Name)
-                    .IsUnique();
 
                 e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
@@ -288,6 +281,32 @@ namespace aiof.api.data
                 e.Property(x => x.TypeName).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
                 e.Property(x => x.UserId).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.IsDeleted).HasSnakeCaseColumnName();
+            });
+
+            modelBuilder.Entity<AccountType>(e =>
+            {
+                e.ToTable(Keys.Entity.AccountType);
+
+                e.HasKey(x => x.Name);
+
+                e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
+                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
+            });
+
+            modelBuilder.Entity<AccountTypeMap>(e =>
+            {
+                e.ToTable(Keys.Entity.AccountTypeMap);
+
+                e.HasKey(x => x.AccountName);
+
+                e.Property(x => x.AccountName).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
+                e.Property(x => x.AccountTypeName).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
+
+                e.HasOne(x => x.AccountType)
+                    .WithMany()
+                    .HasForeignKey(x => x.AccountTypeName)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
             });
         }
     }

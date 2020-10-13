@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -6,14 +6,17 @@ using System.ComponentModel.DataAnnotations;
 
 namespace aiof.api.data
 {
-    public interface ILiabilityType
+    public interface IAccountTypeMap
     {
         [Required]
         [MaxLength(100)]
-        string Name { get; set; }
+        string AccountName { get; set; }
         
-        [JsonIgnore]
         [Required]
-        Guid PublicKey { get; set; }
+        [MaxLength(100)]
+        string AccountTypeName { get; set; }
+        
+        [Required]
+        AccountType AccountType { get; set; }
     }
 }

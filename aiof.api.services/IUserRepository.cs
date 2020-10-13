@@ -30,5 +30,9 @@ namespace aiof.api.services
             int id,
             SubscriptionDto subscriptionDto);
         Task DeleteSubscriptionAsync(int id);
+        Task<IAccount> GetAccountAsync(int id);
+        Task<IEnumerable<IAccountType>> GetAccountTypesAsync();
+        Task<IEnumerable<IAccountTypeMap>> GetAccountTypeMapsAsync();
+        Task DeleteAccountAsync(int id);
     }
 }

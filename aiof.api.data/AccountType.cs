@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace aiof.api.data
 {
-    public class LiabilityType : ILiabilityType, 
+    public class AccountType : IAccountType,
         IPublicKeyName
     {
         [Required]

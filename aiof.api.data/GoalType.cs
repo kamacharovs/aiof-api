@@ -13,8 +13,8 @@ namespace aiof.api.data
         [MaxLength(100)]
         public string Name { get; set; }
 
-        [Required]
         [JsonIgnore]
+        [Required]
         public Guid PublicKey { get; set; } = Guid.NewGuid();
     }
 }
