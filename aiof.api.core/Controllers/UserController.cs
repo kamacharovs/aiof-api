@@ -16,7 +16,7 @@ namespace aiof.api.core.Controllers
     /// <summary>
     /// Everything aiof user
     /// </summary>
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("user")]
     [Produces(Keys.ApplicationJson)]
@@ -134,6 +134,17 @@ namespace aiof.api.core.Controllers
             await _repo.DeleteSubscriptionAsync(id);
 
             return Ok();
+        }
+
+        /// <summary>
+        /// Get Account types
+        /// </summary>
+        [HttpGet]
+        [Route("account/types")]
+        [ProducesResponseType(typeof(IEnumerable<IAccountType>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAccountTypesAsync()
+        {
+            return Ok(await _repo.GetAccountTypesAsync());
         }
     }
 }
