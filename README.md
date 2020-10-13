@@ -32,6 +32,12 @@ cd .\aiof.api.core\
 dotnet run
 ```
 
+Make API calls to
+
+```text
+http://localhost:5001
+```
+
 Note: the API uses JWT authentication and authorization. In order to run this locally with fake in-memory data and bypass the authorization and authentication, you can play around with the code and comment out the `[Authorize]` attributes in the `Controllers`.
 
 If you want to fully test it, then the recommended way is to use `docker-compose`. That pulls down all the Docker images needed and you will have the full microservices architecture locally in order to get a JWT from `aiof-auth` and add it to your requests to this API.
@@ -79,6 +85,6 @@ Migrations are managed in the `ef-migrations` branch
 ```powershell
 dotnet ef migrations add {migration name}
 dotnet ef migrations script
-dotnet ef migrations script 20180904195021_InitialCreate
+dotnet ef migrations script {migration name}
 dotnet ef migrations remove
 ```
