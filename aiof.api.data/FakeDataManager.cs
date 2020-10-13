@@ -49,6 +49,12 @@ namespace aiof.api.data
             _context.Accounts
                 .AddRange(GetFakeAccounts());
 
+            _context.AccountTypes
+                .AddRange(GetFakeAccountTypes());
+
+            _context.AccountTypeMaps
+                .AddRange(GetFakeAccountTypeMaps());
+
             _context.SaveChanges();
         }
 
@@ -128,7 +134,7 @@ namespace aiof.api.data
                     Id = 3,
                     PublicKey = Guid.Parse("dbf79a48-0504-4bd0-ad00-8cbc3044e585"),
                     Name = "hardcoded guid",
-                    TypeName = "house",
+                    TypeName = "investment",
                     Value = 999999M,
                     UserId = 1
                 },
@@ -405,35 +411,105 @@ namespace aiof.api.data
             };
         }
 
-        //TODO: add entities for these 2
-        public IEnumerable<string> GetFakeAccountTypes()
+        public IEnumerable<AccountType> GetFakeAccountTypes()
         {
-            return new List<string>
+            return new List<AccountType>
             {
-                "retirement",
-                "taxable"
+                new AccountType
+                {
+                    Name = "retirement"
+                },
+                new AccountType
+                {
+                    Name = "taxable"
+                }
             };
         }
-        public object GetFakeAccountTypesMapping()
+
+        public IEnumerable<AccountTypeMap> GetFakeAccountTypeMaps()
         {
-            return new Dictionary<string, string>
+            return new List<AccountTypeMap>
             {
-                { "401(k)", "retirement" },
-                { "401(a)", "retirement" },
-                { "401(b)", "retirement" },
-                { "457", "taxable" },
-                { "IRA", "retirement" },
-                { "Roth IRA", "retirement" },
-                { "Brokerage", "taxable" },
-                { "Checking/Savings", "taxable" },
-                { "Health Savings Account", "taxable" },
-                { "529 Plan", "taxable" },
-                { "SEP IRA", "retirement" },
-                { "Simple IRA", "retirement" },
-                { "Taxable", "taxable" },
-                { "Tax-Deferred", "retirement" },
-                { "Self Employed Plan", "taxable" },
-                { "UGMA/UTMA", "taxable" }
+                new AccountTypeMap
+                {
+                    AccountName = "401(k)",
+                    AccountTypeName = "retirement"
+                },
+                new AccountTypeMap
+                {
+                    AccountName = "401(a)",
+                    AccountTypeName = "retirement"
+                },
+                new AccountTypeMap
+                {
+                    AccountName = "401(b)",
+                    AccountTypeName = "retirement"
+                },
+                new AccountTypeMap
+                {
+                    AccountName = "457",
+                    AccountTypeName = "taxable"
+                },
+                new AccountTypeMap
+                {
+                    AccountName = "IRA",
+                    AccountTypeName = "retirement"
+                },
+                new AccountTypeMap
+                {
+                    AccountName = "Roth IRA",
+                    AccountTypeName = "retirement"
+                },
+                new AccountTypeMap
+                {
+                    AccountName = "Brokerage",
+                    AccountTypeName = "taxable"
+                },
+                new AccountTypeMap
+                {
+                    AccountName = "Checking/Savings",
+                    AccountTypeName = "taxable"
+                },
+                new AccountTypeMap
+                {
+                    AccountName = "Health Savings Account",
+                    AccountTypeName = "taxable"
+                },
+                new AccountTypeMap
+                {
+                    AccountName = "529 Plan",
+                    AccountTypeName = "taxable"
+                },
+                new AccountTypeMap
+                {
+                    AccountName = "SEP IRA",
+                    AccountTypeName = "retirement"
+                },
+                new AccountTypeMap
+                {
+                    AccountName = "Simple IRA",
+                    AccountTypeName = "retirement"
+                },
+                new AccountTypeMap
+                {
+                    AccountName = "Taxable",
+                    AccountTypeName = "taxable"
+                },
+                new AccountTypeMap
+                {
+                    AccountName = "Tax-Deferred",
+                    AccountTypeName = "retirement"
+                },
+                new AccountTypeMap
+                {
+                    AccountName = "Self Employed Plan",
+                    AccountTypeName = "taxable"
+                },
+                new AccountTypeMap
+                {
+                    AccountName = "UGMA/UTMA",
+                    AccountTypeName = "taxable"
+                }
             };
         }
 

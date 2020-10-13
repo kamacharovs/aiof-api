@@ -135,5 +135,27 @@ namespace aiof.api.core.Controllers
 
             return Ok();
         }
+
+        /// <summary>
+        /// Get Account types
+        /// </summary>
+        [HttpGet]
+        [Route("account/types")]
+        [ProducesResponseType(typeof(IEnumerable<IAccountType>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAccountTypesAsync()
+        {
+            return Ok(await _repo.GetAccountTypesAsync());
+        }
+
+        /// <summary>
+        /// Get Account types mapping
+        /// </summary>
+        [HttpGet]
+        [Route("account/types/map")]
+        [ProducesResponseType(typeof(IEnumerable<IAccountTypeMap>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAccountTypeMapsAsync()
+        {
+            return Ok(await _repo.GetAccountTypeMapsAsync());
+        }
     }
 }

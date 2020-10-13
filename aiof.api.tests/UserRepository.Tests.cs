@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Xunit;
@@ -56,6 +57,29 @@ namespace aiof.api.tests
 
             if (!string.IsNullOrEmpty(subscription.Url))
                 Assert.True(subscription.Url.Length < 500);
+        }
+
+        [Fact]
+        public async Task GetAccountTypesAsync_Is_Successful()
+        {
+            var _repo = new ServiceHelper().GetRequiredService<IUserRepository>();
+            var accountTypes = await _repo.GetAccountTypesAsync();
+
+            Assert.NotEmpty(accountTypes);
+            Assert.NotNull(accountTypes.First().Name);
+        }
+
+        [Fact]
+        public async Task GetAccountTypeMapsAsync_Is_Successful()
+        {
+            var _repo = new ServiceHelper().GetRequiredService<IUserRepository>();
+            var accountTypesMap = await _repo.GetAccountTypeMapsAsync();
+
+            Assert.NotEmpty(accountTypesMap);
+            Assert.NotNull(accountTypesMap.First().AccountName);
+            Assert.NotNull(accountTypesMap.First().AccountTypeName);
+            Assert.NotNull(accountTypesMap.First().AccountType);
+            Assert.NotNull(accountTypesMap.First().AccountType.Name);
         }
     }
 }

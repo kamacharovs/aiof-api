@@ -232,12 +232,43 @@ namespace aiof.api.services
                 ? query.AsNoTracking()
                 : query;
         }
+        private IQueryable<AccountType> GetAccountTypesQuery(bool asNoTracking = true)
+        {
+            var query = _context.AccountTypes
+                .AsQueryable();
 
-        public async Task<IAccount> GetAccountAsync(Guid publicKey)
+            return asNoTracking
+                ? query.AsNoTracking()
+                : query;
+        }
+        private IQueryable<AccountTypeMap> GetAccountTypeMapsQuery(bool asNoTracking = true)
+        {
+            var query = _context.AccountTypeMaps
+                .Include(x => x.AccountType)
+                .AsQueryable();
+
+            return asNoTracking
+                ? query.AsNoTracking()
+                : query;
+        }
+
+        public async Task<IAccount> GetAccountAsync(int id)
         {
             return await GetAccountsQuery()
-                .FirstOrDefaultAsync(x => x.PublicKey == publicKey)
-                ?? throw new AiofNotFoundException($"{nameof(Account)} with PublicKey={publicKey} was not found");
+                .FirstOrDefaultAsync(x => x.Id == id)
+                ?? throw new AiofNotFoundException($"{nameof(Account)} with Id={id} was not found");
+        }
+
+        public async Task<IEnumerable<IAccountType>> GetAccountTypesAsync()
+        {
+            return await GetAccountTypesQuery()
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<IAccountTypeMap>> GetAccountTypeMapsAsync()
+        {
+            return await GetAccountTypeMapsQuery()
+                .ToListAsync();
         }
 
         public async Task DeleteAccountAsync(int id)
