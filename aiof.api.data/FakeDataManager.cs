@@ -49,6 +49,9 @@ namespace aiof.api.data
             _context.Accounts
                 .AddRange(GetFakeAccounts());
 
+            _context.AccountTypes
+                .AddRange(GetFakeAccountTypes());
+
             _context.SaveChanges();
         }
 
@@ -405,14 +408,21 @@ namespace aiof.api.data
             };
         }
 
-        public IEnumerable<string> GetFakeAccountTypes()
+        public IEnumerable<AccountType> GetFakeAccountTypes()
         {
-            return new List<string>
+            return new List<AccountType>
             {
-                "retirement",
-                "taxable"
+                new AccountType
+                {
+                    Name = "retirement"
+                },
+                new AccountType
+                {
+                    Name = "taxable"
+                }
             };
         }
+
         public object GetFakeAccountTypesMapping()
         {
             return new Dictionary<string, string>
