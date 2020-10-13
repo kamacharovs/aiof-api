@@ -10,7 +10,7 @@ aiof API overall documentation
 
 ### Application
 
-On a high level, the API is a CRUD application for `aiof` data. It is based on a multi-tenant pattern based on `user_id`. This is enforced by the interface `ITenant` which gets dependency injected. Thus, even though User A is authenticated and authorized (via JWT), they can't access data for User B who is the same, authorization-wise, to user A. Thus the authentication and authorization process flow is as follows
+On a high level, the API is a CRUD application for `aiof` data. It is based on a multi-tenant pattern based on `user_id`. This is enforced by the interface `ITenant` which gets dependency injected. Even though User A is authenticated and authorized (via JWT), they can't access data for User B who is the same, authorization-wise, to user A. Thus, the authentication and authorization process flow is as follows:
 
 - Is User Authenticated?
 - Is User Authorized to access this Endpoint? Are they in the correct Role?
@@ -19,20 +19,22 @@ On a high level, the API is a CRUD application for `aiof` data. It is based on a
 
 ## How to run it
 
-### Locally
-
-From the root directory
+From the root project directory
 
 ```powershell
 dotnet run -p .\aiof.api.core\
 ```
 
-Change directories and run from the core `.csproj`
+Or change directories and run from the core `.csproj`
 
 ```powershell
 cd .\aiof.api.core\
 dotnet run
 ```
+
+Note: the API uses JWT authentication and authorization. In order to run this locally with fake in-memory data and bypass the authorization and authentication, you can play around with the code and comment out the `[Authorize]` attributes in the `Controllers`.
+
+If you want to fully test it, then the recommended way is to use `docker-compose`. That pulls down all the Docker images needed and you will have the full microservices architecture locally in order to get a JWT from `aiof-auth` and add it to your request to this API.
 
 ### Docker
 
@@ -40,6 +42,34 @@ Pull the latest image from Docker Hub
 
 ```powershell
 docker pull gkama/aiof-api:latest
+```
+
+Run it
+
+```powershell
+docker run -it --rm -e ASPNETCORE_ENVIRONMENT='Development' -p 8000:80 gkama/aiof-api:latest
+```
+
+Make API calls to
+
+```text
+http://localhost:8000/
+```
+
+### Docker compose
+
+From the project root directory
+
+```powershell
+docker-compose up
+```
+
+Make API calls to
+
+```text
+http://localhost:8000   aiof-api
+http://localhost:8001   aiof-auth
+http://localhost:8002   aiof-metadata
 ```
 
 ## EF Core migrations
