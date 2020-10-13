@@ -232,9 +232,19 @@ namespace aiof.api.services
                 ? query.AsNoTracking()
                 : query;
         }
-        private IQueryable<AccountType> GetAccountTypes(bool asNoTracking = true)
+        private IQueryable<AccountType> GetAccountTypesQuery(bool asNoTracking = true)
         {
             var query = _context.AccountTypes
+                .AsQueryable();
+
+            return asNoTracking
+                ? query.AsNoTracking()
+                : query;
+        }
+        private IQueryable<AccountTypeMap> GetAccountTypeMapsQuery(bool asNoTracking = true)
+        {
+            var query = _context.AccountTypeMaps
+                .Include(x => x.AccountType)
                 .AsQueryable();
 
             return asNoTracking
@@ -251,7 +261,13 @@ namespace aiof.api.services
 
         public async Task<IEnumerable<IAccountType>> GetAccountTypesAsync()
         {
-            return await GetAccountTypes()
+            return await GetAccountTypesQuery()
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<IAccountTypeMap>> GetAccountTypeMapsAsync()
+        {
+            return await GetAccountTypeMapsQuery()
                 .ToListAsync();
         }
 

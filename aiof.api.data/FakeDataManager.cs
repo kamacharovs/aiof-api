@@ -52,6 +52,9 @@ namespace aiof.api.data
             _context.AccountTypes
                 .AddRange(GetFakeAccountTypes());
 
+            _context.AccountTypeMaps
+                .AddRange(GetFakeAccountTypeMaps());
+
             _context.SaveChanges();
         }
 
@@ -423,26 +426,90 @@ namespace aiof.api.data
             };
         }
 
-        public object GetFakeAccountTypesMapping()
+        public IEnumerable<AccountTypeMap> GetFakeAccountTypeMaps()
         {
-            return new Dictionary<string, string>
+            return new List<AccountTypeMap>
             {
-                { "401(k)", "retirement" },
-                { "401(a)", "retirement" },
-                { "401(b)", "retirement" },
-                { "457", "taxable" },
-                { "IRA", "retirement" },
-                { "Roth IRA", "retirement" },
-                { "Brokerage", "taxable" },
-                { "Checking/Savings", "taxable" },
-                { "Health Savings Account", "taxable" },
-                { "529 Plan", "taxable" },
-                { "SEP IRA", "retirement" },
-                { "Simple IRA", "retirement" },
-                { "Taxable", "taxable" },
-                { "Tax-Deferred", "retirement" },
-                { "Self Employed Plan", "taxable" },
-                { "UGMA/UTMA", "taxable" }
+                new AccountTypeMap
+                {
+                    AccountName = "401(k)",
+                    AccountTypeName = "retirement"
+                },
+                new AccountTypeMap
+                {
+                    AccountName = "401(a)",
+                    AccountTypeName = "retirement"
+                },
+                new AccountTypeMap
+                {
+                    AccountName = "401(b)",
+                    AccountTypeName = "retirement"
+                },
+                new AccountTypeMap
+                {
+                    AccountName = "457",
+                    AccountTypeName = "taxable"
+                },
+                new AccountTypeMap
+                {
+                    AccountName = "IRA",
+                    AccountTypeName = "retirement"
+                },
+                new AccountTypeMap
+                {
+                    AccountName = "Roth IRA",
+                    AccountTypeName = "retirement"
+                },
+                new AccountTypeMap
+                {
+                    AccountName = "Brokerage",
+                    AccountTypeName = "taxable"
+                },
+                new AccountTypeMap
+                {
+                    AccountName = "Checking/Savings",
+                    AccountTypeName = "taxable"
+                },
+                new AccountTypeMap
+                {
+                    AccountName = "Health Savings Account",
+                    AccountTypeName = "taxable"
+                },
+                new AccountTypeMap
+                {
+                    AccountName = "529 Plan",
+                    AccountTypeName = "taxable"
+                },
+                new AccountTypeMap
+                {
+                    AccountName = "SEP IRA",
+                    AccountTypeName = "retirement"
+                },
+                new AccountTypeMap
+                {
+                    AccountName = "Simple IRA",
+                    AccountTypeName = "retirement"
+                },
+                new AccountTypeMap
+                {
+                    AccountName = "Taxable",
+                    AccountTypeName = "taxable"
+                },
+                new AccountTypeMap
+                {
+                    AccountName = "Tax-Deferred",
+                    AccountTypeName = "retirement"
+                },
+                new AccountTypeMap
+                {
+                    AccountName = "Self Employed Plan",
+                    AccountTypeName = "taxable"
+                },
+                new AccountTypeMap
+                {
+                    AccountName = "UGMA/UTMA",
+                    AccountTypeName = "taxable"
+                }
             };
         }
 
