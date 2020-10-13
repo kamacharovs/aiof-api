@@ -23,6 +23,7 @@ namespace aiof.api.data
         public virtual DbSet<Subscription> Subscriptions { get; set; }
         public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<AccountType> AccountTypes { get; set; }
+        public virtual DbSet<AccountTypeMap> AccountTypeMaps { get; set; }
 
         public AiofContext(DbContextOptions<AiofContext> options, ITenant tenant)
             : base(options)
@@ -278,6 +279,22 @@ namespace aiof.api.data
 
                 e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
+            });
+
+            modelBuilder.Entity<AccountTypeMap>(e =>
+            {
+                e.ToTable(Keys.Entity.AccountTypeMap);
+
+                e.HasKey(x => x.AccountName);
+
+                e.Property(x => x.AccountName).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
+                e.Property(x => x.AccountTypeName).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
+
+                e.HasOne(x => x.AccountType)
+                    .WithMany()
+                    .HasForeignKey(x => x.AccountTypeName)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
             });
         }
     }
