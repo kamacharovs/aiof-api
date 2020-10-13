@@ -131,7 +131,7 @@ namespace aiof.api.data
                     Id = 3,
                     PublicKey = Guid.Parse("dbf79a48-0504-4bd0-ad00-8cbc3044e585"),
                     Name = "hardcoded guid",
-                    TypeName = "house",
+                    TypeName = "investment",
                     Value = 999999M,
                     UserId = 1
                 },
