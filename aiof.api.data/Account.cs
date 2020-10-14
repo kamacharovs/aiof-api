@@ -8,7 +8,6 @@ namespace aiof.api.data
     public class Account : IAccount,
         IPublicKeyId, IIsDeleted
     {
-        [JsonIgnore]
         [Required]
         public int Id { get; set; }
 

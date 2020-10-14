@@ -5,14 +5,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace aiof.api.data
 {
-    public class Goal : IEquatable<Goal>, IGoal, 
+    public class Goal : IGoal, 
         IPublicKeyId, IPublicKeyName, IIsDeleted
     {
-        [JsonIgnore]
         [Required]
         public int Id { get; set; }
 
-        [JsonIgnore]
         [Required]
         public Guid PublicKey { get; set; } = Guid.NewGuid();
 
@@ -50,22 +48,6 @@ namespace aiof.api.data
 
         [JsonIgnore]
         public bool IsDeleted { get; set; } = false;
-
-        public bool Equals(Goal other)
-        {
-            if (other is null)
-                return false;
-
-            return this.Name == other.Name
-                && this.TypeName == other.TypeName
-                && this.Amount == other.Amount
-                && this.CurrentAmount == other.CurrentAmount
-                && this.Contribution == other.Contribution
-                && this.ContributionFrequencyName == other.ContributionFrequencyName;
-        }
-
-        public override bool Equals(object obj) => Equals(obj as Goal);
-        public override int GetHashCode() => (Name, TypeName, Amount, CurrentAmount, Contribution, ContributionFrequency).GetHashCode();
     }
 
     public class GoalDto

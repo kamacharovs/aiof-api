@@ -94,10 +94,6 @@ namespace aiof.api.services
             await _context.Liabilities.AddAsync(liability);
             await _context.SaveChangesAsync();
 
-            await _context.Entry(liability)
-                .Reference(x => x.Type)
-                .LoadAsync();
-
             _logger.LogInformation("{Tenant} | Created Liability={Liability}",
                 _context._tenant.Log,
                 JsonSerializer.Serialize(liability));

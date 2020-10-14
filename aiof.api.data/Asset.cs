@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace aiof.api.data
 {
-    public class Asset : IEquatable<Asset>, IAsset, 
+    public class Asset : IAsset, 
         IPublicKeyId, IPublicKeyName, IIsDeleted
     {
         [Required]
@@ -33,19 +33,6 @@ namespace aiof.api.data
 
         [JsonIgnore]
         public bool IsDeleted { get; set; } = false;
-
-        public bool Equals(Asset other)
-        {
-            if (other is null)
-                return false;
-
-            return this.Name == other.Name 
-                && this.TypeName == other.TypeName
-                && this.Value == other.Value;
-        }
-
-        public override bool Equals(object obj) => Equals(obj as Asset);
-        public override int GetHashCode() => (Name, TypeName, Value).GetHashCode();
     }
 
     public class AssetDto
