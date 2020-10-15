@@ -96,21 +96,19 @@ namespace aiof.api.services
                 ?? throw new AiofNotFoundException($"{nameof(UserProfile)} for {nameof(User)} with Username={username} was not found");
         }
 
-        public async Task<IUser> UpsertFinanceAsync(
+        public async Task<IUser> UpsertAsync(
             int userId,
             UserDto userDto)
         {
             var userInDb = await GetAsync(userId) as User;
-            var userDtoMapped = _mapper.Map<User>(userDto);
-
-            _sw.Start();
-            var user = _mapper.Map(userInDb, userDtoMapped);           
-            _sw.Stop();      
-            _logger.LogInformation("UpsertFinanceAsync algorithm took {AlgorithmTime} (µs)",
-                _sw.Elapsed.TotalMilliseconds * 1000);
+            var user = _mapper.Map(userDto, userInDb);
 
             _context.Update(user);
             await _context.SaveChangesAsync();
+
+            _logger.LogInformation("{Tenant} | UpsertUserAsync completed | {UserDto}",
+                _tenant,
+                userDto.ToString());
 
             return await GetAsync(userId);
         }

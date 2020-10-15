@@ -33,4 +33,12 @@ namespace aiof.api.data
         [JsonIgnore]
         public bool IsDeleted { get; set; } = false;
     }
+
+    public class AccountDto
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string TypeName { get; set; }
+        public int UserId { get; set; }
+    }
 }

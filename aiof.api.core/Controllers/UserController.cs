@@ -16,7 +16,7 @@ namespace aiof.api.core.Controllers
     /// <summary>
     /// Everything aiof user
     /// </summary>
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("user")]
     [Produces(Keys.ApplicationJson)]
@@ -65,7 +65,7 @@ namespace aiof.api.core.Controllers
             [FromRoute, Required] int id,
             [FromBody, Required] UserDto userDto)
         {
-            return Ok(await _repo.UpsertFinanceAsync(id, userDto));
+            return Ok(await _repo.UpsertAsync(id, userDto));
         }
 
         /// <summary>

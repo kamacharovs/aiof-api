@@ -17,7 +17,7 @@ namespace aiof.api.services
         Task<IUserProfile> GetUserProfileAsync(
             string username,
             bool asNoTracking = true);
-        Task<IUser> UpsertFinanceAsync(
+        Task<IUser> UpsertAsync(
             int userId,
             UserDto userDto);
         Task<IUser> UpsertUserProfileAsync(

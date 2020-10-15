@@ -55,6 +55,12 @@ namespace aiof.api.data
                 .ForMember(x => x.From, o => o.Condition(s => s.From != null))
                 .ForMember(x => x.Url, o => o.Condition(s => s.Url != null))
                 .ForMember(x => x.UserId, o => o.MapFrom(s => s.UserId));
+
+            CreateMap<AccountDto, Account>()
+                .ForMember(x => x.Name, o => o.MapFrom(s => s.Name))
+                .ForMember(x => x.Description, o => o.MapFrom(s => s.Description))
+                .ForMember(x => x.TypeName, o => o.MapFrom(s => s.TypeName))
+                .ForMember(x => x.UserId, o => o.MapFrom(s => s.UserId));
         }
     }
 }
