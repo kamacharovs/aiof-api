@@ -75,6 +75,13 @@ namespace aiof.api.services
                     && x.Value == liabilityDto.Value);
         }
 
+        public async Task<IEnumerable<ILiability>> GetAllAsync(int userId)
+        {
+            return await GetQuery()
+                .Where(x => x.UserId == userId)
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<ILiabilityType>> GetTypesAsync()
         {
             return await GetTypesQuery()

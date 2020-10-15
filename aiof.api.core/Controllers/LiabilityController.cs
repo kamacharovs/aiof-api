@@ -39,6 +39,13 @@ namespace aiof.api.core.Controllers
             return Ok(await _repo.GetAsync(id));
         }
 
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<ILiability>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllAsync([FromQuery, Required] int userId)
+        {
+            return Ok(await _repo.GetAllAsync(userId));
+        }
+
         [HttpPut]
         [Route("{id}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
