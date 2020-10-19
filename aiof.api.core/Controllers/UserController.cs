@@ -16,12 +16,14 @@ namespace aiof.api.core.Controllers
     /// <summary>
     /// Everything aiof user
     /// </summary>
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("user")]
     [Produces(Keys.ApplicationJson)]
     [Consumes(Keys.ApplicationJson)]
     [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(IAiofProblemDetailBase), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(IAiofProblemDetailBase), StatusCodes.Status401Unauthorized)]
     public class UserController : ControllerBase
     {
         public readonly IUserRepository _repo;
