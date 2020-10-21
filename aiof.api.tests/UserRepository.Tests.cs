@@ -86,9 +86,7 @@ namespace aiof.api.tests
         [MemberData(nameof(Helper.UsersId), MemberType = typeof(Helper))]
         public async Task UpsertAsync_IsSuccessful(int id)
         {
-            var service = new ServiceHelper() { UserId = id };
-            var _repo = service.GetRequiredService<IUserRepository>();
-            var _mapper = service.GetRequiredService<IMapper>();
+            var _repo = new ServiceHelper() { UserId = id }.GetRequiredService<IUserRepository>();
             var dto = Helper.RandomUserDto(id);
 
             Assert.NotNull(dto);
@@ -121,6 +119,21 @@ namespace aiof.api.tests
                         && x.TypeName == goal.TypeName
                         && x.UserId == goal.UserId));
             }
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.UsersId), MemberType = typeof(Helper))]
+        public async Task UpsertProfileAsync_IsSuccessful(int id)
+        {
+            var _repo = new ServiceHelper() { UserId = id }.GetRequiredService<IUserRepository>();
+            var dto = Helper.RandomUserProfileDto();
+
+            var user = await _repo.UpsertProfileAsync(id, dto);
+
+            Assert.NotNull(user);
+            Assert.Equal(user.Profile.Gender, dto.Gender);
+            Assert.Equal(user.Profile.DateOfBirth, dto.DateOfBirth);
+            Assert.Equal(user.Profile.EducationLevel, dto.EducationLevel);
         }
 
         [Theory]

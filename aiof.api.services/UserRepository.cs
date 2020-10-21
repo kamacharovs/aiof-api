@@ -112,12 +112,13 @@ namespace aiof.api.services
             return await GetAsync(userId);
         }
 
-        public async Task<IUser> UpsertUserProfileAsync(
-            string username, 
+        public async Task<IUser> UpsertProfileAsync(
+            int userId, 
             UserProfileDto userProfileDto)
         {
-            var user = await GetAsync(username) as User;
+            var user = await GetAsync(userId, false) as User;
 
+            user.Profile = user.Profile ?? new UserProfile();
             user.Profile = _mapper.Map(userProfileDto, user.Profile);
             user.Profile.UserId = user.Id;
             user.Profile.Age = user.Profile.DateOfBirth is null ? null : (int?)(DateTime.UtcNow.Year - user.Profile.DateOfBirth.Value.Year);
@@ -127,12 +128,12 @@ namespace aiof.api.services
 
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("{Tenant} | Upserted User with Username={Username}. UserProfile={UserProfile}",
+            _logger.LogInformation("{Tenant} | Upserted User with Username={UserId}. UserProfile={UserProfile}",
                 _tenant,
-                username,
+                userId,
                 JsonSerializer.Serialize(user.Profile));
 
-            return await GetAsync(username);
+            return await GetAsync(userId);
         }
 
         #region Subscription

@@ -211,7 +211,7 @@ namespace aiof.api.tests
             return new Faker<UserProfileDto>()
                 .RuleFor(x => x.Gender, f => f.Person.Gender.ToString())
                 .RuleFor(x => x.DateOfBirth, f => f.Date.Past(f.Random.Int(18, 99)))
-                .RuleFor(x => x.EducationLevel, f => "Bachelors")
+                .RuleFor(x => x.EducationLevel, f => EducationLevels.Bachelors.ToString())
                 .Generate();
         }
 
