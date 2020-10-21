@@ -23,8 +23,12 @@ namespace aiof.api.services
         Task<IUser> UpsertProfileAsync(
             int userId,
             UserProfileDto userProfileDto);
-        Task<ISubscription> GetSubscriptionAsync(int id);
-        Task<ISubscription> GetSubscriptionAsync(Guid publicKey);
+        Task<ISubscription> GetSubscriptionAsync(
+            int id,
+            bool asNoTracking = true);
+        Task<ISubscription> GetSubscriptionAsync(
+            Guid publicKey,
+            bool asNoTracking = true);
         Task<ISubscription> AddSubscriptionAsync(SubscriptionDto subscriptionDto);
         Task<ISubscription> UpdateSubscriptionAsync(
             int id,

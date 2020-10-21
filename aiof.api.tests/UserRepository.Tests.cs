@@ -209,6 +209,30 @@ namespace aiof.api.tests
             Assert.False(sub.IsDeleted);
         }
 
+        [Theory]
+        [MemberData(nameof(Helper.SubscriptionsId), MemberType = typeof(Helper))]
+        public async Task UpdateSubscriptionAsync_IsSuccessful(int userId, int id)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
+            var dto = Helper.RandomSubscriptionDto(userId);
+            var sub = await _repo.UpdateSubscriptionAsync(id, dto);
+
+            Assert.NotNull(sub);
+            Assert.Equal(dto.Amount, sub.Amount);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.SubscriptionsId), MemberType = typeof(Helper))]
+        public async Task DeleteSubscriptionAsync_IsSuccessful(int userId, int id)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
+
+            await _repo.DeleteSubscriptionAsync(id);
+            var sub = await _repo.GetSubscriptionAsync(id);
+
+            Assert.Null(sub);
+        }
+
         [Fact]
         public async Task GetAccountTypesAsync_Is_Successful()
         {

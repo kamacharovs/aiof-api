@@ -148,14 +148,18 @@ namespace aiof.api.services
                 : subscriptionQuery;
         }
 
-        public async Task<ISubscription> GetSubscriptionAsync(int id)
+        public async Task<ISubscription> GetSubscriptionAsync(
+            int id,
+            bool asNoTracking = true)
         {
-            return await GetSubscriptionsQuery()
+            return await GetSubscriptionsQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
-        public async Task<ISubscription> GetSubscriptionAsync(Guid publicKey)
+        public async Task<ISubscription> GetSubscriptionAsync(
+            Guid publicKey,
+            bool asNoTracking = true)
         {
-            return await GetSubscriptionsQuery()
+            return await GetSubscriptionsQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.PublicKey == publicKey);
         }
         public async Task<ISubscription> GetSubscriptionAsync(
@@ -199,11 +203,12 @@ namespace aiof.api.services
             int id,
             SubscriptionDto subscriptionDto)
         {
-            var subscriptionInDb = await GetSubscriptionAsync(id);
-            var mappedDto = _mapper.Map<Subscription>(subscriptionDto);
-            var subcription = _mapper.Map(subscriptionInDb as Subscription, mappedDto);
+            var subscriptionInDb = await GetSubscriptionAsync(id, false);
+            var subcription = _mapper.Map(subscriptionDto, subscriptionInDb as Subscription);
             
-            _context.Subscriptions.Update(subcription);
+            _context.Subscriptions
+                .Update(subcription);
+
             await _context.SaveChangesAsync();
 
             _logger.LogInformation("{Tenant} | Updated Subscription={Subscription}",
