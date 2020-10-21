@@ -197,25 +197,43 @@ namespace aiof.api.tests
                 id: true);
         }
 
-        public static List<AssetDto> FakerAssetDtos()
+        public static UserDto RandomUserDto(int userId = 1)
+        {
+            return new Faker<UserDto>()
+                .RuleFor(x => x.Assets, f => FakerAssetDtos(userId))
+                .RuleFor(x => x.Liabilities, f => FakerLiabilityDtos(userId))
+                .RuleFor(x => x.Goals, f => FakerGoalDtos(userId))
+                .Generate();
+        }
+
+        public static UserProfileDto RandomUserProfileDto()
+        {
+            return new Faker<UserProfileDto>()
+                .RuleFor(x => x.Gender, f => f.Person.Gender.ToString())
+                .RuleFor(x => x.DateOfBirth, f => f.Date.Past(f.Random.Int(18, 99)))
+                .RuleFor(x => x.EducationLevel, f => "Bachelors")
+                .Generate();
+        }
+
+        public static List<AssetDto> FakerAssetDtos(int userId = 1)
         {
             return new Faker<AssetDto>()
-                .RuleFor(x => x.Name, f => "car to buy")
-                .RuleFor(x => x.TypeName, f => "car")
+                .RuleFor(x => x.Name, f => f.Random.String2(10))
+                .RuleFor(x => x.TypeName, f => f.Random.String2(5))
                 .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000))
-                .RuleFor(x => x.UserId, f => f.Random.Int(1, 2))
+                .RuleFor(x => x.UserId, f => userId)
                 .Generate(GeneratedAmount);
         }
-        public static List<LiabilityDto> FakerLiabilityDtos()
+        public static List<LiabilityDto> FakerLiabilityDtos(int userId = 1)
         {
             return new Faker<LiabilityDto>()
-                .RuleFor(x => x.Name, f => f.Random.String())
-                .RuleFor(x => x.TypeName, f => "car")
+                .RuleFor(x => x.Name, f => f.Random.String2(10))
+                .RuleFor(x => x.TypeName, f => f.Random.String2(5))
                 .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000))
-                .RuleFor(x => x.UserId, f => f.Random.Int(1, 2))
+                .RuleFor(x => x.UserId, f => userId)
                 .Generate(GeneratedAmount);
         }
-        public static List<GoalDto> FakerGoalDtos()
+        public static List<GoalDto> FakerGoalDtos(int userId = 1)
         {
             return new Faker<GoalDto>()
                 .RuleFor(x => x.Name, f => f.Random.String())
@@ -224,7 +242,7 @@ namespace aiof.api.tests
                 .RuleFor(x => x.CurrentAmount, f => f.Random.Decimal(1000, 4000))
                 .RuleFor(x => x.Contribution, f => f.Random.Decimal(700, 900))
                 .RuleFor(x => x.ContributionFrequencyName, f => "monthly")
-                .RuleFor(x => x.UserId, f => f.Random.Int(1, 2))
+                .RuleFor(x => x.UserId, f => userId)
                 .Generate(GeneratedAmount);
         }
 
@@ -289,15 +307,6 @@ namespace aiof.api.tests
                     FakerLiabilityDtos()
                 }
             };
-        }
-
-        public static UserProfileDto RandomUserProfileDto()
-        {
-            return new Faker<UserProfileDto>()
-                .RuleFor(x => x.Gender, f => f.Person.Gender.ToString())
-                .RuleFor(x => x.DateOfBirth, f => f.Date.Past(f.Random.Int(18, 99)))
-                .RuleFor(x => x.EducationLevel, f => "Bachelors")
-                .Generate();
         }
 
         public static int GeneratedAmount = 3;

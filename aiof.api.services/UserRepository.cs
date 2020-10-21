@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -12,7 +13,6 @@ using AutoMapper;
 using FluentValidation;
 
 using aiof.api.data;
-using System.Text.Json;
 
 namespace aiof.api.services
 {
@@ -58,7 +58,6 @@ namespace aiof.api.services
                 ? usersQuery.AsNoTracking()
                 : usersQuery;
         }
-
         private IQueryable<UserProfile> GetProfilesQuery(bool asNoTracking = true)
         {
             var usersProfileQuery = _context.UserProfiles
@@ -100,7 +99,7 @@ namespace aiof.api.services
             int userId,
             UserDto userDto)
         {
-            var userInDb = await GetAsync(userId) as User;
+            var userInDb = await GetAsync(userId, false) as User;
             var user = _mapper.Map(userDto, userInDb);
 
             _context.Update(user);

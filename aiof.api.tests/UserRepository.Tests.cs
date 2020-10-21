@@ -8,6 +8,7 @@ using Xunit;
 
 using aiof.api.data;
 using aiof.api.services;
+using AutoMapper;
 
 namespace aiof.api.tests
 {
@@ -15,7 +16,7 @@ namespace aiof.api.tests
     {
         [Theory]
         [MemberData(nameof(Helper.UsersId), MemberType = typeof(Helper))]
-        public async Task GetUserAsync_IsSuccessful(int id)
+        public async Task GetUserAsync_ById_IsSuccessful(int id)
         {
             var _repo = new ServiceHelper() { UserId = id }.GetRequiredService<IUserRepository>();
             var user = await _repo.GetAsync(id);
@@ -29,10 +30,33 @@ namespace aiof.api.tests
         }
         [Theory]
         [MemberData(nameof(Helper.UsersId), MemberType = typeof(Helper))]
-        public async Task GetUserAsync_NotFound(int id)
+        public async Task GetUserAsync_ById_NotFound(int id)
         {
             var _repo = new ServiceHelper() { UserId = id }.GetRequiredService<IUserRepository>();
             await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.GetAsync(id + 1));
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.UsersIdUsername), MemberType = typeof(Helper))]
+        public async Task GetUserAsync_ByUsername_IsSuccessful(int id, string username)
+        {
+            var _repo = new ServiceHelper() { UserId = id }.GetRequiredService<IUserRepository>();
+            var user = await _repo.GetAsync(username);
+
+            Assert.Equal(id, user.Id);
+            Assert.NotEqual(Guid.Empty, user.PublicKey);
+            Assert.NotNull(user.FirstName);
+            Assert.NotNull(user.LastName);
+            Assert.NotNull(user.Email);
+            Assert.NotNull(user.Username);
+            Assert.Equal(username, user.Username);
+        }
+        [Theory]
+        [MemberData(nameof(Helper.UsersIdUsername), MemberType = typeof(Helper))]
+        public async Task GetUserAsync_ByUsername_NotFound(int id, string username)
+        {
+            var _repo = new ServiceHelper() { UserId = id }.GetRequiredService<IUserRepository>();
+            await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.GetAsync(username + "notfound"));
         }
 
         [Theory]
@@ -56,6 +80,47 @@ namespace aiof.api.tests
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
             await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.GetProfileAsync(userId + 1));
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.UsersId), MemberType = typeof(Helper))]
+        public async Task UpsertAsync_IsSuccessful(int id)
+        {
+            var service = new ServiceHelper() { UserId = id };
+            var _repo = service.GetRequiredService<IUserRepository>();
+            var _mapper = service.GetRequiredService<IMapper>();
+            var dto = Helper.RandomUserDto(id);
+
+            Assert.NotNull(dto);
+
+            var user = await _repo.UpsertAsync(id, dto);
+
+            Assert.NotEmpty(user.Assets);
+            foreach (var asset in dto.Assets)
+            {
+                Assert.NotNull(
+                    user.Assets.FirstOrDefault(x => x.Name == asset.Name
+                        && x.TypeName == asset.TypeName
+                        && x.UserId == asset.UserId));
+            }
+
+            Assert.NotEmpty(user.Liabilities);
+            foreach (var liability in dto.Liabilities)
+            {
+                Assert.NotNull(
+                    user.Liabilities.FirstOrDefault(x => x.Name == liability.Name
+                        && x.TypeName == liability.TypeName
+                        && x.UserId == liability.UserId));
+            }
+
+            Assert.NotEmpty(user.Goals);
+            foreach (var goal in dto.Goals)
+            {
+                Assert.NotNull(
+                    user.Goals.FirstOrDefault(x => x.Name == goal.Name
+                        && x.TypeName == goal.TypeName
+                        && x.UserId == goal.UserId));
+            }
         }
 
         [Theory]
