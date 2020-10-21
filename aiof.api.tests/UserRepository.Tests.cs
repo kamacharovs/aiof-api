@@ -135,6 +135,15 @@ namespace aiof.api.tests
             Assert.Equal(user.Profile.DateOfBirth, dto.DateOfBirth);
             Assert.Equal(user.Profile.EducationLevel, dto.EducationLevel);
         }
+        [Theory]
+        [MemberData(nameof(Helper.UsersId), MemberType = typeof(Helper))]
+        public async Task UpsertProfileAsync_NotFound(int id)
+        {
+            var _repo = new ServiceHelper() { UserId = id }.GetRequiredService<IUserRepository>();
+            var dto = Helper.RandomUserProfileDto();
+
+            await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.UpsertProfileAsync(id + 1, dto));
+        }
 
         [Theory]
         [MemberData(nameof(Helper.SubscriptionsId), MemberType = typeof(Helper))]
