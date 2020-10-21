@@ -167,6 +167,47 @@ namespace aiof.api.tests
             if (!string.IsNullOrEmpty(subscription.Url))
                 Assert.True(subscription.Url.Length < 500);
         }
+        [Theory]
+        [MemberData(nameof(Helper.SubscriptionsId), MemberType = typeof(Helper))]
+        public async Task GetSubscsriptionAsync_ById_IsNull(int userId, int id)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
+            var subscription = await _repo.GetSubscriptionAsync(id * 5);
+
+            Assert.Null(subscription);
+        }
+        [Theory]
+        [MemberData(nameof(Helper.SubscriptionsPublicKey), MemberType = typeof(Helper))]
+        public async Task GetSubscsriptionAsync_ByPublicKey_IsNull(int userId, Guid publicKey)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
+            var newPublicKey = publicKey == Guid.Empty ? Guid.NewGuid() : Guid.NewGuid();
+            var subscription = await _repo.GetSubscriptionAsync(newPublicKey);
+
+            Assert.Null(subscription);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.UsersId), MemberType = typeof(Helper))]
+        public async Task AddSubscriptionAsync_IsSuccessful(int userId)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
+            var dto = Helper.RandomSubscriptionDto(userId);
+            var sub = await _repo.AddSubscriptionAsync(dto);
+
+            Assert.NotNull(sub);
+            Assert.Equal(userId, sub.UserId);
+            Assert.NotEqual(Guid.Empty, sub.PublicKey);
+            Assert.NotNull(sub.Name);
+            Assert.NotNull(sub.Description);
+            Assert.True(sub.Amount > 0);
+            Assert.NotNull(sub.PaymentFrequencyName);
+            Assert.NotNull(sub.PaymentFrequency);
+            Assert.True(sub.PaymentLength > 0);
+            Assert.NotNull(sub.From);
+            Assert.NotNull(sub.Url);
+            Assert.False(sub.IsDeleted);
+        }
 
         [Fact]
         public async Task GetAccountTypesAsync_Is_Successful()

@@ -681,7 +681,8 @@ namespace aiof.api.data
 
         public IEnumerable<object[]> GetFakeSubscriptionsData(
             bool userId = false,
-            bool id = false)
+            bool id = false,
+            bool publicKey = false)
         {
             var fakeSubscriptions = GetFakeSubscriptions()
                 .ToArray();
@@ -691,7 +692,7 @@ namespace aiof.api.data
             if (userId
                 && id)
             {
-                foreach(var fakeSubscription in fakeSubscriptions.Where(x => !x.IsDeleted))
+                foreach (var fakeSubscription in fakeSubscriptions.Where(x => !x.IsDeleted))
                 {
                     toReturn.Add(new object[]
                     {
@@ -700,9 +701,21 @@ namespace aiof.api.data
                     });
                 }
             }
+            else if (userId
+                && publicKey)
+            {
+                foreach (var fakeSubscription in fakeSubscriptions.Where(x => !x.IsDeleted))
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeSubscription.UserId,
+                        fakeSubscription.PublicKey
+                    });
+                }
+            }
             else if (id)
             {
-                foreach(var fakeSubscriptionId in fakeSubscriptions.Where(x => !x.IsDeleted).Select(x => x.Id))
+                foreach (var fakeSubscriptionId in fakeSubscriptions.Where(x => !x.IsDeleted).Select(x => x.Id))
                 {
                     toReturn.Add(new object[]
                     {

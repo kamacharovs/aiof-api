@@ -196,6 +196,12 @@ namespace aiof.api.tests
                 userId: true,
                 id: true);
         }
+        public static IEnumerable<object[]> SubscriptionsPublicKey()
+        {
+            return _Fake.GetFakeSubscriptionsData(
+                userId: true,
+                publicKey: true);
+        }
 
         public static UserDto RandomUserDto(int userId = 1)
         {
@@ -244,6 +250,20 @@ namespace aiof.api.tests
                 .RuleFor(x => x.ContributionFrequencyName, f => "monthly")
                 .RuleFor(x => x.UserId, f => userId)
                 .Generate(GeneratedAmount);
+        }
+
+        public static SubscriptionDto RandomSubscriptionDto(int userId = 1)
+        {
+            return new Faker<SubscriptionDto>()
+                .RuleFor(x => x.Name, f => f.Random.String2(10))
+                .RuleFor(x => x.Description, f => f.Random.String2(50))
+                .RuleFor(x => x.Amount, f => f.Random.Decimal(20, 150))
+                .RuleFor(x => x.PaymentFrequencyName, f => "monthly")
+                .RuleFor(x => x.PaymentLength, f => 365)
+                .RuleFor(x => x.From, f => f.Random.String2(10))
+                .RuleFor(x => x.Url, f => f.Internet.Url())
+                .RuleFor(x => x.UserId, f => userId)
+                .Generate();
         }
 
         public static IEnumerable<object[]> RandomUserDtos()
