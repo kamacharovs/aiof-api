@@ -43,7 +43,7 @@ namespace aiof.api.services
             _sw = new Stopwatch();
         }
 
-        private IQueryable<User> GetUsersQuery(bool asNoTracking = true)
+        private IQueryable<User> GetQuery(bool asNoTracking = true)
         {
             var usersQuery = _context.Users
                 .Include(x => x.Profile)
@@ -59,7 +59,7 @@ namespace aiof.api.services
                 : usersQuery;
         }
 
-        private IQueryable<UserProfile> GetUserProfilesQuery(bool asNoTracking = true)
+        private IQueryable<UserProfile> GetProfilesQuery(bool asNoTracking = true)
         {
             var usersProfileQuery = _context.UserProfiles
                 .Include(x => x.User)
@@ -74,26 +74,26 @@ namespace aiof.api.services
             int id,
             bool asNoTracking = true)
         {
-            return await GetUsersQuery(asNoTracking)
+            return await GetQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.Id == id)
                 ?? throw new AiofNotFoundException($"{nameof(User)} with Id={id} was not found");
         }
-        public async Task<IUser> GetUserAsync(
+        public async Task<IUser> GetAsync(
             string username,
             bool asNoTracking = true)
         {
-            return await GetUsersQuery()
+            return await GetQuery()
                 .FirstOrDefaultAsync(x => x.Username == username)
                 ?? throw new AiofNotFoundException($"{nameof(User)} with Username={username} was not found");
         }
 
-        public async Task<IUserProfile> GetUserProfileAsync(
-            string username,
+        public async Task<IUserProfile> GetProfileAsync(
+            int userId,
             bool asNoTracking = true)
         {
-            return await GetUserProfilesQuery(asNoTracking)
-                .FirstOrDefaultAsync(x => x.User.Username == username)
-                ?? throw new AiofNotFoundException($"{nameof(UserProfile)} for {nameof(User)} with Username={username} was not found");
+            return await GetProfilesQuery(asNoTracking)
+                .FirstOrDefaultAsync(x => x.User.Id == userId)
+                ?? throw new AiofNotFoundException($"{nameof(UserProfile)} for {nameof(User)} with UserId={userId} was not found");
         }
 
         public async Task<IUser> UpsertAsync(
@@ -117,7 +117,7 @@ namespace aiof.api.services
             string username, 
             UserProfileDto userProfileDto)
         {
-            var user = await GetUserAsync(username) as User;
+            var user = await GetAsync(username) as User;
 
             user.Profile = _mapper.Map(userProfileDto, user.Profile);
             user.Profile.UserId = user.Id;
@@ -133,7 +133,7 @@ namespace aiof.api.services
                 username,
                 JsonSerializer.Serialize(user.Profile));
 
-            return await GetUserAsync(username);
+            return await GetAsync(username);
         }
 
         #region Subscription

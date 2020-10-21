@@ -15,10 +15,10 @@ namespace aiof.api.tests
     {
         [Theory]
         [MemberData(nameof(Helper.UsersIdUsername), MemberType = typeof(Helper))]
-        public async Task GetUserAsync_Valid(int userId, string username)
+        public async Task GetUserAsync_IsSuccessful(int userId, string username)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
-            var user = await _repo.GetUserAsync(username);
+            var user = await _repo.GetAsync(username);
 
             Assert.NotNull(user.FirstName);
             Assert.NotNull(user.LastName);
@@ -27,13 +27,21 @@ namespace aiof.api.tests
         }
 
         [Theory]
-        [MemberData(nameof(Helper.UserProfilesIdUsername), MemberType = typeof(Helper))]
-        public async Task GetUserProfileAsync_Valid(int userId, string username)
+        [MemberData(nameof(Helper.UserProfilesId), MemberType = typeof(Helper))]
+        public async Task GetUserProfileAsync_IsSuccessful(int userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
-            var userProfile = await _repo.GetUserProfileAsync(username);
+            var profile = await _repo.GetProfileAsync(userId);
 
-            Assert.NotNull(userProfile);
+            Assert.NotNull(profile);
+            Assert.NotEqual(profile.PublicKey, Guid.Empty);
+            Assert.NotNull(profile.User);
+            Assert.NotNull(profile.Gender);
+            Assert.NotNull(profile.Occupation);
+            Assert.NotNull(profile.OccupationIndustry);
+            Assert.NotNull(profile.MaritalStatus);
+            Assert.NotNull(profile.EducationLevel);
+            Assert.NotNull(profile.ResidentialStatus);
         }
 
         [Theory]

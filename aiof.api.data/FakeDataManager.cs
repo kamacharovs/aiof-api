@@ -572,6 +572,14 @@ namespace aiof.api.data
                         fakeUser.Username,
                     });
             }
+            else if (userId)
+            {
+                foreach (var fakeUserId in fakeUserProfiles.Select(x => x.UserId))
+                    toReturn.Add(new object[]
+                    {
+                        fakeUserId
+                    });
+            }
             else if (username)
             {
                 foreach (var fakeUsername in fakeUserProfiles.Select(x => x.User.Username))

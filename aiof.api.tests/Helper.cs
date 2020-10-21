@@ -144,6 +144,11 @@ namespace aiof.api.tests
                 id: true,
                 username: true);
         }
+        public static IEnumerable<object[]> UserProfilesId()
+        {
+            return _Fake.GetFakeUserProfilesData(
+                userId: true);
+        }
         public static IEnumerable<object[]> UserProfilesIdUsername()
         {
             return _Fake.GetFakeUserProfilesData(
