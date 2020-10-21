@@ -150,31 +150,31 @@ namespace aiof.api.tests
         public async Task GetSubscsriptionAsync_IsSuccessful(int userId, int id)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
-            var subscription = await _repo.GetSubscriptionAsync(id);
+            var sub = await _repo.GetSubscriptionAsync(id);
 
-            Assert.NotNull(subscription);
-            Assert.NotEqual(Guid.Empty, subscription.PublicKey);
-            Assert.NotNull(subscription.Name);
-            Assert.NotNull(subscription.Description);
-            Assert.True(subscription.Amount > 0);
-            Assert.NotNull(subscription.PaymentFrequencyName);
-            Assert.NotNull(subscription.PaymentFrequency);
-            Assert.True(subscription.PaymentLength > 0);
+            Assert.NotNull(sub);
+            Assert.NotEqual(Guid.Empty, sub.PublicKey);
+            Assert.NotNull(sub.Name);
+            Assert.NotNull(sub.Description);
+            Assert.True(sub.Amount > 0);
+            Assert.NotNull(sub.PaymentFrequencyName);
+            Assert.NotNull(sub.PaymentFrequency);
+            Assert.True(sub.PaymentLength > 0);
 
-            if (!string.IsNullOrEmpty(subscription.From))
-                Assert.True(subscription.From.Length < 200);
+            if (!string.IsNullOrEmpty(sub.From))
+                Assert.True(sub.From.Length < 200);
 
-            if (!string.IsNullOrEmpty(subscription.Url))
-                Assert.True(subscription.Url.Length < 500);
+            if (!string.IsNullOrEmpty(sub.Url))
+                Assert.True(sub.Url.Length < 500);
         }
         [Theory]
         [MemberData(nameof(Helper.SubscriptionsId), MemberType = typeof(Helper))]
         public async Task GetSubscsriptionAsync_ById_IsNull(int userId, int id)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
-            var subscription = await _repo.GetSubscriptionAsync(id * 5);
+            var sub = await _repo.GetSubscriptionAsync(id * 5);
 
-            Assert.Null(subscription);
+            Assert.Null(sub);
         }
         [Theory]
         [MemberData(nameof(Helper.SubscriptionsPublicKey), MemberType = typeof(Helper))]
@@ -182,9 +182,9 @@ namespace aiof.api.tests
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
             var newPublicKey = publicKey == Guid.Empty ? Guid.NewGuid() : Guid.NewGuid();
-            var subscription = await _repo.GetSubscriptionAsync(newPublicKey);
+            var sub = await _repo.GetSubscriptionAsync(newPublicKey);
 
-            Assert.Null(subscription);
+            Assert.Null(sub);
         }
 
         [Theory]
@@ -233,6 +233,28 @@ namespace aiof.api.tests
             Assert.Null(sub);
         }
 
+        [Theory]
+        [MemberData(nameof(Helper.AccountsId), MemberType = typeof(Helper))]
+        public async Task GetAccountAsync_IsSuccessful(int userId, int id)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
+            var acc = await _repo.GetAccountAsync(id);
+
+            Assert.NotNull(acc);
+            Assert.Equal(userId, acc.UserId);
+            Assert.NotEqual(Guid.Empty, acc.PublicKey);
+            Assert.NotNull(acc.Name);
+            Assert.NotNull(acc.Description);
+            Assert.NotNull(acc.TypeName);
+        }
+        [Theory]
+        [MemberData(nameof(Helper.AccountsId), MemberType = typeof(Helper))]
+        public async Task GetAccountAsync_NotFound(int userId, int id)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
+            await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.GetAccountAsync(id * 5));
+        }
+
         [Fact]
         public async Task GetAccountTypesAsync_Is_Successful()
         {
@@ -254,6 +276,17 @@ namespace aiof.api.tests
             Assert.NotNull(accountTypesMap.First().AccountTypeName);
             Assert.NotNull(accountTypesMap.First().AccountType);
             Assert.NotNull(accountTypesMap.First().AccountType.Name);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.AccountsId), MemberType = typeof(Helper))]
+        public async Task DeleteAccountAsync_IsSuccessful(int userId, int id)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
+
+            await _repo.DeleteAccountAsync(id);
+
+            await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.GetAccountAsync(id));
         }
     }
 }

@@ -203,6 +203,19 @@ namespace aiof.api.tests
                 publicKey: true);
         }
 
+        public static IEnumerable<object[]> AccountsId()
+        {
+            return _Fake.GetFakeAccountsData(
+                userId: true,
+                id: true);
+        }
+        public static IEnumerable<object[]> AccountsPublicKey()
+        {
+            return _Fake.GetFakeAccountsData(
+                userId: true,
+                publicKey: true);
+        }
+
         public static UserDto RandomUserDto(int userId = 1)
         {
             return new Faker<UserDto>()

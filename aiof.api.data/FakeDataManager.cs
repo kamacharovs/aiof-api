@@ -726,6 +726,54 @@ namespace aiof.api.data
 
             return toReturn;
         }
+
+        public IEnumerable<object[]> GetFakeAccountsData(
+            bool userId = false,
+            bool id = false,
+            bool publicKey = false)
+        {
+            var fakeAccounts = GetFakeAccounts()
+                .ToArray();
+
+            var toReturn = new List<object[]>();
+
+            if (userId
+                && id)
+            {
+                foreach (var fakefakeAccount in fakeAccounts.Where(x => !x.IsDeleted))
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakefakeAccount.UserId,
+                        fakefakeAccount.Id
+                    });
+                }
+            }
+            else if (userId
+                && publicKey)
+            {
+                foreach (var fakeAccount in fakeAccounts.Where(x => !x.IsDeleted))
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeAccount.UserId,
+                        fakeAccount.PublicKey
+                    });
+                }
+            }
+            else if (id)
+            {
+                foreach (var fakeAccountId in fakeAccounts.Where(x => !x.IsDeleted).Select(x => x.Id))
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeAccountId
+                    });
+                }
+            }
+
+            return toReturn;
+        }
         #endregion
     }
 }
