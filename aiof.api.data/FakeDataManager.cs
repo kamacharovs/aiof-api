@@ -100,7 +100,7 @@ namespace aiof.api.data
                 {
                     Id = 1,
                     UserId = 1,
-                    MaritalStatus = "single",
+                    Gender = "Male",
                     Occupation = "Sr. Software Engineer",
                     OccupationIndustry = "IT"
                 }

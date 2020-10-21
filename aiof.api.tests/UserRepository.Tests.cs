@@ -14,16 +14,25 @@ namespace aiof.api.tests
     public class UserRepositoryTests
     {
         [Theory]
-        [MemberData(nameof(Helper.UsersIdUsername), MemberType = typeof(Helper))]
-        public async Task GetUserAsync_IsSuccessful(int userId, string username)
+        [MemberData(nameof(Helper.UsersId), MemberType = typeof(Helper))]
+        public async Task GetUserAsync_IsSuccessful(int id)
         {
-            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
-            var user = await _repo.GetAsync(username);
+            var _repo = new ServiceHelper() { UserId = id }.GetRequiredService<IUserRepository>();
+            var user = await _repo.GetAsync(id);
 
+            Assert.Equal(id, user.Id);
+            Assert.NotEqual(Guid.Empty, user.PublicKey);
             Assert.NotNull(user.FirstName);
             Assert.NotNull(user.LastName);
             Assert.NotNull(user.Email);
             Assert.NotNull(user.Username);
+        }
+        [Theory]
+        [MemberData(nameof(Helper.UsersId), MemberType = typeof(Helper))]
+        public async Task GetUserAsync_NotFound(int id)
+        {
+            var _repo = new ServiceHelper() { UserId = id }.GetRequiredService<IUserRepository>();
+            await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.GetAsync(id + 1));
         }
 
         [Theory]
@@ -40,8 +49,13 @@ namespace aiof.api.tests
             Assert.NotNull(profile.Occupation);
             Assert.NotNull(profile.OccupationIndustry);
             Assert.NotNull(profile.MaritalStatus);
-            Assert.NotNull(profile.EducationLevel);
-            Assert.NotNull(profile.ResidentialStatus);
+        }
+        [Theory]
+        [MemberData(nameof(Helper.UserProfilesId), MemberType = typeof(Helper))]
+        public async Task GetUserProfileAsync_NotFound(int userId)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
+            await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.GetProfileAsync(userId + 1));
         }
 
         [Theory]
