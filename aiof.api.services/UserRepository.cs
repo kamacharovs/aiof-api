@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -12,7 +13,6 @@ using AutoMapper;
 using FluentValidation;
 
 using aiof.api.data;
-using System.Text.Json;
 
 namespace aiof.api.services
 {
@@ -43,7 +43,7 @@ namespace aiof.api.services
             _sw = new Stopwatch();
         }
 
-        private IQueryable<User> GetUsersQuery(bool asNoTracking = true)
+        private IQueryable<User> GetQuery(bool asNoTracking = true)
         {
             var usersQuery = _context.Users
                 .Include(x => x.Profile)
@@ -58,8 +58,7 @@ namespace aiof.api.services
                 ? usersQuery.AsNoTracking()
                 : usersQuery;
         }
-
-        private IQueryable<UserProfile> GetUserProfilesQuery(bool asNoTracking = true)
+        private IQueryable<UserProfile> GetProfilesQuery(bool asNoTracking = true)
         {
             var usersProfileQuery = _context.UserProfiles
                 .Include(x => x.User)
@@ -74,33 +73,33 @@ namespace aiof.api.services
             int id,
             bool asNoTracking = true)
         {
-            return await GetUsersQuery(asNoTracking)
+            return await GetQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.Id == id)
                 ?? throw new AiofNotFoundException($"{nameof(User)} with Id={id} was not found");
         }
-        public async Task<IUser> GetUserAsync(
+        public async Task<IUser> GetAsync(
             string username,
             bool asNoTracking = true)
         {
-            return await GetUsersQuery()
+            return await GetQuery()
                 .FirstOrDefaultAsync(x => x.Username == username)
                 ?? throw new AiofNotFoundException($"{nameof(User)} with Username={username} was not found");
         }
 
-        public async Task<IUserProfile> GetUserProfileAsync(
-            string username,
+        public async Task<IUserProfile> GetProfileAsync(
+            int userId,
             bool asNoTracking = true)
         {
-            return await GetUserProfilesQuery(asNoTracking)
-                .FirstOrDefaultAsync(x => x.User.Username == username)
-                ?? throw new AiofNotFoundException($"{nameof(UserProfile)} for {nameof(User)} with Username={username} was not found");
+            return await GetProfilesQuery(asNoTracking)
+                .FirstOrDefaultAsync(x => x.User.Id == userId)
+                ?? throw new AiofNotFoundException($"{nameof(UserProfile)} for {nameof(User)} with UserId={userId} was not found");
         }
 
         public async Task<IUser> UpsertAsync(
             int userId,
             UserDto userDto)
         {
-            var userInDb = await GetAsync(userId) as User;
+            var userInDb = await GetAsync(userId, false) as User;
             var user = _mapper.Map(userDto, userInDb);
 
             _context.Update(user);
@@ -113,12 +112,13 @@ namespace aiof.api.services
             return await GetAsync(userId);
         }
 
-        public async Task<IUser> UpsertUserProfileAsync(
-            string username, 
+        public async Task<IUser> UpsertProfileAsync(
+            int userId, 
             UserProfileDto userProfileDto)
         {
-            var user = await GetUserAsync(username) as User;
+            var user = await GetAsync(userId, false) as User;
 
+            user.Profile = user.Profile ?? new UserProfile();
             user.Profile = _mapper.Map(userProfileDto, user.Profile);
             user.Profile.UserId = user.Id;
             user.Profile.Age = user.Profile.DateOfBirth is null ? null : (int?)(DateTime.UtcNow.Year - user.Profile.DateOfBirth.Value.Year);
@@ -128,12 +128,12 @@ namespace aiof.api.services
 
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("{Tenant} | Upserted User with Username={Username}. UserProfile={UserProfile}",
+            _logger.LogInformation("{Tenant} | Upserted User with Username={UserId}. UserProfile={UserProfile}",
                 _tenant,
-                username,
+                userId,
                 JsonSerializer.Serialize(user.Profile));
 
-            return await GetUserAsync(username);
+            return await GetAsync(userId);
         }
 
         #region Subscription
@@ -148,14 +148,18 @@ namespace aiof.api.services
                 : subscriptionQuery;
         }
 
-        public async Task<ISubscription> GetSubscriptionAsync(int id)
+        public async Task<ISubscription> GetSubscriptionAsync(
+            int id,
+            bool asNoTracking = true)
         {
-            return await GetSubscriptionsQuery()
+            return await GetSubscriptionsQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
-        public async Task<ISubscription> GetSubscriptionAsync(Guid publicKey)
+        public async Task<ISubscription> GetSubscriptionAsync(
+            Guid publicKey,
+            bool asNoTracking = true)
         {
-            return await GetSubscriptionsQuery()
+            return await GetSubscriptionsQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.PublicKey == publicKey);
         }
         public async Task<ISubscription> GetSubscriptionAsync(
@@ -199,11 +203,12 @@ namespace aiof.api.services
             int id,
             SubscriptionDto subscriptionDto)
         {
-            var subscriptionInDb = await GetSubscriptionAsync(id);
-            var mappedDto = _mapper.Map<Subscription>(subscriptionDto);
-            var subcription = _mapper.Map(subscriptionInDb as Subscription, mappedDto);
+            var subscriptionInDb = await GetSubscriptionAsync(id, false);
+            var subcription = _mapper.Map(subscriptionDto, subscriptionInDb as Subscription);
             
-            _context.Subscriptions.Update(subcription);
+            _context.Subscriptions
+                .Update(subcription);
+
             await _context.SaveChangesAsync();
 
             _logger.LogInformation("{Tenant} | Updated Subscription={Subscription}",

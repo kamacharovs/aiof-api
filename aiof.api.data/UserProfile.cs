@@ -30,7 +30,7 @@ namespace aiof.api.data
         public string Occupation { get; set; }
         public string OccupationIndustry { get; set; }
         public decimal? GrossSalary { get; set; }
-        public string MaritalStatus { get; set; }
+        public string MaritalStatus { get; set; } = MaritalStatuses.Single.ToString();
         public string EducationLevel { get; set; }
         public string ResidentialStatus { get; set; }
 

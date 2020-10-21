@@ -16,12 +16,14 @@ namespace aiof.api.core.Controllers
     /// <summary>
     /// Everything aiof user
     /// </summary>
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("user")]
     [Produces(Keys.ApplicationJson)]
     [Consumes(Keys.ApplicationJson)]
     [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(IAiofProblemDetailBase), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(IAiofProblemDetailBase), StatusCodes.Status401Unauthorized)]
     public class UserController : ControllerBase
     {
         public readonly IUserRepository _repo;
@@ -53,7 +55,7 @@ namespace aiof.api.core.Controllers
         [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetUserAsync([FromQuery] string username)
         {
-            return Ok(await _repo.GetUserAsync(username));
+            return Ok(await _repo.GetAsync(username));
         }
 
         /// <summary>
@@ -72,12 +74,12 @@ namespace aiof.api.core.Controllers
         /// Upsert User profile
         /// </summary>
         [HttpPut]
-        [Route("profile")]
+        [Route("{id}/profile")]
         public async Task<IActionResult> AddUserProfileAsync(
-            [FromQuery, Required] string username,
+            [FromRoute, Required] int id,
             [FromBody, Required] UserProfileDto userProfileDto)
         {
-            return Ok(await _repo.UpsertUserProfileAsync(username, userProfileDto));
+            return Ok(await _repo.UpsertProfileAsync(id, userProfileDto));
         }
 
         /// <summary>

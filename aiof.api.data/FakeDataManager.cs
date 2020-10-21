@@ -100,7 +100,7 @@ namespace aiof.api.data
                 {
                     Id = 1,
                     UserId = 1,
-                    MaritalStatus = "single",
+                    Gender = "Male",
                     Occupation = "Sr. Software Engineer",
                     OccupationIndustry = "IT"
                 }
@@ -572,6 +572,14 @@ namespace aiof.api.data
                         fakeUser.Username,
                     });
             }
+            else if (userId)
+            {
+                foreach (var fakeUserId in fakeUserProfiles.Select(x => x.UserId))
+                    toReturn.Add(new object[]
+                    {
+                        fakeUserId
+                    });
+            }
             else if (username)
             {
                 foreach (var fakeUsername in fakeUserProfiles.Select(x => x.User.Username))
@@ -673,7 +681,8 @@ namespace aiof.api.data
 
         public IEnumerable<object[]> GetFakeSubscriptionsData(
             bool userId = false,
-            bool id = false)
+            bool id = false,
+            bool publicKey = false)
         {
             var fakeSubscriptions = GetFakeSubscriptions()
                 .ToArray();
@@ -683,7 +692,7 @@ namespace aiof.api.data
             if (userId
                 && id)
             {
-                foreach(var fakeSubscription in fakeSubscriptions.Where(x => !x.IsDeleted))
+                foreach (var fakeSubscription in fakeSubscriptions.Where(x => !x.IsDeleted))
                 {
                     toReturn.Add(new object[]
                     {
@@ -692,13 +701,73 @@ namespace aiof.api.data
                     });
                 }
             }
+            else if (userId
+                && publicKey)
+            {
+                foreach (var fakeSubscription in fakeSubscriptions.Where(x => !x.IsDeleted))
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeSubscription.UserId,
+                        fakeSubscription.PublicKey
+                    });
+                }
+            }
             else if (id)
             {
-                foreach(var fakeSubscriptionId in fakeSubscriptions.Where(x => !x.IsDeleted).Select(x => x.Id))
+                foreach (var fakeSubscriptionId in fakeSubscriptions.Where(x => !x.IsDeleted).Select(x => x.Id))
                 {
                     toReturn.Add(new object[]
                     {
                         fakeSubscriptionId
+                    });
+                }
+            }
+
+            return toReturn;
+        }
+
+        public IEnumerable<object[]> GetFakeAccountsData(
+            bool userId = false,
+            bool id = false,
+            bool publicKey = false)
+        {
+            var fakeAccounts = GetFakeAccounts()
+                .ToArray();
+
+            var toReturn = new List<object[]>();
+
+            if (userId
+                && id)
+            {
+                foreach (var fakefakeAccount in fakeAccounts.Where(x => !x.IsDeleted))
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakefakeAccount.UserId,
+                        fakefakeAccount.Id
+                    });
+                }
+            }
+            else if (userId
+                && publicKey)
+            {
+                foreach (var fakeAccount in fakeAccounts.Where(x => !x.IsDeleted))
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeAccount.UserId,
+                        fakeAccount.PublicKey
+                    });
+                }
+            }
+            else if (id)
+            {
+                foreach (var fakeAccountId in fakeAccounts.Where(x => !x.IsDeleted).Select(x => x.Id))
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeAccountId
                     });
                 }
             }

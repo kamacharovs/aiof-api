@@ -133,6 +133,7 @@ namespace aiof.api.core
             }
 
             app.UseAiofExceptionMiddleware();
+            app.UseAiofUnauthorizedMiddleware();
             app.UseHealthChecks("/health");
             app.UseSwagger();
 
