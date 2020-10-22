@@ -85,6 +85,11 @@ namespace aiof.api.services
                 .FirstOrDefaultAsync(x => x.Username == username)
                 ?? throw new AiofNotFoundException($"{nameof(User)} with Username={username} was not found");
         }
+        public async Task<bool> ExistsAsync(int id)
+        {
+            return await _context.Users
+                .AnyAsync(x => x.Id == id);
+        }
 
         public async Task<IUserProfile> GetProfileAsync(
             int userId,
@@ -92,7 +97,7 @@ namespace aiof.api.services
         {
             return await GetProfilesQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.UserId == userId)
-                ?? throw new AiofNotFoundException($"{nameof(UserProfile)} for {nameof(User)} with UserId={userId} was not found");
+                ?? throw new AiofNotFoundException($"{nameof(UserProfile)} for {nameof(User)} with UserId={userId} was not found"); ;
         }
 
         public async Task<IUser> UpsertAsync(
@@ -116,11 +121,18 @@ namespace aiof.api.services
             int userId,
             UserProfileDto userProfileDto)
         {
-            var profileInDb = new UserProfile();
-            try { profileInDb = await GetProfileAsync(userId, false) as UserProfile; }
+            if (await ExistsAsync(userId) is false)
+                throw new AiofNotFoundException($"{nameof(User)} with Id={userId} was not found. Unable to update profile");
+
+            var profile = new UserProfile();
+            try
+            {
+                profile = await GetProfileAsync(userId, false) as UserProfile;
+            }
             catch (Exception e) when (e is AiofNotFoundException) { }
 
-            var profile = _mapper.Map(userProfileDto, profileInDb);
+            profile = _mapper.Map(userProfileDto, profile);
+            profile.UserId = userId;
 
             _context.UserProfiles
                 .Update(profile);

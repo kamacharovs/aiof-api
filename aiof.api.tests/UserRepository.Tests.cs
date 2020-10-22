@@ -79,7 +79,8 @@ namespace aiof.api.tests
         public async Task GetUserProfileAsync_NotFound(int userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
-            await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.GetProfileAsync(userId + 1));
+            
+            await Assert.ThrowsAsync<AiofNotFoundException>(() =>_repo.GetProfileAsync(userId + 1));
         }
 
         [Theory]
