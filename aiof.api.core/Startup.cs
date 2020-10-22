@@ -66,6 +66,7 @@ namespace aiof.api.core
                 services.AddDbContext<AiofContext>(o => o.UseNpgsql(_config[Keys.PostgreSQL]));
 
             services.AddLogging();
+            services.AddApplicationInsightsTelemetry();
             services.AddHealthChecks();
             services.AddFeatureManagement();
             services.AddHttpContextAccessor();
