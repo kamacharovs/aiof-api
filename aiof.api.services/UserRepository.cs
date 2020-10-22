@@ -61,7 +61,6 @@ namespace aiof.api.services
         private IQueryable<UserProfile> GetProfilesQuery(bool asNoTracking = true)
         {
             var usersProfileQuery = _context.UserProfiles
-                .Include(x => x.User)
                 .AsQueryable();
 
             return asNoTracking
