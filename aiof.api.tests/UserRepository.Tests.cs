@@ -128,12 +128,12 @@ namespace aiof.api.tests
             var _repo = new ServiceHelper() { UserId = id }.GetRequiredService<IUserRepository>();
             var dto = Helper.RandomUserProfileDto();
 
-            var user = await _repo.UpsertProfileAsync(id, dto);
+            var profile = await _repo.UpsertProfileAsync(id, dto);
 
-            Assert.NotNull(user);
-            Assert.Equal(user.Profile.Gender, dto.Gender);
-            Assert.Equal(user.Profile.DateOfBirth, dto.DateOfBirth);
-            Assert.Equal(user.Profile.EducationLevel, dto.EducationLevel);
+            Assert.NotNull(profile);
+            Assert.Equal(profile.Gender, dto.Gender);
+            Assert.Equal(profile.DateOfBirth, dto.DateOfBirth);
+            Assert.Equal(profile.EducationLevel, dto.EducationLevel);
         }
         [Theory]
         [MemberData(nameof(Helper.UsersId), MemberType = typeof(Helper))]

@@ -91,7 +91,7 @@ namespace aiof.api.services
             bool asNoTracking = true)
         {
             return await GetProfilesQuery(asNoTracking)
-                .FirstOrDefaultAsync(x => x.User.Id == userId)
+                .FirstOrDefaultAsync(x => x.UserId == userId)
                 ?? throw new AiofNotFoundException($"{nameof(UserProfile)} for {nameof(User)} with UserId={userId} was not found");
         }
 
@@ -112,28 +112,27 @@ namespace aiof.api.services
             return await GetAsync(userId);
         }
 
-        public async Task<IUser> UpsertProfileAsync(
-            int userId, 
+        public async Task<IUserProfile> UpsertProfileAsync(
+            int userId,
             UserProfileDto userProfileDto)
         {
-            var user = await GetAsync(userId, false) as User;
+            var profileInDb = new UserProfile();
+            try { profileInDb = await GetProfileAsync(userId, false) as UserProfile; }
+            catch (Exception e) when (e is AiofNotFoundException) { }
 
-            user.Profile = user.Profile ?? new UserProfile();
-            user.Profile = _mapper.Map(userProfileDto, user.Profile);
-            user.Profile.UserId = user.Id;
-            user.Profile.Age = user.Profile.DateOfBirth is null ? null : (int?)(DateTime.UtcNow.Year - user.Profile.DateOfBirth.Value.Year);
+            var profile = _mapper.Map(userProfileDto, profileInDb);
 
-            _context.Users
-                .Update(user);
+            _context.UserProfiles
+                .Update(profile);
 
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("{Tenant} | Upserted User with Username={UserId}. UserProfile={UserProfile}",
+            _logger.LogInformation("{Tenant} | Upserted UserProfile with UserId={UserId}. UserProfile={UserProfile}",
                 _tenant,
                 userId,
-                JsonSerializer.Serialize(user.Profile));
+                JsonSerializer.Serialize(profile));
 
-            return await GetAsync(userId);
+            return profile;
         }
 
         #region Subscription
