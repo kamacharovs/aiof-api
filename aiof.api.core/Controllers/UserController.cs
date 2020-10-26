@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.FeatureManagement.Mvc;
 
 using aiof.api.data;
 using aiof.api.services;
@@ -150,8 +151,49 @@ namespace aiof.api.core.Controllers
         }
 
         /// <summary>
+        /// Get Account by id
+        /// </summary>
+        [FeatureGate(FeatureFlags.Account)]
+        [HttpGet]
+        [Route("account/{id}")]
+        [ProducesResponseType(typeof(IAccount), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAccountAsync([FromRoute, Required] int id)
+        {
+            return Ok(await _repo.GetAccountAsync(id));
+        }
+
+        /// <summary>
+        /// Add Account
+        /// </summary>
+        [FeatureGate(FeatureFlags.Account)]
+        [HttpPost]
+        [Route("account")]
+        [ProducesResponseType(typeof(IAccount), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AddAccountAsync([FromBody, Required] AccountDto accountDto)
+        {
+            return Ok(await _repo.AddAccountAsync(accountDto));
+        }
+
+        /// <summary>
+        /// Update Account
+        /// </summary>
+        [FeatureGate(FeatureFlags.Account)]
+        [HttpPut]
+        [Route("account/{id}")]
+        [ProducesResponseType(typeof(IAccount), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateAccountAsync(
+            [FromRoute, Required] int id,
+            [FromBody, Required] AccountDto accountDto)
+        {
+            return Ok(await _repo.UpdateAccountAsync(id, accountDto));
+        }
+
+        /// <summary>
         /// Get Account types
         /// </summary>
+        [FeatureGate(FeatureFlags.Account)]
         [HttpGet]
         [Route("account/types")]
         [ProducesResponseType(typeof(IEnumerable<IAccountType>), StatusCodes.Status200OK)]
@@ -163,6 +205,7 @@ namespace aiof.api.core.Controllers
         /// <summary>
         /// Get Account types mapping
         /// </summary>
+        [FeatureGate(FeatureFlags.Account)]
         [HttpGet]
         [Route("account/types/map")]
         [ProducesResponseType(typeof(IEnumerable<IAccountTypeMap>), StatusCodes.Status200OK)]

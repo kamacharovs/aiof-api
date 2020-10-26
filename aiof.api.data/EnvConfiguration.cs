@@ -50,6 +50,7 @@ namespace aiof.api.data
     {
         Asset,
         Goal,
-        Liability
+        Liability,
+        Account
     }
 }
