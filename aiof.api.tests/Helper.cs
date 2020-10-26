@@ -279,6 +279,16 @@ namespace aiof.api.tests
                 .Generate();
         }
 
+        public static AccountDto RandomAccountDto(int userId = 1)
+        {
+            return new Faker<AccountDto>()
+                .RuleFor(x => x.Name, f => f.Random.String2(10))
+                .RuleFor(x => x.Description, f => f.Random.String2(50))
+                .RuleFor(x => x.TypeName, f => "retirement")
+                .RuleFor(x => x.UserId, f => userId)
+                .Generate();
+        }
+
         public static IEnumerable<object[]> RandomUserDtos()
         {
             return new List<object[]>

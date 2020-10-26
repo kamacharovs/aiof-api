@@ -266,9 +266,11 @@ namespace aiof.api.services
                 : query;
         }
 
-        public async Task<IAccount> GetAccountAsync(int id)
+        public async Task<IAccount> GetAccountAsync(
+            int id,
+            bool asNoTracking = true)
         {
-            return await GetAccountsQuery()
+            return await GetAccountsQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.Id == id)
                 ?? throw new AiofNotFoundException($"{nameof(Account)} with Id={id} was not found");
         }
@@ -283,6 +285,25 @@ namespace aiof.api.services
         {
             return await GetAccountTypeMapsQuery()
                 .ToListAsync();
+        }
+
+        public async Task<IAccount> UpdateAccountAsync(
+            int id,
+            AccountDto accountDto)
+        {
+            var accountInDb = await GetAccountAsync(id, false) as Account;
+            var account = _mapper.Map(accountDto, accountInDb);
+
+            _context.Accounts
+                .Update(account);
+
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation("{Tenant} | Updated Account={Account}",
+                _tenant,
+                JsonSerializer.Serialize(account));
+
+            return account;
         }
 
         public async Task DeleteAccountAsync(int id)
