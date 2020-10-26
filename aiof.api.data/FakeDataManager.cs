@@ -771,6 +771,16 @@ namespace aiof.api.data
                     });
                 }
             }
+            else if (userId)
+            {
+                foreach (var fakeAccountUserId in fakeAccounts.Where(x => !x.IsDeleted).Select(x => x.UserId))
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeAccountUserId
+                    });
+                }
+            }
 
             return toReturn;
         }

@@ -280,8 +280,8 @@ namespace aiof.api.tests
         }
 
         [Theory]
-        [MemberData(nameof(Helper.AccountsId), MemberType = typeof(Helper))]
-        public async Task AddAccountAsync_IsSuccessful(int userId, int id)
+        [MemberData(nameof(Helper.AccountsUserId), MemberType = typeof(Helper))]
+        public async Task AddAccountAsync_IsSuccessful(int userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
             var dto = Helper.RandomAccountDto(userId);
@@ -299,8 +299,8 @@ namespace aiof.api.tests
         }
 
         [Theory]
-        [MemberData(nameof(Helper.AccountsId), MemberType = typeof(Helper))]
-        public async Task AddAccountAsync_AlreadyExists(int userId, int id)
+        [MemberData(nameof(Helper.AccountsUserId), MemberType = typeof(Helper))]
+        public async Task AddAccountAsync_AlreadyExists(int userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
             var dto = Helper.RandomAccountDto(userId);
