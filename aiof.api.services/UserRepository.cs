@@ -275,6 +275,17 @@ namespace aiof.api.services
                 ?? throw new AiofNotFoundException($"{nameof(Account)} with Id={id} was not found");
         }
 
+        public async Task<IAccount> GetAccountAsync(
+            AccountDto accountDto,
+            bool asNoTracking = true)
+        {
+            return await GetAccountsQuery(asNoTracking)
+                .FirstOrDefaultAsync(x => x.Name == accountDto.Name
+                    && x.Description == accountDto.Description
+                    && x.TypeName == accountDto.TypeName
+                    && x.UserId == accountDto.UserId);
+        }
+
         public async Task<IEnumerable<IAccountType>> GetAccountTypesAsync()
         {
             return await GetAccountTypesQuery()
@@ -285,6 +296,26 @@ namespace aiof.api.services
         {
             return await GetAccountTypeMapsQuery()
                 .ToListAsync();
+        }
+
+        public async Task<IAccount> AddAccountAsync(AccountDto accountDto)
+        {
+            var accountInDb = await GetAccountAsync(accountDto);
+            if (accountInDb != null)
+                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
+                    $"Account with Name={accountDto.Name}, Description={accountDto.Description}, Type={accountDto.TypeName} already exists");
+
+            var account = _mapper.Map<Account>(accountDto);
+
+            await _context.Accounts
+                .AddAsync(account);
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation("{Tenant} | Added Account={Account}",
+                _tenant,
+                JsonSerializer.Serialize(account));
+
+            return account;
         }
 
         public async Task<IAccount> UpdateAccountAsync(

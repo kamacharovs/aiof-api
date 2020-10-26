@@ -281,6 +281,36 @@ namespace aiof.api.tests
 
         [Theory]
         [MemberData(nameof(Helper.AccountsId), MemberType = typeof(Helper))]
+        public async Task AddAccountAsync_IsSuccessful(int userId, int id)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
+            var dto = Helper.RandomAccountDto(userId);
+            var account = await _repo.AddAccountAsync(dto);
+
+            Assert.NotNull(account);
+            Assert.NotNull(account.Name);
+            Assert.NotNull(account.Description);
+            Assert.NotNull(account.TypeName);
+            Assert.False(account.IsDeleted);
+            Assert.Equal(dto.Name, account.Name);
+            Assert.Equal(dto.Description, account.Description);
+            Assert.Equal(dto.TypeName, account.TypeName);
+            Assert.Equal(dto.UserId, account.UserId);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.AccountsId), MemberType = typeof(Helper))]
+        public async Task AddAccountAsync_AlreadyExists(int userId, int id)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
+            var dto = Helper.RandomAccountDto(userId);
+            var account = await _repo.AddAccountAsync(dto);
+
+            await Assert.ThrowsAsync<AiofFriendlyException>(() => _repo.AddAccountAsync(dto));
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.AccountsId), MemberType = typeof(Helper))]
         public async Task UpdateAccountAsync_IsSuccessful(int userId, int id)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
