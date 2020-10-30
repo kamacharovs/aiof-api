@@ -6,6 +6,10 @@ services:
     container_name: aiof-data
     ports:
       - 5433:5432
+    environment:
+      POSTGRES_USER: aiof
+      POSTGRES_PASSWORD: aiofiscool
+      POSTGRES_DB: aiof
 
   aiofauth:
     image: gkama/aiof-auth:latest
