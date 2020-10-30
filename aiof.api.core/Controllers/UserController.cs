@@ -75,23 +75,11 @@ namespace aiof.api.core.Controllers
         /// Get User profile
         /// </summary>
         [HttpGet]
-        [Route("{id}/profile")]
+        [Route("profile")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetProfileAsync([FromRoute] int id)
+        public async Task<IActionResult> GetProfileAsync()
         {
-            return Ok(await _repo.GetProfileAsync(id));
-        }
-
-        /// <summary>
-        /// Upsert User profile
-        /// </summary>
-        [HttpPut]
-        [Route("{id}/profile")]
-        public async Task<IActionResult> UpsertUserProfileAsync(
-            [FromRoute, Required] int id,
-            [FromBody, Required] UserProfileDto userProfileDto)
-        {
-            return Ok(await _repo.UpsertProfileAsync(id, userProfileDto));
+            return Ok(await _repo.GetProfileAsync());
         }
 
         /// <summary>

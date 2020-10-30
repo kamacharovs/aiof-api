@@ -13,6 +13,7 @@ using AutoMapper;
 using FluentValidation;
 
 using aiof.api.data;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace aiof.api.services
 {
@@ -91,13 +92,10 @@ namespace aiof.api.services
                 .AnyAsync(x => x.Id == id);
         }
 
-        public async Task<IUserProfile> GetProfileAsync(
-            int userId,
-            bool asNoTracking = true)
+        public async Task<IUserProfile> GetProfileAsync(bool asNoTracking = true)
         {
             return await GetProfilesQuery(asNoTracking)
-                .FirstOrDefaultAsync(x => x.UserId == userId)
-                ?? throw new AiofNotFoundException($"{nameof(UserProfile)} for {nameof(User)} with UserId={userId} was not found"); ;
+                .FirstOrDefaultAsync() ?? throw new AiofNotFoundException($"UserProfile for User with UserId={_context._tenant.UserId} was not found");
         }
 
         public async Task<IUser> UpsertAsync(
@@ -127,7 +125,7 @@ namespace aiof.api.services
             var profile = new UserProfile();
             try
             {
-                profile = await GetProfileAsync(userId, false) as UserProfile;
+                profile = await GetProfileAsync(false) as UserProfile;
             }
             catch (Exception e) when (e is AiofNotFoundException) { }
 

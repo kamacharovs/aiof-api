@@ -64,7 +64,7 @@ namespace aiof.api.tests
         public async Task GetUserProfileAsync_IsSuccessful(int userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
-            var profile = await _repo.GetProfileAsync(userId);
+            var profile = await _repo.GetProfileAsync();
 
             Assert.NotNull(profile);
             Assert.NotEqual(profile.PublicKey, Guid.Empty);
@@ -78,9 +78,9 @@ namespace aiof.api.tests
         [MemberData(nameof(Helper.UserProfilesId), MemberType = typeof(Helper))]
         public async Task GetUserProfileAsync_NotFound(int userId)
         {
-            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
+            var _repo = new ServiceHelper() { UserId = userId * 5 }.GetRequiredService<IUserRepository>();
             
-            await Assert.ThrowsAsync<AiofNotFoundException>(() =>_repo.GetProfileAsync(userId + 1));
+            await Assert.ThrowsAsync<AiofNotFoundException>(() =>_repo.GetProfileAsync());
         }
 
         [Theory]
