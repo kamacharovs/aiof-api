@@ -12,7 +12,7 @@ namespace aiof.api.data
 {
     public interface IEnvConfiguration
     {
-        string DatabaseConString { get; }
+        string DataPostgreSQL { get; }
         int PollyDefaultRetry { get; }
         string MetadataDefaultFrequency { get; }
 

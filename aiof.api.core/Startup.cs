@@ -60,10 +60,7 @@ namespace aiof.api.core
                 .AddScoped<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>()
                 .AddScoped<AbstractValidator<UserDto>, UserDtoValidator>();
 
-            if (_env.IsDevelopment())
-                services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(nameof(AiofContext)));
-            else
-                services.AddDbContext<AiofContext>(o => o.UseNpgsql(_config[Keys.PostgreSQL]));
+            services.AddDbContext<AiofContext>(o => o.UseNpgsql(_config[Keys.DataPostgreSQL]));
 
             services.AddLogging();
             services.AddApplicationInsightsTelemetry();
@@ -126,11 +123,7 @@ namespace aiof.api.core
         {
             if (_env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
-                app.UseCors(x => x.WithOrigins(_config[Keys.PortalCORS]).AllowAnyHeader().AllowAnyMethod());
-
-                services.GetRequiredService<FakeDataManager>()
-                    .UseFakeContext();
+                app.UseCors(x => x.WithOrigins(_config[Keys.CorsPortal]).AllowAnyHeader().AllowAnyMethod());
             }
 
             app.UseAiofExceptionMiddleware();

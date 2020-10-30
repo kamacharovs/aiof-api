@@ -10,9 +10,15 @@ namespace aiof.api.data
 
         public const string FeatureManagement = nameof(FeatureManagement);
 
-        public const string Database = nameof(Database);
+        public const string Data = nameof(Data);
+        public const string InMemory = nameof(InMemory);
         public const string PostgreSQL = nameof(PostgreSQL);
-        public const string PortalCORS = nameof(PortalCORS);
+        public const string DataInMemory = Data + ":" + InMemory;
+        public const string DataPostgreSQL = Data + ":" + PostgreSQL;
+
+        public const string Cors = nameof(Cors);
+        public const string Portal = nameof(Portal);
+        public const string CorsPortal = Cors + ":" + Portal;
 
         public const string Polly = nameof(Polly);
         public const string DefaultRetry = nameof(DefaultRetry);
