@@ -29,6 +29,10 @@ namespace aiof.api.data
         [Required]
         public decimal Value { get; set; }
 
+        public decimal? MonthlyPayment { get; set; }
+
+        public int? Years { get; set; }
+
         [JsonIgnore]
         public int UserId { get; set; }
 
@@ -41,5 +45,7 @@ namespace aiof.api.data
         public string Name { get; set; }
         public string TypeName { get; set; }
         public decimal? Value { get; set; }
+        public decimal? MonthlyPayment { get; set; }
+        public int? Years { get; set; }
     }
 }

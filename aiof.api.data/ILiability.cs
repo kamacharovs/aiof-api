@@ -28,6 +28,10 @@ namespace aiof.api.data
         [Required]
         decimal Value { get; set; }
 
+        decimal? MonthlyPayment { get; set; }
+
+        int? Years { get; set; }
+
         [JsonIgnore]
         int UserId { get; set; }
 
