@@ -28,7 +28,7 @@ namespace aiof.api.data
             CreateMap<AssetDto, Asset>()
                 .ForMember(x => x.Name, o => o.Condition(s => s.Name != null))
                 .ForMember(x => x.TypeName, o => o.Condition(s => s.TypeName != null))
-                .ForMember(x => x.Value, o => o.MapFrom(s => s.Value));
+                .ForMember(x => x.Value, o => o.Condition(s => s.Value != null));
 
             CreateMap<GoalDto, Goal>()
                 .ForMember(x => x.Name, o => o.Condition(s => s.Name != null))

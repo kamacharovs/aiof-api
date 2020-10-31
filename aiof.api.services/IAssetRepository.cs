@@ -15,7 +15,6 @@ namespace aiof.api.services
             string name,
             string typeName,
             decimal? value,
-            int? userId = null,
             bool asNoTracking = true);
         Task<IAsset> GetAsync(AssetDto assetDto);
         Task<IEnumerable<IAsset>> GetAsync(string typeName);

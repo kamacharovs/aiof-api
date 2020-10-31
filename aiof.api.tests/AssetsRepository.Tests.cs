@@ -17,15 +17,11 @@ namespace aiof.api.tests
         public async Task GetAssetAsync_By_NameTypeNameValueUserId_Exists(
             string name,
             string typeName,
-            decimal? value,
-            int? userId)
+            decimal value,
+            int userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
-            var asset = await _repo.GetAsync(
-                name,
-                typeName,
-                value,
-                userId);
+            var asset = await _repo.GetAsync(name, typeName, value);
 
             Assert.NotNull(asset);
             Assert.NotNull(asset.Name);

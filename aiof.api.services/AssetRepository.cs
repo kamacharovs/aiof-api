@@ -68,27 +68,19 @@ namespace aiof.api.services
             string name,
             string typeName,
             decimal? value,
-            int? userId = null,
             bool asNoTracking = true)
         {
-            return userId is null
-                ? await GetQuery(asNoTracking)
-                    .FirstOrDefaultAsync(x => x.Name == name
-                        && x.TypeName == typeName
-                        && x.Value == value)
-                : await GetQuery(asNoTracking)
-                    .FirstOrDefaultAsync(x => x.Name == name
-                        && x.TypeName == typeName
-                        && x.Value == value
-                        && x.UserId == userId);
+            return await GetQuery(asNoTracking)
+                .FirstOrDefaultAsync(x => x.Name == name
+                    && x.TypeName == typeName
+                    && x.Value == value);
         }
         public async Task<IAsset> GetAsync(AssetDto assetDto)
         {
             return await GetAsync(
                 assetDto.Name,
                 assetDto.TypeName,
-                assetDto.Value,
-                _context._tenant.UserId);
+                assetDto.Value);
         }
 
         public async Task<IEnumerable<IAsset>> GetAsync(string typeName)
