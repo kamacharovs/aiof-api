@@ -76,8 +76,7 @@ namespace aiof.api.tests
             {
                 Name = name,
                 TypeName = typeName,
-                Value = 15000M,
-                UserId = null
+                Value = 15000M
             };
             Assert.False(_assetDtoValidator.Validate(assetDto).IsValid);
 

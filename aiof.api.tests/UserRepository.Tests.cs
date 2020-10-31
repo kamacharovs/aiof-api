@@ -99,8 +99,7 @@ namespace aiof.api.tests
             {
                 Assert.NotNull(
                     user.Assets.FirstOrDefault(x => x.Name == asset.Name
-                        && x.TypeName == asset.TypeName
-                        && x.UserId == asset.UserId));
+                        && x.TypeName == asset.TypeName));
             }
 
             Assert.NotEmpty(user.Liabilities);

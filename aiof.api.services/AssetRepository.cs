@@ -88,7 +88,7 @@ namespace aiof.api.services
                 assetDto.Name,
                 assetDto.TypeName,
                 assetDto.Value,
-                assetDto.UserId);
+                _context._tenant.UserId);
         }
 
         public async Task<IEnumerable<IAsset>> GetAsync(string typeName)
@@ -115,6 +115,8 @@ namespace aiof.api.services
                     $"{nameof(Asset)} with the provided information already exists");
 
             var asset = _mapper.Map<Asset>(assetDto);
+
+            asset.UserId = _context._tenant.UserId;
 
             await _context.Assets.AddAsync(asset);
             await _context.SaveChangesAsync();

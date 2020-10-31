@@ -12,9 +12,12 @@ namespace aiof.api.data
         public AutoMappingProfileDto()
         {
             CreateMap<User, User>()
+                .ForMember(x => x.Id, o => o.Ignore())
                 .ForMember(x => x.Assets, o => o.MapFrom((s, x) => s.Assets.Union(x.Assets).ToList()))
                 .ForMember(x => x.Goals, o => o.MapFrom((s, x) => s.Goals.Union(x.Goals).ToList()))
                 .ForMember(x => x.Liabilities, o => o.MapFrom((s, x) => s.Liabilities.Union(x.Liabilities).ToList()))
+                .ForMember(x => x.Subscriptions, o => o.MapFrom((s, x) => s.Subscriptions.Union(x.Subscriptions).ToList()))
+                .ForMember(x => x.Accounts, o => o.MapFrom((s, x) => s.Accounts.Union(x.Accounts).ToList()))
                 .ForAllOtherMembers(x => x.Condition((source, destination, member) => member != null));
             CreateMap<UserDto, User>()
                 .ForAllMembers(x => x.Condition((source, destination, member) => member != null));
@@ -25,8 +28,7 @@ namespace aiof.api.data
             CreateMap<AssetDto, Asset>()
                 .ForMember(x => x.Name, o => o.Condition(s => s.Name != null))
                 .ForMember(x => x.TypeName, o => o.Condition(s => s.TypeName != null))
-                .ForMember(x => x.Value, o => o.Condition(s => s.Value != null))
-                .ForMember(x => x.UserId, o => o.Condition(s => s.UserId != null));
+                .ForMember(x => x.Value, o => o.MapFrom(s => s.Value));
 
             CreateMap<GoalDto, Goal>()
                 .ForMember(x => x.Name, o => o.Condition(s => s.Name != null))

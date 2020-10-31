@@ -224,7 +224,7 @@ namespace aiof.api.tests
         public static UserDto RandomUserDto(int userId = 1)
         {
             return new Faker<UserDto>()
-                .RuleFor(x => x.Assets, f => FakerAssetDtos(userId))
+                .RuleFor(x => x.Assets, f => FakerAssetDtos())
                 .RuleFor(x => x.Liabilities, f => FakerLiabilityDtos(userId))
                 .RuleFor(x => x.Goals, f => FakerGoalDtos(userId))
                 .Generate();
@@ -239,13 +239,12 @@ namespace aiof.api.tests
                 .Generate();
         }
 
-        public static List<AssetDto> FakerAssetDtos(int userId = 1)
+        public static List<AssetDto> FakerAssetDtos()
         {
             return new Faker<AssetDto>()
                 .RuleFor(x => x.Name, f => f.Random.String2(10))
                 .RuleFor(x => x.TypeName, f => f.Random.String2(5))
                 .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000))
-                .RuleFor(x => x.UserId, f => userId)
                 .Generate(GeneratedAmount);
         }
         public static List<LiabilityDto> FakerLiabilityDtos(int userId = 1)
@@ -317,8 +316,7 @@ namespace aiof.api.tests
                 {
                     fakeAssetDto.Name,
                     fakeAssetDto.TypeName,
-                    fakeAssetDto.Value,
-                    fakeAssetDto.UserId
+                    fakeAssetDto.Value
                 });
             }
 
