@@ -107,8 +107,7 @@ namespace aiof.api.tests
             {
                 Assert.NotNull(
                     user.Liabilities.FirstOrDefault(x => x.Name == liability.Name
-                        && x.TypeName == liability.TypeName
-                        && x.UserId == liability.UserId));
+                        && x.TypeName == liability.TypeName));
             }
 
             Assert.NotEmpty(user.Goals);

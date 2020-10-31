@@ -258,7 +258,6 @@ namespace aiof.api.tests
                 .RuleFor(x => x.Name, f => f.Random.String2(10))
                 .RuleFor(x => x.TypeName, f => f.Random.String2(5))
                 .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000))
-                .RuleFor(x => x.UserId, f => userId)
                 .Generate(GeneratedAmount);
         }
         public static List<GoalDto> FakerGoalDtos(int userId = 1)

@@ -61,7 +61,7 @@ namespace aiof.api.services
         {
             return await GetQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.Id == id)
-                ?? throw new AiofNotFoundException($"{nameof(Asset)} with Id={id} was not found");
+                ?? throw new AiofNotFoundException($"Asset with Id={id} was not found");
         }
 
         public async Task<IAsset> GetAsync(
@@ -142,10 +142,10 @@ namespace aiof.api.services
             AssetDto assetDto)
         {
             var asset = await GetAsync(id, asNoTracking: false);
-            var assetToAdd = _mapper.Map(assetDto, asset as Asset);
+            var assetToUpdate = _mapper.Map(assetDto, asset as Asset);
 
             _context.Assets
-                .Update(assetToAdd);
+                .Update(assetToUpdate);
 
             await _context.SaveChangesAsync();
             await _context.Entry(asset)

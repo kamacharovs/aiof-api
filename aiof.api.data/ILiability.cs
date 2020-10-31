@@ -29,7 +29,7 @@ namespace aiof.api.data
         decimal Value { get; set; }
 
         [JsonIgnore]
-        int? UserId { get; set; }
+        int UserId { get; set; }
 
         [JsonIgnore]
         bool IsDeleted { get; set; }
