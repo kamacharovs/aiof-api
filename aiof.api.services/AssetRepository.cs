@@ -104,11 +104,11 @@ namespace aiof.api.services
 
             if (await GetAsync(assetDto) != null)
                 throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"{nameof(Asset)} with the provided information already exists");
+                    $"Asset already exists");
 
             var asset = _mapper.Map<Asset>(assetDto);
 
-            asset.UserId = _context._tenant.UserId;
+            asset.UserId = _context.Tenant.UserId;
 
             await _context.Assets.AddAsync(asset);
             await _context.SaveChangesAsync();
@@ -118,7 +118,7 @@ namespace aiof.api.services
                 .LoadAsync();
             
             _logger.LogInformation("{Tenant} | Created Asset with Id={AssetId}, PublicKey={AssetPublicKey} and UserId={AssetUserId}",
-                _context._tenant.Log,
+                _context.Tenant.Log,
                 asset.Id,
                 asset.PublicKey,
                 asset.UserId);
@@ -147,7 +147,7 @@ namespace aiof.api.services
                 .LoadAsync();
 
             _logger.LogInformation("{Tenant} | Updated Asset with Id={AssetId}, PublicKey={AssetPublicKey} and UserId={AssetUserId}",
-                _context._tenant.Log,
+                _context.Tenant.Log,
                 asset.Id,
                 asset.PublicKey,
                 asset.UserId);

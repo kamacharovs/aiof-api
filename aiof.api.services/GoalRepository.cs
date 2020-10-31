@@ -111,7 +111,7 @@ namespace aiof.api.services
                 .LoadAsync();
 
             _logger.LogInformation("{Tenant} | Created Goal with Id={GoalId}, PublicKey={GoalPublicKey} and UserId={GoalUserId}",
-                _context._tenant.Log,
+                _context.Tenant.Log,
                 goal.Id,
                 goal.PublicKey,
                 goal.UserId);
@@ -141,7 +141,7 @@ namespace aiof.api.services
             await _context.SaveChangesAsync();
 
             _logger.LogInformation("{Tenant} | Update Goal={Goal}",
-                _context._tenant.Log,
+                _context.Tenant.Log,
                 JsonSerializer.Serialize(goal));
 
             return goal;

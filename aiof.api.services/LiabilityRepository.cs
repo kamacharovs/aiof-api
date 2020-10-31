@@ -102,7 +102,7 @@ namespace aiof.api.services
             await _context.SaveChangesAsync();
 
             _logger.LogInformation("{Tenant} | Created Liability={Liability}",
-                _context._tenant.Log,
+                _context.Tenant.Log,
                 JsonSerializer.Serialize(liability));
 
             return liability;
@@ -128,7 +128,7 @@ namespace aiof.api.services
             await _context.SaveChangesAsync();
 
             _logger.LogInformation("{Tenant} | Updated Liability={Liability}",
-                _context._tenant.Log,
+                _context.Tenant.Log,
                 JsonSerializer.Serialize(liability));
 
             return liability;

@@ -13,7 +13,6 @@ using AutoMapper;
 using FluentValidation;
 
 using aiof.api.data;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace aiof.api.services
 {
@@ -22,10 +21,10 @@ namespace aiof.api.services
     {
         private readonly ILogger<UserRepository> _logger;
         private readonly IMapper _mapper;
+        private readonly ITenant _tenant;
         private readonly AiofContext _context;
         private readonly AbstractValidator<SubscriptionDto> _subscriptionDtoValidator;
 
-        private readonly string _tenant;
         private readonly Stopwatch _sw;
 
         public UserRepository(
@@ -40,7 +39,7 @@ namespace aiof.api.services
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _subscriptionDtoValidator = subscriptionDtoValidator ?? throw new ArgumentNullException(nameof(subscriptionDtoValidator));
 
-            _tenant = _context._tenant.Log;
+            _tenant = _context.Tenant;
             _sw = new Stopwatch();
         }
 
@@ -74,7 +73,7 @@ namespace aiof.api.services
         {
             return await GetQuery(asNoTracking)
                 .FirstOrDefaultAsync()
-                ?? throw new AiofNotFoundException($"User with Id={_context._tenant.UserId} was not found");
+                ?? throw new AiofNotFoundException($"User with Id={_context.Tenant.UserId} was not found");
         }
         public async Task<IUser> GetAsync(
             string username,
@@ -94,7 +93,7 @@ namespace aiof.api.services
         {
             return await GetProfilesQuery(asNoTracking)
                 .FirstOrDefaultAsync()
-                ?? throw new AiofNotFoundException($"UserProfile for User with UserId={_context._tenant.UserId} was not found");
+                ?? throw new AiofNotFoundException($"UserProfile for User with UserId={_context.Tenant.UserId} was not found");
         }
 
         public async Task<IUser> UpsertAsync(UserDto userDto)
@@ -107,7 +106,7 @@ namespace aiof.api.services
             await _context.SaveChangesAsync();
 
             _logger.LogInformation("{Tenant} | UpsertUserAsync completed | {UserDto}",
-                _tenant,
+                _tenant.Log,
                 userDto.ToString());
 
             return await GetAsync();
@@ -123,7 +122,7 @@ namespace aiof.api.services
             catch (Exception e) when (e is AiofNotFoundException) { }
 
             profile = _mapper.Map(userProfileDto, profile);
-            profile.UserId = _context._tenant.UserId;
+            profile.UserId = _context.Tenant.UserId;
 
             _context.UserProfiles
                 .Update(profile);
@@ -131,8 +130,8 @@ namespace aiof.api.services
             await _context.SaveChangesAsync();
 
             _logger.LogInformation("{Tenant} | Upserted UserProfile with UserId={UserId}. UserProfile={UserProfile}",
-                _tenant,
-                _context._tenant.UserId,
+                _tenant.Log,
+                _context.Tenant.UserId,
                 JsonSerializer.Serialize(profile));
 
             return profile;
@@ -195,7 +194,7 @@ namespace aiof.api.services
             await _context.SaveChangesAsync();
 
             _logger.LogInformation("{Tenant} | Added Subscription={Subscription}",
-                _tenant,
+                _tenant.Log,
                 JsonSerializer.Serialize(subscription));
 
             return subscription;
@@ -214,7 +213,7 @@ namespace aiof.api.services
             await _context.SaveChangesAsync();
 
             _logger.LogInformation("{Tenant} | Updated Subscription={Subscription}",
-                _tenant,
+                _tenant.Log,
                 JsonSerializer.Serialize(subcription));
 
             return subcription;
@@ -303,7 +302,7 @@ namespace aiof.api.services
             await _context.SaveChangesAsync();
 
             _logger.LogInformation("{Tenant} | Added Account={Account}",
-                _tenant,
+                _tenant.Log,
                 JsonSerializer.Serialize(account));
 
             return account;
@@ -322,7 +321,7 @@ namespace aiof.api.services
             await _context.SaveChangesAsync();
 
             _logger.LogInformation("{Tenant} | Updated Account={Account}",
-                _tenant,
+                _tenant.Log,
                 JsonSerializer.Serialize(account));
 
             return account;

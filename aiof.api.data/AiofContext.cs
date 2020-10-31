@@ -9,7 +9,7 @@ namespace aiof.api.data
 {
     public class AiofContext : DbContext
     {
-        public readonly ITenant _tenant;
+        public readonly ITenant Tenant;
 
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserProfile> UserProfiles { get; set; }
@@ -28,7 +28,7 @@ namespace aiof.api.data
         public AiofContext(DbContextOptions<AiofContext> options, ITenant tenant)
             : base(options)
         {
-            _tenant = tenant ?? throw new ArgumentNullException(nameof(tenant));
+            Tenant = tenant ?? throw new ArgumentNullException(nameof(tenant));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -37,7 +37,7 @@ namespace aiof.api.data
             {
                 e.ToTable(Keys.Entity.User);
 
-                e.HasQueryFilter(x => x.Id == _tenant.UserId);
+                e.HasQueryFilter(x => x.Id == Tenant.UserId);
 
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
@@ -85,7 +85,7 @@ namespace aiof.api.data
 
                 e.HasKey(x => x.Id);
 
-                e.HasQueryFilter(x => x.UserId == _tenant.UserId);
+                e.HasQueryFilter(x => x.UserId == Tenant.UserId);
 
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
@@ -111,7 +111,7 @@ namespace aiof.api.data
 
                 e.HasKey(x => x.Id);
 
-                e.HasQueryFilter(x => x.UserId == _tenant.UserId
+                e.HasQueryFilter(x => x.UserId == Tenant.UserId
                     && !x.IsDeleted);
 
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
@@ -134,7 +134,7 @@ namespace aiof.api.data
 
                 e.HasKey(x => x.Id);
 
-                e.HasQueryFilter(x => x.UserId == _tenant.UserId
+                e.HasQueryFilter(x => x.UserId == Tenant.UserId
                     && !x.IsDeleted);
 
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
@@ -157,7 +157,7 @@ namespace aiof.api.data
 
                 e.HasKey(x => x.Id);
 
-                e.HasQueryFilter(x => x.UserId == _tenant.UserId
+                e.HasQueryFilter(x => x.UserId == Tenant.UserId
                     && !x.IsDeleted);
 
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
@@ -230,7 +230,7 @@ namespace aiof.api.data
 
                 e.HasKey(x => x.Id);
 
-                e.HasQueryFilter(x => x.UserId == _tenant.UserId
+                e.HasQueryFilter(x => x.UserId == Tenant.UserId
                     && !x.IsDeleted);
 
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
@@ -257,7 +257,7 @@ namespace aiof.api.data
 
                 e.HasKey(x => x.Id);
 
-                e.HasQueryFilter(x => x.UserId == _tenant.UserId
+                e.HasQueryFilter(x => x.UserId == Tenant.UserId
                     && !x.IsDeleted);
 
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
