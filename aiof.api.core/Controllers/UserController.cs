@@ -35,40 +35,38 @@ namespace aiof.api.core.Controllers
         }
 
         /// <summary>
-        /// Get User by id
+        /// Get User
         /// </summary>
         [HttpGet]
-        [Route("{id}")]
-        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAsync([FromRoute] int id)
+        public async Task<IActionResult> GetAsync()
         {
-            return Ok(await _repo.GetAsync(id));
+            return Ok(await _repo.GetAsync());
         }
         
         /// <summary>
         /// Get User by username
         /// </summary>
         [HttpGet]
-        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
+        [Route("{username}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetUserAsync([FromQuery] string username)
+        public async Task<IActionResult> GetByUsernameAsync([FromRoute] string username)
         {
             return Ok(await _repo.GetAsync(username));
         }
 
         /// <summary>
-        /// Upsert User finances
+        /// Upsert User
         /// </summary>
-        [HttpPost]
-        [Route("{id}/finance")]
-        public async Task<IActionResult> UpsertFinanceAsync(
-            [FromRoute, Required] int id,
-            [FromBody, Required] UserDto userDto)
+        [HttpPut]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpsertAsync([FromBody, Required] UserDto userDto)
         {
-            return Ok(await _repo.UpsertAsync(id, userDto));
+            return Ok(await _repo.UpsertAsync(userDto));
         }
 
         /// <summary>
@@ -77,9 +75,22 @@ namespace aiof.api.core.Controllers
         [HttpGet]
         [Route("profile")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IUserProfile), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetProfileAsync()
         {
             return Ok(await _repo.GetProfileAsync());
+        }
+
+        /// <summary>
+        /// Upsert User profile
+        /// </summary>
+        [HttpPut]
+        [Route("profile")]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IUserProfile), StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpsertUserProfileAsync([FromBody, Required] UserProfileDto userProfileDto)
+        {
+            return Ok(await _repo.UpsertProfileAsync(userProfileDto));
         }
 
         /// <summary>

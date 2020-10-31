@@ -19,7 +19,7 @@ namespace aiof.api.tests
         public async Task GetUserAsync_ById_IsSuccessful(int id)
         {
             var _repo = new ServiceHelper() { UserId = id }.GetRequiredService<IUserRepository>();
-            var user = await _repo.GetAsync(id);
+            var user = await _repo.GetAsync();
 
             Assert.Equal(id, user.Id);
             Assert.NotEqual(Guid.Empty, user.PublicKey);
@@ -32,8 +32,8 @@ namespace aiof.api.tests
         [MemberData(nameof(Helper.UsersId), MemberType = typeof(Helper))]
         public async Task GetUserAsync_ById_NotFound(int id)
         {
-            var _repo = new ServiceHelper() { UserId = id }.GetRequiredService<IUserRepository>();
-            await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.GetAsync(id + 1));
+            var _repo = new ServiceHelper() { UserId = id * 5 }.GetRequiredService<IUserRepository>();
+            await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.GetAsync());
         }
 
         [Theory]
@@ -92,7 +92,7 @@ namespace aiof.api.tests
 
             Assert.NotNull(dto);
 
-            var user = await _repo.UpsertAsync(id, dto);
+            var user = await _repo.UpsertAsync(dto);
 
             Assert.NotEmpty(user.Assets);
             foreach (var asset in dto.Assets)
@@ -129,21 +129,12 @@ namespace aiof.api.tests
             var _repo = new ServiceHelper() { UserId = id }.GetRequiredService<IUserRepository>();
             var dto = Helper.RandomUserProfileDto();
 
-            var profile = await _repo.UpsertProfileAsync(id, dto);
+            var profile = await _repo.UpsertProfileAsync(dto);
 
             Assert.NotNull(profile);
             Assert.Equal(profile.Gender, dto.Gender);
             Assert.Equal(profile.DateOfBirth, dto.DateOfBirth);
             Assert.Equal(profile.EducationLevel, dto.EducationLevel);
-        }
-        [Theory]
-        [MemberData(nameof(Helper.UsersId), MemberType = typeof(Helper))]
-        public async Task UpsertProfileAsync_NotFound(int id)
-        {
-            var _repo = new ServiceHelper() { UserId = id }.GetRequiredService<IUserRepository>();
-            var dto = Helper.RandomUserProfileDto();
-
-            await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.UpsertProfileAsync(id + 1, dto));
         }
 
         [Theory]

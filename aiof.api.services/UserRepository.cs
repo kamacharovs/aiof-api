@@ -70,13 +70,11 @@ namespace aiof.api.services
                 : usersProfileQuery;
         }
 
-        public async Task<IUser> GetAsync(
-            int id,
-            bool asNoTracking = true)
+        public async Task<IUser> GetAsync(bool asNoTracking = true)
         {
             return await GetQuery(asNoTracking)
-                .FirstOrDefaultAsync(x => x.Id == id)
-                ?? throw new AiofNotFoundException($"{nameof(User)} with Id={id} was not found");
+                .FirstOrDefaultAsync()
+                ?? throw new AiofNotFoundException($"User with Id={_context._tenant.UserId} was not found");
         }
         public async Task<IUser> GetAsync(
             string username,
@@ -98,11 +96,9 @@ namespace aiof.api.services
                 .FirstOrDefaultAsync() ?? throw new AiofNotFoundException($"UserProfile for User with UserId={_context._tenant.UserId} was not found");
         }
 
-        public async Task<IUser> UpsertAsync(
-            int userId,
-            UserDto userDto)
+        public async Task<IUser> UpsertAsync(UserDto userDto)
         {
-            var userInDb = await GetAsync(userId, false) as User;
+            var userInDb = await GetAsync(false) as User;
             var user = _mapper.Map(userDto, userInDb);
 
             _context.Update(user);
@@ -112,16 +108,11 @@ namespace aiof.api.services
                 _tenant,
                 userDto.ToString());
 
-            return await GetAsync(userId);
+            return await GetAsync();
         }
 
-        public async Task<IUserProfile> UpsertProfileAsync(
-            int userId,
-            UserProfileDto userProfileDto)
+        public async Task<IUserProfile> UpsertProfileAsync(UserProfileDto userProfileDto)
         {
-            if (await ExistsAsync(userId) is false)
-                throw new AiofNotFoundException($"{nameof(User)} with Id={userId} was not found. Unable to update profile");
-
             var profile = new UserProfile();
             try
             {
@@ -130,7 +121,7 @@ namespace aiof.api.services
             catch (Exception e) when (e is AiofNotFoundException) { }
 
             profile = _mapper.Map(userProfileDto, profile);
-            profile.UserId = userId;
+            profile.UserId = _context._tenant.UserId;
 
             _context.UserProfiles
                 .Update(profile);
@@ -139,7 +130,7 @@ namespace aiof.api.services
 
             _logger.LogInformation("{Tenant} | Upserted UserProfile with UserId={UserId}. UserProfile={UserProfile}",
                 _tenant,
-                userId,
+                _context._tenant.UserId,
                 JsonSerializer.Serialize(profile));
 
             return profile;
