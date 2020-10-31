@@ -95,6 +95,17 @@ namespace aiof.api.tests
             Assert.NotEmpty(assets);
         }
 
+        [Theory]
+        [MemberData(nameof(Helper.AssetsUsersId), MemberType = typeof(Helper))]
+        public async Task GetAllAsync_IsSuccessful( int userId)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
+            var assets = await _repo.GetAllAsync();
+
+            Assert.NotNull(assets);
+            Assert.NotEmpty(assets);
+        }
+
         [Fact]
         public async Task GetAssetTypesAsync_All()
         {

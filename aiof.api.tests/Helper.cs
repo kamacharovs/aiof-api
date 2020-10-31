@@ -170,6 +170,11 @@ namespace aiof.api.tests
                 id: true,
                 userId: true);
         }
+        public static IEnumerable<object[]> AssetsUsersId()
+        {
+            return _Fake.GetFakeAssetsData(
+                userId: true);
+        }
         public static IEnumerable<object[]> AssetsPublicKey()
         {
             return _Fake.GetFakeAssetsData(

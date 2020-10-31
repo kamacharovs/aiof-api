@@ -91,6 +91,12 @@ namespace aiof.api.services
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<IAsset>> GetAllAsync()
+        {
+            return await GetQuery()
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<IAssetType>> GetTypesAsync()
         {
             return await GetTypesQuery()
