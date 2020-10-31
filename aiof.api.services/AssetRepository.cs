@@ -91,9 +91,9 @@ namespace aiof.api.services
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<IAsset>> GetAllAsync()
+        public async Task<IEnumerable<IAsset>> GetAllAsync(bool asNoTracking = true)
         {
-            return await GetQuery()
+            return await GetQuery(asNoTracking)
                 .ToListAsync();
         }
 
