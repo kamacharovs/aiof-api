@@ -115,8 +115,7 @@ namespace aiof.api.tests
             {
                 Assert.NotNull(
                     user.Goals.FirstOrDefault(x => x.Name == goal.Name
-                        && x.TypeName == goal.TypeName
-                        && x.UserId == goal.UserId));
+                        && x.TypeName == goal.TypeName));
             }
         }
 

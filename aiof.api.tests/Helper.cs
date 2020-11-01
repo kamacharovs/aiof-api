@@ -269,7 +269,6 @@ namespace aiof.api.tests
                 .RuleFor(x => x.CurrentAmount, f => f.Random.Decimal(1000, 4000))
                 .RuleFor(x => x.Contribution, f => f.Random.Decimal(700, 900))
                 .RuleFor(x => x.ContributionFrequencyName, f => "monthly")
-                .RuleFor(x => x.UserId, f => userId)
                 .Generate(GeneratedAmount);
         }
 
