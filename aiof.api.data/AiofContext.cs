@@ -120,7 +120,7 @@ namespace aiof.api.data
                 e.Property(x => x.TypeName).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
                 e.Property(x => x.Value).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.UserId).HasSnakeCaseColumnName().IsRequired();
-                e.Property(x => x.IsDeleted).HasSnakeCaseColumnName();
+                e.Property(x => x.IsDeleted).HasSnakeCaseColumnName().IsRequired();
 
                 e.HasOne(x => x.Type)
                     .WithMany()
@@ -145,7 +145,7 @@ namespace aiof.api.data
                 e.Property(x => x.MonthlyPayment).HasSnakeCaseColumnName();
                 e.Property(x => x.Years).HasSnakeCaseColumnName();
                 e.Property(x => x.UserId).HasSnakeCaseColumnName().IsRequired();
-                e.Property(x => x.IsDeleted).HasSnakeCaseColumnName();
+                e.Property(x => x.IsDeleted).HasSnakeCaseColumnName().IsRequired();
 
                 e.HasOne(x => x.Type)
                     .WithMany()
@@ -172,7 +172,7 @@ namespace aiof.api.data
                 e.Property(x => x.TypeName).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
                 e.Property(x => x.PlannedDate).HasSnakeCaseColumnName();
                 e.Property(x => x.UserId).HasSnakeCaseColumnName();
-                e.Property(x => x.IsDeleted).HasSnakeCaseColumnName();
+                e.Property(x => x.IsDeleted).HasSnakeCaseColumnName().IsRequired();
 
                 e.HasOne(x => x.Type)
                     .WithMany()
@@ -245,7 +245,7 @@ namespace aiof.api.data
                 e.Property(x => x.From).HasSnakeCaseColumnName().HasMaxLength(200);
                 e.Property(x => x.Url).HasSnakeCaseColumnName().HasMaxLength(500);
                 e.Property(x => x.UserId).HasSnakeCaseColumnName().IsRequired();
-                e.Property(x => x.IsDeleted).HasSnakeCaseColumnName();
+                e.Property(x => x.IsDeleted).HasSnakeCaseColumnName().IsRequired();
 
                 e.HasOne(x => x.PaymentFrequency)
                     .WithMany()
@@ -268,7 +268,7 @@ namespace aiof.api.data
                 e.Property(x => x.Description).HasSnakeCaseColumnName().HasMaxLength(500).IsRequired();
                 e.Property(x => x.TypeName).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
                 e.Property(x => x.UserId).HasSnakeCaseColumnName().IsRequired();
-                e.Property(x => x.IsDeleted).HasSnakeCaseColumnName();
+                e.Property(x => x.IsDeleted).HasSnakeCaseColumnName().IsRequired();
             });
 
             modelBuilder.Entity<AccountType>(e =>
