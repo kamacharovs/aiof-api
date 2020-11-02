@@ -83,6 +83,7 @@ namespace aiof.api.tests
             await Assert.ThrowsAsync<AiofNotFoundException>(() =>_repo.GetProfileAsync());
         }
 
+        /*
         [Theory]
         [MemberData(nameof(Helper.UsersId), MemberType = typeof(Helper))]
         public async Task UpsertAsync_IsSuccessful(int id)
@@ -118,6 +119,7 @@ namespace aiof.api.tests
                         && x.TypeName == goal.TypeName));
             }
         }
+        */
 
         [Theory]
         [MemberData(nameof(Helper.UsersId), MemberType = typeof(Helper))]
