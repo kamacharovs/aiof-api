@@ -6,12 +6,10 @@ using System.ComponentModel.DataAnnotations;
 namespace aiof.api.data
 {
     public interface IUser
-    {     
-        [JsonIgnore]
+    {
         [Required]
         int Id { get; set; }
 
-        [JsonIgnore]
         [Required]
         Guid PublicKey { get; set; }
 
@@ -42,5 +40,6 @@ namespace aiof.api.data
         ICollection<Goal> Goals { get; set; }
         ICollection<Liability> Liabilities { get; set; }
         ICollection<Subscription> Subscriptions { get; set; }
+        ICollection<Account> Accounts { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -12,7 +13,6 @@ using AutoMapper;
 using FluentValidation;
 
 using aiof.api.data;
-using System.Text.Json;
 
 namespace aiof.api.services
 {
@@ -21,29 +21,32 @@ namespace aiof.api.services
     {
         private readonly ILogger<UserRepository> _logger;
         private readonly IMapper _mapper;
+        private readonly ITenant _tenant;
         private readonly AiofContext _context;
         private readonly AbstractValidator<SubscriptionDto> _subscriptionDtoValidator;
+        private readonly AbstractValidator<AccountDto> _accountDtoValidator;
 
-        private readonly string _tenant;
         private readonly Stopwatch _sw;
 
         public UserRepository(
             ILogger<UserRepository> logger,
             IMapper mapper, 
             AiofContext context,
-            AbstractValidator<SubscriptionDto> subscriptionDtoValidator)
+            AbstractValidator<SubscriptionDto> subscriptionDtoValidator,
+            AbstractValidator<AccountDto> accountDtoValidator)
             : base(logger, context)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _subscriptionDtoValidator = subscriptionDtoValidator ?? throw new ArgumentNullException(nameof(subscriptionDtoValidator));
+            _accountDtoValidator = accountDtoValidator ?? throw new ArgumentNullException(nameof(accountDtoValidator));
 
-            _tenant = _context._tenant.Log;
+            _tenant = _context.Tenant;
             _sw = new Stopwatch();
         }
 
-        private IQueryable<User> GetUsersQuery(bool asNoTracking = true)
+        private IQueryable<User> GetQuery(bool asNoTracking = true)
         {
             var usersQuery = _context.Users
                 .Include(x => x.Profile)
@@ -58,8 +61,7 @@ namespace aiof.api.services
                 ? usersQuery.AsNoTracking()
                 : usersQuery;
         }
-
-        private IQueryable<UserProfile> GetUserProfilesQuery(bool asNoTracking = true)
+        private IQueryable<UserProfile> GetProfilesQuery(bool asNoTracking = true)
         {
             var usersProfileQuery = _context.UserProfiles
                 .Include(x => x.User)
@@ -70,72 +72,72 @@ namespace aiof.api.services
                 : usersProfileQuery;
         }
 
-        public async Task<IUser> GetAsync(
-            int id,
-            bool asNoTracking = true)
+        public async Task<IUser> GetAsync(bool asNoTracking = true)
         {
-            return await GetUsersQuery(asNoTracking)
-                .FirstOrDefaultAsync(x => x.Id == id)
-                ?? throw new AiofNotFoundException($"{nameof(User)} with Id={id} was not found");
+            return await GetQuery(asNoTracking)
+                .FirstOrDefaultAsync()
+                ?? throw new AiofNotFoundException($"User with Id={_context.Tenant.UserId} was not found");
         }
-        public async Task<IUser> GetUserAsync(
+        public async Task<IUser> GetAsync(
             string username,
             bool asNoTracking = true)
         {
-            return await GetUsersQuery()
+            return await GetQuery()
                 .FirstOrDefaultAsync(x => x.Username == username)
                 ?? throw new AiofNotFoundException($"{nameof(User)} with Username={username} was not found");
         }
-
-        public async Task<IUserProfile> GetUserProfileAsync(
-            string username,
-            bool asNoTracking = true)
+        public async Task<bool> ExistsAsync(int id)
         {
-            return await GetUserProfilesQuery(asNoTracking)
-                .FirstOrDefaultAsync(x => x.User.Username == username)
-                ?? throw new AiofNotFoundException($"{nameof(UserProfile)} for {nameof(User)} with Username={username} was not found");
+            return await _context.Users
+                .AnyAsync(x => x.Id == id);
         }
 
-        public async Task<IUser> UpsertFinanceAsync(
-            int userId,
-            UserDto userDto)
+        public async Task<IUserProfile> GetProfileAsync(bool asNoTracking = true)
         {
-            var userInDb = await GetAsync(userId) as User;
-            var userDtoMapped = _mapper.Map<User>(userDto);
+            return await GetProfilesQuery(asNoTracking)
+                .FirstOrDefaultAsync()
+                ?? throw new AiofNotFoundException($"UserProfile for User with UserId={_context.Tenant.UserId} was not found");
+        }
 
-            _sw.Start();
-            var user = _mapper.Map(userInDb, userDtoMapped);           
-            _sw.Stop();      
-            _logger.LogInformation("UpsertFinanceAsync algorithm took {AlgorithmTime} (µs)",
-                _sw.Elapsed.TotalMilliseconds * 1000);
+        public async Task<IUser> UpsertAsync(UserDto userDto)
+        {
+            var userInDb = await GetAsync(false) as User;
+            var dtoAsUser = _mapper.Map<User>(userDto);
+            var user = _mapper.Map(dtoAsUser, userInDb);
 
             _context.Update(user);
             await _context.SaveChangesAsync();
 
-            return await GetAsync(userId);
+            _logger.LogInformation("{Tenant} | UpsertUserAsync completed | {UserDto}",
+                _tenant.Log,
+                userDto.ToString());
+
+            return await GetAsync();
         }
 
-        public async Task<IUser> UpsertUserProfileAsync(
-            string username, 
-            UserProfileDto userProfileDto)
+        public async Task<IUserProfile> UpsertProfileAsync(UserProfileDto userProfileDto)
         {
-            var user = await GetUserAsync(username) as User;
+            var profile = new UserProfile();
+            try
+            {
+                profile = await GetProfileAsync(false) as UserProfile;
+            }
+            catch (Exception e) when (e is AiofNotFoundException) { }
 
-            user.Profile = _mapper.Map(userProfileDto, user.Profile);
-            user.Profile.UserId = user.Id;
-            user.Profile.Age = user.Profile.DateOfBirth is null ? null : (int?)(DateTime.UtcNow.Year - user.Profile.DateOfBirth.Value.Year);
+            profile = _mapper.Map(userProfileDto, profile);
+            profile.UserId = _context.Tenant.UserId;
 
-            _context.Users
-                .Update(user);
+            _context.UserProfiles
+                .Update(profile);
 
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("{Tenant} | Upserted User with Username={Username}. UserProfile={UserProfile}",
-                _tenant,
-                username,
-                JsonSerializer.Serialize(user.Profile));
+            _logger.LogInformation("{Tenant} | Upserted UserProfile with UserId={UserId}. UserProfile={UserProfile}",
+                _tenant.Log,
+                _context.Tenant.UserId,
+                JsonSerializer.Serialize(profile));
 
-            return await GetUserAsync(username);
+            return profile;
         }
 
         #region Subscription
@@ -150,26 +152,34 @@ namespace aiof.api.services
                 : subscriptionQuery;
         }
 
-        public async Task<ISubscription> GetSubscriptionAsync(int id)
+        public async Task<ISubscription> GetSubscriptionAsync(
+            int id,
+            bool asNoTracking = true)
         {
-            return await GetSubscriptionsQuery()
-                .FirstOrDefaultAsync(x => x.Id == id);
+            return await GetSubscriptionsQuery(asNoTracking)
+                .FirstOrDefaultAsync(x => x.Id == id)
+                ?? throw new AiofNotFoundException($"Subscription with Id={id} was not found");
         }
-        public async Task<ISubscription> GetSubscriptionAsync(Guid publicKey)
+        public async Task<ISubscription> GetSubscriptionAsync(
+            Guid publicKey,
+            bool asNoTracking = true)
         {
-            return await GetSubscriptionsQuery()
+            return await GetSubscriptionsQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.PublicKey == publicKey);
         }
         public async Task<ISubscription> GetSubscriptionAsync(
             string name, 
-            decimal amount,
-            int userId,
+            decimal? amount,
             bool asNoTracking = true)
         {
             return await GetSubscriptionsQuery(asNoTracking)
-                .FirstOrDefaultAsync(x => x.UserId == userId
-                    && x.Name == name
+                .FirstOrDefaultAsync(x => x.Name == name
                     && x.Amount == amount);
+        }
+        public async Task<IEnumerable<ISubscription>> GetSubscriptionsAsync(bool asNoTracking = true)
+        {
+            return await GetSubscriptionsQuery(asNoTracking)
+                .ToListAsync();
         }
 
         public async Task<ISubscription> AddSubscriptionAsync(SubscriptionDto subscriptionDto)
@@ -178,21 +188,23 @@ namespace aiof.api.services
 
             var name = subscriptionDto.Name;
             var amount = subscriptionDto.Amount;
-            var userId = subscriptionDto.UserId;
 
-            if (await GetSubscriptionAsync(name, amount, userId) != null)
+            if (await GetSubscriptionAsync(name, amount) != null)
                 throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"{nameof(Subscription)} with UserId={userId}, Name='{name}' and Amount={amount} already exists");
+                    $"{nameof(Subscription)} with Name='{name}' and Amount={amount} already exists");
 
             var subscription = _mapper.Map<Subscription>(subscriptionDto);
 
-            await _context.Subscriptions
-                .AddAsync(subscription);
+            subscription.UserId = _tenant.UserId;
+
+            await _context.Subscriptions.AddAsync(subscription);
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("{Tenant} | Added Subscription={Subscription}",
-                _tenant,
-                JsonSerializer.Serialize(subscription));
+            _logger.LogInformation("{Tenant} | Created Subscription with Id={SubscriptionId}, PublicKey={SubscriptionPublicKey} and UserId={SubscriptionUserId}",
+                _tenant.Log,
+                subscription.Id,
+                subscription.PublicKey,
+                subscription.UserId);
 
             return subscription;
         }
@@ -201,18 +213,21 @@ namespace aiof.api.services
             int id,
             SubscriptionDto subscriptionDto)
         {
-            var subscriptionInDb = await GetSubscriptionAsync(id);
-            var mappedDto = _mapper.Map<Subscription>(subscriptionDto);
-            var subcription = _mapper.Map(subscriptionInDb as Subscription, mappedDto);
+            var subscriptionInDb = await GetSubscriptionAsync(id, false);
+            var subscription = _mapper.Map(subscriptionDto, subscriptionInDb as Subscription);
             
-            _context.Subscriptions.Update(subcription);
+            _context.Subscriptions
+                .Update(subscription);
+
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("{Tenant} | Updated Subscription={Subscription}",
-                _tenant,
-                JsonSerializer.Serialize(subcription));
+            _logger.LogInformation("{Tenant} | Updated Subscription with Id={SubscriptionId}, PublicKey={SubscriptionPublicKey} and UserId={SubscriptionUserId}",
+                _tenant.Log,
+                subscription.Id,
+                subscription.PublicKey,
+                subscription.UserId);
 
-            return subcription;
+            return subscription;
         }
 
         public async Task DeleteSubscriptionAsync(int id)
@@ -252,11 +267,23 @@ namespace aiof.api.services
                 : query;
         }
 
-        public async Task<IAccount> GetAccountAsync(int id)
+        public async Task<IAccount> GetAccountAsync(
+            int id,
+            bool asNoTracking = true)
         {
-            return await GetAccountsQuery()
+            return await GetAccountsQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.Id == id)
-                ?? throw new AiofNotFoundException($"{nameof(Account)} with Id={id} was not found");
+                ?? throw new AiofNotFoundException($"Account with Id={id} was not found");
+        }
+
+        public async Task<IAccount> GetAccountAsync(
+            AccountDto accountDto,
+            bool asNoTracking = true)
+        {
+            return await GetAccountsQuery(asNoTracking)
+                .FirstOrDefaultAsync(x => x.Name == accountDto.Name
+                    && x.Description == accountDto.Description
+                    && x.TypeName == accountDto.TypeName);
         }
 
         public async Task<IEnumerable<IAccountType>> GetAccountTypesAsync()
@@ -269,6 +296,51 @@ namespace aiof.api.services
         {
             return await GetAccountTypeMapsQuery()
                 .ToListAsync();
+        }
+
+        public async Task<IAccount> AddAccountAsync(AccountDto accountDto)
+        {
+            await _accountDtoValidator.ValidateAndThrowAsync(accountDto);
+
+            if (await GetAccountAsync(accountDto) != null)
+                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
+                    $"Account already exists");
+
+            var account = _mapper.Map<Account>(accountDto);
+
+            account.UserId = _context.Tenant.UserId;
+
+            await _context.Accounts.AddAsync(account);
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation("{Tenant} | Created Account with Id={AccountId}, PublicKey={AccountPublicKey} and UserId={AccountUserId}",
+                _context.Tenant.Log,
+                account.Id,
+                account.PublicKey,
+                account.UserId);
+
+            return account;
+        }
+
+        public async Task<IAccount> UpdateAccountAsync(
+            int id,
+            AccountDto accountDto)
+        {
+            var accountInDb = await GetAccountAsync(id, false);
+            var account = _mapper.Map(accountDto, accountInDb as Account);
+
+            _context.Accounts
+                .Update(account);
+
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation("{Tenant} | Updated Account with Id={AccountId}, PublicKey={AccountPublicKey} and UserId={AccountUserId}",
+                _context.Tenant.Log,
+                account.Id,
+                account.PublicKey,
+                account.UserId);
+
+            return account;
         }
 
         public async Task DeleteAccountAsync(int id)

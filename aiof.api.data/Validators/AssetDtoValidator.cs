@@ -24,7 +24,6 @@ namespace aiof.api.data
             RuleFor(x => x.Value)
                 .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
                 .LessThan(CommonValidator.MaximumValue)
-                .When(x => x.Value != null)
                 .WithMessage(CommonValidator.ValueMessage);
         }
     }

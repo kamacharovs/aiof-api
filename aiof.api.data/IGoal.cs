@@ -7,11 +7,9 @@ namespace aiof.api.data
 {
     public interface IGoal
     {
-        [JsonIgnore]
         [Required]
         int Id { get; set; }
 
-        [JsonIgnore]
         [Required]
         Guid PublicKey { get; set; }
 

@@ -22,4 +22,15 @@ namespace aiof.api.data
         [JsonPropertyName("errors")]
         IEnumerable<string> Errors { get; set; }
     }
+
+    public interface IAiofProblemDetailBase
+    {
+        [JsonPropertyName("code")]
+        [Required]
+        int? Code { get; set; }
+        
+        [JsonPropertyName("message")]
+        [Required]
+        string Message { get; set; }
+    }
 }

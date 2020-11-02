@@ -17,15 +17,11 @@ namespace aiof.api.tests
         public async Task GetAssetAsync_By_NameTypeNameValueUserId_Exists(
             string name,
             string typeName,
-            decimal? value,
-            int? userId)
+            decimal value,
+            int userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
-            var asset = await _repo.GetAsync(
-                name,
-                typeName,
-                value,
-                userId);
+            var asset = await _repo.GetAsync(name, typeName, value);
 
             Assert.NotNull(asset);
             Assert.NotNull(asset.Name);
@@ -43,16 +39,15 @@ namespace aiof.api.tests
         public async Task GetAssetAsync_By_AssetDto_Exists(
             string name,
             string typeName,
-            decimal? value,
-            int? userId)
+            decimal value,
+            int userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
             var asset = await _repo.GetAsync(new AssetDto
             {
                 Name = name,
                 TypeName = typeName,
-                Value = value,
-                UserId = userId
+                Value = value
             });
 
             Assert.NotNull(asset);
@@ -100,6 +95,17 @@ namespace aiof.api.tests
             Assert.NotEmpty(assets);
         }
 
+        [Theory]
+        [MemberData(nameof(Helper.AssetsUsersId), MemberType = typeof(Helper))]
+        public async Task GetAllAsync_IsSuccessful( int userId)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
+            var assets = await _repo.GetAllAsync();
+
+            Assert.NotNull(assets);
+            Assert.NotEmpty(assets);
+        }
+
         [Fact]
         public async Task GetAssetTypesAsync_All()
         {
@@ -117,75 +123,42 @@ namespace aiof.api.tests
         public async Task AddAssetAsync_AlreadyExists_Throws_AiofFriendlyException(
             string name,
             string typeName,
-            decimal? value,
-            int? userId)
+            decimal value,
+            int userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
             await Assert.ThrowsAsync<AiofFriendlyException>(() => _repo.AddAsync(new AssetDto
             {
                 Name = name,
                 TypeName = typeName,
-                Value = value,
-                UserId = userId
+                Value = value
             }));
         }
 
         [Theory]
-        [MemberData(nameof(Helper.RandomAssetDtos), MemberType = typeof(Helper))]
-        public async Task AddAssetAsync_Is_Successful(
-            string name,
-            string typeName,
-            decimal? value,
-            int? userId)
+        [MemberData(nameof(Helper.UsersId), MemberType = typeof(Helper))]
+        public async Task AddAssetAsync_Is_Successful(int userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
-            var asset = await _repo.AddAsync(new AssetDto
-            {
-                Name = name,
-                TypeName = typeName,
-                Value = value,
-                UserId = userId
-            });
+            var dto = Helper.FakerAssetDtos().First();
+            var asset = await _repo.AddAsync(dto);
 
             Assert.NotNull(asset);
             Assert.NotNull(asset.Name);
             Assert.NotNull(asset.TypeName);
-            Assert.NotNull(asset.Type);
-            Assert.Equal(name, asset.Name);
-            Assert.Equal(typeName, asset.TypeName);
-            Assert.Equal(value, asset.Value);
+            Assert.Equal(dto.Name, asset.Name);
+            Assert.Equal(dto.TypeName, asset.TypeName);
+            Assert.Equal(dto.Value, asset.Value);
             Assert.Equal(userId, asset.UserId);
         }
 
         [Theory]
-        [MemberData(nameof(Helper.RandomAssetDtos), MemberType = typeof(Helper))]
-        public async Task DeleteAsync_By_Asset_Is_Successful(
-            string name,
-            string typeName,
-            decimal? value,
-            int? userId)
-        {
-            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
-            var asset = await _repo.AddAsync(new AssetDto
-            {
-                Name = name,
-                TypeName = typeName,
-                Value = value,
-                UserId = userId
-            });
-            Assert.NotNull(await _repo.GetAsync(asset.Name, asset.TypeName, asset.Value));
-
-            await _repo.DeleteAsync(asset.Id);
-            Assert.Null(await _repo.GetAsync(asset.Name, asset.TypeName, asset.Value));
-        }
-
-        [Theory]
         [MemberData(nameof(Helper.AssetsIdUsersId), MemberType = typeof(Helper))]
-        public async Task DeleteAsync_Existing_Is_Successful(int id, int userId)
+        public async Task DeleteAsync_IsSuccessful(int id, int userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
-            await _repo.DeleteAsync(id);
 
+            await _repo.DeleteAsync(id);
             await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.GetAsync(id));
         }
     }

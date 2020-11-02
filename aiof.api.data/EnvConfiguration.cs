@@ -24,7 +24,7 @@ namespace aiof.api.data
             _featureManager = featureManager ?? throw new ArgumentNullException(nameof(featureManager));
         }
 
-        public string DatabaseConString => _config.GetConnectionString(Keys.Database) ?? throw new KeyNotFoundException();
+        public string DataPostgreSQL => _config[Keys.DataPostgreSQL] ?? throw new KeyNotFoundException();
 
         public int PollyDefaultRetry => int.Parse(_config[Keys.PollyDefaultRetry] ?? throw new KeyNotFoundException());
 
@@ -50,6 +50,7 @@ namespace aiof.api.data
     {
         Asset,
         Goal,
-        Liability
+        Liability,
+        Account
     }
 }

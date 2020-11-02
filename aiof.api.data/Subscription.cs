@@ -51,11 +51,10 @@ namespace aiof.api.data
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public decimal Amount { get; set; }
+        public decimal? Amount { get; set; }
         public string PaymentFrequencyName { get; set; }
-        public int PaymentLength { get; set; }
+        public int? PaymentLength { get; set; }
         public string From { get; set; }
         public string Url { get; set; }
-        public int UserId { get; set; }
     }
 }

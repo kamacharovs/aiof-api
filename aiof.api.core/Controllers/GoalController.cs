@@ -21,6 +21,8 @@ namespace aiof.api.core.Controllers
     [Produces(Keys.ApplicationJson)]
     [Consumes(Keys.ApplicationJson)]
     [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(IAiofProblemDetailBase), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(IAiofProblemDetailBase), StatusCodes.Status401Unauthorized)]
     public class GoalController : ControllerBase
     {
         public readonly IGoalRepository _repo;
@@ -30,6 +32,9 @@ namespace aiof.api.core.Controllers
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
         }
 
+        /// <summary>
+        /// Get Goal by id
+        /// </summary>
         [HttpGet]
         [Route("{id}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
@@ -39,6 +44,20 @@ namespace aiof.api.core.Controllers
             return Ok(await _repo.GetAsync(id));
         }
 
+        /// <summary>
+        /// Get Goals
+        /// </summary>
+        [HttpGet]
+        [Route("all")]
+        [ProducesResponseType(typeof(IEnumerable<IGoal>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllAsync()
+        {
+            return Ok(await _repo.GetAllAsync());
+        }
+
+        /// <summary>
+        /// Update Goal by id
+        /// </summary>
         [HttpPut]
         [Route("{id}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
@@ -51,6 +70,9 @@ namespace aiof.api.core.Controllers
             return Ok(await _repo.UpdateAsync(id, goalDto));
         }
 
+        /// <summary>
+        /// Add Goal
+        /// </summary>
         [HttpPost]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(IGoal), StatusCodes.Status201Created)]
@@ -59,6 +81,9 @@ namespace aiof.api.core.Controllers
             return Created(nameof(Goal), await _repo.AddAsync(goalDto));
         }
 
+        /// <summary>
+        /// Delete Goal by id
+        /// </summary>
         [HttpDelete]
         [Route("{id}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
@@ -69,6 +94,9 @@ namespace aiof.api.core.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Get Goal types
+        /// </summary>
         [HttpGet]
         [Route("types")]
         [ProducesResponseType(typeof(IEnumerable<IGoalType>), StatusCodes.Status200OK)]

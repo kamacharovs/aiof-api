@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.FeatureManagement.Mvc;
 
 using aiof.api.data;
 using aiof.api.services;
@@ -16,12 +17,14 @@ namespace aiof.api.core.Controllers
     /// <summary>
     /// Everything aiof user
     /// </summary>
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("user")]
     [Produces(Keys.ApplicationJson)]
     [Consumes(Keys.ApplicationJson)]
     [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(IAiofProblemDetailBase), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(IAiofProblemDetailBase), StatusCodes.Status401Unauthorized)]
     public class UserController : ControllerBase
     {
         public readonly IUserRepository _repo;
@@ -32,40 +35,50 @@ namespace aiof.api.core.Controllers
         }
 
         /// <summary>
-        /// Get User by id
+        /// Get User
         /// </summary>
         [HttpGet]
-        [Route("{id}")]
-        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAsync([FromRoute] int id)
+        public async Task<IActionResult> GetAsync()
         {
-            return Ok(await _repo.GetAsync(id));
+            return Ok(await _repo.GetAsync());
         }
         
         /// <summary>
         /// Get User by username
         /// </summary>
         [HttpGet]
-        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
+        [Route("{username}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetUserAsync([FromQuery] string username)
+        public async Task<IActionResult> GetByUsernameAsync([FromRoute] string username)
         {
-            return Ok(await _repo.GetUserAsync(username));
+            return Ok(await _repo.GetAsync(username));
         }
 
         /// <summary>
-        /// Upsert User finances
+        /// Upsert User
         /// </summary>
-        [HttpPost]
-        [Route("{id}/finance")]
-        public async Task<IActionResult> UpsertFinanceAsync(
-            [FromRoute, Required] int id,
-            [FromBody, Required] UserDto userDto)
+        [HttpPut]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpsertAsync([FromBody, Required] UserDto userDto)
         {
-            return Ok(await _repo.UpsertFinanceAsync(id, userDto));
+            return Ok(await _repo.UpsertAsync(userDto));
+        }
+
+        /// <summary>
+        /// Get User profile
+        /// </summary>
+        [HttpGet]
+        [Route("profile")]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IUserProfile), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetProfileAsync()
+        {
+            return Ok(await _repo.GetProfileAsync());
         }
 
         /// <summary>
@@ -73,11 +86,11 @@ namespace aiof.api.core.Controllers
         /// </summary>
         [HttpPut]
         [Route("profile")]
-        public async Task<IActionResult> AddUserProfileAsync(
-            [FromQuery, Required] string username,
-            [FromBody, Required] UserProfileDto userProfileDto)
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IUserProfile), StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpsertUserProfileAsync([FromBody, Required] UserProfileDto userProfileDto)
         {
-            return Ok(await _repo.UpsertUserProfileAsync(username, userProfileDto));
+            return Ok(await _repo.UpsertProfileAsync(userProfileDto));
         }
 
         /// <summary>
@@ -137,8 +150,49 @@ namespace aiof.api.core.Controllers
         }
 
         /// <summary>
+        /// Get Account by id
+        /// </summary>
+        [FeatureGate(FeatureFlags.Account)]
+        [HttpGet]
+        [Route("account/{id}")]
+        [ProducesResponseType(typeof(IAccount), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAccountAsync([FromRoute, Required] int id)
+        {
+            return Ok(await _repo.GetAccountAsync(id));
+        }
+
+        /// <summary>
+        /// Add Account
+        /// </summary>
+        [FeatureGate(FeatureFlags.Account)]
+        [HttpPost]
+        [Route("account")]
+        [ProducesResponseType(typeof(IAccount), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AddAccountAsync([FromBody, Required] AccountDto accountDto)
+        {
+            return Ok(await _repo.AddAccountAsync(accountDto));
+        }
+
+        /// <summary>
+        /// Update Account
+        /// </summary>
+        [FeatureGate(FeatureFlags.Account)]
+        [HttpPut]
+        [Route("account/{id}")]
+        [ProducesResponseType(typeof(IAccount), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateAccountAsync(
+            [FromRoute, Required] int id,
+            [FromBody, Required] AccountDto accountDto)
+        {
+            return Ok(await _repo.UpdateAccountAsync(id, accountDto));
+        }
+
+        /// <summary>
         /// Get Account types
         /// </summary>
+        [FeatureGate(FeatureFlags.Account)]
         [HttpGet]
         [Route("account/types")]
         [ProducesResponseType(typeof(IEnumerable<IAccountType>), StatusCodes.Status200OK)]
@@ -150,6 +204,7 @@ namespace aiof.api.core.Controllers
         /// <summary>
         /// Get Account types mapping
         /// </summary>
+        [FeatureGate(FeatureFlags.Account)]
         [HttpGet]
         [Route("account/types/map")]
         [ProducesResponseType(typeof(IEnumerable<IAccountTypeMap>), StatusCodes.Status200OK)]

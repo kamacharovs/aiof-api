@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
+using System.Text.Json;
 using System.ComponentModel.DataAnnotations;
 
 namespace aiof.api.data
@@ -8,11 +8,9 @@ namespace aiof.api.data
     public class User : IUser, 
         IPublicKeyId
     {
-        [JsonIgnore]
         [Required]
         public int Id { get; set; }
 
-        [JsonIgnore]
         [Required]
         public Guid PublicKey { get; set; } = Guid.NewGuid();
 
@@ -52,5 +50,11 @@ namespace aiof.api.data
         public ICollection<GoalDto> Goals { get; set; }
         public ICollection<LiabilityDto> Liabilities { get; set; }
         public ICollection<SubscriptionDto> Subscriptions { get; set; }
+        public ICollection<AccountDto> Accounts { get; set; }
+
+        public override string ToString()
+        {
+            return JsonSerializer.Serialize(this);
+        }
     }
 }

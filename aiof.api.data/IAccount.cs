@@ -6,7 +6,6 @@ namespace aiof.api.data
 {
     public interface IAccount
     {
-        [JsonIgnore]
         [Required]
         int Id { get; set; }
 

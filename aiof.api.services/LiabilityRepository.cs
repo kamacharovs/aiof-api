@@ -64,7 +64,7 @@ namespace aiof.api.services
         {
             return await GetQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.Id == id)
-                ?? throw new AiofNotFoundException($"{nameof(Liability)} with Id={id} was not found");
+                ?? throw new AiofNotFoundException($"Liability with Id={id} was not found");
         }
 
         public async Task<ILiability> GetAsync(LiabilityDto liabilityDto)
@@ -73,6 +73,12 @@ namespace aiof.api.services
                 .FirstOrDefaultAsync(x => x.Name == liabilityDto.Name
                     && x.TypeName == liabilityDto.TypeName
                     && x.Value == liabilityDto.Value);
+        }
+
+        public async Task<IEnumerable<ILiability>> GetAllAsync()
+        {
+            return await GetQuery()
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<ILiabilityType>> GetTypesAsync()
@@ -86,21 +92,22 @@ namespace aiof.api.services
         {
             await _liabilityDtoValidator.ValidateAndThrowAsync(liabilityDto);
 
-            var liability = await GetAsync(liabilityDto) is null
-                ? _mapper.Map<Liability>(liabilityDto)
-                : throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"{nameof(Liability)}={JsonSerializer.Serialize(liabilityDto)} already exists");
+            if (await GetAsync(liabilityDto) != null)
+                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
+                    $"Liability already exists");
+
+            var liability = _mapper.Map<Liability>(liabilityDto);
+
+            liability.UserId = _context.Tenant.UserId;
 
             await _context.Liabilities.AddAsync(liability);
             await _context.SaveChangesAsync();
 
-            await _context.Entry(liability)
-                .Reference(x => x.Type)
-                .LoadAsync();
-
-            _logger.LogInformation("{Tenant} | Created Liability={Liability}",
-                _context._tenant.Log,
-                JsonSerializer.Serialize(liability));
+            _logger.LogInformation("{Tenant} | Created with Id={LiabilityId}, PublicKey={LiabilityPublicKey} and UserId={LiabilityUserId}",
+                _context.Tenant.Log,
+                liability.Id,
+                liability.PublicKey,
+                liability.UserId);
 
             return liability;
         }
@@ -115,18 +122,22 @@ namespace aiof.api.services
             int id, 
             LiabilityDto liabilityDto)
         {
-            await _liabilityDtoValidator.ValidateAndThrowAsync(liabilityDto);
-
-            var liability = await GetAsync(id);
+            var liability = await GetAsync(id, asNoTracking: false);
+            var liabilityToUpdate = _mapper.Map(liabilityDto, liability as Liability);
 
             _context.Liabilities
-                .Update(_mapper.Map(liabilityDto, liability as Liability));
+                .Update(liabilityToUpdate);
 
             await _context.SaveChangesAsync();
+            await _context.Entry(liability)
+                .Reference(x => x.Type)
+                .LoadAsync();
 
-            _logger.LogInformation("{Tenant} | Updated Liability={Liability}",
-                _context._tenant.Log,
-                JsonSerializer.Serialize(liability));
+            _logger.LogInformation("{Tenant} | Updated Liability with Id={LiabilityId}, PublicKey={LiabilityPublicKey} and UserId={LiabilityUserId}",
+                _context.Tenant.Log,
+                liability.Id,
+                liability.PublicKey,
+                liability.UserId);
 
             return liability;
         }

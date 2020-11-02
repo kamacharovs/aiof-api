@@ -9,7 +9,7 @@ namespace aiof.api.data
 {
     public class AiofContext : DbContext
     {
-        public readonly ITenant _tenant;
+        public readonly ITenant Tenant;
 
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserProfile> UserProfiles { get; set; }
@@ -35,7 +35,7 @@ namespace aiof.api.data
         public AiofContext(DbContextOptions<AiofContext> options, ITenant tenant)
             : base(options)
         {
-            _tenant = tenant ?? throw new ArgumentNullException(nameof(tenant));
+            Tenant = tenant ?? throw new ArgumentNullException(nameof(tenant));
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -49,7 +49,7 @@ namespace aiof.api.data
             {
                 e.ToTable(Keys.Entity.User);
 
-                e.HasQueryFilter(x => x.Id == _tenant.UserId);
+                e.HasQueryFilter(x => x.Id == Tenant.UserId);
 
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
@@ -83,14 +83,12 @@ namespace aiof.api.data
                 e.HasMany(x => x.Subscriptions)
                     .WithOne()
                     .HasForeignKey(x => x.UserId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired();
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 e.HasMany(x => x.Accounts)
                     .WithOne()
                     .HasForeignKey(x => x.UserId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired();
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<UserProfile>(e =>
@@ -99,7 +97,7 @@ namespace aiof.api.data
 
                 e.HasKey(x => x.Id);
 
-                e.HasQueryFilter(x => x.Id == _tenant.UserId);
+                e.HasQueryFilter(x => x.UserId == Tenant.UserId);
 
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
@@ -125,7 +123,7 @@ namespace aiof.api.data
 
                 e.HasKey(x => x.Id);
 
-                e.HasQueryFilter(x => x.UserId == _tenant.UserId
+                e.HasQueryFilter(x => x.UserId == Tenant.UserId
                     && !x.IsDeleted);
 
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
@@ -133,8 +131,8 @@ namespace aiof.api.data
                 e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
                 e.Property(x => x.TypeName).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
                 e.Property(x => x.Value).HasSnakeCaseColumnName().IsRequired();
-                e.Property(x => x.UserId).HasSnakeCaseColumnName();
-                e.Property(x => x.IsDeleted).HasSnakeCaseColumnName();
+                e.Property(x => x.UserId).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.IsDeleted).HasSnakeCaseColumnName().IsRequired();
 
                 e.HasOne(x => x.Type)
                     .WithMany()
@@ -148,7 +146,7 @@ namespace aiof.api.data
 
                 e.HasKey(x => x.Id);
 
-                e.HasQueryFilter(x => x.Id == _tenant.UserId
+                e.HasQueryFilter(x => x.UserId == Tenant.UserId
                     && !x.IsDeleted);
 
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
@@ -156,8 +154,10 @@ namespace aiof.api.data
                 e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
                 e.Property(x => x.TypeName).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
                 e.Property(x => x.Value).HasSnakeCaseColumnName().IsRequired();
-                e.Property(x => x.UserId).HasSnakeCaseColumnName();
-                e.Property(x => x.IsDeleted).HasSnakeCaseColumnName();
+                e.Property(x => x.MonthlyPayment).HasSnakeCaseColumnName();
+                e.Property(x => x.Years).HasSnakeCaseColumnName();
+                e.Property(x => x.UserId).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.IsDeleted).HasSnakeCaseColumnName().IsRequired();
 
                 e.HasOne(x => x.Type)
                     .WithMany()
@@ -171,7 +171,7 @@ namespace aiof.api.data
 
                 e.HasKey(x => x.Id);
 
-                e.HasQueryFilter(x => x.Id == _tenant.UserId
+                e.HasQueryFilter(x => x.UserId == Tenant.UserId
                     && !x.IsDeleted);
 
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
@@ -184,7 +184,7 @@ namespace aiof.api.data
                 e.Property(x => x.TypeName).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
                 e.Property(x => x.PlannedDate).HasSnakeCaseColumnName();
                 e.Property(x => x.UserId).HasSnakeCaseColumnName();
-                e.Property(x => x.IsDeleted).HasSnakeCaseColumnName();
+                e.Property(x => x.IsDeleted).HasSnakeCaseColumnName().IsRequired();
 
                 e.HasOne(x => x.Type)
                     .WithMany()
@@ -244,7 +244,7 @@ namespace aiof.api.data
 
                 e.HasKey(x => x.Id);
 
-                e.HasQueryFilter(x => x.UserId == _tenant.UserId
+                e.HasQueryFilter(x => x.UserId == Tenant.UserId
                     && !x.IsDeleted);
 
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
@@ -257,7 +257,7 @@ namespace aiof.api.data
                 e.Property(x => x.From).HasSnakeCaseColumnName().HasMaxLength(200);
                 e.Property(x => x.Url).HasSnakeCaseColumnName().HasMaxLength(500);
                 e.Property(x => x.UserId).HasSnakeCaseColumnName().IsRequired();
-                e.Property(x => x.IsDeleted).HasSnakeCaseColumnName();
+                e.Property(x => x.IsDeleted).HasSnakeCaseColumnName().IsRequired();
 
                 e.HasOne(x => x.PaymentFrequency)
                     .WithMany()
@@ -271,7 +271,7 @@ namespace aiof.api.data
 
                 e.HasKey(x => x.Id);
 
-                e.HasQueryFilter(x => x.UserId == _tenant.UserId
+                e.HasQueryFilter(x => x.UserId == Tenant.UserId
                     && !x.IsDeleted);
 
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
@@ -280,7 +280,7 @@ namespace aiof.api.data
                 e.Property(x => x.Description).HasSnakeCaseColumnName().HasMaxLength(500).IsRequired();
                 e.Property(x => x.TypeName).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
                 e.Property(x => x.UserId).HasSnakeCaseColumnName().IsRequired();
-                e.Property(x => x.IsDeleted).HasSnakeCaseColumnName();
+                e.Property(x => x.IsDeleted).HasSnakeCaseColumnName().IsRequired();
             });
 
             modelBuilder.Entity<AccountType>(e =>

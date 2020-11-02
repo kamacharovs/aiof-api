@@ -53,19 +53,18 @@ namespace aiof.api.core
                 })
                 .SetHandlerLifetime(TimeSpan.FromMinutes(5));
 
-            services.AddScoped<AbstractValidator<AssetDto>, AssetDtoValidator>()
-                .AddScoped<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>()
-                .AddScoped<AbstractValidator<LiabilityType>, LiabilityTypeValidator>()
-                .AddScoped<AbstractValidator<GoalDto>, GoalDtoValidator>()
-                .AddScoped<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>()
-                .AddScoped<AbstractValidator<UserDto>, UserDtoValidator>();
+            services.AddSingleton<AbstractValidator<AssetDto>, AssetDtoValidator>()
+                .AddSingleton<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>()
+                .AddSingleton<AbstractValidator<LiabilityType>, LiabilityTypeValidator>()
+                .AddSingleton<AbstractValidator<GoalDto>, GoalDtoValidator>()
+                .AddSingleton<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>()
+                .AddSingleton<AbstractValidator<AccountDto>, AccountDtoValidator>()
+                .AddSingleton<AbstractValidator<UserDto>, UserDtoValidator>();
 
-            if (_env.IsDevelopment())
-                services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(nameof(AiofContext)));
-            else
-                services.AddDbContext<AiofContext>(o => o.UseNpgsql(_config[Keys.PostgreSQL]));
+            services.AddDbContext<AiofContext>(o => o.UseNpgsql(_config[Keys.DataPostgreSQL]));
 
             services.AddLogging();
+            services.AddApplicationInsightsTelemetry();
             services.AddHealthChecks();
             services.AddFeatureManagement();
             services.AddHttpContextAccessor();
@@ -125,13 +124,11 @@ namespace aiof.api.core
         {
             if (_env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
-
-                services.GetRequiredService<FakeDataManager>()
-                    .UseFakeContext();
+                app.UseCors(x => x.WithOrigins(_config[Keys.CorsPortal]).AllowAnyHeader().AllowAnyMethod());
             }
 
             app.UseAiofExceptionMiddleware();
+            app.UseAiofUnauthorizedMiddleware();
             app.UseHealthChecks("/health");
             app.UseSwagger();
 

@@ -7,11 +7,9 @@ namespace aiof.api.data
 {
     public interface ILiability
     {
-        [JsonIgnore]
         [Required]
         int Id { get; set; }
 
-        [JsonIgnore]
         [Required]
         Guid PublicKey { get; set; }
 
@@ -30,8 +28,12 @@ namespace aiof.api.data
         [Required]
         decimal Value { get; set; }
 
+        decimal? MonthlyPayment { get; set; }
+
+        int? Years { get; set; }
+
         [JsonIgnore]
-        int? UserId { get; set; }
+        int UserId { get; set; }
 
         [JsonIgnore]
         bool IsDeleted { get; set; }

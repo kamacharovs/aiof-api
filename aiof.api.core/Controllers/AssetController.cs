@@ -21,6 +21,8 @@ namespace aiof.api.core.Controllers
     [Produces(Keys.ApplicationJson)]
     [Consumes(Keys.ApplicationJson)]
     [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(IAiofProblemDetailBase), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(IAiofProblemDetailBase), StatusCodes.Status401Unauthorized)]
     public class AssetController : ControllerBase
     {
         public readonly IAssetRepository _repo;
@@ -30,6 +32,9 @@ namespace aiof.api.core.Controllers
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
         }
 
+        /// <summary>
+        /// Get Asset by id
+        /// </summary>
         [HttpGet]
         [Route("{id}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
@@ -39,6 +44,20 @@ namespace aiof.api.core.Controllers
             return Ok(await _repo.GetAsync(id));
         }
 
+        /// <summary>
+        /// Get Assets
+        /// </summary>
+        [HttpGet]
+        [Route("all")]
+        [ProducesResponseType(typeof(IEnumerable<IAsset>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllAsync()
+        {
+            return Ok(await _repo.GetAllAsync());
+        }
+
+        /// <summary>
+        /// Update Asset by id
+        /// </summary>
         [HttpPut]
         [Route("{id}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
@@ -51,6 +70,9 @@ namespace aiof.api.core.Controllers
             return Ok(await _repo.UpdateAsync(id, assetDto));
         }
 
+        /// <summary>
+        /// Add Asset
+        /// </summary>
         [HttpPost]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(IAsset), StatusCodes.Status201Created)]
@@ -59,6 +81,9 @@ namespace aiof.api.core.Controllers
             return Created(nameof(Asset), await _repo.AddAsync(assetDto));
         }
 
+        /// <summary>
+        /// Delete Asset by id
+        /// </summary>
         [HttpDelete]
         [Route("{id}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
@@ -70,6 +95,9 @@ namespace aiof.api.core.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Get Asset types
+        /// </summary>
         [HttpGet]
         [Route("types")]
         [ProducesResponseType(typeof(IEnumerable<IAssetType>), StatusCodes.Status200OK)]

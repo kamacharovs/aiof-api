@@ -28,9 +28,6 @@ namespace aiof.api.data
             RuleFor(x => x.PaymentLength)
                 .GreaterThan(CommonValidator.MinimumValueInt);
 
-            RuleFor(x => x.UserId)
-                .NotNull();
-
 
             RuleFor(x => x.From)
                 .MaximumLength(200)
@@ -46,6 +43,32 @@ namespace aiof.api.data
         }
     }
 
+    public class AccountDtoValidator : AbstractValidator<AccountDto>
+    {
+        public AccountDtoValidator()
+        {
+            ValidatorOptions.Global.CascadeMode = CascadeMode.Stop;
+
+            RuleFor(x => x)
+                .NotNull();
+
+            RuleFor(x => x.Name)
+                .NotNull()
+                .NotEmpty()
+                .MaximumLength(200);
+
+            RuleFor(x => x.Description)
+                .NotNull()
+                .NotEmpty()
+                .MaximumLength(500);
+
+            RuleFor(x => x.TypeName)
+                .NotNull()
+                .NotEmpty()
+                .MaximumLength(100);
+        }
+    }
+
     public class UserDtoValidator : AbstractValidator<UserDto>
     {
         public UserDtoValidator()
@@ -58,6 +81,8 @@ namespace aiof.api.data
                 .SetValidator(new GoalDtoValidator());
             RuleForEach(x => x.Subscriptions)
                 .SetValidator(new SubscriptionDtoValidator());
+            RuleForEach(x => x.Accounts)
+                .SetValidator(new AccountDtoValidator());
         }
     }
 }
