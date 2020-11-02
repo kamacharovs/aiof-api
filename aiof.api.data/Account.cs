@@ -39,6 +39,5 @@ namespace aiof.api.data
         public string Name { get; set; }
         public string Description { get; set; }
         public string TypeName { get; set; }
-        public int UserId { get; set; }
     }
 }

@@ -47,12 +47,13 @@ namespace aiof.api.tests
             services.AddScoped<ITenant>(x => GetMockTenant());
             services.AddSingleton(new MapperConfiguration(x => { x.AddProfile(new AutoMappingProfileDto()); }).CreateMapper());
 
-            services.AddScoped<AbstractValidator<AssetDto>, AssetDtoValidator>()
-                .AddScoped<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>()
-                .AddScoped<AbstractValidator<LiabilityType>, LiabilityTypeValidator>()
-                .AddScoped<AbstractValidator<GoalDto>, GoalDtoValidator>()
-                .AddScoped<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>()
-                .AddScoped<AbstractValidator<UserDto>, UserDtoValidator>();
+            services.AddSingleton<AbstractValidator<AssetDto>, AssetDtoValidator>()
+                .AddSingleton<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>()
+                .AddSingleton<AbstractValidator<LiabilityType>, LiabilityTypeValidator>()
+                .AddSingleton<AbstractValidator<GoalDto>, GoalDtoValidator>()
+                .AddSingleton<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>()
+                .AddSingleton<AbstractValidator<AccountDto>, AccountDtoValidator>()
+                .AddSingleton<AbstractValidator<UserDto>, UserDtoValidator>();
 
             services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
@@ -170,6 +171,11 @@ namespace aiof.api.tests
                 id: true,
                 userId: true);
         }
+        public static IEnumerable<object[]> AssetsUsersId()
+        {
+            return _Fake.GetFakeAssetsData(
+                userId: true);
+        }
         public static IEnumerable<object[]> AssetsPublicKey()
         {
             return _Fake.GetFakeAssetsData(
@@ -224,7 +230,7 @@ namespace aiof.api.tests
         public static UserDto RandomUserDto(int userId = 1)
         {
             return new Faker<UserDto>()
-                .RuleFor(x => x.Assets, f => FakerAssetDtos(userId))
+                .RuleFor(x => x.Assets, f => FakerAssetDtos())
                 .RuleFor(x => x.Liabilities, f => FakerLiabilityDtos(userId))
                 .RuleFor(x => x.Goals, f => FakerGoalDtos(userId))
                 .Generate();
@@ -239,13 +245,12 @@ namespace aiof.api.tests
                 .Generate();
         }
 
-        public static List<AssetDto> FakerAssetDtos(int userId = 1)
+        public static List<AssetDto> FakerAssetDtos()
         {
             return new Faker<AssetDto>()
                 .RuleFor(x => x.Name, f => f.Random.String2(10))
                 .RuleFor(x => x.TypeName, f => f.Random.String2(5))
                 .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000))
-                .RuleFor(x => x.UserId, f => userId)
                 .Generate(GeneratedAmount);
         }
         public static List<LiabilityDto> FakerLiabilityDtos(int userId = 1)
@@ -254,7 +259,6 @@ namespace aiof.api.tests
                 .RuleFor(x => x.Name, f => f.Random.String2(10))
                 .RuleFor(x => x.TypeName, f => f.Random.String2(5))
                 .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000))
-                .RuleFor(x => x.UserId, f => userId)
                 .Generate(GeneratedAmount);
         }
         public static List<GoalDto> FakerGoalDtos(int userId = 1)
@@ -266,7 +270,6 @@ namespace aiof.api.tests
                 .RuleFor(x => x.CurrentAmount, f => f.Random.Decimal(1000, 4000))
                 .RuleFor(x => x.Contribution, f => f.Random.Decimal(700, 900))
                 .RuleFor(x => x.ContributionFrequencyName, f => "monthly")
-                .RuleFor(x => x.UserId, f => userId)
                 .Generate(GeneratedAmount);
         }
 
@@ -280,7 +283,6 @@ namespace aiof.api.tests
                 .RuleFor(x => x.PaymentLength, f => 365)
                 .RuleFor(x => x.From, f => f.Random.String2(10))
                 .RuleFor(x => x.Url, f => f.Internet.Url())
-                .RuleFor(x => x.UserId, f => userId)
                 .Generate();
         }
 
@@ -290,7 +292,6 @@ namespace aiof.api.tests
                 .RuleFor(x => x.Name, f => f.Random.String2(10))
                 .RuleFor(x => x.Description, f => f.Random.String2(50))
                 .RuleFor(x => x.TypeName, f => "retirement")
-                .RuleFor(x => x.UserId, f => userId)
                 .Generate();
         }
 
@@ -317,8 +318,7 @@ namespace aiof.api.tests
                 {
                     fakeAssetDto.Name,
                     fakeAssetDto.TypeName,
-                    fakeAssetDto.Value,
-                    fakeAssetDto.UserId
+                    fakeAssetDto.Value
                 });
             }
 

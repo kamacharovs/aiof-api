@@ -77,7 +77,7 @@ namespace aiof.api.services
             await _context.SaveChangesAsync();
 
             _logger.LogInformation("{Tenant} | Soft Deleted {EntityName} with Id={EntityId}",
-                _context._tenant.Log,
+                _context.Tenant.Log,
                 typeof(T).Name,
                 id);
         }
@@ -98,7 +98,7 @@ namespace aiof.api.services
             _context.Set<T>().Remove(entity);
             await _context.SaveChangesAsync();
             _logger.LogInformation("{Tenant} | Deleted {EntityName}={Entity}",
-                _context._tenant.Log,
+                _context.Tenant.Log,
                 typeof(T).Name,
                 JsonSerializer.Serialize(entity));
         }

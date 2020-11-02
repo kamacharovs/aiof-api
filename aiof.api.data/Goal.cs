@@ -54,11 +54,10 @@ namespace aiof.api.data
     {
         public string Name { get; set; }
         public string TypeName { get; set; }
-        public decimal Amount { get; set; }
-        public decimal CurrentAmount { get; set; }
-        public decimal Contribution { get; set; }
+        public decimal? Amount { get; set; }
+        public decimal? CurrentAmount { get; set; }
+        public decimal? Contribution { get; set; }
         public string ContributionFrequencyName { get; set; }
         public DateTime? PlannedDate { get; set; }
-        public int? UserId { get; set; }
     }
 }

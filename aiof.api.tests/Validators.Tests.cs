@@ -76,8 +76,7 @@ namespace aiof.api.tests
             {
                 Name = name,
                 TypeName = typeName,
-                Value = 15000M,
-                UserId = null
+                Value = 15000M
             };
             Assert.False(_assetDtoValidator.Validate(assetDto).IsValid);
 
@@ -85,8 +84,7 @@ namespace aiof.api.tests
             {
                 Name = name,
                 TypeName = typeName,
-                Value = 15000M,
-                UserId = null
+                Value = 15000M
             };
             Assert.False(_liabilityDtoValidator.Validate(liabilityDto).IsValid);
 
@@ -111,23 +109,21 @@ namespace aiof.api.tests
 
 
         [Theory]
-        [InlineData("Netflix", 10, "monthly", 12, 1)]
-        [InlineData("Hulu", 8.99, "monthly", 24, 1)]
-        [InlineData("Subscription", 99.88, "monthly", 36, 1)]
+        [InlineData("Netflix", 10, "monthly", 12)]
+        [InlineData("Hulu", 8.99, "monthly", 24)]
+        [InlineData("Subscription", 99.88, "monthly", 36)]
         public void Subscription_Dto_Validate_IsSuccessful(
             string name,
             decimal amount,
             string paymentFrequencyName,
-            int paymentLength,
-            int userId)
+            int paymentLength)
         {
             var subscriptionDto = new SubscriptionDto
             {
                 Name = name,
                 Amount = amount,
                 PaymentFrequencyName = paymentFrequencyName,
-                PaymentLength = paymentLength,
-                UserId = userId
+                PaymentLength = paymentLength
             };
 
             Assert.True(_subscriptionDtoValidator.Validate(subscriptionDto).IsValid);

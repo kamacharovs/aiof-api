@@ -675,6 +675,16 @@ namespace aiof.api.data
                     });
                 }
             }
+            else if (userId)
+            {
+                foreach (var fakeAssetUserId in fakeAssets.Select(x => x.UserId).Distinct())
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeAssetUserId
+                    });
+                }
+            }
 
             return toReturn;
         }

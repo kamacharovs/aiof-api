@@ -64,26 +64,34 @@ namespace aiof.api.services
                 .FirstOrDefaultAsync(x => x.Id == id)
                 ?? throw new AiofNotFoundException($"{nameof(Goal)} with Id={id} was not found");
         }
+
         public async Task<IGoal> GetAsync(
-            Guid publicKey, 
+            GoalDto goalDto,
             bool asNoTracking = true)
         {
             return await GetQuery(asNoTracking)
-                .FirstOrDefaultAsync(x => x.PublicKey == publicKey)
-                ?? throw new AiofNotFoundException($"{nameof(Goal)} with PublicKey={publicKey} was not found");
-        }
-        public async Task<bool> ExistsAsync(GoalDto goalDto)
-        {
-            return await _context.Goals
                 .FirstOrDefaultAsync(x => x.Name == goalDto.Name
                     && x.TypeName == goalDto.TypeName
                     && x.Amount == goalDto.Amount
                     && x.CurrentAmount == goalDto.CurrentAmount
                     && x.Contribution == goalDto.Contribution
-                    && x.ContributionFrequencyName == goalDto.ContributionFrequencyName
-                    && x.UserId == goalDto.UserId) is null
-                ? false
-                : true;
+                    && x.ContributionFrequencyName == goalDto.ContributionFrequencyName);
+        }
+
+        public async Task<IEnumerable<IGoal>> GetAsync(
+            string typeName,
+            bool asNoTracking = true)
+        {
+            return await GetQuery(asNoTracking)
+                .Where(x => x.TypeName == typeName)
+                .OrderBy(x => x.TypeName)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<IGoal>> GetAllAsync(bool asNoTracking = true)
+        {
+            return await GetQuery(asNoTracking)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<IGoalType>> GetTypesAsync()
@@ -97,13 +105,15 @@ namespace aiof.api.services
         {
             await _goalDtoValidator.ValidateAndThrowAsync(goalDto);
 
-            var goal = await ExistsAsync(goalDto)
-                ? throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"{nameof(Goal)} already exists")
-                : _mapper.Map<Goal>(goalDto);
+            if (await GetAsync(goalDto) != null)
+                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
+                    $"Goal already exists");
+
+            var goal = _mapper.Map<Goal>(goalDto);
+
+            goal.UserId = _context.Tenant.UserId;
 
             await _context.AddAsync(goal);
-
             await _context.SaveChangesAsync();
 
             await _context.Entry(goal)
@@ -111,7 +121,7 @@ namespace aiof.api.services
                 .LoadAsync();
 
             _logger.LogInformation("{Tenant} | Created Goal with Id={GoalId}, PublicKey={GoalPublicKey} and UserId={GoalUserId}",
-                _context._tenant.Log,
+                _context.Tenant.Log,
                 goal.Id,
                 goal.PublicKey,
                 goal.UserId);
@@ -133,16 +143,25 @@ namespace aiof.api.services
                 throw new AiofFriendlyException(HttpStatusCode.BadRequest,
                     $"Unable to update Goal. {nameof(GoalDto)} parameter cannot be NULL");
 
-            var goal = await GetAsync(id);
+            var goal = await GetAsync(id, false);
+            var goalToUpdate = _mapper.Map(goalDto, goal as Goal);
 
             _context.Goals
-                .Update(_mapper.Map(goalDto, goal as Goal));
+                .Update(goalToUpdate);
 
             await _context.SaveChangesAsync();
+            await _context.Entry(goal)
+                .Reference(x => x.Type)
+                .LoadAsync();
+            await _context.Entry(goal)
+                .Reference(x => x.ContributionFrequency)
+                .LoadAsync();
 
-            _logger.LogInformation("{Tenant} | Update Goal={Goal}",
-                _context._tenant.Log,
-                JsonSerializer.Serialize(goal));
+            _logger.LogInformation("{Tenant} | Updated Goal with Id={GoalId}, PublicKey={GoalPublicKey} and UserId={GoalUserId}",
+                _context.Tenant.Log,
+                goal.Id,
+                goal.PublicKey,
+                goal.UserId);
 
             return goal;
         }

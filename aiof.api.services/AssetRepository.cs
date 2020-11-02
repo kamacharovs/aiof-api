@@ -61,34 +61,26 @@ namespace aiof.api.services
         {
             return await GetQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.Id == id)
-                ?? throw new AiofNotFoundException($"{nameof(Asset)} with Id={id} was not found");
+                ?? throw new AiofNotFoundException($"Asset with Id={id} was not found");
         }
 
         public async Task<IAsset> GetAsync(
             string name,
             string typeName,
             decimal? value,
-            int? userId = null,
             bool asNoTracking = true)
         {
-            return userId is null
-                ? await GetQuery(asNoTracking)
-                    .FirstOrDefaultAsync(x => x.Name == name
-                        && x.TypeName == typeName
-                        && x.Value == value)
-                : await GetQuery(asNoTracking)
-                    .FirstOrDefaultAsync(x => x.Name == name
-                        && x.TypeName == typeName
-                        && x.Value == value
-                        && x.UserId == userId);
+            return await GetQuery(asNoTracking)
+                .FirstOrDefaultAsync(x => x.Name == name
+                    && x.TypeName == typeName
+                    && x.Value == value);
         }
         public async Task<IAsset> GetAsync(AssetDto assetDto)
         {
             return await GetAsync(
                 assetDto.Name,
                 assetDto.TypeName,
-                assetDto.Value,
-                assetDto.UserId);
+                assetDto.Value);
         }
 
         public async Task<IEnumerable<IAsset>> GetAsync(string typeName)
@@ -96,6 +88,12 @@ namespace aiof.api.services
             return await GetQuery()
                 .Where(x => x.TypeName == typeName)
                 .OrderBy(x => x.TypeName)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<IAsset>> GetAllAsync(bool asNoTracking = true)
+        {
+            return await GetQuery(asNoTracking)
                 .ToListAsync();
         }
 
@@ -112,9 +110,11 @@ namespace aiof.api.services
 
             if (await GetAsync(assetDto) != null)
                 throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"{nameof(Asset)} with the provided information already exists");
+                    $"Asset already exists");
 
             var asset = _mapper.Map<Asset>(assetDto);
+
+            asset.UserId = _context.Tenant.UserId;
 
             await _context.Assets.AddAsync(asset);
             await _context.SaveChangesAsync();
@@ -124,7 +124,7 @@ namespace aiof.api.services
                 .LoadAsync();
             
             _logger.LogInformation("{Tenant} | Created Asset with Id={AssetId}, PublicKey={AssetPublicKey} and UserId={AssetUserId}",
-                _context._tenant.Log,
+                _context.Tenant.Log,
                 asset.Id,
                 asset.PublicKey,
                 asset.UserId);
@@ -142,10 +142,10 @@ namespace aiof.api.services
             AssetDto assetDto)
         {
             var asset = await GetAsync(id, asNoTracking: false);
-            var assetToAdd = _mapper.Map(assetDto, asset as Asset);
+            var assetToUpdate = _mapper.Map(assetDto, asset as Asset);
 
             _context.Assets
-                .Update(assetToAdd);
+                .Update(assetToUpdate);
 
             await _context.SaveChangesAsync();
             await _context.Entry(asset)
@@ -153,7 +153,7 @@ namespace aiof.api.services
                 .LoadAsync();
 
             _logger.LogInformation("{Tenant} | Updated Asset with Id={AssetId}, PublicKey={AssetPublicKey} and UserId={AssetUserId}",
-                _context._tenant.Log,
+                _context.Tenant.Log,
                 asset.Id,
                 asset.PublicKey,
                 asset.UserId);

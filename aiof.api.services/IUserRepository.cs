@@ -8,27 +8,20 @@ namespace aiof.api.services
 {
     public interface IUserRepository
     {
-        Task<IUser> GetAsync(
-            int id,
-            bool asNoTracking = true);
+        Task<IUser> GetAsync(bool asNoTracking = true);
         Task<IUser> GetAsync(
             string username,
             bool asNoTracking = true);
-        Task<IUserProfile> GetProfileAsync(
-            int userId,
-            bool asNoTracking = true);
-        Task<IUser> UpsertAsync(
-            int userId,
-            UserDto userDto);
-        Task<IUserProfile> UpsertProfileAsync(
-            int userId,
-            UserProfileDto userProfileDto);
+        Task<IUserProfile> GetProfileAsync(bool asNoTracking = true);
+        Task<IUser> UpsertAsync(UserDto userDto);
+        Task<IUserProfile> UpsertProfileAsync(UserProfileDto userProfileDto);
         Task<ISubscription> GetSubscriptionAsync(
             int id,
             bool asNoTracking = true);
         Task<ISubscription> GetSubscriptionAsync(
             Guid publicKey,
             bool asNoTracking = true);
+        Task<IEnumerable<ISubscription>> GetSubscriptionsAsync(bool asNoTracking = true);
         Task<ISubscription> AddSubscriptionAsync(SubscriptionDto subscriptionDto);
         Task<ISubscription> UpdateSubscriptionAsync(
             int id,

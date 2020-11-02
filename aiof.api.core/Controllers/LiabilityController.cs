@@ -32,6 +32,9 @@ namespace aiof.api.core.Controllers
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
         }
 
+        /// <summary>
+        /// Get Liability by id
+        /// </summary>
         [HttpGet]
         [Route("{id}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
@@ -41,13 +44,20 @@ namespace aiof.api.core.Controllers
             return Ok(await _repo.GetAsync(id));
         }
 
+        /// <summary>
+        /// Get Liabilities
+        /// </summary>
         [HttpGet]
+        [Route("all")]
         [ProducesResponseType(typeof(IEnumerable<ILiability>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllAsync([FromQuery, Required] int userId)
+        public async Task<IActionResult> GetAllAsync()
         {
-            return Ok(await _repo.GetAllAsync(userId));
+            return Ok(await _repo.GetAllAsync());
         }
 
+        /// <summary>
+        /// Update Liability by id
+        /// </summary>
         [HttpPut]
         [Route("{id}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
@@ -60,6 +70,9 @@ namespace aiof.api.core.Controllers
             return Ok(await _repo.UpdateAsync(id, liabilityDto));
         }
 
+        /// <summary>
+        /// Add Liability
+        /// </summary>
         [HttpPost]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ILiability), StatusCodes.Status201Created)]
@@ -68,6 +81,9 @@ namespace aiof.api.core.Controllers
             return Created(nameof(Liability), await _repo.AddAsync(liabilityDto));
         }
 
+        /// <summary>
+        /// Delete Liability by id
+        /// </summary>
         [HttpDelete]
         [Route("{id}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
@@ -79,6 +95,9 @@ namespace aiof.api.core.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Add Liability types
+        /// </summary>
         [HttpGet]
         [Route("types")]
         [ProducesResponseType(typeof(IEnumerable<ILiabilityType>), StatusCodes.Status200OK)]
