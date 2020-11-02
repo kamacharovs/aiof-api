@@ -53,12 +53,13 @@ namespace aiof.api.core
                 })
                 .SetHandlerLifetime(TimeSpan.FromMinutes(5));
 
-            services.AddScoped<AbstractValidator<AssetDto>, AssetDtoValidator>()
-                .AddScoped<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>()
-                .AddScoped<AbstractValidator<LiabilityType>, LiabilityTypeValidator>()
-                .AddScoped<AbstractValidator<GoalDto>, GoalDtoValidator>()
-                .AddScoped<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>()
-                .AddScoped<AbstractValidator<UserDto>, UserDtoValidator>();
+            services.AddSingleton<AbstractValidator<AssetDto>, AssetDtoValidator>()
+                .AddSingleton<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>()
+                .AddSingleton<AbstractValidator<LiabilityType>, LiabilityTypeValidator>()
+                .AddSingleton<AbstractValidator<GoalDto>, GoalDtoValidator>()
+                .AddSingleton<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>()
+                .AddSingleton<AbstractValidator<AccountDto>, AccountDtoValidator>()
+                .AddSingleton<AbstractValidator<UserDto>, UserDtoValidator>();
 
             services.AddDbContext<AiofContext>(o => o.UseNpgsql(_config[Keys.DataPostgreSQL]));
 

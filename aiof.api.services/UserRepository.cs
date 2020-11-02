@@ -24,6 +24,7 @@ namespace aiof.api.services
         private readonly ITenant _tenant;
         private readonly AiofContext _context;
         private readonly AbstractValidator<SubscriptionDto> _subscriptionDtoValidator;
+        private readonly AbstractValidator<AccountDto> _accountDtoValidator;
 
         private readonly Stopwatch _sw;
 
@@ -31,13 +32,15 @@ namespace aiof.api.services
             ILogger<UserRepository> logger,
             IMapper mapper, 
             AiofContext context,
-            AbstractValidator<SubscriptionDto> subscriptionDtoValidator)
+            AbstractValidator<SubscriptionDto> subscriptionDtoValidator,
+            AbstractValidator<AccountDto> accountDtoValidator)
             : base(logger, context)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _subscriptionDtoValidator = subscriptionDtoValidator ?? throw new ArgumentNullException(nameof(subscriptionDtoValidator));
+            _accountDtoValidator = accountDtoValidator ?? throw new ArgumentNullException(nameof(accountDtoValidator));
 
             _tenant = _context.Tenant;
             _sw = new Stopwatch();
@@ -270,7 +273,7 @@ namespace aiof.api.services
         {
             return await GetAccountsQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.Id == id)
-                ?? throw new AiofNotFoundException($"{nameof(Account)} with Id={id} was not found");
+                ?? throw new AiofNotFoundException($"Account with Id={id} was not found");
         }
 
         public async Task<IAccount> GetAccountAsync(
@@ -280,8 +283,7 @@ namespace aiof.api.services
             return await GetAccountsQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.Name == accountDto.Name
                     && x.Description == accountDto.Description
-                    && x.TypeName == accountDto.TypeName
-                    && x.UserId == accountDto.UserId);
+                    && x.TypeName == accountDto.TypeName);
         }
 
         public async Task<IEnumerable<IAccountType>> GetAccountTypesAsync()
@@ -298,20 +300,24 @@ namespace aiof.api.services
 
         public async Task<IAccount> AddAccountAsync(AccountDto accountDto)
         {
-            var accountInDb = await GetAccountAsync(accountDto);
-            if (accountInDb != null)
+            await _accountDtoValidator.ValidateAndThrowAsync(accountDto);
+
+            if (await GetAccountAsync(accountDto) != null)
                 throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"Account with Name={accountDto.Name}, Description={accountDto.Description}, Type={accountDto.TypeName} already exists");
+                    $"Account already exists");
 
             var account = _mapper.Map<Account>(accountDto);
 
-            await _context.Accounts
-                .AddAsync(account);
+            account.UserId = _context.Tenant.UserId;
+
+            await _context.Accounts.AddAsync(account);
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("{Tenant} | Added Account={Account}",
-                _tenant.Log,
-                JsonSerializer.Serialize(account));
+            _logger.LogInformation("{Tenant} | Created Account with Id={AccountId}, PublicKey={AccountPublicKey} and UserId={AccountUserId}",
+                _context.Tenant.Log,
+                account.Id,
+                account.PublicKey,
+                account.UserId);
 
             return account;
         }
@@ -320,17 +326,19 @@ namespace aiof.api.services
             int id,
             AccountDto accountDto)
         {
-            var accountInDb = await GetAccountAsync(id, false) as Account;
-            var account = _mapper.Map(accountDto, accountInDb);
+            var accountInDb = await GetAccountAsync(id, false);
+            var account = _mapper.Map(accountDto, accountInDb as Account);
 
             _context.Accounts
                 .Update(account);
 
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("{Tenant} | Updated Account={Account}",
-                _tenant.Log,
-                JsonSerializer.Serialize(account));
+            _logger.LogInformation("{Tenant} | Updated Account with Id={AccountId}, PublicKey={AccountPublicKey} and UserId={AccountUserId}",
+                _context.Tenant.Log,
+                account.Id,
+                account.PublicKey,
+                account.UserId);
 
             return account;
         }

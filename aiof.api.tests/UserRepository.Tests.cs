@@ -161,9 +161,8 @@ namespace aiof.api.tests
         public async Task GetSubscsriptionAsync_ById_IsNull(int userId, int id)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
-            var sub = await _repo.GetSubscriptionAsync(id * 5);
 
-            Assert.Null(sub);
+            await Assert.ThrowsAnyAsync<AiofNotFoundException>(() => _repo.GetSubscriptionAsync(id * 100));
         }
         [Theory]
         [MemberData(nameof(Helper.SubscriptionsPublicKey), MemberType = typeof(Helper))]
@@ -217,9 +216,8 @@ namespace aiof.api.tests
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
 
             await _repo.DeleteSubscriptionAsync(id);
-            var sub = await _repo.GetSubscriptionAsync(id);
 
-            Assert.Null(sub);
+            await Assert.ThrowsAnyAsync<AiofNotFoundException>(() => _repo.GetSubscriptionAsync(id));
         }
 
         [Theory]
@@ -283,7 +281,6 @@ namespace aiof.api.tests
             Assert.Equal(dto.Name, account.Name);
             Assert.Equal(dto.Description, account.Description);
             Assert.Equal(dto.TypeName, account.TypeName);
-            Assert.Equal(dto.UserId, account.UserId);
         }
 
         [Theory]
@@ -313,7 +310,6 @@ namespace aiof.api.tests
             Assert.Equal(dto.Name, account.Name);
             Assert.Equal(dto.Description, account.Description);
             Assert.Equal(dto.TypeName, account.TypeName);
-            Assert.Equal(dto.UserId, account.UserId);
         }
 
         [Theory]

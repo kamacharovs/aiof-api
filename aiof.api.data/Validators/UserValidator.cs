@@ -66,10 +66,6 @@ namespace aiof.api.data
                 .NotNull()
                 .NotEmpty()
                 .MaximumLength(100);
-
-            RuleFor(x => x.UserId)
-                .NotNull()
-                .NotEmpty();
         }
     }
 

@@ -47,12 +47,13 @@ namespace aiof.api.tests
             services.AddScoped<ITenant>(x => GetMockTenant());
             services.AddSingleton(new MapperConfiguration(x => { x.AddProfile(new AutoMappingProfileDto()); }).CreateMapper());
 
-            services.AddScoped<AbstractValidator<AssetDto>, AssetDtoValidator>()
-                .AddScoped<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>()
-                .AddScoped<AbstractValidator<LiabilityType>, LiabilityTypeValidator>()
-                .AddScoped<AbstractValidator<GoalDto>, GoalDtoValidator>()
-                .AddScoped<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>()
-                .AddScoped<AbstractValidator<UserDto>, UserDtoValidator>();
+            services.AddSingleton<AbstractValidator<AssetDto>, AssetDtoValidator>()
+                .AddSingleton<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>()
+                .AddSingleton<AbstractValidator<LiabilityType>, LiabilityTypeValidator>()
+                .AddSingleton<AbstractValidator<GoalDto>, GoalDtoValidator>()
+                .AddSingleton<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>()
+                .AddSingleton<AbstractValidator<AccountDto>, AccountDtoValidator>()
+                .AddSingleton<AbstractValidator<UserDto>, UserDtoValidator>();
 
             services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
@@ -291,7 +292,6 @@ namespace aiof.api.tests
                 .RuleFor(x => x.Name, f => f.Random.String2(10))
                 .RuleFor(x => x.Description, f => f.Random.String2(50))
                 .RuleFor(x => x.TypeName, f => "retirement")
-                .RuleFor(x => x.UserId, f => userId)
                 .Generate();
         }
 

@@ -52,10 +52,7 @@ namespace aiof.api.data
                 .ForAllOtherMembers(x => x.Condition((source, destination, member) => member != null));
 
             CreateMap<AccountDto, Account>()
-                .ForMember(x => x.Name, o => o.MapFrom(s => s.Name))
-                .ForMember(x => x.Description, o => o.MapFrom(s => s.Description))
-                .ForMember(x => x.TypeName, o => o.MapFrom(s => s.TypeName))
-                .ForMember(x => x.UserId, o => o.MapFrom(s => s.UserId));
+                .ForAllMembers(x => x.Condition((source, destination, member) => member != null));
         }
     }
 }
