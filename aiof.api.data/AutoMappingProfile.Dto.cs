@@ -47,14 +47,9 @@ namespace aiof.api.data
             CreateMap<Subscription, Subscription>()
                 .ForAllMembers(x => x.Condition((source, destination, member) => member != null));
             CreateMap<SubscriptionDto, Subscription>()
-                .ForMember(x => x.Name, o => o.MapFrom(s => s.Name))
-                .ForMember(x => x.Description, o => o.Condition(s => s.Description != null))
-                .ForMember(x => x.Amount, o => o.MapFrom(s => s.Amount))
-                .ForMember(x => x.PaymentFrequencyName, o => o.MapFrom(s => s.PaymentFrequencyName))
-                .ForMember(x => x.PaymentLength, o => o.MapFrom(s => s.PaymentLength))
-                .ForMember(x => x.From, o => o.Condition(s => s.From != null))
-                .ForMember(x => x.Url, o => o.Condition(s => s.Url != null))
-                .ForMember(x => x.UserId, o => o.MapFrom(s => s.UserId));
+                .ForMember(x => x.Amount, o => o.Condition(s => s.Amount != null || s.Amount == 0))
+                .ForMember(x => x.PaymentLength, o => o.Condition(s => s.PaymentLength != null || s.PaymentLength == 0))
+                .ForAllOtherMembers(x => x.Condition((source, destination, member) => member != null));
 
             CreateMap<AccountDto, Account>()
                 .ForMember(x => x.Name, o => o.MapFrom(s => s.Name))

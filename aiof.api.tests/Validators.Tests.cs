@@ -124,8 +124,7 @@ namespace aiof.api.tests
                 Name = name,
                 Amount = amount,
                 PaymentFrequencyName = paymentFrequencyName,
-                PaymentLength = paymentLength,
-                UserId = userId
+                PaymentLength = paymentLength
             };
 
             Assert.True(_subscriptionDtoValidator.Validate(subscriptionDto).IsValid);

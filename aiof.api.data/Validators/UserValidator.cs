@@ -28,9 +28,6 @@ namespace aiof.api.data
             RuleFor(x => x.PaymentLength)
                 .GreaterThan(CommonValidator.MinimumValueInt);
 
-            RuleFor(x => x.UserId)
-                .NotNull();
-
 
             RuleFor(x => x.From)
                 .MaximumLength(200)

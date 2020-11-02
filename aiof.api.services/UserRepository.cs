@@ -154,7 +154,8 @@ namespace aiof.api.services
             bool asNoTracking = true)
         {
             return await GetSubscriptionsQuery(asNoTracking)
-                .FirstOrDefaultAsync(x => x.Id == id);
+                .FirstOrDefaultAsync(x => x.Id == id)
+                ?? throw new AiofNotFoundException($"Subscription with Id={id} was not found");
         }
         public async Task<ISubscription> GetSubscriptionAsync(
             Guid publicKey,
@@ -165,14 +166,17 @@ namespace aiof.api.services
         }
         public async Task<ISubscription> GetSubscriptionAsync(
             string name, 
-            decimal amount,
-            int userId,
+            decimal? amount,
             bool asNoTracking = true)
         {
             return await GetSubscriptionsQuery(asNoTracking)
-                .FirstOrDefaultAsync(x => x.UserId == userId
-                    && x.Name == name
+                .FirstOrDefaultAsync(x => x.Name == name
                     && x.Amount == amount);
+        }
+        public async Task<IEnumerable<ISubscription>> GetSubscriptionsAsync(bool asNoTracking = true)
+        {
+            return await GetSubscriptionsQuery(asNoTracking)
+                .ToListAsync();
         }
 
         public async Task<ISubscription> AddSubscriptionAsync(SubscriptionDto subscriptionDto)
@@ -181,21 +185,23 @@ namespace aiof.api.services
 
             var name = subscriptionDto.Name;
             var amount = subscriptionDto.Amount;
-            var userId = subscriptionDto.UserId;
 
-            if (await GetSubscriptionAsync(name, amount, userId) != null)
+            if (await GetSubscriptionAsync(name, amount) != null)
                 throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"{nameof(Subscription)} with UserId={userId}, Name='{name}' and Amount={amount} already exists");
+                    $"{nameof(Subscription)} with Name='{name}' and Amount={amount} already exists");
 
             var subscription = _mapper.Map<Subscription>(subscriptionDto);
 
-            await _context.Subscriptions
-                .AddAsync(subscription);
+            subscription.UserId = _tenant.UserId;
+
+            await _context.Subscriptions.AddAsync(subscription);
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("{Tenant} | Added Subscription={Subscription}",
+            _logger.LogInformation("{Tenant} | Created Subscription with Id={SubscriptionId}, PublicKey={SubscriptionPublicKey} and UserId={SubscriptionUserId}",
                 _tenant.Log,
-                JsonSerializer.Serialize(subscription));
+                subscription.Id,
+                subscription.PublicKey,
+                subscription.UserId);
 
             return subscription;
         }
@@ -205,18 +211,20 @@ namespace aiof.api.services
             SubscriptionDto subscriptionDto)
         {
             var subscriptionInDb = await GetSubscriptionAsync(id, false);
-            var subcription = _mapper.Map(subscriptionDto, subscriptionInDb as Subscription);
+            var subscription = _mapper.Map(subscriptionDto, subscriptionInDb as Subscription);
             
             _context.Subscriptions
-                .Update(subcription);
+                .Update(subscription);
 
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("{Tenant} | Updated Subscription={Subscription}",
+            _logger.LogInformation("{Tenant} | Updated Subscription with Id={SubscriptionId}, PublicKey={SubscriptionPublicKey} and UserId={SubscriptionUserId}",
                 _tenant.Log,
-                JsonSerializer.Serialize(subcription));
+                subscription.Id,
+                subscription.PublicKey,
+                subscription.UserId);
 
-            return subcription;
+            return subscription;
         }
 
         public async Task DeleteSubscriptionAsync(int id)

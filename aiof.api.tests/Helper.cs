@@ -282,7 +282,6 @@ namespace aiof.api.tests
                 .RuleFor(x => x.PaymentLength, f => 365)
                 .RuleFor(x => x.From, f => f.Random.String2(10))
                 .RuleFor(x => x.Url, f => f.Internet.Url())
-                .RuleFor(x => x.UserId, f => userId)
                 .Generate();
         }
 

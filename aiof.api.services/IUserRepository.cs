@@ -21,6 +21,7 @@ namespace aiof.api.services
         Task<ISubscription> GetSubscriptionAsync(
             Guid publicKey,
             bool asNoTracking = true);
+        Task<IEnumerable<ISubscription>> GetSubscriptionsAsync(bool asNoTracking = true);
         Task<ISubscription> AddSubscriptionAsync(SubscriptionDto subscriptionDto);
         Task<ISubscription> UpdateSubscriptionAsync(
             int id,
