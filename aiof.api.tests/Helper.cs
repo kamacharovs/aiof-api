@@ -196,6 +196,18 @@ namespace aiof.api.tests
                 userId: true);
         }
 
+        public static IEnumerable<object[]> LiabilitiesUserId()
+        {
+            return _Fake.GetFakeLiabilitiesData(
+                userId: true);
+        }
+        public static IEnumerable<object[]> LiabilitiesIdUserId()
+        {
+            return _Fake.GetFakeLiabilitiesData(
+                id: true,
+                userId: true);
+        }
+
         public static IEnumerable<object[]> SubscriptionsId()
         {
             return _Fake.GetFakeSubscriptionsData(
@@ -242,6 +254,17 @@ namespace aiof.api.tests
                 .RuleFor(x => x.Gender, f => f.Person.Gender.ToString())
                 .RuleFor(x => x.DateOfBirth, f => f.Date.Past(f.Random.Int(18, 99)))
                 .RuleFor(x => x.EducationLevel, f => EducationLevels.Bachelors.ToString())
+                .Generate();
+        }
+
+        public static LiabilityDto RandomLiabilityDto()
+        {
+            return new Faker<LiabilityDto>()
+                .RuleFor(x => x.Name, f => f.Random.String2(10))
+                .RuleFor(x => x.TypeName, f => f.Random.String2(5))
+                .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000))
+                .RuleFor(x => x.MonthlyPayment, f => f.Random.Decimal(50, 500))
+                .RuleFor(x => x.Years, f => f.Random.Int(1, 5))
                 .Generate();
         }
 

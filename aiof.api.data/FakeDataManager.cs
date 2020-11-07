@@ -689,6 +689,41 @@ namespace aiof.api.data
             return toReturn;
         }
 
+        public IEnumerable<object[]> GetFakeLiabilitiesData(
+            bool id = false,
+            bool userId = false)
+        {
+            var fakeLiabilities = GetFakeLiabilities()
+                .ToArray();
+
+            var toReturn = new List<object[]>();
+
+            if (id
+                && userId)
+            {
+                foreach (var fakeLiability in fakeLiabilities.Where(x => !x.IsDeleted))
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeLiability.Id,
+                        fakeLiability.UserId
+                    });
+                }
+            }
+            else if (userId)
+            {
+                foreach (var fakeLiabilityUserId in fakeLiabilities.Where(x => !x.IsDeleted).Select(x => x.UserId).Distinct())
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeLiabilityUserId
+                    });
+                }
+            }
+
+            return toReturn;
+        }
+
         public IEnumerable<object[]> GetFakeSubscriptionsData(
             bool userId = false,
             bool id = false,

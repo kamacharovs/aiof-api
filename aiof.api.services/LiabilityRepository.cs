@@ -155,8 +155,7 @@ namespace aiof.api.services
                 throw new AiofFriendlyException(HttpStatusCode.BadRequest,
                     $"{nameof(LiabilityType)} with Name={name} already exists");
 
-            await _context.LiabilityTypes
-                .AddAsync(liabilityType);
+            await _context.LiabilityTypes.AddAsync(liabilityType);
             await _context.SaveChangesAsync();
 
             return liabilityType;
