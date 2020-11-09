@@ -219,6 +219,11 @@ namespace aiof.api.tests
                 id: true,
                 userId: true);
         }
+        public static IEnumerable<object[]> GoalsTypeName()
+        {
+            return _Fake.GetFakeGoalsData(
+                typeName: true);
+        }
 
         public static IEnumerable<object[]> SubscriptionsId()
         {

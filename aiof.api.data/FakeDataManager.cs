@@ -726,7 +726,8 @@ namespace aiof.api.data
 
         public IEnumerable<object[]> GetFakeGoalsData(
             bool id = false,
-            bool userId = false)
+            bool userId = false,
+            bool typeName = false)
         {
             var fakeGoals = GetFakeGoals()
                 .ToArray();
@@ -752,6 +753,16 @@ namespace aiof.api.data
                     toReturn.Add(new object[]
                     {
                         fakeGoalUserId
+                    });
+                }
+            }
+            else if (typeName)
+            {
+                foreach (var fakeGoalTypeName in fakeGoals.Where(x => !x.IsDeleted).Select(x => x.TypeName).Distinct())
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeGoalTypeName
                     });
                 }
             }
