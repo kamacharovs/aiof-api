@@ -102,6 +102,18 @@ namespace aiof.api.tests
             Assert.Empty(goals);
         }
 
+        [Theory]
+        [MemberData(nameof(Helper.GoalsTypeName), MemberType = typeof(Helper))]
+        public async Task GetTypeAsync_IsSuccessful(string typeName)
+        {
+            var _repo = new ServiceHelper().GetRequiredService<IGoalRepository>();
+            var goalType = await _repo.GetTypeAsync(typeName);
+
+            Assert.NotNull(goalType);
+            Assert.NotNull(goalType.Name);
+            Assert.NotEqual(Guid.Empty, goalType.PublicKey);
+        }
+
         [Fact]
         public async Task GetTypesAsync_IsSuccessful()
         {
@@ -147,6 +159,18 @@ namespace aiof.api.tests
             var goal = await repo.AddAsync(dto);
 
             await Assert.ThrowsAsync<AiofFriendlyException>(() => repo.AddAsync(dto));
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.GoalsUserId), MemberType = typeof(Helper))]
+        public async Task AddAsync_TypeDoesntExist_Throws_NotFound(int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();
+            var dto = Helper.RandomGoalDto();
+            
+            dto.TypeName = "definitelydoesntexist";
+
+            await Assert.ThrowsAsync<AiofNotFoundException>(() => repo.AddAsync(dto));
         }
 
         [Theory]

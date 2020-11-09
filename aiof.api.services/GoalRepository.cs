@@ -94,6 +94,15 @@ namespace aiof.api.services
                 .ToListAsync();
         }
 
+        public async Task<IGoalType> GetTypeAsync(
+            string typeName,
+            bool asNoTracking = true)
+        {
+            return await GetTypesQuery(asNoTracking)
+                .FirstOrDefaultAsync(x => x.Name == typeName)
+                ?? throw new AiofNotFoundException("GoalType was not found");
+        }
+
         public async Task<IEnumerable<IGoalType>> GetTypesAsync()
         {
             return await GetTypesQuery()
@@ -105,9 +114,13 @@ namespace aiof.api.services
         {
             await _goalDtoValidator.ValidateAndThrowAsync(goalDto);
 
-            if (await GetAsync(goalDto) != null)
+            if (await GetTypeAsync(goalDto.TypeName) == null)
                 throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"Goal already exists");
+                    $"Goal type doesn't exist");
+
+            else if (await GetAsync(goalDto) != null)
+                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
+                    $"Goal already exists"); 
 
             var goal = _mapper.Map<Goal>(goalDto);
 
