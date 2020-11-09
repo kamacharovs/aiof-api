@@ -15,6 +15,9 @@ namespace aiof.api.services
             LiabilityDto liabilityDto,
             bool asNoTracking = true);
         Task<IEnumerable<ILiability>> GetAllAsync();
+        Task<ILiabilityType> GetTypeAsync(
+            string typeName,
+            bool asNoTracking = true);
         Task<IEnumerable<ILiabilityType>> GetTypesAsync();
         Task<ILiability> AddAsync(LiabilityDto liabilityDto);
         IAsyncEnumerable<ILiability> AddAsync(IEnumerable<LiabilityDto> liabilityDtos);

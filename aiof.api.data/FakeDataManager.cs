@@ -691,7 +691,8 @@ namespace aiof.api.data
 
         public IEnumerable<object[]> GetFakeLiabilitiesData(
             bool id = false,
-            bool userId = false)
+            bool userId = false,
+            bool typeName = false)
         {
             var fakeLiabilities = GetFakeLiabilities()
                 .ToArray();
@@ -717,6 +718,16 @@ namespace aiof.api.data
                     toReturn.Add(new object[]
                     {
                         fakeLiabilityUserId
+                    });
+                }
+            }
+            else if (typeName)
+            {
+                foreach (var fakeLiabilityTypeName in fakeLiabilities.Where(x => !x.IsDeleted).Select(x => x.TypeName).Distinct())
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeLiabilityTypeName
                     });
                 }
             }

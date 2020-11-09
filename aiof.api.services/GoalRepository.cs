@@ -100,7 +100,7 @@ namespace aiof.api.services
         {
             return await GetTypesQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.Name == typeName)
-                ?? throw new AiofNotFoundException("GoalType was not found");
+                ?? throw new AiofNotFoundException("Goal type was not found");
         }
 
         public async Task<IEnumerable<IGoalType>> GetTypesAsync()

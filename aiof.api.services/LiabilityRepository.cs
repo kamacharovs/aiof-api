@@ -85,6 +85,15 @@ namespace aiof.api.services
                 .ToListAsync();
         }
 
+        public async Task<ILiabilityType> GetTypeAsync(
+            string typeName,
+            bool asNoTracking = true)
+        {
+            return await GetTypesQuery(asNoTracking)
+                .FirstOrDefaultAsync(x => x.Name == typeName)
+                ?? throw new AiofNotFoundException("Liability type was not found");
+        }
+
         public async Task<IEnumerable<ILiabilityType>> GetTypesAsync()
         {
             return await GetTypesQuery()
@@ -96,7 +105,11 @@ namespace aiof.api.services
         {
             await _liabilityDtoValidator.ValidateAndThrowAsync(liabilityDto);
 
-            if (await GetAsync(liabilityDto) != null)
+            if (await GetTypeAsync(liabilityDto.TypeName) == null)
+                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
+                    $"Liability type doesn't exist");
+
+            else if (await GetAsync(liabilityDto) != null)
                 throw new AiofFriendlyException(HttpStatusCode.BadRequest,
                     $"Liability already exists");
 
