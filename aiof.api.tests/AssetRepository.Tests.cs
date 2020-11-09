@@ -140,7 +140,7 @@ namespace aiof.api.tests
         public async Task AddAssetAsync_Is_Successful(int userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
-            var dto = Helper.FakerAssetDtos().First();
+            var dto = Helper.RandomAssetDto();
             var asset = await _repo.AddAsync(dto);
 
             Assert.NotNull(asset);
@@ -157,8 +157,8 @@ namespace aiof.api.tests
         public async Task DeleteAsync_IsSuccessful(int id, int userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
-
             await _repo.DeleteAsync(id);
+            
             await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.GetAsync(id));
         }
     }

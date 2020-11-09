@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Security.Claims;
 
@@ -279,11 +280,20 @@ namespace aiof.api.tests
                 .Generate();
         }
 
+        public static AssetDto RandomAssetDto()
+        {
+            return new Faker<AssetDto>()
+                .RuleFor(x => x.Name, f => f.Random.String2(10))
+                .RuleFor(x => x.TypeName, f => _Fake.GetFakeAssetTypes().First().Name)
+                .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000))
+                .Generate();
+        }
+
         public static LiabilityDto RandomLiabilityDto()
         {
             return new Faker<LiabilityDto>()
                 .RuleFor(x => x.Name, f => f.Random.String2(10))
-                .RuleFor(x => x.TypeName, f => "personal loan")
+                .RuleFor(x => x.TypeName, f => _Fake.GetFakeLiabilityTypes().First().Name)
                 .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000))
                 .RuleFor(x => x.MonthlyPayment, f => f.Random.Decimal(50, 500))
                 .RuleFor(x => x.Years, f => f.Random.Int(1, 5))
@@ -294,7 +304,7 @@ namespace aiof.api.tests
         {
              return new Faker<GoalDto>()
                 .RuleFor(x => x.Name, f => f.Random.String2(10))
-                .RuleFor(x => x.TypeName, f => "save for a rainy day")
+                .RuleFor(x => x.TypeName, f => _Fake.GetFakeGoalTypes().First().Name)
                 .RuleFor(x => x.Amount, f => f.Random.Decimal(5000, 10000))
                 .RuleFor(x => x.CurrentAmount, f => f.Random.Decimal(1000, 4000))
                 .RuleFor(x => x.Contribution, f => f.Random.Decimal(700, 900))

@@ -91,7 +91,7 @@ namespace aiof.api.services
         {
             return await GetTypesQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.Name == typeName)
-                ?? throw new AiofNotFoundException("Liability type was not found");
+                ?? throw new AiofNotFoundException($"Liability type with name={typeName} was not found");
         }
 
         public async Task<IEnumerable<ILiabilityType>> GetTypesAsync()
@@ -104,14 +104,7 @@ namespace aiof.api.services
         public async Task<ILiability> AddAsync(LiabilityDto liabilityDto)
         {
             await _liabilityDtoValidator.ValidateAndThrowAsync(liabilityDto);
-
-            if (await GetTypeAsync(liabilityDto.TypeName) == null)
-                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"Liability type doesn't exist");
-
-            else if (await GetAsync(liabilityDto) != null)
-                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"Liability already exists");
+            await CheckAsync(liabilityDto);
 
             var liability = _mapper.Map<Liability>(liabilityDto);
 
@@ -139,17 +132,7 @@ namespace aiof.api.services
             int id, 
             LiabilityDto liabilityDto)
         {
-            if (liabilityDto == null)
-            {
-                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"Unable to update Liability. DTO parameter cannot be NULL");
-            }
-            else if (liabilityDto.TypeName != null
-                && await GetTypeAsync(liabilityDto.TypeName) == null)
-            {
-                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"Liability type doesn't exist");
-            }
+            await CheckAsync(liabilityDto);
 
             var liability = await GetAsync(id, false);
             var liabilityToUpdate = _mapper.Map(liabilityDto, liability as Liability);
@@ -193,6 +176,18 @@ namespace aiof.api.services
         public async Task DeleteAsync(int id)
         {
             await base.SoftDeleteAsync<Liability>(id);
+        }
+
+        private async Task CheckAsync(
+            LiabilityDto liabilityDto,
+            string message = null)
+        {
+            if (liabilityDto == null)
+            { throw new AiofFriendlyException(HttpStatusCode.BadRequest, message ?? $"Liability DTO cannot be NULL"); }
+            else if (liabilityDto.TypeName != null && await GetTypeAsync(liabilityDto.TypeName) == null) 
+            { throw new AiofFriendlyException(HttpStatusCode.BadRequest, message ?? $"Liability type doesn't exist"); }
+            else if (await GetAsync(liabilityDto) != null) 
+            { throw new AiofFriendlyException(HttpStatusCode.BadRequest, message ?? $"Liability already exists"); }
         }
     }
 }

@@ -100,7 +100,7 @@ namespace aiof.api.services
         {
             return await GetTypesQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.Name == typeName)
-                ?? throw new AiofNotFoundException("Goal type was not found");
+                ?? throw new AiofNotFoundException($"Goal type with name={typeName} was not found");
         }
 
         public async Task<IEnumerable<IGoalType>> GetTypesAsync()
@@ -113,14 +113,7 @@ namespace aiof.api.services
         public async Task<IGoal> AddAsync(GoalDto goalDto)
         {
             await _goalDtoValidator.ValidateAndThrowAsync(goalDto);
-
-            if (await GetTypeAsync(goalDto.TypeName) == null)
-                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"Goal type doesn't exist");
-
-            else if (await GetAsync(goalDto) != null)
-                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"Goal already exists"); 
+            await CheckAsync(goalDto);
 
             var goal = _mapper.Map<Goal>(goalDto);
 
@@ -152,17 +145,7 @@ namespace aiof.api.services
             int id, 
             GoalDto goalDto)
         {
-            if (goalDto == null)
-            {
-                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"Unable to update Goal. DTO parameter cannot be NULL");
-            }
-            else if (goalDto.TypeName != null
-                && await GetTypeAsync(goalDto.TypeName) == null)
-            {
-                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"Goal type doesn't exist");
-            }
+            await CheckAsync(goalDto);
 
             var goal = await GetAsync(id, false);
             var goalToUpdate = _mapper.Map(goalDto, goal as Goal);
@@ -190,6 +173,18 @@ namespace aiof.api.services
         public async Task DeleteAsync(int id)
         {
             await base.SoftDeleteAsync<Goal>(id);
+        }
+
+        private async Task CheckAsync(
+            GoalDto goalDto,
+            string message = null)
+        {
+            if (goalDto == null)
+            { throw new AiofFriendlyException(HttpStatusCode.BadRequest, message ?? $"Goal DTO cannot be NULL"); }
+            else if (goalDto.TypeName != null && await GetTypeAsync(goalDto.TypeName) == null) 
+            { throw new AiofFriendlyException(HttpStatusCode.BadRequest, message ?? $"Goal type doesn't exist"); }
+            else if (await GetAsync(goalDto) != null) 
+            { throw new AiofFriendlyException(HttpStatusCode.BadRequest, message ?? $"Goal already exists"); }
         }
     }
 }
