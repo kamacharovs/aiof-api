@@ -153,6 +153,7 @@ namespace aiof.api.tests
                 Liabilities = liabilities,
                 Goals = goals
             };
+            
             Assert.True(_userDtoValidator.Validate(userDto).IsValid);
         }
 
@@ -161,6 +162,7 @@ namespace aiof.api.tests
         {
             var assetDtos = Helper.RandomAssetDtos();
             var userDto = new UserDto { Assets = assetDtos };
+
             Assert.True(_userDtoValidator.Validate(userDto).IsValid);
         }
 
@@ -169,6 +171,7 @@ namespace aiof.api.tests
         {
             var liabilityDtos = Helper.RandomLiabilityDtos();
             var userDto = new UserDto { Liabilities = liabilityDtos };
+
             Assert.True(_userDtoValidator.Validate(userDto).IsValid);
         }
 
@@ -177,6 +180,7 @@ namespace aiof.api.tests
         {
             var goalDtos = Helper.RandomGoalDtos();
             var userDto = new UserDto { Goals = goalDtos };
+
             Assert.True(_userDtoValidator.Validate(userDto).IsValid);
         }
     }
