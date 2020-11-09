@@ -165,5 +165,14 @@ namespace aiof.api.tests
 
             await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.GetAsync(id));
         }
+
+        [Theory]
+        [MemberData(nameof(Helper.LiabilitiesIdUserId), MemberType = typeof(Helper))]
+        public async Task DeleteAsync_ById_NotFound(int id, int userId)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<ILiabilityRepository>();
+          
+            await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.DeleteAsync(id * 100));
+        }
     }
 }

@@ -177,12 +177,36 @@ namespace aiof.api.tests
 
         [Theory]
         [MemberData(nameof(Helper.GoalsIdUserId), MemberType = typeof(Helper))]
+        public async Task UpdateAsync_ById_NotFound(int id, int userId)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();
+            var newAmount = 250000M;
+            
+            await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.UpdateAsync(
+                id * 100,
+                new GoalDto
+                {
+                    Amount = newAmount
+                }));
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.GoalsIdUserId), MemberType = typeof(Helper))]
         public async Task DeleteAsync_ById_IsSuccessful(int id, int userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();
             await _repo.DeleteAsync(id);
 
             await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.GetAsync(id));
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.GoalsIdUserId), MemberType = typeof(Helper))]
+        public async Task DeleteAsync_ById_NotFound(int id, int userId)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();
+            
+            await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.DeleteAsync(id * 100));
         }
     }
 }
