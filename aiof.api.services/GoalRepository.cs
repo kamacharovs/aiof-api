@@ -62,7 +62,7 @@ namespace aiof.api.services
         {
             return await GetQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.Id == id)
-                ?? throw new AiofNotFoundException($"{nameof(Goal)} with Id={id} was not found");
+                ?? throw new AiofNotFoundException($"Goal with Id={id} was not found");
         }
 
         public async Task<IGoal> GetAsync(
@@ -113,7 +113,7 @@ namespace aiof.api.services
 
             goal.UserId = _context.Tenant.UserId;
 
-            await _context.AddAsync(goal);
+            await _context.Goals.AddAsync(goal);
             await _context.SaveChangesAsync();
 
             await _context.Entry(goal)

@@ -36,6 +36,15 @@ namespace aiof.api.tests
         }
 
         [Theory]
+        [MemberData(nameof(Helper.GoalsIdUserId), MemberType = typeof(Helper))]
+        public async Task GetAsync_ById_NotFound(int id, int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();
+            
+            await Assert.ThrowsAsync<AiofNotFoundException>(() => repo.GetAsync(id * 100));
+        }
+
+        [Theory]
         [MemberData(nameof(Helper.GoalsTypeName), MemberType = typeof(Helper))]
         public async Task GetAsync_ByTypeName_IsSuccessful(string typeName)
         {
@@ -83,6 +92,16 @@ namespace aiof.api.tests
                 Assert.NotEqual(new DateTime(), goal.PlannedDate);
         }
 
+        [Theory]
+        [MemberData(nameof(Helper.GoalsUserId), MemberType = typeof(Helper))]
+        public async Task GetAllAsync_IsEmpty(int userId)
+        {
+            var _repo = new ServiceHelper() { UserId = userId * 100 }.GetRequiredService<IGoalRepository>();
+            var goals = await _repo.GetAllAsync();
+
+            Assert.Empty(goals);
+        }
+
         [Fact]
         public async Task GetTypesAsync_IsSuccessful()
         {
@@ -117,6 +136,17 @@ namespace aiof.api.tests
 
             if (goal.PlannedDate != null)
                 Assert.NotEqual(new DateTime(), goal.PlannedDate);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.GoalsUserId), MemberType = typeof(Helper))]
+        public async Task AddAsync_AlreadyExists_Throws_BadRequest(int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();
+            var dto = Helper.RandomGoalDto();
+            var goal = await repo.AddAsync(dto);
+
+            await Assert.ThrowsAsync<AiofFriendlyException>(() => repo.AddAsync(dto));
         }
 
         [Theory]
@@ -205,7 +235,7 @@ namespace aiof.api.tests
         public async Task DeleteAsync_ById_NotFound(int id, int userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();
-            
+
             await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.DeleteAsync(id * 100));
         }
     }

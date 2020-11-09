@@ -67,12 +67,16 @@ namespace aiof.api.services
                 ?? throw new AiofNotFoundException($"Liability with Id={id} was not found");
         }
 
-        public async Task<ILiability> GetAsync(LiabilityDto liabilityDto)
+        public async Task<ILiability> GetAsync(
+            LiabilityDto liabilityDto,
+            bool asNoTracking = true)
         {
-            return await GetQuery()
+            return await GetQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.Name == liabilityDto.Name
                     && x.TypeName == liabilityDto.TypeName
-                    && x.Value == liabilityDto.Value);
+                    && x.Value == liabilityDto.Value
+                    && x.MonthlyPayment == liabilityDto.MonthlyPayment
+                    && x.Years == liabilityDto.Years);
         }
 
         public async Task<IEnumerable<ILiability>> GetAllAsync()
