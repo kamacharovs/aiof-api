@@ -139,7 +139,19 @@ namespace aiof.api.services
             int id, 
             LiabilityDto liabilityDto)
         {
-            var liability = await GetAsync(id, asNoTracking: false);
+            if (liabilityDto == null)
+            {
+                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
+                    $"Unable to update Liability. DTO parameter cannot be NULL");
+            }
+            else if (liabilityDto.TypeName != null
+                && await GetTypeAsync(liabilityDto.TypeName) == null)
+            {
+                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
+                    $"Liability type doesn't exist");
+            }
+
+            var liability = await GetAsync(id, false);
             var liabilityToUpdate = _mapper.Map(liabilityDto, liability as Liability);
 
             _context.Liabilities

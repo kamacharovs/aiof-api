@@ -153,8 +153,16 @@ namespace aiof.api.services
             GoalDto goalDto)
         {
             if (goalDto == null)
+            {
                 throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"Unable to update Goal. {nameof(GoalDto)} parameter cannot be NULL");
+                    $"Unable to update Goal. DTO parameter cannot be NULL");
+            }
+            else if (goalDto.TypeName != null
+                && await GetTypeAsync(goalDto.TypeName) == null)
+            {
+                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
+                    $"Goal type doesn't exist");
+            }
 
             var goal = await GetAsync(id, false);
             var goalToUpdate = _mapper.Map(goalDto, goal as Goal);

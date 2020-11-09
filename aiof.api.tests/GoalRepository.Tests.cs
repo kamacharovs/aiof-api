@@ -246,6 +246,15 @@ namespace aiof.api.tests
 
         [Theory]
         [MemberData(nameof(Helper.GoalsIdUserId), MemberType = typeof(Helper))]
+        public async Task UpdateAsync_ById_DtoIsNull_Throws_BadRequest(int id, int userId)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();
+            
+            await Assert.ThrowsAsync<AiofFriendlyException>(() => _repo.UpdateAsync(id, null));
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.GoalsIdUserId), MemberType = typeof(Helper))]
         public async Task DeleteAsync_ById_IsSuccessful(int id, int userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();

@@ -197,6 +197,15 @@ namespace aiof.api.tests
         }
 
         [Theory]
+        [MemberData(nameof(Helper.LiabilitiesIdUserId), MemberType = typeof(Helper))]
+        public async Task UpdateAsync_ById_DtoIsNull_Throws_BadRequest(int id, int userId)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<ILiabilityRepository>();
+            
+            await Assert.ThrowsAsync<AiofFriendlyException>(() => _repo.UpdateAsync(id, null));
+        }
+
+        [Theory]
         [InlineData("type-number-1")]
         [InlineData("type-number-2")]
         [InlineData("type-number-3")]
