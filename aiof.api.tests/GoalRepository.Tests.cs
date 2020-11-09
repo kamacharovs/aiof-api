@@ -82,5 +82,41 @@ namespace aiof.api.tests
             if (goal.PlannedDate != null)
                 Assert.NotEqual(new DateTime(), goal.PlannedDate);
         }
+
+        [Fact]
+        public async Task GetTypesAsync_IsSuccessful()
+        {
+            var _repo = new ServiceHelper().GetRequiredService<IGoalRepository>();
+            var types = await _repo.GetTypesAsync();
+            var type = types.FirstOrDefault();
+
+            Assert.NotEmpty(types);
+            Assert.NotNull(type);
+            Assert.NotNull(type.Name);
+            Assert.NotEqual(Guid.Empty, type.PublicKey);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.GoalsUserId), MemberType = typeof(Helper))]
+        public async Task AddAsync_IsSuccessful(int userId)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();
+            var dto = Helper.RandomGoalDto();
+            var goal = await _repo.AddAsync(dto);
+
+            Assert.NotNull(goal);
+            Assert.NotNull(goal.Name);
+            Assert.NotNull(goal.TypeName);
+            Assert.NotNull(goal.Type);
+            Assert.True(goal.Amount > 0);
+            Assert.True(goal.CurrentAmount > 0);
+            Assert.True(goal.Contribution > 0);
+            Assert.NotNull(goal.ContributionFrequencyName);
+            Assert.NotNull(goal.ContributionFrequency);
+            Assert.False(goal.IsDeleted);
+
+            if (goal.PlannedDate != null)
+                Assert.NotEqual(new DateTime(), goal.PlannedDate);
+        }
     }
 }

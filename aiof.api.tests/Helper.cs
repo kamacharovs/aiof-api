@@ -285,6 +285,19 @@ namespace aiof.api.tests
                 .Generate();
         }
 
+        public static GoalDto RandomGoalDto()
+        {
+             return new Faker<GoalDto>()
+                .RuleFor(x => x.Name, f => f.Random.String())
+                .RuleFor(x => x.TypeName, f => "save for a rainy day")
+                .RuleFor(x => x.Amount, f => f.Random.Decimal(5000, 10000))
+                .RuleFor(x => x.CurrentAmount, f => f.Random.Decimal(1000, 4000))
+                .RuleFor(x => x.Contribution, f => f.Random.Decimal(700, 900))
+                .RuleFor(x => x.ContributionFrequencyName, f => "monthly")
+                .RuleFor(x => x.PlannedDate, f => DateTime.Now.AddDays(7))
+                .Generate();
+        }
+
         public static List<AssetDto> FakerAssetDtos()
         {
             return new Faker<AssetDto>()
