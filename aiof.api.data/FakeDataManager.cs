@@ -724,6 +724,41 @@ namespace aiof.api.data
             return toReturn;
         }
 
+        public IEnumerable<object[]> GetFakeGoalsData(
+            bool id = false,
+            bool userId = false)
+        {
+            var fakeGoals = GetFakeGoals()
+                .ToArray();
+
+            var toReturn = new List<object[]>();
+
+            if (id
+                && userId)
+            {
+                foreach (var fakeGoal in fakeGoals.Where(x => !x.IsDeleted))
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeGoal.Id,
+                        fakeGoal.UserId
+                    });
+                }
+            }
+            else if (userId)
+            {
+                foreach (var fakeGoalUserId in fakeGoals.Where(x => !x.IsDeleted).Select(x => x.UserId).Distinct())
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeGoalUserId
+                    });
+                }
+            }
+
+            return toReturn;
+        }
+
         public IEnumerable<object[]> GetFakeSubscriptionsData(
             bool userId = false,
             bool id = false,

@@ -208,6 +208,18 @@ namespace aiof.api.tests
                 userId: true);
         }
 
+        public static IEnumerable<object[]> GoalsUserId()
+        {
+            return _Fake.GetFakeGoalsData(
+                userId: true);
+        }
+        public static IEnumerable<object[]> GoalsIdUserId()
+        {
+            return _Fake.GetFakeGoalsData(
+                id: true,
+                userId: true);
+        }
+
         public static IEnumerable<object[]> SubscriptionsId()
         {
             return _Fake.GetFakeSubscriptionsData(
