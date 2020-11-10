@@ -601,6 +601,7 @@ namespace aiof.api.data
             bool userId = false)
         {
             var fakeAssets = GetFakeAssets()
+                .Where(x => !x.IsDeleted)
                 .ToArray();
 
             var toReturn = new List<object[]>();

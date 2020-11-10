@@ -206,6 +206,16 @@ namespace aiof.api.tests
         }
 
         [Theory]
+        [MemberData(nameof(Helper.LiabilitiesIdUserId), MemberType = typeof(Helper))]
+        public async Task UpdateAsync_ById_DoesntExist_Throws_NotFound(int id, int userId)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<ILiabilityRepository>();
+            var dto = Helper.RandomLiabilityDto();
+            
+            await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.UpdateAsync(id * 100, dto));
+        }
+
+        [Theory]
         [InlineData("type-number-1")]
         [InlineData("type-number-2")]
         [InlineData("type-number-3")]
