@@ -336,6 +336,10 @@ namespace aiof.api.tests
 
         public static SubscriptionDto RandomSubscriptionDto()
         {
+            return FakerSubscriptionDto().Generate();
+        }
+        private static Faker<SubscriptionDto> FakerSubscriptionDto()
+        {
             return new Faker<SubscriptionDto>()
                 .RuleFor(x => x.Name, f => f.Random.String2(10))
                 .RuleFor(x => x.Description, f => f.Random.String2(50))
@@ -343,8 +347,7 @@ namespace aiof.api.tests
                 .RuleFor(x => x.PaymentFrequencyName, f => "monthly")
                 .RuleFor(x => x.PaymentLength, f => 365)
                 .RuleFor(x => x.From, f => f.Random.String2(10))
-                .RuleFor(x => x.Url, f => f.Internet.Url())
-                .Generate();
+                .RuleFor(x => x.Url, f => f.Internet.Url());
         }
 
         public static AccountDto RandomAccountDto()
