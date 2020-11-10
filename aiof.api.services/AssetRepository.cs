@@ -97,6 +97,15 @@ namespace aiof.api.services
                 .ToListAsync();
         }
 
+        public async Task<IAssetType> GetTypeAsync(
+            string typeName,
+            bool asNoTracking = true)
+        {
+            return await GetTypesQuery(asNoTracking)
+                .FirstOrDefaultAsync(x => x.Name == typeName)
+                ?? throw new AiofNotFoundException($"Asset type with name={typeName} was not found");
+        }
+
         public async Task<IEnumerable<IAssetType>> GetTypesAsync()
         {
             return await GetTypesQuery()
@@ -107,10 +116,7 @@ namespace aiof.api.services
         public async Task<IAsset> AddAsync(AssetDto assetDto)
         {
             await _assetDtoValidator.ValidateAndThrowAsync(assetDto);
-
-            if (await GetAsync(assetDto) != null)
-                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"Asset already exists");
+            await CheckAsync(assetDto);
 
             var asset = _mapper.Map<Asset>(assetDto);
 
@@ -141,6 +147,8 @@ namespace aiof.api.services
             int id, 
             AssetDto assetDto)
         {
+            await CheckAsync(assetDto);
+
             var asset = await GetAsync(id, asNoTracking: false);
             var assetToUpdate = _mapper.Map(assetDto, asset as Asset);
 
@@ -164,6 +172,18 @@ namespace aiof.api.services
         public async Task DeleteAsync(int id)
         {
             await base.SoftDeleteAsync<Asset>(id);
+        }
+
+        private async Task CheckAsync(
+            AssetDto assetDto,
+            string message = null)
+        {
+            if (assetDto == null)
+            { throw new AiofFriendlyException(HttpStatusCode.BadRequest, message ?? $"Asset DTO cannot be NULL"); }
+            else if (assetDto.TypeName != null && await GetTypeAsync(assetDto.TypeName) == null) 
+            { throw new AiofFriendlyException(HttpStatusCode.BadRequest, message ?? $"Asset type doesn't exist"); }
+            else if (await GetAsync(assetDto) != null) 
+            { throw new AiofFriendlyException(HttpStatusCode.BadRequest, message ?? $"Asset already exists"); }
         }
     }
 }

@@ -62,7 +62,7 @@ namespace aiof.api.services
         {
             return await GetQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.Id == id)
-                ?? throw new AiofNotFoundException($"{nameof(Goal)} with Id={id} was not found");
+                ?? throw new AiofNotFoundException($"Goal with Id={id} was not found");
         }
 
         public async Task<IGoal> GetAsync(
@@ -94,6 +94,15 @@ namespace aiof.api.services
                 .ToListAsync();
         }
 
+        public async Task<IGoalType> GetTypeAsync(
+            string typeName,
+            bool asNoTracking = true)
+        {
+            return await GetTypesQuery(asNoTracking)
+                .FirstOrDefaultAsync(x => x.Name == typeName)
+                ?? throw new AiofNotFoundException($"Goal type with name={typeName} was not found");
+        }
+
         public async Task<IEnumerable<IGoalType>> GetTypesAsync()
         {
             return await GetTypesQuery()
@@ -104,16 +113,13 @@ namespace aiof.api.services
         public async Task<IGoal> AddAsync(GoalDto goalDto)
         {
             await _goalDtoValidator.ValidateAndThrowAsync(goalDto);
-
-            if (await GetAsync(goalDto) != null)
-                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"Goal already exists");
+            await CheckAsync(goalDto);
 
             var goal = _mapper.Map<Goal>(goalDto);
 
             goal.UserId = _context.Tenant.UserId;
 
-            await _context.AddAsync(goal);
+            await _context.Goals.AddAsync(goal);
             await _context.SaveChangesAsync();
 
             await _context.Entry(goal)
@@ -139,9 +145,7 @@ namespace aiof.api.services
             int id, 
             GoalDto goalDto)
         {
-            if (goalDto == null)
-                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"Unable to update Goal. {nameof(GoalDto)} parameter cannot be NULL");
+            await CheckAsync(goalDto);
 
             var goal = await GetAsync(id, false);
             var goalToUpdate = _mapper.Map(goalDto, goal as Goal);
@@ -169,6 +173,18 @@ namespace aiof.api.services
         public async Task DeleteAsync(int id)
         {
             await base.SoftDeleteAsync<Goal>(id);
+        }
+
+        private async Task CheckAsync(
+            GoalDto goalDto,
+            string message = null)
+        {
+            if (goalDto == null)
+            { throw new AiofFriendlyException(HttpStatusCode.BadRequest, message ?? $"Goal DTO cannot be NULL"); }
+            else if (goalDto.TypeName != null && await GetTypeAsync(goalDto.TypeName) == null) 
+            { throw new AiofFriendlyException(HttpStatusCode.BadRequest, message ?? $"Goal type doesn't exist"); }
+            else if (await GetAsync(goalDto) != null) 
+            { throw new AiofFriendlyException(HttpStatusCode.BadRequest, message ?? $"Goal already exists"); }
         }
     }
 }

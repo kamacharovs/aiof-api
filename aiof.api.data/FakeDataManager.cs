@@ -601,6 +601,7 @@ namespace aiof.api.data
             bool userId = false)
         {
             var fakeAssets = GetFakeAssets()
+                .Where(x => !x.IsDeleted)
                 .ToArray();
 
             var toReturn = new List<object[]>();
@@ -691,7 +692,8 @@ namespace aiof.api.data
 
         public IEnumerable<object[]> GetFakeLiabilitiesData(
             bool id = false,
-            bool userId = false)
+            bool userId = false,
+            bool typeName = false)
         {
             var fakeLiabilities = GetFakeLiabilities()
                 .ToArray();
@@ -717,6 +719,62 @@ namespace aiof.api.data
                     toReturn.Add(new object[]
                     {
                         fakeLiabilityUserId
+                    });
+                }
+            }
+            else if (typeName)
+            {
+                foreach (var fakeLiabilityTypeName in fakeLiabilities.Where(x => !x.IsDeleted).Select(x => x.TypeName).Distinct())
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeLiabilityTypeName
+                    });
+                }
+            }
+
+            return toReturn;
+        }
+
+        public IEnumerable<object[]> GetFakeGoalsData(
+            bool id = false,
+            bool userId = false,
+            bool typeName = false)
+        {
+            var fakeGoals = GetFakeGoals()
+                .ToArray();
+
+            var toReturn = new List<object[]>();
+
+            if (id
+                && userId)
+            {
+                foreach (var fakeGoal in fakeGoals.Where(x => !x.IsDeleted))
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeGoal.Id,
+                        fakeGoal.UserId
+                    });
+                }
+            }
+            else if (userId)
+            {
+                foreach (var fakeGoalUserId in fakeGoals.Where(x => !x.IsDeleted).Select(x => x.UserId).Distinct())
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeGoalUserId
+                    });
+                }
+            }
+            else if (typeName)
+            {
+                foreach (var fakeGoalTypeName in fakeGoals.Where(x => !x.IsDeleted).Select(x => x.TypeName).Distinct())
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeGoalTypeName
                     });
                 }
             }

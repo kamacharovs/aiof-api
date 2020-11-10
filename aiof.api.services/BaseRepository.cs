@@ -66,6 +66,21 @@ namespace aiof.api.services
             return await GetAsync<T>(Guid.Parse(publicKey));
         }
 
+        public async Task<T> QuickAddAsync<T>(T entity)
+            where T : class, IPublicKeyId
+        {
+            await _context.Set<T>().AddAsync(entity);
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation("{Tenant} | Added {EntityName} with Id={EntityId} and PublicKey={EntityPublicKey}",
+                _context.Tenant.Log,
+                typeof(T).Name,
+                entity.Id,
+                entity.PublicKey);
+
+            return entity;
+        }
+
         public async Task SoftDeleteAsync<T>(int id)
             where T : class, IPublicKeyId, IIsDeleted
         {

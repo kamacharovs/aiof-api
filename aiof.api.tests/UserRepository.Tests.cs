@@ -182,7 +182,7 @@ namespace aiof.api.tests
         public async Task AddSubscriptionAsync_IsSuccessful(int userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
-            var dto = Helper.RandomSubscriptionDto(userId);
+            var dto = Helper.RandomSubscriptionDto();
             var sub = await _repo.AddSubscriptionAsync(dto);
 
             Assert.NotNull(sub);
@@ -204,7 +204,7 @@ namespace aiof.api.tests
         public async Task UpdateSubscriptionAsync_IsSuccessful(int userId, int id)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
-            var dto = Helper.RandomSubscriptionDto(userId);
+            var dto = Helper.RandomSubscriptionDto();
             var sub = await _repo.UpdateSubscriptionAsync(id, dto);
 
             Assert.NotNull(sub);
@@ -272,7 +272,7 @@ namespace aiof.api.tests
         public async Task AddAccountAsync_IsSuccessful(int userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
-            var dto = Helper.RandomAccountDto(userId);
+            var dto = Helper.RandomAccountDto();
             var account = await _repo.AddAccountAsync(dto);
 
             Assert.NotNull(account);
@@ -290,7 +290,7 @@ namespace aiof.api.tests
         public async Task AddAccountAsync_AlreadyExists(int userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
-            var dto = Helper.RandomAccountDto(userId);
+            var dto = Helper.RandomAccountDto();
             var account = await _repo.AddAccountAsync(dto);
 
             await Assert.ThrowsAsync<AiofFriendlyException>(() => _repo.AddAccountAsync(dto));
@@ -301,7 +301,7 @@ namespace aiof.api.tests
         public async Task UpdateAccountAsync_IsSuccessful(int userId, int id)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
-            var dto = Helper.RandomAccountDto(userId);
+            var dto = Helper.RandomAccountDto();
             var account = await _repo.UpdateAccountAsync(id, dto);
 
             Assert.NotNull(account);

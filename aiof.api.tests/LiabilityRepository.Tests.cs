@@ -35,6 +35,15 @@ namespace aiof.api.tests
         }
 
         [Theory]
+        [MemberData(nameof(Helper.LiabilitiesIdUserId), MemberType = typeof(Helper))]
+        public async Task GetAsync_ById_NotFound(int id, int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<ILiabilityRepository>();
+            
+            await Assert.ThrowsAsync<AiofNotFoundException>(() => repo.GetAsync(id * 100));
+        }
+
+        [Theory]
         [MemberData(nameof(Helper.LiabilitiesUserId), MemberType = typeof(Helper))]
         public async Task GetAllAsync_IsSuccessful(int userId)
         {
@@ -50,6 +59,28 @@ namespace aiof.api.tests
             Assert.True(liability.Value > 0);
             Assert.Equal(userId, liability.UserId);
             Assert.False(liability.IsDeleted);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.LiabilitiesUserId), MemberType = typeof(Helper))]
+        public async Task GetAllAsync_IsEmpty(int userId)
+        {
+            var _repo = new ServiceHelper() { UserId = userId * 100 }.GetRequiredService<ILiabilityRepository>();
+            var liabilities = await _repo.GetAllAsync();
+
+            Assert.Empty(liabilities);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.LiabilitiesTypeName), MemberType = typeof(Helper))]
+        public async Task GetTypeAsync_IsSuccessful(string typeName)
+        {
+            var _repo = new ServiceHelper().GetRequiredService<ILiabilityRepository>();
+            var liabilityType = await _repo.GetTypeAsync(typeName);
+
+            Assert.NotNull(liabilityType);
+            Assert.NotNull(liabilityType.Name);
+            Assert.NotEqual(Guid.Empty, liabilityType.PublicKey);
         }
 
         [Fact]
@@ -70,8 +101,8 @@ namespace aiof.api.tests
         public async Task AddAsync_IsSuccessful(int userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<ILiabilityRepository>();
-            var liabilityDto = Helper.RandomLiabilityDto();
-            var liability = await _repo.AddAsync(liabilityDto);
+            var dto = Helper.RandomLiabilityDto();
+            var liability = await _repo.AddAsync(dto);
 
             Assert.NotNull(liability);
             Assert.NotNull(liability.Name);
@@ -85,6 +116,29 @@ namespace aiof.api.tests
 
             Assert.Equal(userId, liability.UserId);
             Assert.False(liability.IsDeleted);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.LiabilitiesUserId), MemberType = typeof(Helper))]
+        public async Task AddAsync_AlreadyExists_Throws_BadRequest(int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<ILiabilityRepository>();
+            var dto = Helper.RandomLiabilityDto();
+            var liability = await repo.AddAsync(dto);
+
+            await Assert.ThrowsAsync<AiofFriendlyException>(() => repo.AddAsync(dto));
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.LiabilitiesUserId), MemberType = typeof(Helper))]
+        public async Task AddAsync_TypeDoesntExist_Throws_NotFound(int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<ILiabilityRepository>();
+            var dto = Helper.RandomLiabilityDto();
+            
+            dto.TypeName = "definitelydoesntexist";
+
+            await Assert.ThrowsAsync<AiofNotFoundException>(() => repo.AddAsync(dto));
         }
 
         [Theory]
@@ -143,6 +197,25 @@ namespace aiof.api.tests
         }
 
         [Theory]
+        [MemberData(nameof(Helper.LiabilitiesIdUserId), MemberType = typeof(Helper))]
+        public async Task UpdateAsync_ById_DtoIsNull_Throws_BadRequest(int id, int userId)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<ILiabilityRepository>();
+            
+            await Assert.ThrowsAsync<AiofFriendlyException>(() => _repo.UpdateAsync(id, null));
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.LiabilitiesIdUserId), MemberType = typeof(Helper))]
+        public async Task UpdateAsync_ById_DoesntExist_Throws_NotFound(int id, int userId)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<ILiabilityRepository>();
+            var dto = Helper.RandomLiabilityDto();
+            
+            await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.UpdateAsync(id * 100, dto));
+        }
+
+        [Theory]
         [InlineData("type-number-1")]
         [InlineData("type-number-2")]
         [InlineData("type-number-3")]
@@ -164,6 +237,15 @@ namespace aiof.api.tests
             await _repo.DeleteAsync(id);
 
             await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.GetAsync(id));
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.LiabilitiesIdUserId), MemberType = typeof(Helper))]
+        public async Task DeleteAsync_ById_NotFound(int id, int userId)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<ILiabilityRepository>();
+          
+            await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.DeleteAsync(id * 100));
         }
     }
 }
