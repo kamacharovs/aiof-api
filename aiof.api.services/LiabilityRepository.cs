@@ -162,10 +162,7 @@ namespace aiof.api.services
             };
 
             await _liabilityTypeValidator.ValidateAndThrowAsync(liabilityType);
-
-            if ((await GetTypesAsync()).Any(x => x.Name == name))
-                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"{nameof(LiabilityType)} with Name={name} already exists");
+            await CheckAsync(name);
 
             await _context.LiabilityTypes.AddAsync(liabilityType);
             await _context.SaveChangesAsync();
@@ -188,6 +185,14 @@ namespace aiof.api.services
             { throw new AiofFriendlyException(HttpStatusCode.BadRequest, message ?? $"Liability type doesn't exist"); }
             else if (await GetAsync(liabilityDto) != null) 
             { throw new AiofFriendlyException(HttpStatusCode.BadRequest, message ?? $"Liability already exists"); }
+        }
+
+        private async Task CheckAsync(
+            string typeName,
+            string message = null)
+        {
+            if ((await GetTypesAsync()).Any(x => x.Name == typeName))
+            { throw new AiofFriendlyException(HttpStatusCode.BadRequest, $"Liability type with name={typeName} already exists"); }
         }
     }
 }
