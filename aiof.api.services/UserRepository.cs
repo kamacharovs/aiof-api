@@ -55,6 +55,7 @@ namespace aiof.api.services
                 .Include(x => x.Liabilities)
                 .Include(x => x.Subscriptions)
                 .Include(x => x.Accounts)
+                .OrderBy(x => x.Id)
                 .AsQueryable();
 
             return asNoTracking
