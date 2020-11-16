@@ -20,7 +20,6 @@ using FluentValidation;
 
 using aiof.api.data;
 using aiof.api.services;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace aiof.api.core
 {
