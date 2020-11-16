@@ -20,6 +20,7 @@ using FluentValidation;
 
 using aiof.api.data;
 using aiof.api.services;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace aiof.api.core
 {
@@ -61,7 +62,7 @@ namespace aiof.api.core
                 .AddSingleton<AbstractValidator<AccountDto>, AccountDtoValidator>()
                 .AddSingleton<AbstractValidator<UserDto>, UserDtoValidator>();
 
-            services.AddDbContext<AiofContext>(o => o.UseNpgsql(_config[Keys.DataPostgreSQL]));
+            services.AddDbContext<AiofContext>(o => o.UseNpgsql(_config[Keys.DataPostgreSQL], x => x.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
 
             services.AddLogging();
             services.AddApplicationInsightsTelemetry();
