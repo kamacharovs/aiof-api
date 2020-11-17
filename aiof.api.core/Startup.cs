@@ -7,16 +7,16 @@ using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.FeatureManagement;
-using Microsoft.OpenApi.Models;
-using Microsoft.IdentityModel.Tokens;
 
 using AutoMapper;
 using FluentValidation;
+using GraphQL.Server;
+using GraphQL.Types;
+using GraphQL.Authorization;
 
 using aiof.api.data;
 using aiof.api.services;
@@ -61,6 +61,10 @@ namespace aiof.api.core
                 .AddSingleton<AbstractValidator<AccountDto>, AccountDtoValidator>()
                 .AddSingleton<AbstractValidator<UserDto>, UserDtoValidator>();
 
+            services.AddScoped<ISchema, UserSchema>()
+                .AddScoped<UserQuery>()
+                .AddSingleton<AssetTypeGraphType>();
+
             services.AddDbContext<AiofContext>(o => o.UseNpgsql(_config[Keys.DataPostgreSQL], o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
 
             services.AddLogging();
@@ -68,47 +72,15 @@ namespace aiof.api.core
             services.AddHealthChecks();
             services.AddFeatureManagement();
             services.AddHttpContextAccessor();
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(
-                Keys.Bearer,
-                x =>
-                {
-                    var rsa = RSA.Create();
-                    rsa.FromXmlString(_config[Keys.JwtPublicKey]);
+            services.AddAiofAuthentication(_config);
+            services.AddAiofSwaggerGen(_config);
 
-                    x.TokenValidationParameters = new TokenValidationParameters()
-                    {
-                        ValidateIssuer = true,
-                        ValidIssuer = _config[Keys.JwtIssuer],
-                        ValidateAudience = true,
-                        ValidAudience = _config[Keys.JwtAudience],
-                        ValidateIssuerSigningKey = true,
-                        ValidateLifetime = true,
-                        IssuerSigningKey = new RsaSecurityKey(rsa)
-                    };
-                });
-
-            services.AddSwaggerGen(x =>
-            {
-                x.SwaggerDoc(_config[Keys.OpenApiVersion], new OpenApiInfo
+            services.AddGraphQL(options =>
                 {
-                    Title = _config[Keys.OpenApiTitle],
-                    Version = _config[Keys.OpenApiVersion],
-                    Description = _config[Keys.OpenApiDescription],
-                    Contact = new OpenApiContact
-                    {
-                        Name = _config[Keys.OpenApiContactName],
-                        Email = _config[Keys.OpenApiContactEmail],
-                        Url = new Uri(_config[Keys.OpenApiContactUrl])
-                    },
-                    License = new OpenApiLicense
-                    {
-                        Name = _config[Keys.OpenApiLicenseName],
-                        Url = new Uri(_config[Keys.OpenApiLicenseUrl]),
-                    }
-                });
-                x.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
-            });
+                    options.EnableMetrics = true;
+                })
+                .AddErrorInfoProvider(opt => opt.ExposeExceptionStackTrace = true)
+                .AddSystemTextJson();
 
             services.AddControllers();
             services.AddMvcCore()
@@ -131,6 +103,9 @@ namespace aiof.api.core
             app.UseAiofUnauthorizedMiddleware();
             app.UseHealthChecks("/health");
             app.UseSwagger();
+
+            app.UseGraphQL<ISchema>();
+            app.UseGraphQLPlayground();
 
             app.UseRouting();
             app.UseAuthentication();

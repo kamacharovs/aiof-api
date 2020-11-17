@@ -20,6 +20,9 @@ namespace aiof.api.data
         public Guid PublicKey { get; set; }
 
         [JsonIgnore]
+        public ClaimsPrincipal User { get; set; }
+
+        [JsonIgnore]
         public string Log
         {
             get
@@ -49,6 +52,7 @@ namespace aiof.api.data
             this.UserId = userId;
             this.ClientId = clientId;
             this.PublicKey = publicKey;
+            this.User = user;
         }
     }
 }

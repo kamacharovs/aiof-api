@@ -5,8 +5,6 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Diagnostics;
 
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
@@ -96,14 +94,6 @@ namespace aiof.api.core
 
             await httpContext.Response
                 .WriteAsync(problemjson);
-        }
-    }
-
-    public static partial class HttpStatusCodeExceptionMiddlewareExtensions
-    {
-        public static IApplicationBuilder UseAiofExceptionMiddleware(this IApplicationBuilder builder)
-        {
-            return builder.UseMiddleware<AiofExceptionMiddleware>();
         }
     }
 }
