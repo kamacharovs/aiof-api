@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net;
+
+using Microsoft.Extensions.Logging;
 
 using GraphQL;
 using GraphQL.Types;
@@ -13,13 +16,16 @@ namespace aiof.api.services
 {
     public class GraphQLRepository : IGraphQLRepository
     {
+        private readonly ILogger<GraphQLRepository> _logger;
         private readonly ISchema _schema;
         private readonly IDocumentExecuter _executer;
 
         public GraphQLRepository(
+            ILogger<GraphQLRepository> logger,
             ISchema schema,
             IDocumentExecuter executer)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _schema = schema ?? throw new ArgumentNullException(nameof(schema));
             _executer = executer ?? throw new ArgumentNullException(nameof(executer));
         }
@@ -35,8 +41,15 @@ namespace aiof.api.services
 
             if (result.Errors?.Count > 0)
             {
-                throw new AiofFriendlyException();
+                var errors = result.Errors.Select(x => x.Message);
+                var message = string.Join(", ", errors);
+
+                throw new AiofFriendlyException(
+                    HttpStatusCode.BadRequest,
+                    message);
             }
+
+            _logger.LogInformation($"GraphQL command executed. Type={result.Operation.OperationType}");
 
             return result.Data;
         }
