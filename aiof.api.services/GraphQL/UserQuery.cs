@@ -21,6 +21,18 @@ namespace aiof.api.services
                 "asset_type",
                 resolve: async context => await _repo.GetTypesAsync()
             );
+
+            FieldAsync<AssetGraphType>(
+                "asset",
+                arguments: new QueryArguments(
+                    new QueryArgument<IdGraphType> { Name = "id" }
+                ),
+                resolve: async context =>
+                {
+                    var id = context.GetArgument<int?>("id");
+
+                    return await _repo.GetAsync((int)id);
+                });
         }
     }
 }

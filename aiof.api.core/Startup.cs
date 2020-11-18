@@ -63,6 +63,7 @@ namespace aiof.api.core
 
             services.AddScoped<ISchema, UserSchema>()
                 .AddScoped<UserQuery>()
+                .AddSingleton<AssetGraphType>()
                 .AddSingleton<AssetTypeGraphType>();
 
             services.AddDbContext<AiofContext>(o => o.UseNpgsql(_config[Keys.DataPostgreSQL], o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
