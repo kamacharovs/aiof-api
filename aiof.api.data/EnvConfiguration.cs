@@ -48,6 +48,7 @@ namespace aiof.api.data
 
     public enum FeatureFlags
     {
+        GraphQL,
         Asset,
         Goal,
         Liability,
