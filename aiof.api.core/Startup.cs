@@ -44,7 +44,9 @@ namespace aiof.api.core
                 .AddScoped<IEnvConfiguration, EnvConfiguration>()
                 .AddScoped<ITenant, Tenant>()
                 .AddScoped<FakeDataManager>()
-                .AddAutoMapper(typeof(AutoMappingProfileDto).Assembly);
+                .AddAutoMapper(typeof(AutoMappingProfileDto).Assembly)
+                .AddAiofGraphQLTypes()
+                .AddAiofFluentValidators();
 
             services.AddHttpClient<IAiofMetadataRepository, AiofMetadataRepository>(Keys.Metadata, x =>
                 {
@@ -52,19 +54,6 @@ namespace aiof.api.core
                     x.DefaultRequestHeaders.Add(Keys.Accept, Keys.ApplicationJson);
                 })
                 .SetHandlerLifetime(TimeSpan.FromMinutes(5));
-
-            services.AddSingleton<AbstractValidator<AssetDto>, AssetDtoValidator>()
-                .AddSingleton<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>()
-                .AddSingleton<AbstractValidator<LiabilityType>, LiabilityTypeValidator>()
-                .AddSingleton<AbstractValidator<GoalDto>, GoalDtoValidator>()
-                .AddSingleton<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>()
-                .AddSingleton<AbstractValidator<AccountDto>, AccountDtoValidator>()
-                .AddSingleton<AbstractValidator<UserDto>, UserDtoValidator>();
-
-            services.AddScoped<ISchema, UserSchema>()
-                .AddScoped<UserQuery>()
-                .AddSingleton<AssetGraphType>()
-                .AddSingleton<AssetTypeGraphType>();
 
             services.AddDbContext<AiofContext>(o => o.UseNpgsql(_config[Keys.DataPostgreSQL], o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
 

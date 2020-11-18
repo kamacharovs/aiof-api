@@ -17,6 +17,9 @@ using Microsoft.FeatureManagement;
 using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 
+using FluentValidation;
+using GraphQL.Types;
+
 using aiof.api.data;
 using aiof.api.services;
 
@@ -72,6 +75,29 @@ namespace aiof.api.core
                 });
                 x.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
             });
+
+            return services;
+        }
+
+        public static IServiceCollection AddAiofFluentValidators(this IServiceCollection services)
+        {
+            services.AddSingleton<AbstractValidator<AssetDto>, AssetDtoValidator>()
+                .AddSingleton<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>()
+                .AddSingleton<AbstractValidator<LiabilityType>, LiabilityTypeValidator>()
+                .AddSingleton<AbstractValidator<GoalDto>, GoalDtoValidator>()
+                .AddSingleton<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>()
+                .AddSingleton<AbstractValidator<AccountDto>, AccountDtoValidator>()
+                .AddSingleton<AbstractValidator<UserDto>, UserDtoValidator>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddAiofGraphQLTypes(this IServiceCollection services)
+        {
+            services.AddScoped<ISchema, UserSchema>()
+                .AddScoped<UserQuery>()
+                .AddSingleton<AssetGraphType>()
+                .AddSingleton<AssetTypeGraphType>();
 
             return services;
         }
