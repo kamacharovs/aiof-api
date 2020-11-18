@@ -4,21 +4,17 @@ using System.IO;
 using System.Reflection;
 using System.Security.Cryptography;
 
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
-using Microsoft.FeatureManagement;
 using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 
 using FluentValidation;
+using GraphQL.Server;
 using GraphQL.Types;
+using GraphQL.Authorization;
 
 using aiof.api.data;
 using aiof.api.services;
@@ -92,12 +88,18 @@ namespace aiof.api.core
             return services;
         }
 
-        public static IServiceCollection AddAiofGraphQLTypes(this IServiceCollection services)
+        public static IServiceCollection AddAiofGraphQL(this IServiceCollection services)
         {
             services.AddScoped<ISchema, UserSchema>()
-                .AddScoped<UserQuery>()
-                .AddSingleton<AssetGraphType>()
-                .AddSingleton<AssetTypeGraphType>();
+                .AddScoped<UserQuery>();
+
+            services.AddGraphQL(options =>
+                {
+                    options.EnableMetrics = true;
+                })
+                .AddErrorInfoProvider(opt => opt.ExposeExceptionStackTrace = true)
+                .AddSystemTextJson()
+                .AddGraphTypes(typeof(AssetTypeGraphType).Assembly, ServiceLifetime.Singleton);
 
             return services;
         }

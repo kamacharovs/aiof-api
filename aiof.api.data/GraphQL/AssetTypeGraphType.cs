@@ -8,7 +8,7 @@ using GraphQL.Types;
 
 namespace aiof.api.data
 {
-    public class AssetTypeGraphType : ObjectGraphType<AssetType>
+    public class AssetTypeGraphType : ObjectGraphType<AssetType>, IGraphType
     {
         public AssetTypeGraphType()
         {

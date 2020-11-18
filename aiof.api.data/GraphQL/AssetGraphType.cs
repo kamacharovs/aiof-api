@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 using GraphQL.Types;
+using GraphQL.Authorization;
 
 namespace aiof.api.data
 {
-    public class AssetGraphType : ObjectGraphType<Asset>
+    public class AssetGraphType : ObjectGraphType<Asset>, IGraphType
     {
         public AssetGraphType()
         {

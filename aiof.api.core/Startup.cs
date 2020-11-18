@@ -13,10 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.FeatureManagement;
 
 using AutoMapper;
-using FluentValidation;
-using GraphQL.Server;
 using GraphQL.Types;
-using GraphQL.Authorization;
 
 using aiof.api.data;
 using aiof.api.services;
@@ -45,7 +42,6 @@ namespace aiof.api.core
                 .AddScoped<ITenant, Tenant>()
                 .AddScoped<FakeDataManager>()
                 .AddAutoMapper(typeof(AutoMappingProfileDto).Assembly)
-                .AddAiofGraphQLTypes()
                 .AddAiofFluentValidators();
 
             services.AddHttpClient<IAiofMetadataRepository, AiofMetadataRepository>(Keys.Metadata, x =>
@@ -57,20 +53,14 @@ namespace aiof.api.core
 
             services.AddDbContext<AiofContext>(o => o.UseNpgsql(_config[Keys.DataPostgreSQL], o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
 
-            services.AddLogging();
-            services.AddApplicationInsightsTelemetry();
             services.AddHealthChecks();
             services.AddFeatureManagement();
-            services.AddHttpContextAccessor();
-            services.AddAiofAuthentication(_config);
-            services.AddAiofSwaggerGen(_config);
-
-            services.AddGraphQL(options =>
-                {
-                    options.EnableMetrics = true;
-                })
-                .AddErrorInfoProvider(opt => opt.ExposeExceptionStackTrace = true)
-                .AddSystemTextJson();
+            services.AddLogging()
+                .AddApplicationInsightsTelemetry()
+                .AddHttpContextAccessor()
+                .AddAiofAuthentication(_config)
+                .AddAiofSwaggerGen(_config)
+                .AddAiofGraphQL();
 
             services.AddControllers();
             services.AddMvcCore()

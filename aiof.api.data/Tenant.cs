@@ -4,6 +4,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Security.Claims;
 
+using GraphQL.Authorization;
+
 using Microsoft.AspNetCore.Http;
 
 namespace aiof.api.data
@@ -54,5 +56,10 @@ namespace aiof.api.data
             this.PublicKey = publicKey;
             this.User = user;
         }
+    }
+
+    public class GraphQLUserContext : Dictionary<string, object>, IProvideClaimsPrincipal
+    {
+        public ClaimsPrincipal User { get; set; }
     }
 }
