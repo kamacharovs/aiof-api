@@ -18,15 +18,18 @@ namespace aiof.api.services
     public class GraphQLRepository : IGraphQLRepository
     {
         private readonly ILogger<GraphQLRepository> _logger;
+        private readonly ITenant _tenant;
         private readonly ISchema _schema;
         private readonly IDocumentExecuter _executer;
 
         public GraphQLRepository(
             ILogger<GraphQLRepository> logger,
+            ITenant tenant,
             ISchema schema,
             IDocumentExecuter executer)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _tenant = tenant ?? throw new ArgumentNullException(nameof(tenant));
             _schema = schema ?? throw new ArgumentNullException(nameof(schema));
             _executer = executer ?? throw new ArgumentNullException(nameof(executer));
         }
@@ -50,7 +53,10 @@ namespace aiof.api.services
                     message);
             }
 
-            _logger.LogInformation($"GraphQL command executed. Type={result.Operation.OperationType}");
+            _logger.LogInformation("{Tenant} | GraphQL command executed. Type={GraphQLType} | Request={GraphQLRequest}",
+                _tenant.Log,
+                result.Operation.OperationType,
+                query.Query);
 
             return result.Data;
         }
