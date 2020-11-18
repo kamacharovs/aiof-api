@@ -11,6 +11,7 @@ using GraphQL;
 using GraphQL.Types;
 
 using aiof.api.data;
+using aiof.api.data.graphql;
 
 namespace aiof.api.services
 {

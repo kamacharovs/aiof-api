@@ -8,9 +8,9 @@ using GraphQL.Types;
 
 namespace aiof.api.data.graphql
 {
-    public class AssetTypeGraphType : ObjectGraphType<AssetType>, IGraphType
+    public class LiabilityTypeGraphType : ObjectGraphType<LiabilityType>, IGraphType
     {
-        public AssetTypeGraphType()
+        public LiabilityTypeGraphType()
         {
             Field(x => x.Name);
             Field(x => x.PublicKey);

@@ -8,19 +8,21 @@ using GraphQL.Types;
 
 namespace aiof.api.data.graphql
 {
-    public class AssetGraphType : ObjectGraphType<Asset>, IGraphType
+    public class LiabilityGraphType : ObjectGraphType<Liability>, IGraphType
     {
-        public AssetGraphType()
+        public LiabilityGraphType()
         {
             Field(x => x.Id);
             Field(x => x.PublicKey);
             Field(x => x.Name);
             Field(x => x.TypeName);
             Field(x => x.Value);
+            Field(x => x.MonthlyPayment, nullable: true);
+            Field(x => x.Years, nullable: true);
             Field(x => x.UserId);
             Field(x => x.IsDeleted);
 
-            Field<AssetTypeGraphType>("type", resolve: context => context.Source.Type);
+            Field<LiabilityTypeGraphType>("type", resolve: context => context.Source.Type);
         }
     }
 }

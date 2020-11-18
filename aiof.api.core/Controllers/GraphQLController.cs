@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.FeatureManagement.Mvc;
 
 using aiof.api.data;
+using aiof.api.data.graphql;
 using aiof.api.services;
 
 namespace aiof.api.core.Controllers

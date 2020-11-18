@@ -51,7 +51,7 @@ namespace aiof.api.core
                 })
                 .SetHandlerLifetime(TimeSpan.FromMinutes(5));
 
-            services.AddDbContext<AiofContext>(o => o.UseNpgsql(_config[Keys.DataPostgreSQL], o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
+            services.AddDbContext<AiofContext>(o => o.UseNpgsql(_config[Keys.DataPostgreSQL], o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)), ServiceLifetime.Transient);
 
             services.AddHealthChecks();
             services.AddFeatureManagement();

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using aiof.api.data;
+using aiof.api.data.graphql;
 
 namespace aiof.api.services
 {

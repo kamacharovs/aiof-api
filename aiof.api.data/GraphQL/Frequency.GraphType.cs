@@ -8,12 +8,13 @@ using GraphQL.Types;
 
 namespace aiof.api.data.graphql
 {
-    public class AssetTypeGraphType : ObjectGraphType<AssetType>, IGraphType
+    public class FrequencyGraphType : ObjectGraphType<Frequency>, IGraphType
     {
-        public AssetTypeGraphType()
+        public FrequencyGraphType()
         {
             Field(x => x.Name);
             Field(x => x.PublicKey);
+            Field(x => x.Value);
         }
     }
 }

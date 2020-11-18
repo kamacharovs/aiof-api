@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace aiof.api.data
+namespace aiof.api.data.graphql
 {
     public class GraphQLQuery
     {
