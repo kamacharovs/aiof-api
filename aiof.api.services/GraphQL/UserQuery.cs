@@ -19,10 +19,10 @@ namespace aiof.api.services
             IGoalRepository _goalRepo,
             IUserRepository _userRepo)
         {
-            Name = "User";
+            Name = "UserQuery";
 
             FieldAsync<ListGraphType<AssetTypeGraphType>>(
-                "asset_type",
+                "asset_types",
                 resolve: async context => await _assetRepo.GetTypesAsync()
             );
 
@@ -40,10 +40,9 @@ namespace aiof.api.services
 
 
             FieldAsync<ListGraphType<LiabilityTypeGraphType>>(
-                "liability_type",
+                "liability_types",
                 resolve: async context => await _liabilityRepo.GetTypesAsync()
             );
-
             FieldAsync<LiabilityGraphType>(
                 "liability",
                 arguments: new QueryArguments(
@@ -55,10 +54,14 @@ namespace aiof.api.services
 
                     return await _liabilityRepo.GetAsync((int)id);
                 });
+            FieldAsync<ListGraphType<LiabilityGraphType>>(
+                "liabilities",
+                resolve: async context => await _liabilityRepo.GetAllAsync()
+            );
 
 
             FieldAsync<ListGraphType<GoalTypeGraphType>>(
-                "goal_type",
+                "goal_types",
                 resolve: async context => await _goalRepo.GetTypesAsync()
             );
 
@@ -73,6 +76,12 @@ namespace aiof.api.services
 
                     return await _goalRepo.GetAsync((int)id);
                 });
+
+
+            FieldAsync<UserGraphType>(
+                "user",
+                resolve: async context => await _userRepo.GetAsync()
+            );
         }
     }
 }
