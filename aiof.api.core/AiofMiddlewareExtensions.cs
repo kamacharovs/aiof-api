@@ -14,7 +14,6 @@ using Microsoft.IdentityModel.Tokens;
 using FluentValidation;
 using GraphQL.Server;
 using GraphQL.Types;
-using GraphQL.Authorization;
 
 using aiof.api.data;
 using aiof.api.services;

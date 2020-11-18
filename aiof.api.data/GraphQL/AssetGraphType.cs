@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 using GraphQL.Types;
-using GraphQL.Authorization;
 
 namespace aiof.api.data
 {

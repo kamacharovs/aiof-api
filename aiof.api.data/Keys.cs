@@ -60,7 +60,6 @@ namespace aiof.api.data
 
         public static class Claim
         {
-            public const string Role = "role";
             public const string UserId = "user_id";
             public const string ClientId = "client_id";
             public const string PublicKey = "public_key";

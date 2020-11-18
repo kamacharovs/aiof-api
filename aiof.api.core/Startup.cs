@@ -13,7 +13,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.FeatureManagement;
 
 using AutoMapper;
-using GraphQL.Types;
 
 using aiof.api.data;
 using aiof.api.services;
