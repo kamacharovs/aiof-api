@@ -84,9 +84,6 @@ namespace aiof.api.core
             app.UseHealthChecks("/health");
             app.UseSwagger();
 
-            app.UseGraphQL<ISchema>();
-            app.UseGraphQLPlayground();
-
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
