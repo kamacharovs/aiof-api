@@ -25,6 +25,7 @@ namespace aiof.api.data.graphql
             Field<ListGraphType<AssetGraphType>>("assets", resolve: context => context.Source.Assets);
             Field<ListGraphType<LiabilityGraphType>>("liabilities", resolve: context => context.Source.Liabilities);
             Field<ListGraphType<GoalGraphType>>("goals", resolve: context => context.Source.Goals);
+            Field<ListGraphType<SubscriptionGraphType>>("subscriptions", resolve: context => context.Source.Subscriptions);
         }
     }
 }
