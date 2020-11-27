@@ -7,14 +7,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace aiof.api.data
 {
-    public class EducationLevel : IEducationLevel, 
-        IPublicKeyName
+    public interface IEducationLevel
     {
         [Required]
         [MaxLength(100)]
-        public string Name { get; set; }
+        string Name { get; set; }
 
         [Required]
-        public Guid PublicKey { get; set; } = Guid.NewGuid();
+        Guid PublicKey { get; set; }
     }
 }
