@@ -15,6 +15,6 @@ namespace aiof.api.data
         public string Name { get; set; }
 
         [Required]
-        public Guid PublicKey { get; set; }
+        public Guid PublicKey { get; set; } = Guid.NewGuid();
     }
 }
