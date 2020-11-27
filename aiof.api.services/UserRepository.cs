@@ -357,6 +357,13 @@ namespace aiof.api.services
                 .AsNoTracking()
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<IMaritalStatus>> GetMaritalStatusesAsync()
+        {
+            return await _context.MaritalStatuses
+                .AsNoTracking()
+                .ToListAsync();
+        }
         #endregion
     }
 }

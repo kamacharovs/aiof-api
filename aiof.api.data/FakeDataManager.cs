@@ -58,6 +58,9 @@ namespace aiof.api.data
             _context.EducationLevels
                 .AddRange(GetFakeEducationLevels());
 
+            _context.MaritalStatuses
+                .AddRange(GetFakeMaritalStatuses());
+
             _context.SaveChanges();
         }
 
@@ -535,6 +538,29 @@ namespace aiof.api.data
                 new EducationLevel
                 {
                     Name = "Doctorate"
+                }
+            };
+        }
+
+        public IEnumerable<MaritalStatus> GetFakeMaritalStatuses()
+        {
+            return new List<MaritalStatus>
+            {
+                new MaritalStatus
+                {
+                    Name = "Single"
+                },
+                new MaritalStatus
+                {
+                    Name = "Married"
+                },
+                new MaritalStatus
+                {
+                    Name = "Living together"
+                },
+                new MaritalStatus
+                {
+                    Name = "No longer married"
                 }
             };
         }

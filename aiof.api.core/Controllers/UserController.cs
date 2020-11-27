@@ -223,5 +223,16 @@ namespace aiof.api.core.Controllers
         {
             return Ok(await _repo.GetEducationLevelsAsync());
         }
+
+        /// <summary>
+        /// Get Marital statuses
+        /// </summary>
+        [HttpGet]
+        [Route("marital/statuses")]
+        [ProducesResponseType(typeof(IEnumerable<IMaritalStatus>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetMaritalStatusesAsync()
+        {
+            return Ok(await _repo.GetMaritalStatusesAsync());
+        }
     }
 }

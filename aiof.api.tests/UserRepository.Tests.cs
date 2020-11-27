@@ -339,5 +339,20 @@ namespace aiof.api.tests
             Assert.NotNull(educationLevel.Name);
             Assert.NotEqual(Guid.Empty, educationLevel.PublicKey);
         }
+
+        [Fact]
+        public async Task GetMaritalStatusesAsync_IsSuccessful()
+        {
+            var _repo = new ServiceHelper().GetRequiredService<IUserRepository>();
+
+            var maritalStatuses = await _repo.GetMaritalStatusesAsync();
+            var maritalStatus = maritalStatuses.FirstOrDefault();
+
+            Assert.NotNull(maritalStatuses);
+            Assert.NotEmpty(maritalStatuses);
+            Assert.NotNull(maritalStatus);
+            Assert.NotNull(maritalStatus.Name);
+            Assert.NotEqual(Guid.Empty, maritalStatus.PublicKey);
+        }
     }
 }
