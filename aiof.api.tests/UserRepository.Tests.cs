@@ -324,5 +324,20 @@ namespace aiof.api.tests
 
             await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.GetAccountAsync(id));
         }
+
+        [Fact]
+        public async Task GetEducationLevelsAsync_IsSuccessful()
+        {
+            var _repo = new ServiceHelper().GetRequiredService<IUserRepository>();
+
+            var educationLevels = await _repo.GetEducationLevelsAsync();
+            var educationLevel = educationLevels.FirstOrDefault();
+
+            Assert.NotNull(educationLevels);
+            Assert.NotEmpty(educationLevels);
+            Assert.NotNull(educationLevel);
+            Assert.NotNull(educationLevel.Name);
+            Assert.NotEqual(Guid.Empty, educationLevel.PublicKey);
+        }
     }
 }

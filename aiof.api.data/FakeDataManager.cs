@@ -55,6 +55,9 @@ namespace aiof.api.data
             _context.AccountTypeMaps
                 .AddRange(GetFakeAccountTypeMaps());
 
+            _context.EducationLevels
+                .AddRange(GetFakeEducationLevels());
+
             _context.SaveChanges();
         }
 
@@ -509,6 +512,29 @@ namespace aiof.api.data
                 {
                     AccountName = "UGMA/UTMA",
                     AccountTypeName = "taxable"
+                }
+            };
+        }
+
+        public IEnumerable<EducationLevel> GetFakeEducationLevels()
+        {
+            return new List<EducationLevel>
+            {
+                new EducationLevel
+                {
+                    Name = "Some high school or less"
+                },
+                new EducationLevel
+                {
+                    Name = "High school graduate or equivalent (GED)"
+                },
+                new EducationLevel
+                {
+                    Name = "Some college, no degree"
+                },
+                new EducationLevel
+                {
+                    Name = "Doctorate"
                 }
             };
         }

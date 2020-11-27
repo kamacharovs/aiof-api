@@ -212,5 +212,16 @@ namespace aiof.api.core.Controllers
         {
             return Ok(await _repo.GetAccountTypeMapsAsync());
         }
+
+        /// <summary>
+        /// Get Education levels
+        /// </summary>
+        [HttpGet]
+        [Route("education/levels")]
+        [ProducesResponseType(typeof(IEnumerable<IEducationLevel>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetEducationLevelsAsync()
+        {
+            return Ok(await _repo.GetEducationLevelsAsync());
+        }
     }
 }

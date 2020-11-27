@@ -349,5 +349,14 @@ namespace aiof.api.services
             await base.SoftDeleteAsync<Account>(id);
         }
         #endregion
+
+        #region Utility
+        public async Task<IEnumerable<IEducationLevel>> GetEducationLevelsAsync()
+        {
+            return await _context.EducationLevels
+                .AsNoTracking()
+                .ToListAsync();
+        }
+        #endregion
     }
 }
