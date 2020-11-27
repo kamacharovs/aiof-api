@@ -82,6 +82,7 @@ namespace aiof.api.data
             public static string AccountTypeMap = nameof(data.AccountTypeMap).ToSnakeCase();
             public static string EducationLevel = nameof(data.EducationLevel).ToSnakeCase();
             public static string MaritalStatus = nameof(data.MaritalStatus).ToSnakeCase();
+            public static string ResidentialStatus = nameof(data.ResidentialStatus).ToSnakeCase();
         }
     }
 }

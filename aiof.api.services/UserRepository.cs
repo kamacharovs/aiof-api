@@ -364,6 +364,13 @@ namespace aiof.api.services
                 .AsNoTracking()
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<IResidentialStatus>> GetResidentialStatusesAsync()
+        {
+            return await _context.ResidentialStatuses
+                .AsNoTracking()
+                .ToListAsync();
+        }
         #endregion
     }
 }

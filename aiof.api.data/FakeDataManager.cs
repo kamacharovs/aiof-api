@@ -61,6 +61,9 @@ namespace aiof.api.data
             _context.MaritalStatuses
                 .AddRange(GetFakeMaritalStatuses());
 
+            _context.ResidentialStatuses
+                .AddRange(GetFakeResidentialStatuses());
+
             _context.SaveChanges();
         }
 
@@ -561,6 +564,41 @@ namespace aiof.api.data
                 new MaritalStatus
                 {
                     Name = "No longer married"
+                }
+            };
+        }
+
+        public IEnumerable<ResidentialStatus> GetFakeResidentialStatuses()
+        {
+            return new List<ResidentialStatus>
+            {
+                new ResidentialStatus
+                {
+                    Name = "Living with parents / relatives"
+                },
+                new ResidentialStatus
+                {
+                    Name = "Couch surfing"
+                },
+                new ResidentialStatus
+                {
+                    Name = "Renting with friends"
+                },
+                new ResidentialStatus
+                {
+                    Name = "Renting by myself"
+                },
+                new ResidentialStatus
+                {
+                    Name = "Campus housing"
+                },
+                new ResidentialStatus
+                {
+                    Name = "I own a condo"
+                },
+                new ResidentialStatus
+                {
+                    Name = "I own a house"
                 }
             };
         }
