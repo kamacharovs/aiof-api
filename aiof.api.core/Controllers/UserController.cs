@@ -267,5 +267,16 @@ namespace aiof.api.core.Controllers
         {
             return Ok(await _repo.GetHouseholdChildrenAsync());
         }
+
+        /// <summary>
+        /// Get User profile options
+        /// </summary>
+        [HttpGet]
+        [Route("profile/options")]
+        [ProducesResponseType(typeof(IUserProfileOptions), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetUserProfileOptionsAsync()
+        {
+            return Ok(await _repo.GetUserProfileOptionsAsync());
+        }
     }
 }

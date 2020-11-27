@@ -43,5 +43,6 @@ namespace aiof.api.services
         Task<IEnumerable<IGender>> GetGendersAsync();
         Task<IEnumerable<IHouseholdAdult>> GetHouseholdAdultsAsync();
         Task<IEnumerable<IHouseholdChild>> GetHouseholdChildrenAsync();
+        Task<IUserProfileOptions> GetUserProfileOptionsAsync();
     }
 }

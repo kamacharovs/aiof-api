@@ -414,5 +414,26 @@ namespace aiof.api.tests
             Assert.NotNull(hhChild.Name);
             Assert.NotEqual(Guid.Empty, hhChild.PublicKey);
         }
+
+        [Fact]
+        public async Task GetUserProfileOptionsAsync_IsSuccessful()
+        {
+            var _repo = new ServiceHelper().GetRequiredService<IUserRepository>();
+
+            var userProfileOptions = await _repo.GetUserProfileOptionsAsync();
+
+            Assert.NotNull(userProfileOptions.EducationLevels);
+            Assert.NotNull(userProfileOptions.MaritalStatuses);
+            Assert.NotNull(userProfileOptions.ResidentialStatuses);
+            Assert.NotNull(userProfileOptions.Genders);
+            Assert.NotNull(userProfileOptions.HouseholdAdults);
+            Assert.NotNull(userProfileOptions.HouseholdChildren);
+            Assert.NotEmpty(userProfileOptions.EducationLevels);
+            Assert.NotEmpty(userProfileOptions.MaritalStatuses);
+            Assert.NotEmpty(userProfileOptions.ResidentialStatuses);
+            Assert.NotEmpty(userProfileOptions.Genders);
+            Assert.NotEmpty(userProfileOptions.HouseholdAdults);
+            Assert.NotEmpty(userProfileOptions.HouseholdChildren);
+        }
     }
 }

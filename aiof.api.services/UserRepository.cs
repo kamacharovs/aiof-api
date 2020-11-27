@@ -392,6 +392,19 @@ namespace aiof.api.services
                 .AsNoTracking()
                 .ToListAsync();
         }
+
+        public async Task<IUserProfileOptions> GetUserProfileOptionsAsync()
+        {
+            return new UserProfileOptions
+            {
+                EducationLevels = await GetEducationLevelsAsync(),
+                MaritalStatuses = await GetMaritalStatusesAsync(),
+                ResidentialStatuses = await GetResidentialStatusesAsync(),
+                Genders = await GetGendersAsync(),
+                HouseholdAdults = await GetHouseholdAdultsAsync(),
+                HouseholdChildren = await GetHouseholdChildrenAsync()
+            };
+        }
         #endregion
     }
 }
