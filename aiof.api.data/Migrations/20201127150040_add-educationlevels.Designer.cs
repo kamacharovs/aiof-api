@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using aiof.api.data;
@@ -9,9 +10,10 @@ using aiof.api.data;
 namespace aiof.api.data.Migrations
 {
     [DbContext(typeof(AiofContext))]
-    partial class AiofContextModelSnapshot : ModelSnapshot
+    [Migration("20201127150040_add-educationlevels")]
+    partial class addeducationlevels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
