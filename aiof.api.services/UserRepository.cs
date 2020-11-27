@@ -378,6 +378,13 @@ namespace aiof.api.services
                 .AsNoTracking()
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<IHouseholdAdult>> GetHouseholdAdultsAsync()
+        {
+            return await _context.HouseholdAdults
+                .AsNoTracking()
+                .ToListAsync();
+        }
         #endregion
     }
 }

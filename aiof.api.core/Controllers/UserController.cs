@@ -247,14 +247,14 @@ namespace aiof.api.core.Controllers
         }
 
         /// <summary>
-        /// Get Genders
+        /// Get Household adults
         /// </summary>
         [HttpGet]
-        [Route("genders")]
-        [ProducesResponseType(typeof(IEnumerable<IGender>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetGendersAsync()
+        [Route("household/adults")]
+        [ProducesResponseType(typeof(IEnumerable<IHouseholdAdult>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetHouseholdAdultsAsync()
         {
-            return Ok(await _repo.GetGendersAsync());
+            return Ok(await _repo.GetHouseholdAdultsAsync());
         }
     }
 }

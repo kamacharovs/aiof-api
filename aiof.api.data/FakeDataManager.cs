@@ -67,6 +67,9 @@ namespace aiof.api.data
             _context.Genders
                 .AddRange(GetFakeGenders());
 
+            _context.HouseholdAdults
+                .AddRange(GetFakeHouseholdAdults());
+
             _context.SaveChanges();
         }
 
@@ -621,6 +624,41 @@ namespace aiof.api.data
                 new Gender
                 {
                     Name = "Other"
+                }
+            };
+        }
+
+        public IEnumerable<HouseholdAdult> GetFakeHouseholdAdults()
+        {
+            return new List<HouseholdAdult>
+            {
+                new HouseholdAdult
+                {
+                    Name = "1 adult"
+                },
+                new HouseholdAdult
+                {
+                    Name = "2 adults"
+                },
+                new HouseholdAdult
+                {
+                    Name = "3 adults"
+                },
+                new HouseholdAdult
+                {
+                    Name = "4 adults"
+                },
+                new HouseholdAdult
+                {
+                    Name = "5 adults"
+                },
+                new HouseholdAdult
+                {
+                    Name = "6 adults"
+                },
+                new HouseholdAdult
+                {
+                    Name = "6+ adults"
                 }
             };
         }
