@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Security.Claims;
 
@@ -165,13 +166,13 @@ namespace aiof.api.tests
                 value: true,
                 userId: true);
         }
-        public static IEnumerable<object[]> AssetsIdUsersId()
+        public static IEnumerable<object[]> AssetsIdUserId()
         {
             return _Fake.GetFakeAssetsData(
                 id: true,
                 userId: true);
         }
-        public static IEnumerable<object[]> AssetsUsersId()
+        public static IEnumerable<object[]> AssetsUserId()
         {
             return _Fake.GetFakeAssetsData(
                 userId: true);
@@ -194,6 +195,40 @@ namespace aiof.api.tests
                 typeName: true,
                 value: true,
                 userId: true);
+        }
+
+        public static IEnumerable<object[]> LiabilitiesUserId()
+        {
+            return _Fake.GetFakeLiabilitiesData(
+                userId: true);
+        }
+        public static IEnumerable<object[]> LiabilitiesIdUserId()
+        {
+            return _Fake.GetFakeLiabilitiesData(
+                id: true,
+                userId: true);
+        }
+        public static IEnumerable<object[]> LiabilitiesTypeName()
+        {
+            return _Fake.GetFakeLiabilitiesData(
+                typeName: true);
+        }
+
+        public static IEnumerable<object[]> GoalsUserId()
+        {
+            return _Fake.GetFakeGoalsData(
+                userId: true);
+        }
+        public static IEnumerable<object[]> GoalsIdUserId()
+        {
+            return _Fake.GetFakeGoalsData(
+                id: true,
+                userId: true);
+        }
+        public static IEnumerable<object[]> GoalsTypeName()
+        {
+            return _Fake.GetFakeGoalsData(
+                typeName: true);
         }
 
         public static IEnumerable<object[]> SubscriptionsId()
@@ -227,12 +262,12 @@ namespace aiof.api.tests
                 userId: true);
         }
 
-        public static UserDto RandomUserDto(int userId = 1)
+        public static UserDto RandomUserDto()
         {
             return new Faker<UserDto>()
-                .RuleFor(x => x.Assets, f => FakerAssetDtos())
-                .RuleFor(x => x.Liabilities, f => FakerLiabilityDtos(userId))
-                .RuleFor(x => x.Goals, f => FakerGoalDtos(userId))
+                .RuleFor(x => x.Assets, f => RandomAssetDtos())
+                .RuleFor(x => x.Liabilities, f => RandomLiabilityDtos())
+                .RuleFor(x => x.Goals, f => RandomGoalDtos())
                 .Generate();
         }
 
@@ -245,35 +280,65 @@ namespace aiof.api.tests
                 .Generate();
         }
 
-        public static List<AssetDto> FakerAssetDtos()
+        public static AssetDto RandomAssetDto()
+        {
+            return FakerAssetDto().Generate();
+        }
+        public static List<AssetDto> RandomAssetDtos(int? n = null)
+        {
+            return FakerAssetDto().Generate(n ?? GeneratedAmount);
+        }
+        private static Faker<AssetDto> FakerAssetDto()
         {
             return new Faker<AssetDto>()
                 .RuleFor(x => x.Name, f => f.Random.String2(10))
-                .RuleFor(x => x.TypeName, f => f.Random.String2(5))
-                .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000))
-                .Generate(GeneratedAmount);
+                .RuleFor(x => x.TypeName, f => _Fake.GetFakeAssetTypes().First().Name)
+                .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000));
         }
-        public static List<LiabilityDto> FakerLiabilityDtos(int userId = 1)
+
+        public static LiabilityDto RandomLiabilityDto(int? n = null)
+        {
+            return FakerLiabilityDto().Generate();
+        }
+        public static List<LiabilityDto> RandomLiabilityDtos(int? n = null)
+        {
+            return FakerLiabilityDto().Generate(n ?? GeneratedAmount);
+        }
+        private static Faker<LiabilityDto> FakerLiabilityDto()
         {
             return new Faker<LiabilityDto>()
                 .RuleFor(x => x.Name, f => f.Random.String2(10))
-                .RuleFor(x => x.TypeName, f => f.Random.String2(5))
+                .RuleFor(x => x.TypeName, f => _Fake.GetFakeLiabilityTypes().First().Name)
                 .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000))
-                .Generate(GeneratedAmount);
+                .RuleFor(x => x.MonthlyPayment, f => f.Random.Decimal(50, 500))
+                .RuleFor(x => x.Years, f => f.Random.Int(1, 5));
         }
-        public static List<GoalDto> FakerGoalDtos(int userId = 1)
+
+        public static GoalDto RandomGoalDto()
+        {
+            return FakerGoalDto().Generate();
+        }
+        public static List<GoalDto> RandomGoalDtos(int? n = null)
+        {
+            return FakerGoalDto().Generate(n ?? GeneratedAmount);
+        }
+        private static Faker<GoalDto> FakerGoalDto()
         {
             return new Faker<GoalDto>()
-                .RuleFor(x => x.Name, f => f.Random.String())
-                .RuleFor(x => x.TypeName, f => "save for a rainy day")
+                .RuleFor(x => x.Name, f => f.Random.String2(10))
+                .RuleFor(x => x.TypeName, f => _Fake.GetFakeGoalTypes().First().Name)
                 .RuleFor(x => x.Amount, f => f.Random.Decimal(5000, 10000))
                 .RuleFor(x => x.CurrentAmount, f => f.Random.Decimal(1000, 4000))
                 .RuleFor(x => x.Contribution, f => f.Random.Decimal(700, 900))
                 .RuleFor(x => x.ContributionFrequencyName, f => "monthly")
-                .Generate(GeneratedAmount);
+                .RuleFor(x => x.PlannedDate, f => DateTime.Now.AddDays(7));
         }
 
-        public static SubscriptionDto RandomSubscriptionDto(int userId = 1)
+        public static SubscriptionDto RandomSubscriptionDto()
+        {
+            return FakerSubscriptionDto().Generate();
+        }
+        private static Faker<SubscriptionDto> FakerSubscriptionDto()
         {
             return new Faker<SubscriptionDto>()
                 .RuleFor(x => x.Name, f => f.Random.String2(10))
@@ -282,11 +347,10 @@ namespace aiof.api.tests
                 .RuleFor(x => x.PaymentFrequencyName, f => "monthly")
                 .RuleFor(x => x.PaymentLength, f => 365)
                 .RuleFor(x => x.From, f => f.Random.String2(10))
-                .RuleFor(x => x.Url, f => f.Internet.Url())
-                .Generate();
+                .RuleFor(x => x.Url, f => f.Internet.Url());
         }
 
-        public static AccountDto RandomAccountDto(int userId = 1)
+        public static AccountDto RandomAccountDto()
         {
             return new Faker<AccountDto>()
                 .RuleFor(x => x.Name, f => f.Random.String2(10))
@@ -301,58 +365,9 @@ namespace aiof.api.tests
             {
                 new object[]
                 {
-                    FakerAssetDtos(),
-                    FakerLiabilityDtos(),
-                    FakerGoalDtos()
-                }
-            };
-        }
-
-        public static IEnumerable<object[]> RandomAssetDtos()
-        {
-            var toReturn = new List<object[]>();
-
-            foreach (var fakeAssetDto in FakerAssetDtos())
-            {
-                toReturn.Add(new object[]
-                {
-                    fakeAssetDto.Name,
-                    fakeAssetDto.TypeName,
-                    fakeAssetDto.Value
-                });
-            }
-
-            return toReturn;
-        }
-        public static IEnumerable<object[]> RandomAssetDtosList()
-        {
-            return new List<object[]>
-            {
-                new object[]
-                {
-                    FakerAssetDtos()
-                }
-            };
-        }
-
-        public static IEnumerable<object[]> RandomeGoalDtosList()
-        {
-            return new List<object[]>
-            {
-                new object[]
-                {
-                    FakerGoalDtos()
-                }
-            };
-        }
-
-        public static IEnumerable<object[]> RandomLiabilityDtosList()
-        {
-            return new List<object[]>
-            {
-                new object[]
-                {
-                    FakerLiabilityDtos()
+                    RandomAssetDtos(),
+                    RandomLiabilityDtos(),
+                    RandomGoalDtos()
                 }
             };
         }

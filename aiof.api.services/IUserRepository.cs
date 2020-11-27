@@ -37,5 +37,6 @@ namespace aiof.api.services
             int id,
             AccountDto accountDto);
         Task DeleteAccountAsync(int id);
+        Task<IEnumerable<IEducationLevel>> GetEducationLevelsAsync();
     }
 }

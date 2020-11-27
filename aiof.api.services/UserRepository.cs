@@ -55,6 +55,7 @@ namespace aiof.api.services
                 .Include(x => x.Liabilities)
                 .Include(x => x.Subscriptions)
                 .Include(x => x.Accounts)
+                .OrderBy(x => x.Id)
                 .AsQueryable();
 
             return asNoTracking
@@ -346,6 +347,15 @@ namespace aiof.api.services
         public async Task DeleteAccountAsync(int id)
         {
             await base.SoftDeleteAsync<Account>(id);
+        }
+        #endregion
+
+        #region Utility
+        public async Task<IEnumerable<IEducationLevel>> GetEducationLevelsAsync()
+        {
+            return await _context.EducationLevels
+                .AsNoTracking()
+                .ToListAsync();
         }
         #endregion
     }

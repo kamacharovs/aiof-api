@@ -42,7 +42,9 @@ namespace aiof.api.data
             CreateMap<LiabilityDto, Liability>()
                 .ForMember(x => x.Name, o => o.Condition(s => s.Name != null))
                 .ForMember(x => x.TypeName, o => o.Condition(s => s.TypeName != null))
-                .ForMember(x => x.Value, o => o.Condition(s => s.Value != null));
+                .ForMember(x => x.Value, o => o.Condition(s => s.Value != null))
+                .ForMember(x => x.MonthlyPayment, o => o.Condition(s => s.MonthlyPayment != null))
+                .ForMember(x => x.Years, o => o.Condition(s => s.Years != null));
 
             CreateMap<Subscription, Subscription>()
                 .ForAllMembers(x => x.Condition((source, destination, member) => member != null));

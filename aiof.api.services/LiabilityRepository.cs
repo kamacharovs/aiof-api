@@ -67,18 +67,31 @@ namespace aiof.api.services
                 ?? throw new AiofNotFoundException($"Liability with Id={id} was not found");
         }
 
-        public async Task<ILiability> GetAsync(LiabilityDto liabilityDto)
+        public async Task<ILiability> GetAsync(
+            LiabilityDto liabilityDto,
+            bool asNoTracking = true)
         {
-            return await GetQuery()
+            return await GetQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.Name == liabilityDto.Name
                     && x.TypeName == liabilityDto.TypeName
-                    && x.Value == liabilityDto.Value);
+                    && x.Value == liabilityDto.Value
+                    && x.MonthlyPayment == liabilityDto.MonthlyPayment
+                    && x.Years == liabilityDto.Years);
         }
 
         public async Task<IEnumerable<ILiability>> GetAllAsync()
         {
             return await GetQuery()
                 .ToListAsync();
+        }
+
+        public async Task<ILiabilityType> GetTypeAsync(
+            string typeName,
+            bool asNoTracking = true)
+        {
+            return await GetTypesQuery(asNoTracking)
+                .FirstOrDefaultAsync(x => x.Name == typeName)
+                ?? throw new AiofNotFoundException($"Liability type with name={typeName} was not found");
         }
 
         public async Task<IEnumerable<ILiabilityType>> GetTypesAsync()
@@ -91,10 +104,7 @@ namespace aiof.api.services
         public async Task<ILiability> AddAsync(LiabilityDto liabilityDto)
         {
             await _liabilityDtoValidator.ValidateAndThrowAsync(liabilityDto);
-
-            if (await GetAsync(liabilityDto) != null)
-                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"Liability already exists");
+            await CheckAsync(liabilityDto);
 
             var liability = _mapper.Map<Liability>(liabilityDto);
 
@@ -122,7 +132,9 @@ namespace aiof.api.services
             int id, 
             LiabilityDto liabilityDto)
         {
-            var liability = await GetAsync(id, asNoTracking: false);
+            await CheckAsync(liabilityDto);
+
+            var liability = await GetAsync(id, false);
             var liabilityToUpdate = _mapper.Map(liabilityDto, liability as Liability);
 
             _context.Liabilities
@@ -150,13 +162,9 @@ namespace aiof.api.services
             };
 
             await _liabilityTypeValidator.ValidateAndThrowAsync(liabilityType);
+            await CheckAsync(name);
 
-            if ((await GetTypesAsync()).Any(x => x.Name == name))
-                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"{nameof(LiabilityType)} with Name={name} already exists");
-
-            await _context.LiabilityTypes
-                .AddAsync(liabilityType);
+            await _context.LiabilityTypes.AddAsync(liabilityType);
             await _context.SaveChangesAsync();
 
             return liabilityType;
@@ -165,6 +173,26 @@ namespace aiof.api.services
         public async Task DeleteAsync(int id)
         {
             await base.SoftDeleteAsync<Liability>(id);
+        }
+
+        private async Task CheckAsync(
+            LiabilityDto liabilityDto,
+            string message = null)
+        {
+            if (liabilityDto == null)
+            { throw new AiofFriendlyException(HttpStatusCode.BadRequest, message ?? $"Liability DTO cannot be NULL"); }
+            else if (liabilityDto.TypeName != null && await GetTypeAsync(liabilityDto.TypeName) == null) 
+            { throw new AiofFriendlyException(HttpStatusCode.BadRequest, message ?? $"Liability type doesn't exist"); }
+            else if (await GetAsync(liabilityDto) != null) 
+            { throw new AiofFriendlyException(HttpStatusCode.BadRequest, message ?? $"Liability already exists"); }
+        }
+
+        private async Task CheckAsync(
+            string typeName,
+            string message = null)
+        {
+            if ((await GetTypesAsync()).Any(x => x.Name == typeName))
+            { throw new AiofFriendlyException(HttpStatusCode.BadRequest, $"Liability type with name={typeName} already exists"); }
         }
     }
 }
