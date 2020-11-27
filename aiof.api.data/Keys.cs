@@ -85,6 +85,7 @@ namespace aiof.api.data
             public static string ResidentialStatus = nameof(data.ResidentialStatus).ToSnakeCase();
             public static string Gender = nameof(data.Gender).ToSnakeCase();
             public static string HouseholdAdult = nameof(data.HouseholdAdult).ToSnakeCase();
+            public static string HouseholdChild = nameof(data.HouseholdChild).ToSnakeCase();
         }
     }
 }

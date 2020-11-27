@@ -70,6 +70,9 @@ namespace aiof.api.data
             _context.HouseholdAdults
                 .AddRange(GetFakeHouseholdAdults());
 
+            _context.HouseholdChildren
+                .AddRange(GetFakeHouseholdChildren());
+
             _context.SaveChanges();
         }
 
@@ -659,6 +662,45 @@ namespace aiof.api.data
                 new HouseholdAdult
                 {
                     Name = "6+ adults"
+                }
+            };
+        }
+
+        public IEnumerable<HouseholdChild> GetFakeHouseholdChildren()
+        {
+            return new List<HouseholdChild>
+            {
+                new HouseholdChild
+                {
+                    Name = "0 children"
+                },
+                new HouseholdChild
+                {
+                    Name = "1 child"
+                },
+                new HouseholdChild
+                {
+                    Name = "2 children"
+                },
+                new HouseholdChild
+                {
+                    Name = "3 children"
+                },
+                new HouseholdChild
+                {
+                    Name = "4 children"
+                },
+                new HouseholdChild
+                {
+                    Name = "5 children"
+                },
+                new HouseholdChild
+                {
+                    Name = "6 children"
+                },
+                new HouseholdChild
+                {
+                    Name = "6+ children"
                 }
             };
         }

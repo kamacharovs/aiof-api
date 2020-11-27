@@ -42,5 +42,6 @@ namespace aiof.api.services
         Task<IEnumerable<IResidentialStatus>> GetResidentialStatusesAsync();
         Task<IEnumerable<IGender>> GetGendersAsync();
         Task<IEnumerable<IHouseholdAdult>> GetHouseholdAdultsAsync();
+        Task<IEnumerable<IHouseholdChild>> GetHouseholdChildrenAsync();
     }
 }

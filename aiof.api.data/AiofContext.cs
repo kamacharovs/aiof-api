@@ -29,6 +29,7 @@ namespace aiof.api.data
         public virtual DbSet<ResidentialStatus> ResidentialStatuses { get; set; }
         public virtual DbSet<Gender> Genders { get; set; }
         public virtual DbSet<HouseholdAdult> HouseholdAdults { get; set; }
+        public virtual DbSet<HouseholdChild> HouseholdChildren { get; set; }
 
         public AiofContext(DbContextOptions<AiofContext> options, ITenant tenant)
             : base(options)
@@ -345,6 +346,16 @@ namespace aiof.api.data
             modelBuilder.Entity<HouseholdAdult>(e =>
             {
                 e.ToTable(Keys.Entity.HouseholdAdult);
+
+                e.HasKey(x => x.Name);
+
+                e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
+                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
+            });
+
+            modelBuilder.Entity<HouseholdChild>(e =>
+            {
+                e.ToTable(Keys.Entity.HouseholdChild);
 
                 e.HasKey(x => x.Name);
 

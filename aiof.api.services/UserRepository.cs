@@ -385,6 +385,13 @@ namespace aiof.api.services
                 .AsNoTracking()
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<IHouseholdChild>> GetHouseholdChildrenAsync()
+        {
+            return await _context.HouseholdChildren
+                .AsNoTracking()
+                .ToListAsync();
+        }
         #endregion
     }
 }

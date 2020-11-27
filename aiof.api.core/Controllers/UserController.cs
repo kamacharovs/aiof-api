@@ -256,5 +256,16 @@ namespace aiof.api.core.Controllers
         {
             return Ok(await _repo.GetHouseholdAdultsAsync());
         }
+
+        /// <summary>
+        /// Get Household children
+        /// </summary>
+        [HttpGet]
+        [Route("household/children")]
+        [ProducesResponseType(typeof(IEnumerable<IHouseholdChild>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetHouseholdChildrenAsync()
+        {
+            return Ok(await _repo.GetHouseholdChildrenAsync());
+        }
     }
 }

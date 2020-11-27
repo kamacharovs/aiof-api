@@ -399,5 +399,20 @@ namespace aiof.api.tests
             Assert.NotNull(hhAdult.Name);
             Assert.NotEqual(Guid.Empty, hhAdult.PublicKey);
         }
+
+        [Fact]
+        public async Task GetHouseholdChildrenAsync_IsSuccessful()
+        {
+            var _repo = new ServiceHelper().GetRequiredService<IUserRepository>();
+
+            var hhChildren = await _repo.GetHouseholdChildrenAsync();
+            var hhChild = hhChildren.FirstOrDefault();
+
+            Assert.NotNull(hhChildren);
+            Assert.NotEmpty(hhChildren);
+            Assert.NotNull(hhChild);
+            Assert.NotNull(hhChild.Name);
+            Assert.NotEqual(Guid.Empty, hhChild.PublicKey);
+        }
     }
 }
