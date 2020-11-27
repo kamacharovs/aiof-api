@@ -24,6 +24,7 @@ namespace aiof.api.data
         public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<AccountType> AccountTypes { get; set; }
         public virtual DbSet<AccountTypeMap> AccountTypeMaps { get; set; }
+        public virtual DbSet<EducationLevel> EducationLevels { get; set; }
 
         public AiofContext(DbContextOptions<AiofContext> options, ITenant tenant)
             : base(options)
@@ -295,6 +296,16 @@ namespace aiof.api.data
                     .HasForeignKey(x => x.AccountTypeName)
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
+            });
+
+            modelBuilder.Entity<EducationLevel>(e =>
+            {
+                e.ToTable(Keys.Entity.EducationLevel);
+
+                e.HasKey(x => x.Name);
+
+                e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
+                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
             });
         }
     }
