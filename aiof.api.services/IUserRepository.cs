@@ -40,5 +40,6 @@ namespace aiof.api.services
         Task<IEnumerable<IEducationLevel>> GetEducationLevelsAsync();
         Task<IEnumerable<IMaritalStatus>> GetMaritalStatusesAsync();
         Task<IEnumerable<IResidentialStatus>> GetResidentialStatusesAsync();
+        Task<IEnumerable<IGender>> GetGendersAsync();
     }
 }

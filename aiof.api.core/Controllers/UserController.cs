@@ -245,5 +245,16 @@ namespace aiof.api.core.Controllers
         {
             return Ok(await _repo.GetResidentialStatusesAsync());
         }
+
+        /// <summary>
+        /// Get Genders
+        /// </summary>
+        [HttpGet]
+        [Route("genders")]
+        [ProducesResponseType(typeof(IEnumerable<IGender>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetGendersAsync()
+        {
+            return Ok(await _repo.GetGendersAsync());
+        }
     }
 }

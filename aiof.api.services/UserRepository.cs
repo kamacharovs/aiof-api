@@ -371,6 +371,13 @@ namespace aiof.api.services
                 .AsNoTracking()
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<IGender>> GetGendersAsync()
+        {
+            return await _context.Genders
+                .AsNoTracking()
+                .ToListAsync();
+        }
         #endregion
     }
 }

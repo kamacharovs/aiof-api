@@ -64,6 +64,9 @@ namespace aiof.api.data
             _context.ResidentialStatuses
                 .AddRange(GetFakeResidentialStatuses());
 
+            _context.Genders
+                .AddRange(GetFakeGenders());
+
             _context.SaveChanges();
         }
 
@@ -599,6 +602,25 @@ namespace aiof.api.data
                 new ResidentialStatus
                 {
                     Name = "I own a house"
+                }
+            };
+        }
+
+        public IEnumerable<Gender> GetFakeGenders()
+        {
+            return new List<Gender>
+            {
+                new Gender
+                {
+                    Name = "Male"
+                },
+                new Gender
+                {
+                    Name = "Female"
+                },
+                new Gender
+                {
+                    Name = "Other"
                 }
             };
         }
