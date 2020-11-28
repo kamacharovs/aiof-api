@@ -25,6 +25,11 @@ namespace aiof.api.data
         public virtual DbSet<AccountType> AccountTypes { get; set; }
         public virtual DbSet<AccountTypeMap> AccountTypeMaps { get; set; }
         public virtual DbSet<EducationLevel> EducationLevels { get; set; }
+        public virtual DbSet<MaritalStatus> MaritalStatuses { get; set; }
+        public virtual DbSet<ResidentialStatus> ResidentialStatuses { get; set; }
+        public virtual DbSet<Gender> Genders { get; set; }
+        public virtual DbSet<HouseholdAdult> HouseholdAdults { get; set; }
+        public virtual DbSet<HouseholdChild> HouseholdChildren { get; set; }
 
         public AiofContext()
         { }
@@ -313,6 +318,56 @@ namespace aiof.api.data
             modelBuilder.Entity<EducationLevel>(e =>
             {
                 e.ToTable(Keys.Entity.EducationLevel);
+
+                e.HasKey(x => x.Name);
+
+                e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
+                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
+            });
+
+            modelBuilder.Entity<MaritalStatus>(e =>
+            {
+                e.ToTable(Keys.Entity.MaritalStatus);
+
+                e.HasKey(x => x.Name);
+
+                e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
+                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
+            });
+
+            modelBuilder.Entity<ResidentialStatus>(e =>
+            {
+                e.ToTable(Keys.Entity.ResidentialStatus);
+
+                e.HasKey(x => x.Name);
+
+                e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
+                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
+            });
+
+            modelBuilder.Entity<Gender>(e =>
+            {
+                e.ToTable(Keys.Entity.Gender);
+
+                e.HasKey(x => x.Name);
+
+                e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
+                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
+            });
+
+            modelBuilder.Entity<HouseholdAdult>(e =>
+            {
+                e.ToTable(Keys.Entity.HouseholdAdult);
+
+                e.HasKey(x => x.Name);
+
+                e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
+                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
+            });
+
+            modelBuilder.Entity<HouseholdChild>(e =>
+            {
+                e.ToTable(Keys.Entity.HouseholdChild);
 
                 e.HasKey(x => x.Name);
 

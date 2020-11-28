@@ -38,5 +38,11 @@ namespace aiof.api.services
             AccountDto accountDto);
         Task DeleteAccountAsync(int id);
         Task<IEnumerable<IEducationLevel>> GetEducationLevelsAsync();
+        Task<IEnumerable<IMaritalStatus>> GetMaritalStatusesAsync();
+        Task<IEnumerable<IResidentialStatus>> GetResidentialStatusesAsync();
+        Task<IEnumerable<IGender>> GetGendersAsync();
+        Task<IEnumerable<IHouseholdAdult>> GetHouseholdAdultsAsync();
+        Task<IEnumerable<IHouseholdChild>> GetHouseholdChildrenAsync();
+        Task<IUserProfileOptions> GetUserProfileOptionsAsync();
     }
 }
