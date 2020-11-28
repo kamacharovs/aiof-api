@@ -58,6 +58,21 @@ namespace aiof.api.data
             _context.EducationLevels
                 .AddRange(GetFakeEducationLevels());
 
+            _context.MaritalStatuses
+                .AddRange(GetFakeMaritalStatuses());
+
+            _context.ResidentialStatuses
+                .AddRange(GetFakeResidentialStatuses());
+
+            _context.Genders
+                .AddRange(GetFakeGenders());
+
+            _context.HouseholdAdults
+                .AddRange(GetFakeHouseholdAdults());
+
+            _context.HouseholdChildren
+                .AddRange(GetFakeHouseholdChildren());
+
             _context.SaveChanges();
         }
 
@@ -535,6 +550,157 @@ namespace aiof.api.data
                 new EducationLevel
                 {
                     Name = "Doctorate"
+                }
+            };
+        }
+
+        public IEnumerable<MaritalStatus> GetFakeMaritalStatuses()
+        {
+            return new List<MaritalStatus>
+            {
+                new MaritalStatus
+                {
+                    Name = "Single"
+                },
+                new MaritalStatus
+                {
+                    Name = "Married"
+                },
+                new MaritalStatus
+                {
+                    Name = "Living together"
+                },
+                new MaritalStatus
+                {
+                    Name = "No longer married"
+                }
+            };
+        }
+
+        public IEnumerable<ResidentialStatus> GetFakeResidentialStatuses()
+        {
+            return new List<ResidentialStatus>
+            {
+                new ResidentialStatus
+                {
+                    Name = "Living with parents / relatives"
+                },
+                new ResidentialStatus
+                {
+                    Name = "Couch surfing"
+                },
+                new ResidentialStatus
+                {
+                    Name = "Renting with friends"
+                },
+                new ResidentialStatus
+                {
+                    Name = "Renting by myself"
+                },
+                new ResidentialStatus
+                {
+                    Name = "Campus housing"
+                },
+                new ResidentialStatus
+                {
+                    Name = "I own a condo"
+                },
+                new ResidentialStatus
+                {
+                    Name = "I own a house"
+                }
+            };
+        }
+
+        public IEnumerable<Gender> GetFakeGenders()
+        {
+            return new List<Gender>
+            {
+                new Gender
+                {
+                    Name = "Male"
+                },
+                new Gender
+                {
+                    Name = "Female"
+                },
+                new Gender
+                {
+                    Name = "Other"
+                }
+            };
+        }
+
+        public IEnumerable<HouseholdAdult> GetFakeHouseholdAdults()
+        {
+            return new List<HouseholdAdult>
+            {
+                new HouseholdAdult
+                {
+                    Name = "1 adult"
+                },
+                new HouseholdAdult
+                {
+                    Name = "2 adults"
+                },
+                new HouseholdAdult
+                {
+                    Name = "3 adults"
+                },
+                new HouseholdAdult
+                {
+                    Name = "4 adults"
+                },
+                new HouseholdAdult
+                {
+                    Name = "5 adults"
+                },
+                new HouseholdAdult
+                {
+                    Name = "6 adults"
+                },
+                new HouseholdAdult
+                {
+                    Name = "6+ adults"
+                }
+            };
+        }
+
+        public IEnumerable<HouseholdChild> GetFakeHouseholdChildren()
+        {
+            return new List<HouseholdChild>
+            {
+                new HouseholdChild
+                {
+                    Name = "0 children"
+                },
+                new HouseholdChild
+                {
+                    Name = "1 child"
+                },
+                new HouseholdChild
+                {
+                    Name = "2 children"
+                },
+                new HouseholdChild
+                {
+                    Name = "3 children"
+                },
+                new HouseholdChild
+                {
+                    Name = "4 children"
+                },
+                new HouseholdChild
+                {
+                    Name = "5 children"
+                },
+                new HouseholdChild
+                {
+                    Name = "6 children"
+                },
+                new HouseholdChild
+                {
+                    Name = "6+ children"
                 }
             };
         }

@@ -357,6 +357,54 @@ namespace aiof.api.services
                 .AsNoTracking()
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<IMaritalStatus>> GetMaritalStatusesAsync()
+        {
+            return await _context.MaritalStatuses
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<IResidentialStatus>> GetResidentialStatusesAsync()
+        {
+            return await _context.ResidentialStatuses
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<IGender>> GetGendersAsync()
+        {
+            return await _context.Genders
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<IHouseholdAdult>> GetHouseholdAdultsAsync()
+        {
+            return await _context.HouseholdAdults
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<IHouseholdChild>> GetHouseholdChildrenAsync()
+        {
+            return await _context.HouseholdChildren
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<IUserProfileOptions> GetUserProfileOptionsAsync()
+        {
+            return new UserProfileOptions
+            {
+                EducationLevels = await GetEducationLevelsAsync(),
+                MaritalStatuses = await GetMaritalStatusesAsync(),
+                ResidentialStatuses = await GetResidentialStatusesAsync(),
+                Genders = await GetGendersAsync(),
+                HouseholdAdults = await GetHouseholdAdultsAsync(),
+                HouseholdChildren = await GetHouseholdChildrenAsync()
+            };
+        }
         #endregion
     }
 }

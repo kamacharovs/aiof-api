@@ -339,5 +339,115 @@ namespace aiof.api.tests
             Assert.NotNull(educationLevel.Name);
             Assert.NotEqual(Guid.Empty, educationLevel.PublicKey);
         }
+
+        [Fact]
+        public async Task GetMaritalStatusesAsync_IsSuccessful()
+        {
+            var _repo = new ServiceHelper().GetRequiredService<IUserRepository>();
+
+            var maritalStatuses = await _repo.GetMaritalStatusesAsync();
+            var maritalStatus = maritalStatuses.FirstOrDefault();
+
+            Assert.NotNull(maritalStatuses);
+            Assert.NotEmpty(maritalStatuses);
+            Assert.NotNull(maritalStatus);
+            Assert.NotNull(maritalStatus.Name);
+            Assert.NotEqual(Guid.Empty, maritalStatus.PublicKey);
+        }
+
+        [Fact]
+        public async Task GetResidentialStatusesAsync_IsSuccessful()
+        {
+            var _repo = new ServiceHelper().GetRequiredService<IUserRepository>();
+
+            var residentialStatuses = await _repo.GetResidentialStatusesAsync();
+            var residentialStatus = residentialStatuses.FirstOrDefault();
+
+            Assert.NotNull(residentialStatuses);
+            Assert.NotEmpty(residentialStatuses);
+            Assert.NotNull(residentialStatus);
+            Assert.NotNull(residentialStatus.Name);
+            Assert.NotEqual(Guid.Empty, residentialStatus.PublicKey);
+        }
+
+        [Fact]
+        public async Task GetGendersAsync_IsSuccessful()
+        {
+            var _repo = new ServiceHelper().GetRequiredService<IUserRepository>();
+
+            var genders = await _repo.GetGendersAsync();
+            var gender = genders.FirstOrDefault();
+
+            Assert.NotNull(genders);
+            Assert.NotEmpty(genders);
+            Assert.NotNull(gender);
+            Assert.NotNull(gender.Name);
+            Assert.NotEqual(Guid.Empty, gender.PublicKey);
+        }
+
+        [Fact]
+        public async Task GetHouseholdAdultsAsync_IsSuccessful()
+        {
+            var _repo = new ServiceHelper().GetRequiredService<IUserRepository>();
+
+            var hhAdults = await _repo.GetHouseholdAdultsAsync();
+            var hhAdult = hhAdults.FirstOrDefault();
+
+            Assert.NotNull(hhAdults);
+            Assert.NotEmpty(hhAdults);
+            Assert.NotNull(hhAdult);
+            Assert.NotNull(hhAdult.Name);
+            Assert.NotEqual(Guid.Empty, hhAdult.PublicKey);
+        }
+
+        [Fact]
+        public async Task GetHouseholdChildrenAsync_IsSuccessful()
+        {
+            var _repo = new ServiceHelper().GetRequiredService<IUserRepository>();
+
+            var hhChildren = await _repo.GetHouseholdChildrenAsync();
+            var hhChild = hhChildren.FirstOrDefault();
+
+            Assert.NotNull(hhChildren);
+            Assert.NotEmpty(hhChildren);
+            Assert.NotNull(hhChild);
+            Assert.NotNull(hhChild.Name);
+            Assert.NotEqual(Guid.Empty, hhChild.PublicKey);
+        }
+
+        [Fact]
+        public async Task GetUserProfileOptionsAsync_IsSuccessful()
+        {
+            var _repo = new ServiceHelper().GetRequiredService<IUserRepository>();
+
+            var userProfileOptions = await _repo.GetUserProfileOptionsAsync();
+
+            Assert.NotNull(userProfileOptions.EducationLevels);
+            Assert.NotNull(userProfileOptions.MaritalStatuses);
+            Assert.NotNull(userProfileOptions.ResidentialStatuses);
+            Assert.NotNull(userProfileOptions.Genders);
+            Assert.NotNull(userProfileOptions.HouseholdAdults);
+            Assert.NotNull(userProfileOptions.HouseholdChildren);
+            Assert.NotEmpty(userProfileOptions.EducationLevels);
+            Assert.NotEmpty(userProfileOptions.MaritalStatuses);
+            Assert.NotEmpty(userProfileOptions.ResidentialStatuses);
+            Assert.NotEmpty(userProfileOptions.Genders);
+            Assert.NotEmpty(userProfileOptions.HouseholdAdults);
+            Assert.NotEmpty(userProfileOptions.HouseholdChildren);
+
+            AssertIPublicKeyName(userProfileOptions.EducationLevels.FirstOrDefault() as IPublicKeyName);
+            AssertIPublicKeyName(userProfileOptions.MaritalStatuses.FirstOrDefault() as IPublicKeyName);
+            AssertIPublicKeyName(userProfileOptions.ResidentialStatuses.FirstOrDefault() as IPublicKeyName);
+            AssertIPublicKeyName(userProfileOptions.Genders.FirstOrDefault() as IPublicKeyName);
+            AssertIPublicKeyName(userProfileOptions.HouseholdAdults.FirstOrDefault() as IPublicKeyName);
+            AssertIPublicKeyName(userProfileOptions.HouseholdChildren.FirstOrDefault() as IPublicKeyName);
+        }
+
+        private void AssertIPublicKeyName(IPublicKeyName obj)
+        {
+            Assert.NotNull(obj);
+            Assert.NotNull(obj.Name);
+            Assert.NotEqual(Guid.Empty, obj.PublicKey);
+        }
     }
 }

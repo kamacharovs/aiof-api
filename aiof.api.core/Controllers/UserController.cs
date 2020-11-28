@@ -223,5 +223,60 @@ namespace aiof.api.core.Controllers
         {
             return Ok(await _repo.GetEducationLevelsAsync());
         }
+
+        /// <summary>
+        /// Get Marital statuses
+        /// </summary>
+        [HttpGet]
+        [Route("marital/statuses")]
+        [ProducesResponseType(typeof(IEnumerable<IMaritalStatus>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetMaritalStatusesAsync()
+        {
+            return Ok(await _repo.GetMaritalStatusesAsync());
+        }
+
+        /// <summary>
+        /// Get Residential statuses
+        /// </summary>
+        [HttpGet]
+        [Route("residential/statuses")]
+        [ProducesResponseType(typeof(IEnumerable<IResidentialStatus>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetResidentialStatusesAsync()
+        {
+            return Ok(await _repo.GetResidentialStatusesAsync());
+        }
+
+        /// <summary>
+        /// Get Household adults
+        /// </summary>
+        [HttpGet]
+        [Route("household/adults")]
+        [ProducesResponseType(typeof(IEnumerable<IHouseholdAdult>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetHouseholdAdultsAsync()
+        {
+            return Ok(await _repo.GetHouseholdAdultsAsync());
+        }
+
+        /// <summary>
+        /// Get Household children
+        /// </summary>
+        [HttpGet]
+        [Route("household/children")]
+        [ProducesResponseType(typeof(IEnumerable<IHouseholdChild>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetHouseholdChildrenAsync()
+        {
+            return Ok(await _repo.GetHouseholdChildrenAsync());
+        }
+
+        /// <summary>
+        /// Get User profile options
+        /// </summary>
+        [HttpGet]
+        [Route("profile/options")]
+        [ProducesResponseType(typeof(IUserProfileOptions), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetUserProfileOptionsAsync()
+        {
+            return Ok(await _repo.GetUserProfileOptionsAsync());
+        }
     }
 }
