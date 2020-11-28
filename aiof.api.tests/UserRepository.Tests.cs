@@ -434,6 +434,20 @@ namespace aiof.api.tests
             Assert.NotEmpty(userProfileOptions.Genders);
             Assert.NotEmpty(userProfileOptions.HouseholdAdults);
             Assert.NotEmpty(userProfileOptions.HouseholdChildren);
+
+            AssertIPublicKeyName(userProfileOptions.EducationLevels.FirstOrDefault() as IPublicKeyName);
+            AssertIPublicKeyName(userProfileOptions.MaritalStatuses.FirstOrDefault() as IPublicKeyName);
+            AssertIPublicKeyName(userProfileOptions.ResidentialStatuses.FirstOrDefault() as IPublicKeyName);
+            AssertIPublicKeyName(userProfileOptions.Genders.FirstOrDefault() as IPublicKeyName);
+            AssertIPublicKeyName(userProfileOptions.HouseholdAdults.FirstOrDefault() as IPublicKeyName);
+            AssertIPublicKeyName(userProfileOptions.HouseholdChildren.FirstOrDefault() as IPublicKeyName);
+        }
+
+        private void AssertIPublicKeyName(IPublicKeyName obj)
+        {
+            Assert.NotNull(obj);
+            Assert.NotNull(obj.Name);
+            Assert.NotEqual(Guid.Empty, obj.PublicKey);
         }
     }
 }
