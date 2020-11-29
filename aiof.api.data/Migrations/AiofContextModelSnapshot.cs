@@ -305,6 +305,10 @@ namespace aiof.api.data.Migrations
                         .HasColumnName("public_key")
                         .HasColumnType("uuid");
 
+                    b.Property<int>("Value")
+                        .HasColumnName("value")
+                        .HasColumnType("integer");
+
                     b.HasKey("Name");
 
                     b.ToTable("household_adult");
@@ -320,6 +324,10 @@ namespace aiof.api.data.Migrations
                     b.Property<Guid>("PublicKey")
                         .HasColumnName("public_key")
                         .HasColumnType("uuid");
+
+                    b.Property<int>("Value")
+                        .HasColumnName("value")
+                        .HasColumnType("integer");
 
                     b.HasKey("Name");
 

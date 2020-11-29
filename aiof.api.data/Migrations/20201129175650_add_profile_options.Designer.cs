@@ -10,8 +10,8 @@ using aiof.api.data;
 namespace aiof.api.data.Migrations
 {
     [DbContext(typeof(AiofContext))]
-    [Migration("20201128135303_add-user-profile-options")]
-    partial class adduserprofileoptions
+    [Migration("20201129175650_add_profile_options")]
+    partial class add_profile_options
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -307,6 +307,10 @@ namespace aiof.api.data.Migrations
                         .HasColumnName("public_key")
                         .HasColumnType("uuid");
 
+                    b.Property<int>("Value")
+                        .HasColumnName("value")
+                        .HasColumnType("integer");
+
                     b.HasKey("Name");
 
                     b.ToTable("household_adult");
@@ -322,6 +326,10 @@ namespace aiof.api.data.Migrations
                     b.Property<Guid>("PublicKey")
                         .HasColumnName("public_key")
                         .HasColumnType("uuid");
+
+                    b.Property<int>("Value")
+                        .HasColumnName("value")
+                        .HasColumnType("integer");
 
                     b.HasKey("Name");
 

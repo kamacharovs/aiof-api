@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace aiof.api.data.Migrations
 {
-    public partial class adduserprofileoptions : Migration
+    public partial class add_profile_options : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -24,7 +24,8 @@ namespace aiof.api.data.Migrations
                 columns: table => new
                 {
                     name = table.Column<string>(maxLength: 100, nullable: false),
-                    public_key = table.Column<Guid>(nullable: false)
+                    public_key = table.Column<Guid>(nullable: false),
+                    value = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -36,7 +37,8 @@ namespace aiof.api.data.Migrations
                 columns: table => new
                 {
                     name = table.Column<string>(maxLength: 100, nullable: false),
-                    public_key = table.Column<Guid>(nullable: false)
+                    public_key = table.Column<Guid>(nullable: false),
+                    value = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
