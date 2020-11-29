@@ -15,5 +15,8 @@ namespace aiof.api.data
 
         [Required]
         Guid PublicKey { get; set; }
+
+        [Required]
+        int Value { get; set; }
     }
 }

@@ -637,31 +637,33 @@ namespace aiof.api.data
             {
                 new HouseholdAdult
                 {
-                    Name = "1 adult"
+                    Name = "1 adult",
+                    Value = 1
                 },
                 new HouseholdAdult
                 {
-                    Name = "2 adults"
+                    Name = "2 adults",
+                    Value = 2
                 },
                 new HouseholdAdult
                 {
-                    Name = "3 adults"
+                    Name = "3 adults",
+                    Value = 3
                 },
                 new HouseholdAdult
                 {
-                    Name = "4 adults"
+                    Name = "4 adults",
+                    Value = 4
                 },
                 new HouseholdAdult
                 {
-                    Name = "5 adults"
+                    Name = "5 adults",
+                    Value = 5
                 },
                 new HouseholdAdult
                 {
-                    Name = "6 adults"
-                },
-                new HouseholdAdult
-                {
-                    Name = "6+ adults"
+                    Name = "6 adults",
+                    Value = 6
                 }
             };
         }
@@ -672,35 +674,38 @@ namespace aiof.api.data
             {
                 new HouseholdChild
                 {
-                    Name = "0 children"
+                    Name = "0 children",
+                    Value = 0
                 },
                 new HouseholdChild
                 {
-                    Name = "1 child"
+                    Name = "1 child",
+                    Value = 1
                 },
                 new HouseholdChild
                 {
-                    Name = "2 children"
+                    Name = "2 children",
+                    Value = 2
                 },
                 new HouseholdChild
                 {
-                    Name = "3 children"
+                    Name = "3 children",
+                    Value = 3
                 },
                 new HouseholdChild
                 {
-                    Name = "4 children"
+                    Name = "4 children",
+                    Value = 4
                 },
                 new HouseholdChild
                 {
-                    Name = "5 children"
+                    Name = "5 children",
+                    Value = 5
                 },
                 new HouseholdChild
                 {
-                    Name = "6 children"
-                },
-                new HouseholdChild
-                {
-                    Name = "6+ children"
+                    Name = "6 children",
+                    Value = 6
                 }
             };
         }

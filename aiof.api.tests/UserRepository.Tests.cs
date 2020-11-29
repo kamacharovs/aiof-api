@@ -397,6 +397,7 @@ namespace aiof.api.tests
             Assert.NotEmpty(hhAdults);
             Assert.NotNull(hhAdult);
             Assert.NotNull(hhAdult.Name);
+            Assert.True(hhAdult.Value >= 0);
             Assert.NotEqual(Guid.Empty, hhAdult.PublicKey);
         }
 
@@ -412,6 +413,7 @@ namespace aiof.api.tests
             Assert.NotEmpty(hhChildren);
             Assert.NotNull(hhChild);
             Assert.NotNull(hhChild.Name);
+            Assert.True(hhChild.Value >= 0);
             Assert.NotEqual(Guid.Empty, hhChild.PublicKey);
         }
 
