@@ -363,6 +363,7 @@ namespace aiof.api.data
 
                 e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.Value).HasSnakeCaseColumnName().IsRequired();
             });
 
             modelBuilder.Entity<HouseholdChild>(e =>
@@ -373,6 +374,7 @@ namespace aiof.api.data
 
                 e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.Value).HasSnakeCaseColumnName().IsRequired();
             });
         }
     }

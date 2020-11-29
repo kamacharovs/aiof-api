@@ -397,6 +397,7 @@ namespace aiof.api.tests
             Assert.NotEmpty(hhAdults);
             Assert.NotNull(hhAdult);
             Assert.NotNull(hhAdult.Name);
+            Assert.True(hhAdult.Value >= 0);
             Assert.NotEqual(Guid.Empty, hhAdult.PublicKey);
         }
 
@@ -412,6 +413,7 @@ namespace aiof.api.tests
             Assert.NotEmpty(hhChildren);
             Assert.NotNull(hhChild);
             Assert.NotNull(hhChild.Name);
+            Assert.True(hhChild.Value >= 0);
             Assert.NotEqual(Guid.Empty, hhChild.PublicKey);
         }
 
@@ -434,6 +436,20 @@ namespace aiof.api.tests
             Assert.NotEmpty(userProfileOptions.Genders);
             Assert.NotEmpty(userProfileOptions.HouseholdAdults);
             Assert.NotEmpty(userProfileOptions.HouseholdChildren);
+
+            AssertIPublicKeyName(userProfileOptions.EducationLevels.FirstOrDefault() as IPublicKeyName);
+            AssertIPublicKeyName(userProfileOptions.MaritalStatuses.FirstOrDefault() as IPublicKeyName);
+            AssertIPublicKeyName(userProfileOptions.ResidentialStatuses.FirstOrDefault() as IPublicKeyName);
+            AssertIPublicKeyName(userProfileOptions.Genders.FirstOrDefault() as IPublicKeyName);
+            AssertIPublicKeyName(userProfileOptions.HouseholdAdults.FirstOrDefault() as IPublicKeyName);
+            AssertIPublicKeyName(userProfileOptions.HouseholdChildren.FirstOrDefault() as IPublicKeyName);
+        }
+
+        private void AssertIPublicKeyName(IPublicKeyName obj)
+        {
+            Assert.NotNull(obj);
+            Assert.NotNull(obj.Name);
+            Assert.NotEqual(Guid.Empty, obj.PublicKey);
         }
     }
 }
