@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 namespace aiof.api.data
 {
     public class UsefulDocumentation : IUsefulDocumentation,
-        IPublicKeyId
+        IPublicKeyId, IPublicKeyName
     {
         [Required]
         public int Id { get; set; }

@@ -1110,6 +1110,39 @@ namespace aiof.api.data
 
             return toReturn;
         }
+
+        public IEnumerable<object[]> GetFakeUsefulDocumentationsData(
+            bool page = false,
+            bool category = false)
+        {
+            var fakeUsefulDocumentations = GetFakeUsefulDocumentations()
+                .ToArray();
+
+            var toReturn = new List<object[]>();
+
+            if (page)
+            {
+                foreach (var fakeUsefulDocumentationPage in fakeUsefulDocumentations.Select(x => x.Page).Distinct())
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeUsefulDocumentationPage
+                    });
+                }
+            }
+            else if (category)
+            {
+                foreach (var fakeUsefulDocumentationCategory in fakeUsefulDocumentations.Select(x => x.Category).Distinct())
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeUsefulDocumentationCategory
+                    });
+                }
+            }
+
+            return toReturn;
+        }
         #endregion
     }
 }

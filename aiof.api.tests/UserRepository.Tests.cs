@@ -8,7 +8,6 @@ using Xunit;
 
 using aiof.api.data;
 using aiof.api.services;
-using AutoMapper;
 
 namespace aiof.api.tests
 {
