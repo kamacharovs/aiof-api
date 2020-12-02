@@ -7,28 +7,27 @@ using System.ComponentModel.DataAnnotations;
 
 namespace aiof.api.data
 {
-    public class UsefulDocumentation : IUsefulDocumentation,
-        IPublicKeyId
+    public interface IUsefulDocumentation
     {
         [Required]
-        public int Id { get; set; }
+        int Id { get; set; }
 
         [Required]
-        public Guid PublicKey { get; set; } = Guid.NewGuid();
+        Guid PublicKey { get; set; }
 
         [Required]
         [MaxLength(100)]
-        public string Page { get; set; }
+        string Page { get; set; }
 
         [Required]
         [MaxLength(300)]
-        public string Name { get; set; }
+        string Name { get; set; }
 
         [Required]
         [MaxLength(500)]
-        public string Url { get; set; }
+        string Url { get; set; }
 
         [MaxLength(100)]
-        public string Category { get; set; }
+        string Category { get; set; }
     }
 }
