@@ -41,6 +41,7 @@ namespace aiof.api.tests
                 .AddScoped<IAssetRepository, AssetRepository>()
                 .AddScoped<IGoalRepository, GoalRepository>()
                 .AddScoped<ILiabilityRepository, LiabilityRepository>()
+                .AddScoped<IUtilityRepository, UtilityRepository>()
                 .AddScoped<IEnvConfiguration, EnvConfiguration>()
                 .AddScoped<FakeDataManager>()
                 .AddSingleton(GetMockedMetadataRepo());
@@ -260,6 +261,17 @@ namespace aiof.api.tests
         {
             return _Fake.GetFakeAccountsData(
                 userId: true);
+        }
+
+        public static IEnumerable<object[]> UsefulDocumentationPage()
+        {
+            return _Fake.GetFakeUsefulDocumentationsData(
+                page: true);
+        }
+        public static IEnumerable<object[]> UsefulDocumentationCategory()
+        {
+            return _Fake.GetFakeUsefulDocumentationsData(
+                category: true);
         }
 
         public static UserDto RandomUserDto()
