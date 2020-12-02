@@ -30,6 +30,7 @@ namespace aiof.api.data
         public virtual DbSet<Gender> Genders { get; set; }
         public virtual DbSet<HouseholdAdult> HouseholdAdults { get; set; }
         public virtual DbSet<HouseholdChild> HouseholdChildren { get; set; }
+        public virtual DbSet<UsefulDocumentation> UsefulDocumentations { get; set; }
 
         public AiofContext(DbContextOptions<AiofContext> options, ITenant tenant)
             : base(options)
@@ -363,6 +364,20 @@ namespace aiof.api.data
                 e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.Value).HasSnakeCaseColumnName().IsRequired();
+            });
+
+            modelBuilder.Entity<UsefulDocumentation>(e =>
+            {
+                e.ToTable(Keys.Entity.UsefulDocumentation);
+
+                e.HasKey(x => x.Id);
+
+                e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
+                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.Page).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
+                e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(300).IsRequired();
+                e.Property(x => x.Url).HasSnakeCaseColumnName().HasMaxLength(500).IsRequired();
+                e.Property(x => x.Category).HasSnakeCaseColumnName().HasMaxLength(100);
             });
         }
     }

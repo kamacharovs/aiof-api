@@ -73,6 +73,9 @@ namespace aiof.api.data
             _context.HouseholdChildren
                 .AddRange(GetFakeHouseholdChildren());
 
+            _context.UsefulDocumentations
+                .AddRange(GetFakeUsefulDocumentations());
+
             _context.SaveChanges();
         }
 
@@ -706,6 +709,29 @@ namespace aiof.api.data
                 {
                     Name = "6 children",
                     Value = 6
+                }
+            };
+        }
+
+        public IEnumerable<UsefulDocumentation> GetFakeUsefulDocumentations()
+        {
+            return new List<UsefulDocumentation>
+            {
+                new UsefulDocumentation
+                {
+                    Id = 1,
+                    Page = "finance",
+                    Name = "What is a financial asset?",
+                    Url = "http://google.com",
+                    Category = "financial asset"
+                },
+                new UsefulDocumentation
+                {
+                    Id = 2,
+                    Page = "finance",
+                    Name = "What is a financial liability?",
+                    Url = "http://google.com",
+                    Category = "financial liability"
                 }
             };
         }
