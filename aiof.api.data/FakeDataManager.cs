@@ -73,6 +73,9 @@ namespace aiof.api.data
             _context.HouseholdChildren
                 .AddRange(GetFakeHouseholdChildren());
 
+            _context.UsefulDocumentations
+                .AddRange(GetFakeUsefulDocumentations());
+
             _context.SaveChanges();
         }
 
@@ -710,6 +713,29 @@ namespace aiof.api.data
             };
         }
 
+        public IEnumerable<UsefulDocumentation> GetFakeUsefulDocumentations()
+        {
+            return new List<UsefulDocumentation>
+            {
+                new UsefulDocumentation
+                {
+                    Id = 1,
+                    Page = "finance",
+                    Name = "What is a financial asset?",
+                    Url = "http://google.com",
+                    Category = "financial asset"
+                },
+                new UsefulDocumentation
+                {
+                    Id = 2,
+                    Page = "finance",
+                    Name = "What is a financial liability?",
+                    Url = "http://google.com",
+                    Category = "financial liability"
+                }
+            };
+        }
+
 
         #region Unit Tests
         public IEnumerable<object[]> GetFakeUsersData(
@@ -1078,6 +1104,39 @@ namespace aiof.api.data
                     toReturn.Add(new object[]
                     {
                         fakeAccountUserId
+                    });
+                }
+            }
+
+            return toReturn;
+        }
+
+        public IEnumerable<object[]> GetFakeUsefulDocumentationsData(
+            bool page = false,
+            bool category = false)
+        {
+            var fakeUsefulDocumentations = GetFakeUsefulDocumentations()
+                .ToArray();
+
+            var toReturn = new List<object[]>();
+
+            if (page)
+            {
+                foreach (var fakeUsefulDocumentationPage in fakeUsefulDocumentations.Select(x => x.Page).Distinct())
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeUsefulDocumentationPage
+                    });
+                }
+            }
+            else if (category)
+            {
+                foreach (var fakeUsefulDocumentationCategory in fakeUsefulDocumentations.Select(x => x.Category).Distinct())
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeUsefulDocumentationCategory
                     });
                 }
             }

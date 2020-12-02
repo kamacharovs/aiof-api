@@ -41,6 +41,7 @@ namespace aiof.api.core
                 .AddScoped<IAssetRepository, AssetRepository>()
                 .AddScoped<IGoalRepository, GoalRepository>()
                 .AddScoped<ILiabilityRepository, LiabilityRepository>()
+                .AddScoped<IUtilityRepository, UtilityRepository>()
                 .AddScoped<IEnvConfiguration, EnvConfiguration>()
                 .AddScoped<ITenant, Tenant>()
                 .AddScoped<FakeDataManager>()
