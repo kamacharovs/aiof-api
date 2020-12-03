@@ -21,11 +21,22 @@ On a high level, the API is a CRUD application for `aiof` data. It is based on a
 
 Migrations are managed in the `ef-migrations` branch
 
+An example of creating a simple migration and generating the SQL script for it
+
 ```powershell
 dotnet ef migrations add {migration name} -p .\aiof.api.data
 dotnet ef migrations script -p .\aiof.api.data
 dotnet ef migrations script {migration name} -p .\aiof.api.data
 dotnet ef migrations remove
+```
+
+Additionally, below are more advanced `dotnet ef migrations` script. The last one is used to run a migration pointing to a specific database. This can be leveraged in pipeline builds
+
+```powershell
+dotnet tool update --global dotnet-ef --version 5.0.0
+dotnet ef database update -p .\aiof.api.data
+dotnet ef migrations list -p .\aiof.api.data
+dotnet ef database update -s .\aiof.api.core -p .\aiof.api.data --connection "host=127.0.0.1;database=aiof3;port=5432;username=postgres;password=postgres"
 ```
 
 ## How to run it
