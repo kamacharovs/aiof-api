@@ -44,11 +44,6 @@ namespace aiof.api.data
             Tenant = tenant ?? throw new ArgumentNullException(nameof(tenant));
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseNpgsql("host=127.0.0.1;database=aiof;port=5432;username=postgres;password=postgres");
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>(e =>
