@@ -43,8 +43,7 @@ namespace aiof.api.tests
                 .AddScoped<ILiabilityRepository, LiabilityRepository>()
                 .AddScoped<IUtilityRepository, UtilityRepository>()
                 .AddScoped<IEnvConfiguration, EnvConfiguration>()
-                .AddScoped<FakeDataManager>()
-                .AddSingleton(GetMockedMetadataRepo());
+                .AddScoped<FakeDataManager>();
             
             services.AddScoped<ITenant>(x => GetMockTenant());
             services.AddSingleton(new MapperConfiguration(x => { x.AddProfile(new AutoMappingProfileDto()); }).CreateMapper());
@@ -63,53 +62,6 @@ namespace aiof.api.tests
             services.AddHttpContextAccessor();
 
             return services;
-        }
-
-        public IAiofMetadataRepository GetMockedMetadataRepo()
-        {
-            var mockedRepo = new Mock<IAiofMetadataRepository>();
-
-            mockedRepo.Setup(x => x.GetFrequenciesAsync())
-                .ReturnsAsync(
-                    new List<string>
-                    {
-                        "daily",
-                        "monthly",
-                        "quarterly",
-                        "half-year",
-                        "yearly"
-                    });
-
-            mockedRepo.Setup(x => x.GetLoanPaymentsAsync(
-                It.IsAny<decimal>(),
-                It.IsAny<decimal>(),
-                It.IsAny<decimal>(),
-                It.IsAny<string>()
-            )).ReturnsAsync(
-                new List<LoanPayment>
-                {
-                    new LoanPayment
-                    {
-                        InitialBalance =  15000,
-                        EndingBalance = 14818.14M,
-                        Interest = 56.25M,
-                        Month = 1,
-                        Payment = 238.11M,
-                        Principal = 181.86M
-                    },
-                    new LoanPayment
-                    {
-                        InitialBalance =  14818.14M,
-                        EndingBalance = 14635.6M,
-                        Interest = 55.57M,
-                        Month = 2,
-                        Payment = 238.11M,
-                        Principal = 182.54M
-                    }
-                }
-            );
-
-            return mockedRepo.Object;
         }
 
         public ITenant GetMockTenant()

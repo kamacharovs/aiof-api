@@ -98,12 +98,4 @@ namespace aiof.api.core
                 .WriteAsync(problemjson);
         }
     }
-
-    public static partial class HttpStatusCodeExceptionMiddlewareExtensions
-    {
-        public static IApplicationBuilder UseAiofExceptionMiddleware(this IApplicationBuilder builder)
-        {
-            return builder.UseMiddleware<AiofExceptionMiddleware>();
-        }
-    }
 }

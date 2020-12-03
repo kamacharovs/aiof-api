@@ -45,71 +45,18 @@ namespace aiof.api.core
                 .AddScoped<IEnvConfiguration, EnvConfiguration>()
                 .AddScoped<ITenant, Tenant>()
                 .AddScoped<FakeDataManager>()
-                .AddAutoMapper(typeof(AutoMappingProfileDto).Assembly);
-
-            services.AddHttpClient<IAiofMetadataRepository, AiofMetadataRepository>(Keys.Metadata, x =>
-                {
-                    x.BaseAddress = new Uri(_config[Keys.MetadataBaseUrl]);
-                    x.DefaultRequestHeaders.Add(Keys.Accept, Keys.ApplicationJson);
-                })
-                .SetHandlerLifetime(TimeSpan.FromMinutes(5));
-
-            services.AddSingleton<AbstractValidator<AssetDto>, AssetDtoValidator>()
-                .AddSingleton<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>()
-                .AddSingleton<AbstractValidator<LiabilityType>, LiabilityTypeValidator>()
-                .AddSingleton<AbstractValidator<GoalDto>, GoalDtoValidator>()
-                .AddSingleton<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>()
-                .AddSingleton<AbstractValidator<AccountDto>, AccountDtoValidator>()
-                .AddSingleton<AbstractValidator<UserDto>, UserDtoValidator>();
+                .AddAutoMapper(typeof(AutoMappingProfileDto).Assembly)
+                .AddAiofFluentValidators();
 
             services.AddDbContext<AiofContext>(o => o.UseNpgsql(_config[Keys.DataPostgreSQL], o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
 
-            services.AddLogging();
-            services.AddApplicationInsightsTelemetry();
             services.AddHealthChecks();
             services.AddFeatureManagement();
-            services.AddHttpContextAccessor();
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(
-                Keys.Bearer,
-                x =>
-                {
-                    var rsa = RSA.Create();
-                    rsa.FromXmlString(_config[Keys.JwtPublicKey]);
-
-                    x.TokenValidationParameters = new TokenValidationParameters()
-                    {
-                        ValidateIssuer = true,
-                        ValidIssuer = _config[Keys.JwtIssuer],
-                        ValidateAudience = true,
-                        ValidAudience = _config[Keys.JwtAudience],
-                        ValidateIssuerSigningKey = true,
-                        ValidateLifetime = true,
-                        IssuerSigningKey = new RsaSecurityKey(rsa)
-                    };
-                });
-
-            services.AddSwaggerGen(x =>
-            {
-                x.SwaggerDoc(_config[Keys.OpenApiVersion], new OpenApiInfo
-                {
-                    Title = _config[Keys.OpenApiTitle],
-                    Version = _config[Keys.OpenApiVersion],
-                    Description = _config[Keys.OpenApiDescription],
-                    Contact = new OpenApiContact
-                    {
-                        Name = _config[Keys.OpenApiContactName],
-                        Email = _config[Keys.OpenApiContactEmail],
-                        Url = new Uri(_config[Keys.OpenApiContactUrl])
-                    },
-                    License = new OpenApiLicense
-                    {
-                        Name = _config[Keys.OpenApiLicenseName],
-                        Url = new Uri(_config[Keys.OpenApiLicenseUrl]),
-                    }
-                });
-                x.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
-            });
+            services.AddLogging()
+                .AddApplicationInsightsTelemetry()
+                .AddHttpContextAccessor()
+                .AddAiofAuthentication(_config)
+                .AddAiofSwaggerGen(_config);
 
             services.AddControllers();
             services.AddMvcCore()

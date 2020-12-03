@@ -65,12 +65,4 @@ namespace aiof.api.core
                 .WriteAsync(aiofProblemJson);
         }
     }
-
-    public static partial class HttpStatusCodeExceptionMiddlewareExtensions
-    {
-        public static IApplicationBuilder UseAiofUnauthorizedMiddleware(this IApplicationBuilder builder)
-        {
-            return builder.UseMiddleware<AiofUnauthorizedMiddleware>();
-        }
-    }
 }
