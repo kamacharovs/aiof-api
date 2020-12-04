@@ -42,6 +42,7 @@ namespace aiof.api.services
         {
             return await GetUsefulDocumentationQuery(asNoTracking)
                 .Where(x => x.Page == page)
+                .OrderBy(x => x.Id)
                 .ToListAsync();
         }
         public async Task<IEnumerable<IUsefulDocumentation>> GetUsefulDocumentationsByCategoryAsync(
@@ -50,6 +51,7 @@ namespace aiof.api.services
         {
             return await GetUsefulDocumentationQuery(asNoTracking)
                 .Where(x => x.Category == category)
+                .OrderBy(x => x.Id)
                 .ToListAsync();
         }
 
