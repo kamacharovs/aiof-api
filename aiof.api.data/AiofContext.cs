@@ -12,6 +12,7 @@ namespace aiof.api.data
 
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserProfile> UserProfiles { get; set; }
+        public virtual DbSet<UserDependent> UserDependents { get; set; }
         public virtual DbSet<Asset> Assets { get; set; }
         public virtual DbSet<Liability> Liabilities { get; set; }
         public virtual DbSet<Goal> Goals { get; set; }
@@ -109,6 +110,32 @@ namespace aiof.api.data
                 e.Property(x => x.HouseholdAdults).HasSnakeCaseColumnName();
                 e.Property(x => x.HouseholdChildren).HasSnakeCaseColumnName();
                 e.Property(x => x.RetirementContributionsPreTax).HasSnakeCaseColumnName();
+            });
+
+            modelBuilder.Entity<UserDependent>(e =>
+            {
+                e.ToTable(Keys.Entity.UserDependent);
+
+                e.HasKey(x => x.Id);
+
+                e.HasQueryFilter(x => x.UserId == Tenant.UserId);
+
+                e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
+                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.FirstName).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
+                e.Property(x => x.LastName).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
+                e.Property(x => x.Age).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.Email).HasSnakeCaseColumnName().HasMaxLength(200);
+                e.Property(x => x.AmountOfSupportProvided).HasSnakeCaseColumnName();
+                e.Property(x => x.UserRelationship).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
+                e.Property(x => x.UserId).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.Created).HasColumnType("timestamp").HasSnakeCaseColumnName().IsRequired();
+
+                e.HasOne(x => x.User)
+                    .WithMany()
+                    .HasForeignKey(x => x.UserId)
+                    .IsRequired()
+                    .OnDelete(DeleteBehavior.SetNull);
             });
 
             modelBuilder.Entity<Asset>(e =>

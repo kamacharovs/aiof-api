@@ -36,4 +36,17 @@ namespace aiof.api.data
         Rent,
         LiveWithParents
     }
+
+    public enum UserRelationship
+    {
+        Child,
+        Son,
+        Daughter,
+        Brother,
+        Sister,
+        Stepson,
+        Stepdaughter,
+        Stepbrother,
+        Stepsister,
+    }
 }

@@ -237,7 +237,6 @@ namespace aiof.api.services
         }
         #endregion
 
-
         #region Account
         private IQueryable<Account> GetAccountsQuery(bool asNoTracking = true)
         {
