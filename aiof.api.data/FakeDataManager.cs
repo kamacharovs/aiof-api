@@ -814,7 +814,17 @@ namespace aiof.api.data
             var fakeUserDependents = GetFakeUserDependents();
             var toReturn = new List<object[]>();
 
-            if (id)
+            if (id
+                && userId)
+            {
+                foreach (var fakeUserDependent in fakeUserDependents)
+                    toReturn.Add(new object[]
+                    {
+                        fakeUserDependent.Id,
+                        fakeUserDependent.UserId
+                    });
+            }
+            else if (id)
             {
                 foreach (var fakeUserDependentId in fakeUserDependents.Select(x => x.Id).Distinct())
                     toReturn.Add(new object[]

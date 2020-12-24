@@ -59,6 +59,36 @@ namespace aiof.api.tests
         }
 
         [Theory]
+        [MemberData(nameof(Helper.UserIdUserDependentId), MemberType = typeof(Helper))]
+        public async Task GetDependent_ById_IsSuccessful(
+            int id,
+            int userId)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
+
+            var dependent = await _repo.GetDependentAsync(id);
+
+            Assert.NotNull(dependent);
+            Assert.NotEqual(0, dependent.Id);
+            Assert.NotEqual(Guid.Empty, dependent.PublicKey);
+            Assert.NotNull(dependent.FirstName);
+            Assert.NotNull(dependent.LastName);
+            Assert.NotEqual(0, dependent.Age);
+            Assert.NotEqual(0, dependent.AmountOfSupportProvided);
+            Assert.NotNull(dependent.UserRelationship);
+            Assert.NotEqual(0, dependent.UserId);
+            Assert.NotEqual(DateTime.MinValue, dependent.Created);
+        }
+        [Theory]
+        [MemberData(nameof(Helper.UserIdUserDependentId), MemberType = typeof(Helper))]
+        public async Task GetDependent_ById_NotFound(
+            int id,
+            int userId)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
+            await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.GetDependentAsync(id * 100));
+        }
+        [Theory]
         [MemberData(nameof(Helper.UserIdWithDependents), MemberType = typeof(Helper))]
         public async Task GetDependentsAsync_IsSuccessful(int id)
         {
@@ -80,7 +110,6 @@ namespace aiof.api.tests
             Assert.NotEqual(0, dependent.UserId);
             Assert.NotEqual(DateTime.MinValue, dependent.Created);
         }
-
         [Theory]
         [InlineData(777)]
         [InlineData(888)]
@@ -94,6 +123,34 @@ namespace aiof.api.tests
 
             Assert.Empty(dependents);
             Assert.Null(dependent);
+        }
+        [Theory]
+        [MemberData(nameof(Helper.UsersId), MemberType = typeof(Helper))]
+        public async Task AddDependentAsync_IsSuccessful(int userId)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
+
+            var dependent = await _repo.AddDependentAsync(
+                new UserDependentDto
+                {
+                    FirstName = $"FirstName{userId}",
+                    LastName = $"Lastname{userId}",
+                    Age = 10,
+                    Email = null,
+                    AmountOfSupportProvided = 15000M,
+                    UserRelationship = UserRelationships.Child.ToString()
+                });
+
+            Assert.NotNull(dependent);
+            Assert.NotEqual(0, dependent.Id);
+            Assert.NotEqual(Guid.Empty, dependent.PublicKey);
+            Assert.NotNull(dependent.FirstName);
+            Assert.NotNull(dependent.LastName);
+            Assert.NotEqual(0, dependent.Age);
+            Assert.NotEqual(0, dependent.AmountOfSupportProvided);
+            Assert.NotNull(dependent.UserRelationship);
+            Assert.NotEqual(0, dependent.UserId);
+            Assert.NotEqual(DateTime.MinValue, dependent.Created);
         }
 
         [Theory]
