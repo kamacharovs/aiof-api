@@ -32,9 +32,6 @@ namespace aiof.api.data
         public virtual DbSet<HouseholdChild> HouseholdChildren { get; set; }
         public virtual DbSet<UsefulDocumentation> UsefulDocumentations { get; set; }
 
-        public AiofContext()
-        { }
-
         public AiofContext(DbContextOptions<AiofContext> options)
             : base(options)
         { }
