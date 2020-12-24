@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations;
 
 namespace aiof.api.data
@@ -43,5 +43,9 @@ namespace aiof.api.data
 
         [Required]
         DateTime Created { get; set; }
+
+        [JsonIgnore]
+        [Required]
+        bool IsDeleted { get; set; }
     }
 }

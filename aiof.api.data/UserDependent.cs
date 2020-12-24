@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations;
 
 namespace aiof.api.data
@@ -49,6 +49,10 @@ namespace aiof.api.data
 
         [Required]
         public DateTime Created { get; set; } = DateTime.UtcNow;
+
+        [JsonIgnore]
+        [Required]
+        public bool IsDeleted { get; set; } = false;
     }
 
     public class UserDependentDto
