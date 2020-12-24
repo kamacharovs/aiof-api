@@ -52,7 +52,7 @@ namespace aiof.api.core.Controllers
         [Route("{username}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetByUsernameAsync([FromRoute] string username)
+        public async Task<IActionResult> GetByUsernameAsync([FromRoute, Required] string username)
         {
             return Ok(await _repo.GetAsync(username));
         }
@@ -66,6 +66,18 @@ namespace aiof.api.core.Controllers
         public async Task<IActionResult> GetDependentsAsync()
         {
             return Ok(await _repo.GetDependentsAsync());
+        }
+
+        /// <summary>
+        /// Get User dependent by id
+        /// </summary>
+        [HttpGet]
+        [Route("dependent/{id}")]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IUserDependent), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetDependentAsync([FromRoute, Required] int id)
+        {
+            return Ok(await _repo.GetDependentAsync(id));
         }
 
         /// <summary>

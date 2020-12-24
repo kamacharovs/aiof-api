@@ -93,10 +93,12 @@ namespace aiof.api.services
                 .AnyAsync(x => x.Id == id);
         }
 
-        public async Task<IEnumerable<IUserDependent>> GetDependentsAsync()
+        public async Task<IUserDependent> GetDependentAsync(int id)
         {
             return await _context.UserDependents
-                .ToListAsync();
+                .Include(x => x.User)
+                .FirstOrDefaultAsync(x => x.Id == id)
+                ?? throw new AiofNotFoundException($"User dependent with id={id} was not found");
         }
         public async Task<IUserDependent> GetDependentAsync(UserDependentDto dto)
         {
@@ -107,6 +109,12 @@ namespace aiof.api.services
                     && x.Email == dto.Email
                     && x.AmountOfSupportProvided == dto.AmountOfSupportProvided
                     && x.UserRelationship == dto.UserRelationship);
+        }
+        public async Task<IEnumerable<IUserDependent>> GetDependentsAsync()
+        {
+            return await _context.UserDependents
+                .OrderBy(x => x.Id)
+                .ToListAsync();
         }
 
         public async Task<IUserProfile> GetProfileAsync(bool asNoTracking = true)
