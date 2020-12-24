@@ -808,14 +808,23 @@ namespace aiof.api.data
         }
 
         public IEnumerable<object[]> GetFakeUserDependentsData(
+            bool id = false,
             bool userId = false)
         {
             var fakeUserDependents = GetFakeUserDependents();
             var toReturn = new List<object[]>();
 
-            if (userId)
+            if (id)
             {
-                foreach (var fakeUserId in fakeUserDependents.Select(x => x.Id).Distinct())
+                foreach (var fakeUserDependentId in fakeUserDependents.Select(x => x.Id).Distinct())
+                    toReturn.Add(new object[]
+                    {
+                        fakeUserDependentId
+                    });
+            }
+            else if (userId)
+            {
+                foreach (var fakeUserId in fakeUserDependents.Select(x => x.UserId).Distinct())
                     toReturn.Add(new object[]
                     {
                         fakeUserId

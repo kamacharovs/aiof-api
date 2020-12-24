@@ -93,6 +93,18 @@ namespace aiof.api.core.Controllers
         }
 
         /// <summary>
+        /// Add User dependent
+        /// </summary>
+        [HttpPost]
+        [Route("dependent")]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IUserDependent), StatusCodes.Status201Created)]
+        public async Task<IActionResult> AddDependentAsync([FromBody, Required] UserDependentDto userDependentDto)
+        {
+            return Ok(await _repo.AddDependentAsync(userDependentDto));
+        }
+
+        /// <summary>
         /// Get User profile
         /// </summary>
         [HttpGet]

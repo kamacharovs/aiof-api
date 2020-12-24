@@ -106,12 +106,6 @@ namespace aiof.api.data
                 e.Property(x => x.UserId).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.Created).HasColumnType("timestamp").HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.IsDeleted).HasSnakeCaseColumnName().IsRequired();
-
-                e.HasOne(x => x.User)
-                    .WithMany()
-                    .HasForeignKey(x => x.UserId)
-                    .IsRequired()
-                    .OnDelete(DeleteBehavior.SetNull);
             });
 
             modelBuilder.Entity<UserProfile>(e =>
