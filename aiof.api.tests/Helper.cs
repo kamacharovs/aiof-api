@@ -54,7 +54,8 @@ namespace aiof.api.tests
                 .AddSingleton<AbstractValidator<GoalDto>, GoalDtoValidator>()
                 .AddSingleton<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>()
                 .AddSingleton<AbstractValidator<AccountDto>, AccountDtoValidator>()
-                .AddSingleton<AbstractValidator<UserDto>, UserDtoValidator>();
+                .AddSingleton<AbstractValidator<UserDto>, UserDtoValidator>()
+                .AddSingleton<AbstractValidator<UserDependentDto>, UserDependentDtoValidator>();
 
             services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 

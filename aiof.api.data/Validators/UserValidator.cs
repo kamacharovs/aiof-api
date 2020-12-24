@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 
 using FluentValidation;
+using FluentValidation.Validators;
 
 namespace aiof.api.data
 {
@@ -116,7 +117,7 @@ namespace aiof.api.data
                 .GreaterThan(0);
 
             RuleFor(x => x.Email)
-                .EmailAddress()
+                .EmailAddress(EmailValidationMode.AspNetCoreCompatible)
                 .MaximumLength(200)
                 .When(x => !string.IsNullOrWhiteSpace(x.Email));
 
