@@ -69,6 +69,7 @@ namespace aiof.api.data
         {
             public static string User = nameof(data.User).ToSnakeCase();
             public static string UserProfile = nameof(data.UserProfile).ToSnakeCase();
+            public static string UserDependent = nameof(data.UserDependent).ToSnakeCase();
             public static string Asset = nameof(data.Asset).ToSnakeCase();
             public static string Liability = nameof(data.Liability).ToSnakeCase();
             public static string Goal = nameof(data.Goal).ToSnakeCase();

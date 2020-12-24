@@ -30,7 +30,7 @@ namespace aiof.api.services
 
         public UserRepository(
             ILogger<UserRepository> logger,
-            IMapper mapper, 
+            IMapper mapper,
             AiofContext context,
             AbstractValidator<SubscriptionDto> subscriptionDtoValidator,
             AbstractValidator<AccountDto> accountDtoValidator)
@@ -93,11 +93,42 @@ namespace aiof.api.services
                 .AnyAsync(x => x.Id == id);
         }
 
+        public async Task<IEnumerable<IUserDependent>> GetDependentsAsync()
+        {
+            return await _context.UserDependents
+                .ToListAsync();
+        }
+        public async Task<IUserDependent> GetDependentAsync(UserDependentDto dto)
+        {
+            return await _context.UserDependents
+                .FirstOrDefaultAsync(x => x.FirstName == dto.FirstName
+                    && x.LastName == dto.LastName
+                    && x.Age == dto.Age
+                    && x.Email == dto.Email
+                    && x.AmountOfSupportProvided == dto.AmountOfSupportProvided
+                    && x.UserRelationship == dto.UserRelationship);
+        }
+
         public async Task<IUserProfile> GetProfileAsync(bool asNoTracking = true)
         {
             return await GetProfilesQuery(asNoTracking)
                 .FirstOrDefaultAsync()
                 ?? throw new AiofNotFoundException($"UserProfile for User with UserId={_context.Tenant.UserId} was not found");
+        }
+
+        public async Task<IUserDependent> UpsertDependentAsync(UserDependentDto userDependentDto)
+        {
+            var userDependentInDb = await GetDependentAsync(userDependentDto);
+            var dtoAsUserDependent = _mapper.Map<UserDependent>(userDependentDto);
+            var userDependent = _mapper.Map(dtoAsUserDependent, userDependentInDb);
+
+            _context.Update(userDependent);
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation("{Tenant} | ",
+                _tenant.Log);
+
+            return userDependentInDb;
         }
 
         public async Task<IUser> UpsertAsync(UserDto userDto)
@@ -169,7 +200,7 @@ namespace aiof.api.services
                 .FirstOrDefaultAsync(x => x.PublicKey == publicKey);
         }
         public async Task<ISubscription> GetSubscriptionAsync(
-            string name, 
+            string name,
             decimal? amount,
             bool asNoTracking = true)
         {
@@ -216,7 +247,7 @@ namespace aiof.api.services
         {
             var subscriptionInDb = await GetSubscriptionAsync(id, false);
             var subscription = _mapper.Map(subscriptionDto, subscriptionInDb as Subscription);
-            
+
             _context.Subscriptions
                 .Update(subscription);
 
@@ -236,7 +267,6 @@ namespace aiof.api.services
             await base.SoftDeleteAsync<Subscription>(id);
         }
         #endregion
-
 
         #region Account
         private IQueryable<Account> GetAccountsQuery(bool asNoTracking = true)
