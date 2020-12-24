@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using aiof.api.data;
@@ -9,9 +10,10 @@ using aiof.api.data;
 namespace aiof.api.data.Migrations
 {
     [DbContext(typeof(AiofContext))]
-    partial class AiofContextModelSnapshot : ModelSnapshot
+    [Migration("20201224140337_add_user_dependent")]
+    partial class add_user_dependent
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
