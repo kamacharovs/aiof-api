@@ -37,7 +37,7 @@ namespace aiof.api.data
         LiveWithParents
     }
 
-    public enum UserRelationship
+    public enum UserRelationships
     {
         Child,
         Son,

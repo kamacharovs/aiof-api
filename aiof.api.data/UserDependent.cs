@@ -35,7 +35,7 @@ namespace aiof.api.data
         public string Email { get; set; }
 
         [Required]
-        public float AmountOfSupportProvided { get; set; }
+        public decimal AmountOfSupportProvided { get; set; }
 
         [Required]
         [MaxLength(100)]
