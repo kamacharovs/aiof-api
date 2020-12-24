@@ -19,11 +19,11 @@ namespace aiof.api.data
             _context.Users
                 .AddRange(GetFakeUsers());
 
-            _context.UserProfiles
-                .AddRange(GetFakeUserProfiles());
-
             _context.UserDependents
                 .AddRange(GetFakeUserDependents());
+
+            _context.UserProfiles
+                .AddRange(GetFakeUserProfiles());
 
             _context.AssetTypes
                 .AddRange(GetFakeAssetTypes());
@@ -116,21 +116,6 @@ namespace aiof.api.data
             };
         }
 
-        public IEnumerable<UserProfile> GetFakeUserProfiles()
-        {
-            return new List<UserProfile>
-            {
-                new UserProfile
-                {
-                    Id = 1,
-                    UserId = 1,
-                    Gender = "Male",
-                    Occupation = "Sr. Software Engineer",
-                    OccupationIndustry = "IT"
-                }
-            };
-        }
-
         public IEnumerable<UserDependent> GetFakeUserDependents()
         {
             return new List<UserDependent>
@@ -156,6 +141,21 @@ namespace aiof.api.data
                     AmountOfSupportProvided = 12000M,
                     UserRelationship = UserRelationships.Son.ToString(),
                     UserId = 2
+                }
+            };
+        }
+
+        public IEnumerable<UserProfile> GetFakeUserProfiles()
+        {
+            return new List<UserProfile>
+            {
+                new UserProfile
+                {
+                    Id = 1,
+                    UserId = 1,
+                    Gender = "Male",
+                    Occupation = "Sr. Software Engineer",
+                    OccupationIndustry = "IT"
                 }
             };
         }
