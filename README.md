@@ -24,7 +24,7 @@ Migrations are managed in the `ef-migrations` branch
 An example of creating a simple migration and generating the SQL script for it
 
 ```powershell
-dotnet ef migrations add {migration name} -p .\aiof.api.data
+dotnet ef migrations add {migration name} -s .\aiof.api.core -p .\aiof.api.data
 dotnet ef migrations script -p .\aiof.api.data
 dotnet ef migrations script {migration name} -p .\aiof.api.data
 dotnet ef migrations remove
