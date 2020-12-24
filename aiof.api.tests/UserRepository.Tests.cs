@@ -81,7 +81,7 @@ namespace aiof.api.tests
         }
         [Theory]
         [MemberData(nameof(Helper.UserIdUserDependentId), MemberType = typeof(Helper))]
-        public async Task GetDependent_ById_NotFound(
+        public async Task GetDependentAsync_ById_NotFound(
             int id,
             int userId)
         {
@@ -151,6 +151,18 @@ namespace aiof.api.tests
             Assert.NotNull(dependent.UserRelationship);
             Assert.NotEqual(0, dependent.UserId);
             Assert.NotEqual(DateTime.MinValue, dependent.Created);
+        }
+        [Theory]
+        [MemberData(nameof(Helper.UserIdUserDependentId), MemberType = typeof(Helper))]
+        public async Task DeleteDependentAsync_ById_IsSuccessful(
+            int id,
+            int userId)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
+
+            await _repo.DeleteDependentAsync(id);
+
+            await Assert.ThrowsAnyAsync<AiofNotFoundException>(() => _repo.GetDependentAsync(id));
         }
 
         [Theory]

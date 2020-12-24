@@ -19,6 +19,7 @@ namespace aiof.api.services
         Task<IUser> UpsertAsync(UserDto userDto);
         Task<IUserDependent> AddDependentAsync(UserDependentDto userDependentDto);
         Task<IUserProfile> UpsertProfileAsync(UserProfileDto userProfileDto);
+        Task DeleteDependentAsync(int id);
         Task<ISubscription> GetSubscriptionAsync(
             int id,
             bool asNoTracking = true);

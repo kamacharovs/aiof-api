@@ -11,7 +11,7 @@ namespace aiof.api.data
     /// An IRS definition of dependents can be found <see href="https://www.irs.gov/help/ita/whom-may-i-claim-as-a-dependent">here</see>
     /// </summary>
     public class UserDependent : IUserDependent,
-        IPublicKeyId
+        IPublicKeyId, IIsDeleted
     {
         [Required]
         public int Id { get; set; }

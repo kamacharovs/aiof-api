@@ -189,6 +189,11 @@ namespace aiof.api.services
             return profile;
         }
 
+        public async Task DeleteDependentAsync(int id)
+        {
+            await base.SoftDeleteAsync<UserDependent>(id);
+        }
+
         #region Subscription
         private IQueryable<Subscription> GetSubscriptionsQuery(bool asNoTracking = true)
         {
