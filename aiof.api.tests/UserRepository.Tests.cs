@@ -59,6 +59,44 @@ namespace aiof.api.tests
         }
 
         [Theory]
+        [MemberData(nameof(Helper.UserIdWithDependents), MemberType = typeof(Helper))]
+        public async Task GetDependentsAsync_IsSuccessful(int id)
+        {
+            var _repo = new ServiceHelper() { UserId = id }.GetRequiredService<IUserRepository>();
+
+            var dependents = await _repo.GetDependentsAsync();
+            var dependent = dependents.FirstOrDefault();
+
+            Assert.NotNull(dependents);
+            Assert.NotEmpty(dependents);
+            Assert.NotNull(dependent);
+            Assert.NotEqual(0, dependent.Id);
+            Assert.NotEqual(Guid.Empty, dependent.PublicKey);
+            Assert.NotNull(dependent.FirstName);
+            Assert.NotNull(dependent.LastName);
+            Assert.NotEqual(0, dependent.Age);
+            Assert.NotEqual(0, dependent.AmountOfSupportProvided);
+            Assert.NotNull(dependent.UserRelationship);
+            Assert.NotEqual(0, dependent.UserId);
+            Assert.NotEqual(DateTime.MinValue, dependent.Created);
+        }
+
+        [Theory]
+        [InlineData(777)]
+        [InlineData(888)]
+        [InlineData(999)]
+        public async Task GetDependentsAsync_IsEmpty(int id)
+        {
+            var _repo = new ServiceHelper() { UserId = id }.GetRequiredService<IUserRepository>();
+
+            var dependents = await _repo.GetDependentsAsync();
+            var dependent = dependents.FirstOrDefault();
+
+            Assert.Empty(dependents);
+            Assert.Null(dependent);
+        }
+
+        [Theory]
         [MemberData(nameof(Helper.UserProfilesId), MemberType = typeof(Helper))]
         public async Task GetUserProfileAsync_IsSuccessful(int userId)
         {

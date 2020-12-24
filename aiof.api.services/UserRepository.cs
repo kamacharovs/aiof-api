@@ -93,6 +93,12 @@ namespace aiof.api.services
                 .AnyAsync(x => x.Id == id);
         }
 
+        public async Task<IEnumerable<IUserDependent>> GetDependentsAsync()
+        {
+            return await _context.UserDependents
+                .ToListAsync();
+        }
+
         public async Task<IUserProfile> GetProfileAsync(bool asNoTracking = true)
         {
             return await GetProfilesQuery(asNoTracking)

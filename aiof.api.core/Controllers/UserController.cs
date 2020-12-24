@@ -58,6 +58,17 @@ namespace aiof.api.core.Controllers
         }
 
         /// <summary>
+        /// Get User dependents
+        /// </summary>
+        [HttpGet]
+        [Route("dependents")]
+        [ProducesResponseType(typeof(IEnumerable<IUserDependent>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetDependentsAsync()
+        {
+            return Ok(await _repo.GetDependentsAsync());
+        }
+
+        /// <summary>
         /// Upsert User
         /// </summary>
         [HttpPut]

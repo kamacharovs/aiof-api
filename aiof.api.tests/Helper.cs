@@ -99,6 +99,11 @@ namespace aiof.api.tests
                 id: true,
                 username: true);
         }
+        public static IEnumerable<object[]> UserIdWithDependents()
+        {
+            return _Fake.GetFakeUserDependentsData(
+                userId: true);
+        }
         public static IEnumerable<object[]> UserProfilesId()
         {
             return _Fake.GetFakeUserProfilesData(

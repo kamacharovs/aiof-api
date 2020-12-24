@@ -10,8 +10,8 @@ namespace aiof.api.data
     /// An example of this can be a son, daughter, stepson, stepdaughter, stepborther, etc.
     /// An IRS definition of dependents can be found <see href="https://www.irs.gov/help/ita/whom-may-i-claim-as-a-dependent">here</see>
     /// </summary>
-    public class UserDependent
-        : IPublicKeyId
+    public class UserDependent : IUserDependent,
+        IPublicKeyId
     {
         [Required]
         public int Id { get; set; }
