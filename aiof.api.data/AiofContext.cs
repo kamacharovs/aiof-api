@@ -11,8 +11,8 @@ namespace aiof.api.data
         public readonly ITenant Tenant;
 
         public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<UserProfile> UserProfiles { get; set; }
         public virtual DbSet<UserDependent> UserDependents { get; set; }
+        public virtual DbSet<UserProfile> UserProfiles { get; set; }
         public virtual DbSet<Asset> Assets { get; set; }
         public virtual DbSet<Liability> Liabilities { get; set; }
         public virtual DbSet<Goal> Goals { get; set; }
@@ -92,7 +92,8 @@ namespace aiof.api.data
 
                 e.HasKey(x => x.Id);
 
-                e.HasQueryFilter(x => x.UserId == Tenant.UserId);
+                e.HasQueryFilter(x => x.UserId == Tenant.UserId
+                    && !x.IsDeleted);
 
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
