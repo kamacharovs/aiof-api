@@ -194,10 +194,12 @@ namespace aiof.api.services
             int userDependentId,
             UserDependentDto userDependentDto)
         {
-            var userDependentInDb = await GetDependentAsync(userDependentId);
+            var userDependentInDb = await GetDependentAsync(userDependentId) as UserDependent;
             var userDependent = _mapper.Map(userDependentDto, userDependentInDb);
 
-            _context.Update(userDependent);
+            _context.UserDependents
+                .Update(userDependent);
+
             await _context.SaveChangesAsync();
 
             _logger.LogInformation("{Tenant} | Updated UserDependent={UserDependent}",
@@ -264,7 +266,7 @@ namespace aiof.api.services
 
             if (await GetSubscriptionAsync(name, amount) != null)
                 throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"{nameof(Subscription)} with Name='{name}' and Amount={amount} already exists");
+                    $"{nameof(Subscription)} with Name={name} and Amount={amount} already exists");
 
             var subscription = _mapper.Map<Subscription>(subscriptionDto);
 

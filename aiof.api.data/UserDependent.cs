@@ -57,9 +57,9 @@ namespace aiof.api.data
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public int Age { get; set; }
+        public int? Age { get; set; }
         public string Email { get; set; }
-        public decimal AmountOfSupportProvided { get; set; }
+        public decimal? AmountOfSupportProvided { get; set; }
         public string UserRelationship { get; set; }
     }
 }
