@@ -22,6 +22,8 @@ namespace aiof.api.data
             CreateMap<UserDto, User>()
                 .ForAllMembers(x => x.Condition((source, destination, member) => member != null));
 
+            CreateMap<UserDependent, UserDependent>()
+                .ForAllMembers(x => x.Condition((source, destination, member) => member != null));
             CreateMap<UserDependentDto, UserDependent>()
                 .ForMember(x => x.Age, o => o.MapFrom(s => s.Age))
                 .ForAllOtherMembers(x => x.Condition((source, destination, member) => member != null));

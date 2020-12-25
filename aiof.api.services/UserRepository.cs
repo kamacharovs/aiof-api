@@ -96,29 +96,6 @@ namespace aiof.api.services
                 .AnyAsync(x => x.Id == id);
         }
 
-        public async Task<IUserDependent> GetDependentAsync(int id)
-        {
-            return await _context.UserDependents
-                .FirstOrDefaultAsync(x => x.Id == id)
-                ?? throw new AiofNotFoundException($"User dependent with id={id} was not found");
-        }
-        public async Task<IUserDependent> GetDependentAsync(UserDependentDto dto)
-        {
-            return await _context.UserDependents
-                .FirstOrDefaultAsync(x => x.FirstName == dto.FirstName
-                    && x.LastName == dto.LastName
-                    && x.Age == dto.Age
-                    && x.Email == dto.Email
-                    && x.AmountOfSupportProvided == dto.AmountOfSupportProvided
-                    && x.UserRelationship == dto.UserRelationship);
-        }
-        public async Task<IEnumerable<IUserDependent>> GetDependentsAsync()
-        {
-            return await _context.UserDependents
-                .OrderBy(x => x.Id)
-                .ToListAsync();
-        }
-
         public async Task<IUserProfile> GetProfileAsync(bool asNoTracking = true)
         {
             return await GetProfilesQuery(asNoTracking)
@@ -140,28 +117,6 @@ namespace aiof.api.services
                 userDto.ToString());
 
             return await GetAsync();
-        }
-
-        public async Task<IUserDependent> AddDependentAsync(UserDependentDto userDependentDto)
-        {
-            await _dependentDtoValidator.ValidateAndThrowAsync(userDependentDto);
-
-            if (await GetDependentAsync(userDependentDto) != null)
-                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"User dependent already exists");
-
-            var dependent = _mapper.Map<UserDependent>(userDependentDto);
-
-            dependent.UserId = _tenant.UserId;
-
-            await _context.UserDependents.AddAsync(dependent);
-            await _context.SaveChangesAsync();
-
-            _logger.LogInformation("{Tenant} | Added UserDependent={UserDependent}",
-                _tenant.Log,
-                JsonSerializer.Serialize(dependent));
-
-            return dependent;
         }
 
         public async Task<IUserProfile> UpsertProfileAsync(UserProfileDto userProfileDto)
@@ -189,10 +144,74 @@ namespace aiof.api.services
             return profile;
         }
 
+        #region Dependent
+        public async Task<IUserDependent> GetDependentAsync(int id)
+        {
+            return await _context.UserDependents
+                .FirstOrDefaultAsync(x => x.Id == id)
+                ?? throw new AiofNotFoundException($"User dependent with id={id} was not found");
+        }
+        public async Task<IUserDependent> GetDependentAsync(UserDependentDto dto)
+        {
+            return await _context.UserDependents
+                .FirstOrDefaultAsync(x => x.FirstName == dto.FirstName
+                    && x.LastName == dto.LastName
+                    && x.Age == dto.Age
+                    && x.Email == dto.Email
+                    && x.AmountOfSupportProvided == dto.AmountOfSupportProvided
+                    && x.UserRelationship == dto.UserRelationship);
+        }
+        public async Task<IEnumerable<IUserDependent>> GetDependentsAsync()
+        {
+            return await _context.UserDependents
+                .OrderBy(x => x.Id)
+                .ToListAsync();
+        }
+
+        public async Task<IUserDependent> AddDependentAsync(UserDependentDto userDependentDto)
+        {
+            await _dependentDtoValidator.ValidateAndThrowAsync(userDependentDto);
+
+            if (await GetDependentAsync(userDependentDto) != null)
+                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
+                    $"User dependent already exists");
+
+            var dependent = _mapper.Map<UserDependent>(userDependentDto);
+
+            dependent.UserId = _tenant.UserId;
+
+            await _context.UserDependents.AddAsync(dependent);
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation("{Tenant} | Added UserDependent={UserDependent}",
+                _tenant.Log,
+                JsonSerializer.Serialize(dependent));
+
+            return dependent;
+        }
+
+        public async Task<IUserDependent> UpdateDependentAsync(
+            int userDependentId,
+            UserDependentDto userDependentDto)
+        {
+            var userDependentInDb = await GetDependentAsync(userDependentId);
+            var userDependent = _mapper.Map(userDependentDto, userDependentInDb);
+
+            _context.Update(userDependent);
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation("{Tenant} | Updated UserDependent={UserDependent}",
+                _tenant.Log,
+                JsonSerializer.Serialize(userDependent));
+
+            return userDependentInDb;
+        }
+
         public async Task DeleteDependentAsync(int id)
         {
             await base.SoftDeleteAsync<UserDependent>(id);
         }
+        #endregion
 
         #region Subscription
         private IQueryable<Subscription> GetSubscriptionsQuery(bool asNoTracking = true)
