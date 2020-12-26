@@ -168,6 +168,36 @@ namespace aiof.api.tests
         }
 
         [Theory]
+        [MemberData(nameof(Helper.UsersId), MemberType = typeof(Helper))]
+        public async Task GetDependentAsync_ByDto_IsSuccessful(int userId)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
+
+            var dependentDto = new UserDependentDto
+            {
+                FirstName = $"FirstName{userId}",
+                LastName = $"Lastname{userId}",
+                Age = 10,
+                Email = null,
+                AmountOfSupportProvided = 15000M,
+                UserRelationship = UserRelationships.Child.ToString()
+            };
+            await _repo.AddDependentAsync(dependentDto);
+            var dependent = await _repo.GetDependentAsync(dependentDto);
+
+            Assert.NotNull(dependent);
+            Assert.NotEqual(0, dependent.Id);
+            Assert.NotEqual(Guid.Empty, dependent.PublicKey);
+            Assert.NotNull(dependent.FirstName);
+            Assert.NotNull(dependent.LastName);
+            Assert.NotEqual(0, dependent.Age);
+            Assert.NotEqual(0, dependent.AmountOfSupportProvided);
+            Assert.NotNull(dependent.UserRelationship);
+            Assert.NotEqual(0, dependent.UserId);
+            Assert.NotEqual(DateTime.MinValue, dependent.Created);
+        }
+
+        [Theory]
         [MemberData(nameof(Helper.UserIdWithDependents), MemberType = typeof(Helper))]
         public async Task GetDependentsAsync_IsSuccessful(int id)
         {
