@@ -323,7 +323,6 @@ namespace aiof.api.tests
             await Assert.ThrowsAnyAsync<AiofNotFoundException>(() => _repo.DeleteDependentAsync(id * 100));
         }
 
-
         [Theory]
         [MemberData(nameof(Helper.SubscriptionsId), MemberType = typeof(Helper))]
         public async Task GetSubscsriptionAsync_IsSuccessful(int userId, int id)

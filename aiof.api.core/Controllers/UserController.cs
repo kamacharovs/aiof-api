@@ -58,29 +58,6 @@ namespace aiof.api.core.Controllers
         }
 
         /// <summary>
-        /// Get User dependents
-        /// </summary>
-        [HttpGet]
-        [Route("dependents")]
-        [ProducesResponseType(typeof(IEnumerable<IUserDependent>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetDependentsAsync()
-        {
-            return Ok(await _repo.GetDependentsAsync());
-        }
-
-        /// <summary>
-        /// Get User dependent by id
-        /// </summary>
-        [HttpGet]
-        [Route("dependent/{id}")]
-        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(IUserDependent), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetDependentAsync([FromRoute, Required] int id)
-        {
-            return Ok(await _repo.GetDependentAsync(id));
-        }
-
-        /// <summary>
         /// Upsert User
         /// </summary>
         [HttpPut]
@@ -93,8 +70,34 @@ namespace aiof.api.core.Controllers
         }
 
         /// <summary>
+        /// Get User dependents
+        /// </summary>
+        [FeatureGate(FeatureFlags.UserDependent)]
+        [HttpGet]
+        [Route("dependents")]
+        [ProducesResponseType(typeof(IEnumerable<IUserDependent>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetDependentsAsync()
+        {
+            return Ok(await _repo.GetDependentsAsync());
+        }
+
+        /// <summary>
+        /// Get User dependent by id
+        /// </summary>
+        [FeatureGate(FeatureFlags.UserDependent)]
+        [HttpGet]
+        [Route("dependent/{id}")]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IUserDependent), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetDependentAsync([FromRoute, Required] int id)
+        {
+            return Ok(await _repo.GetDependentAsync(id));
+        }
+
+        /// <summary>
         /// Add User dependent
         /// </summary>
+        [FeatureGate(FeatureFlags.UserDependent)]
         [HttpPost]
         [Route("dependent")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
@@ -102,6 +105,20 @@ namespace aiof.api.core.Controllers
         public async Task<IActionResult> AddDependentAsync([FromBody, Required] UserDependentDto userDependentDto)
         {
             return Ok(await _repo.AddDependentAsync(userDependentDto));
+        }
+
+        /// <summary>
+        /// Delete User dependent by id
+        /// </summary>
+        [FeatureGate(FeatureFlags.UserDependent)]
+        [HttpDelete]
+        [Route("dependent/{id}")]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IUserDependent), StatusCodes.Status200OK)]
+        public async Task<IActionResult> DeleteDependentAsync([FromRoute, Required] int id)
+        {
+            await _repo.DeleteDependentAsync(id);
+            return Ok();
         }
 
         /// <summary>
