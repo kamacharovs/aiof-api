@@ -285,6 +285,22 @@ namespace aiof.api.tests
 
         [Theory]
         [MemberData(nameof(Helper.UserIdUserDependentId), MemberType = typeof(Helper))]
+        public async Task UpdateDependentAsync_NotFound(
+            int userId,
+            int userDependentId)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
+
+            await Assert.ThrowsAsync<AiofNotFoundException>(() => 
+            _repo.UpdateDependentAsync(
+                userDependentId * 100, new UserDependentDto
+                {
+                    LastName = "Smith"
+                }));
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.UserIdUserDependentId), MemberType = typeof(Helper))]
         public async Task DeleteDependentAsync_ById_IsSuccessful(
             int id,
             int userId)
@@ -294,6 +310,17 @@ namespace aiof.api.tests
             await _repo.DeleteDependentAsync(id);
 
             await Assert.ThrowsAnyAsync<AiofNotFoundException>(() => _repo.GetDependentAsync(id));
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.UserIdUserDependentId), MemberType = typeof(Helper))]
+        public async Task DeleteDependentAsync_ById_NotFound(
+            int id,
+            int userId)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
+
+            await Assert.ThrowsAnyAsync<AiofNotFoundException>(() => _repo.DeleteDependentAsync(id * 100));
         }
 
 
