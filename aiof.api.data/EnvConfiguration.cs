@@ -39,6 +39,7 @@ namespace aiof.api.data
         Asset,
         Goal,
         Liability,
-        Account
+        Account,
+        UserDependent
     }
 }

@@ -54,7 +54,8 @@ namespace aiof.api.tests
                 .AddSingleton<AbstractValidator<GoalDto>, GoalDtoValidator>()
                 .AddSingleton<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>()
                 .AddSingleton<AbstractValidator<AccountDto>, AccountDtoValidator>()
-                .AddSingleton<AbstractValidator<UserDto>, UserDtoValidator>();
+                .AddSingleton<AbstractValidator<UserDto>, UserDtoValidator>()
+                .AddSingleton<AbstractValidator<UserDependentDto>, UserDependentDtoValidator>();
 
             services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
@@ -98,6 +99,17 @@ namespace aiof.api.tests
             return _Fake.GetFakeUsersData(
                 id: true,
                 username: true);
+        }
+        public static IEnumerable<object[]> UserIdWithDependents()
+        {
+            return _Fake.GetFakeUserDependentsData(
+                userId: true);
+        }
+        public static IEnumerable<object[]> UserIdUserDependentId()
+        {
+            return _Fake.GetFakeUserDependentsData(
+                id: true,
+                userId: true);
         }
         public static IEnumerable<object[]> UserProfilesId()
         {

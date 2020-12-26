@@ -22,10 +22,10 @@ On a high level, the API is a CRUD application for `aiof` data. It is based on a
 Migrations are managed in the `ef-migrations` branch
 
 ```powershell
-dotnet ef migrations add {migration name} -p .\aiof.api.data
+dotnet ef migrations add {migration name} -s .\aiof.api.core -p .\aiof.api.data
 dotnet ef migrations script -p .\aiof.api.data
 dotnet ef migrations script {migration name} -p .\aiof.api.data
-dotnet ef migrations remove
+dotnet ef migrations remove -s .\aiof.api.core -p .\aiof.api.data
 ```
 
 ## How to run it

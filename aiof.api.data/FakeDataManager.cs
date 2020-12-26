@@ -19,6 +19,9 @@ namespace aiof.api.data
             _context.Users
                 .AddRange(GetFakeUsers());
 
+            _context.UserDependents
+                .AddRange(GetFakeUserDependents());
+
             _context.UserProfiles
                 .AddRange(GetFakeUserProfiles());
 
@@ -109,6 +112,35 @@ namespace aiof.api.data
                     LastName = "Best",
                     Email = "george.best@auth.com",
                     Username = "gbest"
+                }
+            };
+        }
+
+        public IEnumerable<UserDependent> GetFakeUserDependents()
+        {
+            return new List<UserDependent>
+            {
+                new UserDependent
+                {
+                    Id = 1,
+                    FirstName = "Zima",
+                    LastName = "Kamacharov",
+                    Age = 3,
+                    Email = "zima.kamacharov@aiof.com",
+                    AmountOfSupportProvided = 1500M,
+                    UserRelationship = UserRelationships.Child.ToString(),
+                    UserId = 1
+                },
+                new UserDependent
+                {
+                    Id = 2,
+                    FirstName = "Child",
+                    LastName = "Childlastname",
+                    Age = 12,
+                    Email = null,
+                    AmountOfSupportProvided = 12000M,
+                    UserRelationship = UserRelationships.Son.ToString(),
+                    UserId = 2
                 }
             };
         }
@@ -769,6 +801,43 @@ namespace aiof.api.data
                     toReturn.Add(new object[] 
                     { 
                         fakeUserUsername
+                    });
+            }
+
+            return toReturn;
+        }
+
+        public IEnumerable<object[]> GetFakeUserDependentsData(
+            bool id = false,
+            bool userId = false)
+        {
+            var fakeUserDependents = GetFakeUserDependents();
+            var toReturn = new List<object[]>();
+
+            if (id
+                && userId)
+            {
+                foreach (var fakeUserDependent in fakeUserDependents)
+                    toReturn.Add(new object[]
+                    {
+                        fakeUserDependent.Id,
+                        fakeUserDependent.UserId
+                    });
+            }
+            else if (id)
+            {
+                foreach (var fakeUserDependentId in fakeUserDependents.Select(x => x.Id).Distinct())
+                    toReturn.Add(new object[]
+                    {
+                        fakeUserDependentId
+                    });
+            }
+            else if (userId)
+            {
+                foreach (var fakeUserId in fakeUserDependents.Select(x => x.UserId).Distinct())
+                    toReturn.Add(new object[]
+                    {
+                        fakeUserId
                     });
             }
 
