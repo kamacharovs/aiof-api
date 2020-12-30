@@ -21,13 +21,6 @@ namespace aiof.api.data
             _featureManager = featureManager ?? throw new ArgumentNullException(nameof(featureManager));
         }
 
-        public string DataPostgreSQL => _config[Keys.DataPostgreSQL] ?? throw new KeyNotFoundException();
-
-        public int PollyDefaultRetry => int.Parse(_config[Keys.PollyDefaultRetry] ?? throw new KeyNotFoundException());
-
-        public string MetadataBaseUrl => _config[Keys.MetadataBaseUrl] ?? throw new KeyNotFoundException();
-        public string MetadataDefaultFrequency => _config[Keys.MetadataDefaultFrequency] ?? throw new KeyNotFoundException();
-
         public async Task<bool> IsEnabledAsync(FeatureFlags featureFlag)
         {
             return await _featureManager.IsEnabledAsync(nameof(featureFlag));
