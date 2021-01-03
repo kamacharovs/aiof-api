@@ -468,82 +468,82 @@ namespace aiof.api.data
                 new AccountType
                 {
                     Name = "401(k)",
-                    Type = "retirement"
+                    Type = AccountTypes.Retirement.ToString()
                 },
                 new AccountType
                 {
                     Name = "401(a)",
-                    Type = "retirement"
+                    Type = AccountTypes.Retirement.ToString()
                 },
                 new AccountType
                 {
                     Name = "401(b)",
-                    Type = "retirement"
+                    Type = AccountTypes.Retirement.ToString()
                 },
                 new AccountType
                 {
                     Name = "457",
-                    Type = "taxable"
+                    Type = AccountTypes.Taxable.ToString()
                 },
                 new AccountType
                 {
                     Name = "IRA",
-                    Type = "retirement"
+                    Type = AccountTypes.Retirement.ToString()
                 },
                 new AccountType
                 {
                     Name = "Roth IRA",
-                    Type = "retirement"
+                    Type = AccountTypes.Retirement.ToString()
                 },
                 new AccountType
                 {
                     Name = "Brokerage",
-                    Type = "taxable"
+                    Type = AccountTypes.Taxable.ToString()
                 },
                 new AccountType
                 {
                     Name = "Checking/Savings",
-                    Type = "taxable"
+                    Type = AccountTypes.Taxable.ToString()
                 },
                 new AccountType
                 {
                     Name = "Health Savings Account",
-                    Type = "taxable"
+                    Type = AccountTypes.Taxable.ToString()
                 },
                 new AccountType
                 {
                     Name = "529 Plan",
-                    Type = "taxable"
+                    Type = AccountTypes.Taxable.ToString()
                 },
                 new AccountType
                 {
                     Name = "SEP IRA",
-                    Type = "retirement"
+                    Type = AccountTypes.Retirement.ToString()
                 },
                 new AccountType
                 {
                     Name = "Simple IRA",
-                    Type = "retirement"
+                    Type = AccountTypes.Retirement.ToString()
                 },
                 new AccountType
                 {
                     Name = "Taxable",
-                    Type = "taxable"
+                    Type = AccountTypes.Taxable.ToString()
                 },
                 new AccountType
                 {
                     Name = "Tax-Deferred",
-                    Type = "retirement"
+                    Type = AccountTypes.Retirement.ToString()
                 },
                 new AccountType
                 {
                     Name = "Self Employed Plan",
-                    Type = "taxable"
+                    Type = AccountTypes.Taxable.ToString()
                 },
                 new AccountType
                 {
                     Name = "UGMA/UTMA",
-                    Type = "taxable"
+                    Type = AccountTypes.Taxable.ToString()
                 }
             };
         }
