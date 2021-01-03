@@ -455,7 +455,7 @@ namespace aiof.api.data
                     Id = 1,
                     Name = "BfA bank acount",
                     Description = "Bank Of Amanerica bank acount",
-                    TypeName = "bank",
+                    TypeName = "Checking/Savings",
                     UserId = 1
                 }
             };

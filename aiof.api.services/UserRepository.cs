@@ -315,6 +315,7 @@ namespace aiof.api.services
         private IQueryable<Account> GetAccountsQuery(bool asNoTracking = true)
         {
             var query = _context.Accounts
+                .Include(x => x.Type)
                 .AsQueryable();
 
             return asNoTracking

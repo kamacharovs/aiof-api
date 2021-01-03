@@ -297,6 +297,12 @@ namespace aiof.api.data
                 e.Property(x => x.TypeName).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
                 e.Property(x => x.UserId).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.IsDeleted).HasSnakeCaseColumnName().IsRequired();
+
+                e.HasOne(x => x.Type)
+                    .WithMany()
+                    .HasForeignKey(x => x.TypeName)
+                    .IsRequired()
+                    .OnDelete(DeleteBehavior.SetNull);
             });
 
             modelBuilder.Entity<AccountType>(e =>
