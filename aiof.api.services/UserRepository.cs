@@ -53,6 +53,7 @@ namespace aiof.api.services
         {
             var usersQuery = _context.Users
                 .Include(x => x.Profile)
+                .Include(x => x.Dependents)
                 .Include(x => x.Assets)
                 .Include(x => x.Goals)
                 .Include(x => x.Liabilities)
