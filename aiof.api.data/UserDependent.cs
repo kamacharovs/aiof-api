@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations;
 
@@ -11,7 +12,7 @@ namespace aiof.api.data
     /// An IRS definition of dependents can be found <see href="https://www.irs.gov/help/ita/whom-may-i-claim-as-a-dependent">here</see>
     /// </summary>
     public class UserDependent : IUserDependent,
-        IPublicKeyId
+        IPublicKeyId, IIsDeleted
     {
         [Required]
         public int Id { get; set; }
@@ -42,9 +43,6 @@ namespace aiof.api.data
         public string UserRelationship { get; set; }
 
         [Required]
-        public User User { get; set; }
-
-        [Required]
         public int UserId { get; set; }
 
         [Required]
@@ -59,9 +57,9 @@ namespace aiof.api.data
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public int Age { get; set; }
+        public int? Age { get; set; }
         public string Email { get; set; }
-        public decimal AmountOfSupportProvided { get; set; }
+        public decimal? AmountOfSupportProvided { get; set; }
         public string UserRelationship { get; set; }
     }
 }

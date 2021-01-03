@@ -36,9 +36,6 @@ namespace aiof.api.data
         string UserRelationship { get; set; }
 
         [Required]
-        User User { get; set; }
-
-        [Required]
         int UserId { get; set; }
 
         [Required]

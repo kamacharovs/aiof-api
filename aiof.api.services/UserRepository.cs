@@ -25,6 +25,7 @@ namespace aiof.api.services
         private readonly AiofContext _context;
         private readonly AbstractValidator<SubscriptionDto> _subscriptionDtoValidator;
         private readonly AbstractValidator<AccountDto> _accountDtoValidator;
+        private readonly AbstractValidator<UserDependentDto> _dependentDtoValidator;
 
         private readonly Stopwatch _sw;
 
@@ -33,7 +34,8 @@ namespace aiof.api.services
             IMapper mapper,
             AiofContext context,
             AbstractValidator<SubscriptionDto> subscriptionDtoValidator,
-            AbstractValidator<AccountDto> accountDtoValidator)
+            AbstractValidator<AccountDto> accountDtoValidator,
+            AbstractValidator<UserDependentDto> dependentDtoValidator)
             : base(logger, context)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -41,6 +43,7 @@ namespace aiof.api.services
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _subscriptionDtoValidator = subscriptionDtoValidator ?? throw new ArgumentNullException(nameof(subscriptionDtoValidator));
             _accountDtoValidator = accountDtoValidator ?? throw new ArgumentNullException(nameof(accountDtoValidator));
+            _dependentDtoValidator = dependentDtoValidator ?? throw new ArgumentNullException(nameof(dependentDtoValidator));
 
             _tenant = _context.Tenant;
             _sw = new Stopwatch();
@@ -93,42 +96,11 @@ namespace aiof.api.services
                 .AnyAsync(x => x.Id == id);
         }
 
-        public async Task<IEnumerable<IUserDependent>> GetDependentsAsync()
-        {
-            return await _context.UserDependents
-                .ToListAsync();
-        }
-        public async Task<IUserDependent> GetDependentAsync(UserDependentDto dto)
-        {
-            return await _context.UserDependents
-                .FirstOrDefaultAsync(x => x.FirstName == dto.FirstName
-                    && x.LastName == dto.LastName
-                    && x.Age == dto.Age
-                    && x.Email == dto.Email
-                    && x.AmountOfSupportProvided == dto.AmountOfSupportProvided
-                    && x.UserRelationship == dto.UserRelationship);
-        }
-
         public async Task<IUserProfile> GetProfileAsync(bool asNoTracking = true)
         {
             return await GetProfilesQuery(asNoTracking)
                 .FirstOrDefaultAsync()
                 ?? throw new AiofNotFoundException($"UserProfile for User with UserId={_context.Tenant.UserId} was not found");
-        }
-
-        public async Task<IUserDependent> UpsertDependentAsync(UserDependentDto userDependentDto)
-        {
-            var userDependentInDb = await GetDependentAsync(userDependentDto);
-            var dtoAsUserDependent = _mapper.Map<UserDependent>(userDependentDto);
-            var userDependent = _mapper.Map(dtoAsUserDependent, userDependentInDb);
-
-            _context.Update(userDependent);
-            await _context.SaveChangesAsync();
-
-            _logger.LogInformation("{Tenant} | ",
-                _tenant.Log);
-
-            return userDependentInDb;
         }
 
         public async Task<IUser> UpsertAsync(UserDto userDto)
@@ -171,6 +143,77 @@ namespace aiof.api.services
 
             return profile;
         }
+
+        #region Dependent
+        public async Task<IUserDependent> GetDependentAsync(int id)
+        {
+            return await _context.UserDependents
+                .FirstOrDefaultAsync(x => x.Id == id)
+                ?? throw new AiofNotFoundException($"User dependent with id={id} was not found");
+        }
+        public async Task<IUserDependent> GetDependentAsync(UserDependentDto dto)
+        {
+            return await _context.UserDependents
+                .FirstOrDefaultAsync(x => x.FirstName == dto.FirstName
+                    && x.LastName == dto.LastName
+                    && x.Age == dto.Age
+                    && x.Email == dto.Email
+                    && x.AmountOfSupportProvided == dto.AmountOfSupportProvided
+                    && x.UserRelationship == dto.UserRelationship);
+        }
+        public async Task<IEnumerable<IUserDependent>> GetDependentsAsync()
+        {
+            return await _context.UserDependents
+                .OrderBy(x => x.Id)
+                .ToListAsync();
+        }
+
+        public async Task<IUserDependent> AddDependentAsync(UserDependentDto userDependentDto)
+        {
+            await _dependentDtoValidator.ValidateAndThrowAsync(userDependentDto);
+
+            if (await GetDependentAsync(userDependentDto) != null)
+                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
+                    $"User dependent already exists");
+
+            var dependent = _mapper.Map<UserDependent>(userDependentDto);
+
+            dependent.UserId = _tenant.UserId;
+
+            await _context.UserDependents.AddAsync(dependent);
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation("{Tenant} | Added UserDependent={UserDependent}",
+                _tenant.Log,
+                JsonSerializer.Serialize(dependent));
+
+            return dependent;
+        }
+
+        public async Task<IUserDependent> UpdateDependentAsync(
+            int userDependentId,
+            UserDependentDto userDependentDto)
+        {
+            var userDependentInDb = await GetDependentAsync(userDependentId) as UserDependent;
+            var userDependent = _mapper.Map(userDependentDto, userDependentInDb);
+
+            _context.UserDependents
+                .Update(userDependent);
+
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation("{Tenant} | Updated UserDependent={UserDependent}",
+                _tenant.Log,
+                JsonSerializer.Serialize(userDependent));
+
+            return userDependentInDb;
+        }
+
+        public async Task DeleteDependentAsync(int id)
+        {
+            await base.SoftDeleteAsync<UserDependent>(id);
+        }
+        #endregion
 
         #region Subscription
         private IQueryable<Subscription> GetSubscriptionsQuery(bool asNoTracking = true)
@@ -223,7 +266,7 @@ namespace aiof.api.services
 
             if (await GetSubscriptionAsync(name, amount) != null)
                 throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"{nameof(Subscription)} with Name='{name}' and Amount={amount} already exists");
+                    $"{nameof(Subscription)} with Name={name} and Amount={amount} already exists");
 
             var subscription = _mapper.Map<Subscription>(subscriptionDto);
 
@@ -272,6 +315,7 @@ namespace aiof.api.services
         private IQueryable<Account> GetAccountsQuery(bool asNoTracking = true)
         {
             var query = _context.Accounts
+                .Include(x => x.Type)
                 .AsQueryable();
 
             return asNoTracking
@@ -281,16 +325,6 @@ namespace aiof.api.services
         private IQueryable<AccountType> GetAccountTypesQuery(bool asNoTracking = true)
         {
             var query = _context.AccountTypes
-                .AsQueryable();
-
-            return asNoTracking
-                ? query.AsNoTracking()
-                : query;
-        }
-        private IQueryable<AccountTypeMap> GetAccountTypeMapsQuery(bool asNoTracking = true)
-        {
-            var query = _context.AccountTypeMaps
-                .Include(x => x.AccountType)
                 .AsQueryable();
 
             return asNoTracking
@@ -320,12 +354,6 @@ namespace aiof.api.services
         public async Task<IEnumerable<IAccountType>> GetAccountTypesAsync()
         {
             return await GetAccountTypesQuery()
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<IAccountTypeMap>> GetAccountTypeMapsAsync()
-        {
-            return await GetAccountTypeMapsQuery()
                 .ToListAsync();
         }
 

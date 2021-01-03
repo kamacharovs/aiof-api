@@ -30,15 +30,6 @@ dotnet ef migrations script {migration name} -p .\aiof.api.data
 dotnet ef migrations remove -s .\aiof.api.core -p .\aiof.api.data
 ```
 
-Additionally, below are more advanced `dotnet ef migrations` script. The last one is used to run a migration pointing to a specific database. This can be leveraged in pipeline builds
-
-```powershell
-dotnet tool update --global dotnet-ef --version 5.0.0
-dotnet ef database update -p .\aiof.api.data
-dotnet ef migrations list -p .\aiof.api.data
-dotnet ef database update -s .\aiof.api.core -p .\aiof.api.data --connection "host=127.0.0.1;database=aiof3;port=5432;username=postgres;password=postgres"
-```
-
 ## How to run it
 
 In order to fully run it locally, the recommended way is to use `docker-compose`. That pulls down all the Docker images needed and you will have the full microservices architecture locally in order to get a JWT from `aiof-auth` and add it to your requests to this API

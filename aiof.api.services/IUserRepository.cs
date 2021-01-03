@@ -12,10 +12,19 @@ namespace aiof.api.services
         Task<IUser> GetAsync(
             string username,
             bool asNoTracking = true);
-        Task<IEnumerable<IUserDependent>> GetDependentsAsync();
         Task<IUserProfile> GetProfileAsync(bool asNoTracking = true);
         Task<IUser> UpsertAsync(UserDto userDto);
         Task<IUserProfile> UpsertProfileAsync(UserProfileDto userProfileDto);
+
+        Task<IUserDependent> GetDependentAsync(int id);
+        Task<IUserDependent> GetDependentAsync(UserDependentDto dto);
+        Task<IEnumerable<IUserDependent>> GetDependentsAsync();
+        Task<IUserDependent> AddDependentAsync(UserDependentDto userDependentDto);
+        Task<IUserDependent> UpdateDependentAsync(
+            int userDependentId,
+            UserDependentDto userDependentDto);
+        Task DeleteDependentAsync(int id);
+
         Task<ISubscription> GetSubscriptionAsync(
             int id,
             bool asNoTracking = true);
@@ -28,16 +37,17 @@ namespace aiof.api.services
             int id,
             SubscriptionDto subscriptionDto);
         Task DeleteSubscriptionAsync(int id);
+
         Task<IAccount> GetAccountAsync(
             int id,
             bool asNoTracking = true);
         Task<IEnumerable<IAccountType>> GetAccountTypesAsync();
-        Task<IEnumerable<IAccountTypeMap>> GetAccountTypeMapsAsync();
         Task<IAccount> AddAccountAsync(AccountDto accountDto);
         Task<IAccount> UpdateAccountAsync(
             int id,
             AccountDto accountDto);
         Task DeleteAccountAsync(int id);
+
         Task<IEnumerable<IEducationLevel>> GetEducationLevelsAsync();
         Task<IEnumerable<IMaritalStatus>> GetMaritalStatusesAsync();
         Task<IEnumerable<IResidentialStatus>> GetResidentialStatusesAsync();
