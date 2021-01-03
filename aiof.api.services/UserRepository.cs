@@ -330,16 +330,6 @@ namespace aiof.api.services
                 ? query.AsNoTracking()
                 : query;
         }
-        private IQueryable<AccountTypeMap> GetAccountTypeMapsQuery(bool asNoTracking = true)
-        {
-            var query = _context.AccountTypeMaps
-                .Include(x => x.AccountType)
-                .AsQueryable();
-
-            return asNoTracking
-                ? query.AsNoTracking()
-                : query;
-        }
 
         public async Task<IAccount> GetAccountAsync(
             int id,
@@ -363,12 +353,6 @@ namespace aiof.api.services
         public async Task<IEnumerable<IAccountType>> GetAccountTypesAsync()
         {
             return await GetAccountTypesQuery()
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<IAccountTypeMap>> GetAccountTypeMapsAsync()
-        {
-            return await GetAccountTypeMapsQuery()
                 .ToListAsync();
         }
 

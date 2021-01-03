@@ -441,19 +441,6 @@ namespace aiof.api.tests
             Assert.NotNull(accountTypes.First().Name);
         }
 
-        [Fact]
-        public async Task GetAccountTypeMapsAsync_Is_Successful()
-        {
-            var _repo = new ServiceHelper().GetRequiredService<IUserRepository>();
-            var accountTypesMap = await _repo.GetAccountTypeMapsAsync();
-
-            Assert.NotEmpty(accountTypesMap);
-            Assert.NotNull(accountTypesMap.First().AccountName);
-            Assert.NotNull(accountTypesMap.First().AccountTypeName);
-            Assert.NotNull(accountTypesMap.First().AccountType);
-            Assert.NotNull(accountTypesMap.First().AccountType.Name);
-        }
-
         [Theory]
         [MemberData(nameof(Helper.AccountsUserId), MemberType = typeof(Helper))]
         public async Task AddAccountAsync_IsSuccessful(int userId)
