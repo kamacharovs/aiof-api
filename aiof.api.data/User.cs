@@ -37,6 +37,7 @@ namespace aiof.api.data
         [Required]
         public UserProfile Profile { get; set; }
 
+        public ICollection<UserDependent> Dependents { get; set; }
         public ICollection<Asset> Assets { get; set; }
         public ICollection<Liability> Liabilities { get; set; }
         public ICollection<Goal> Goals { get; set; }

@@ -59,6 +59,11 @@ namespace aiof.api.data
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
 
+                e.HasMany(x => x.Dependents)
+                    .WithOne()
+                    .HasForeignKey(x => x.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
                 e.HasMany(x => x.Assets)
                     .WithOne()
                     .HasForeignKey(x => x.UserId)
