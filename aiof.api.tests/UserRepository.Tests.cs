@@ -100,7 +100,13 @@ namespace aiof.api.tests
         public async Task UpsertAsync_IsSuccessful(int id)
         {
             var _repo = new ServiceHelper() { UserId = id }.GetRequiredService<IUserRepository>();
-            var dto = Helper.RandomUserDto(id);
+            var rdto = Helper.RandomUserDtos().FirstOrDefault().ToArray();
+            var dto = new UserDto
+            {
+                Assets = (ICollection<AssetDto>)rdto[0],
+                Liabilities = (ICollection<LiabilityDto>)rdto[1],
+                Goals = (ICollection<GoalDto>)rdto[2]
+            };
 
             Assert.NotNull(dto);
 
@@ -129,8 +135,7 @@ namespace aiof.api.tests
                     user.Goals.FirstOrDefault(x => x.Name == goal.Name
                         && x.TypeName == goal.TypeName));
             }
-        }
-        */
+        }*/
 
         [Theory]
         [MemberData(nameof(Helper.UsersId), MemberType = typeof(Helper))]
