@@ -254,18 +254,6 @@ namespace aiof.api.core.Controllers
         }
 
         /// <summary>
-        /// Get Account types mapping
-        /// </summary>
-        [FeatureGate(FeatureFlags.Account)]
-        [HttpGet]
-        [Route("account/types/map")]
-        [ProducesResponseType(typeof(IEnumerable<IAccountTypeMap>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAccountTypeMapsAsync()
-        {
-            return Ok(await _repo.GetAccountTypeMapsAsync());
-        }
-
-        /// <summary>
         /// Get Education levels
         /// </summary>
         [HttpGet]

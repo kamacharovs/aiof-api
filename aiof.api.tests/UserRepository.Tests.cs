@@ -26,6 +26,12 @@ namespace aiof.api.tests
             Assert.NotNull(user.LastName);
             Assert.NotNull(user.Email);
             Assert.NotNull(user.Username);
+            Assert.True(user.Dependents.Count() >= 0);
+            Assert.True(user.Assets.Count() >= 0);
+            Assert.True(user.Liabilities.Count() >= 0);
+            Assert.True(user.Goals.Count() >= 0);
+            Assert.True(user.Subscriptions.Count() >= 0);
+            Assert.True(user.Accounts.Count() >= 0);
         }
         [Theory]
         [MemberData(nameof(Helper.UsersId), MemberType = typeof(Helper))]
@@ -49,6 +55,12 @@ namespace aiof.api.tests
             Assert.NotNull(user.Email);
             Assert.NotNull(user.Username);
             Assert.Equal(username, user.Username);
+            Assert.True(user.Dependents.Count() >= 0);
+            Assert.True(user.Assets.Count() >= 0);
+            Assert.True(user.Liabilities.Count() >= 0);
+            Assert.True(user.Goals.Count() >= 0);
+            Assert.True(user.Subscriptions.Count() >= 0);
+            Assert.True(user.Accounts.Count() >= 0);
         }
         [Theory]
         [MemberData(nameof(Helper.UsersIdUsername), MemberType = typeof(Helper))]
@@ -88,7 +100,13 @@ namespace aiof.api.tests
         public async Task UpsertAsync_IsSuccessful(int id)
         {
             var _repo = new ServiceHelper() { UserId = id }.GetRequiredService<IUserRepository>();
-            var dto = Helper.RandomUserDto(id);
+            var rdto = Helper.RandomUserDtos().FirstOrDefault().ToArray();
+            var dto = new UserDto
+            {
+                Assets = (ICollection<AssetDto>)rdto[0],
+                Liabilities = (ICollection<LiabilityDto>)rdto[1],
+                Goals = (ICollection<GoalDto>)rdto[2]
+            };
 
             Assert.NotNull(dto);
 
@@ -117,8 +135,7 @@ namespace aiof.api.tests
                     user.Goals.FirstOrDefault(x => x.Name == goal.Name
                         && x.TypeName == goal.TypeName));
             }
-        }
-        */
+        }*/
 
         [Theory]
         [MemberData(nameof(Helper.UsersId), MemberType = typeof(Helper))]
@@ -439,19 +456,6 @@ namespace aiof.api.tests
 
             Assert.NotEmpty(accountTypes);
             Assert.NotNull(accountTypes.First().Name);
-        }
-
-        [Fact]
-        public async Task GetAccountTypeMapsAsync_Is_Successful()
-        {
-            var _repo = new ServiceHelper().GetRequiredService<IUserRepository>();
-            var accountTypesMap = await _repo.GetAccountTypeMapsAsync();
-
-            Assert.NotEmpty(accountTypesMap);
-            Assert.NotNull(accountTypesMap.First().AccountName);
-            Assert.NotNull(accountTypesMap.First().AccountTypeName);
-            Assert.NotNull(accountTypesMap.First().AccountType);
-            Assert.NotNull(accountTypesMap.First().AccountType.Name);
         }
 
         [Theory]

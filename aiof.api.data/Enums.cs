@@ -49,4 +49,10 @@ namespace aiof.api.data
         Stepbrother,
         Stepsister,
     }
+
+    public enum AccountTypes
+    {
+        Retirement,
+        Taxable,
+    }
 }

@@ -42,7 +42,6 @@ namespace aiof.api.services
             int id,
             bool asNoTracking = true);
         Task<IEnumerable<IAccountType>> GetAccountTypesAsync();
-        Task<IEnumerable<IAccountTypeMap>> GetAccountTypeMapsAsync();
         Task<IAccount> AddAccountAsync(AccountDto accountDto);
         Task<IAccount> UpdateAccountAsync(
             int id,

@@ -23,7 +23,6 @@ namespace aiof.api.data
         public virtual DbSet<Subscription> Subscriptions { get; set; }
         public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<AccountType> AccountTypes { get; set; }
-        public virtual DbSet<AccountTypeMap> AccountTypeMaps { get; set; }
         public virtual DbSet<EducationLevel> EducationLevels { get; set; }
         public virtual DbSet<MaritalStatus> MaritalStatuses { get; set; }
         public virtual DbSet<ResidentialStatus> ResidentialStatuses { get; set; }
@@ -59,6 +58,11 @@ namespace aiof.api.data
                     .HasForeignKey<UserProfile>(x => x.UserId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
+
+                e.HasMany(x => x.Dependents)
+                    .WithOne()
+                    .HasForeignKey(x => x.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 e.HasMany(x => x.Assets)
                     .WithOne()
@@ -298,6 +302,12 @@ namespace aiof.api.data
                 e.Property(x => x.TypeName).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
                 e.Property(x => x.UserId).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.IsDeleted).HasSnakeCaseColumnName().IsRequired();
+
+                e.HasOne(x => x.Type)
+                    .WithMany()
+                    .HasForeignKey(x => x.TypeName)
+                    .IsRequired()
+                    .OnDelete(DeleteBehavior.SetNull);
             });
 
             modelBuilder.Entity<AccountType>(e =>
@@ -308,22 +318,7 @@ namespace aiof.api.data
 
                 e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
-            });
-
-            modelBuilder.Entity<AccountTypeMap>(e =>
-            {
-                e.ToTable(Keys.Entity.AccountTypeMap);
-
-                e.HasKey(x => x.AccountName);
-
-                e.Property(x => x.AccountName).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
-                e.Property(x => x.AccountTypeName).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
-
-                e.HasOne(x => x.AccountType)
-                    .WithMany()
-                    .HasForeignKey(x => x.AccountTypeName)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired();
+                e.Property(x => x.Type).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
             });
 
             modelBuilder.Entity<EducationLevel>(e =>

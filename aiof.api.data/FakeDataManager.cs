@@ -55,9 +55,6 @@ namespace aiof.api.data
             _context.AccountTypes
                 .AddRange(GetFakeAccountTypes());
 
-            _context.AccountTypeMaps
-                .AddRange(GetFakeAccountTypeMaps());
-
             _context.EducationLevels
                 .AddRange(GetFakeEducationLevels());
 
@@ -458,7 +455,7 @@ namespace aiof.api.data
                     Id = 1,
                     Name = "BfA bank acount",
                     Description = "Bank Of Amanerica bank acount",
-                    TypeName = "bank",
+                    TypeName = "Checking/Savings",
                     UserId = 1
                 }
             };
@@ -470,98 +467,83 @@ namespace aiof.api.data
             {
                 new AccountType
                 {
-                    Name = "retirement"
+                    Name = "401(k)",
+                    Type = AccountTypes.Retirement.ToString()
                 },
                 new AccountType
                 {
-                    Name = "taxable"
-                }
-            };
-        }
-
-        public IEnumerable<AccountTypeMap> GetFakeAccountTypeMaps()
-        {
-            return new List<AccountTypeMap>
-            {
-                new AccountTypeMap
-                {
-                    AccountName = "401(k)",
-                    AccountTypeName = "retirement"
+                    Name = "401(a)",
+                    Type = AccountTypes.Retirement.ToString()
                 },
-                new AccountTypeMap
+                new AccountType
                 {
-                    AccountName = "401(a)",
-                    AccountTypeName = "retirement"
+                    Name = "401(b)",
+                    Type = AccountTypes.Retirement.ToString()
                 },
-                new AccountTypeMap
+                new AccountType
                 {
-                    AccountName = "401(b)",
-                    AccountTypeName = "retirement"
+                    Name = "457",
+                    Type = AccountTypes.Taxable.ToString()
                 },
-                new AccountTypeMap
+                new AccountType
                 {
-                    AccountName = "457",
-                    AccountTypeName = "taxable"
+                    Name = "IRA",
+                    Type = AccountTypes.Retirement.ToString()
                 },
-                new AccountTypeMap
+                new AccountType
                 {
-                    AccountName = "IRA",
-                    AccountTypeName = "retirement"
+                    Name = "Roth IRA",
+                    Type = AccountTypes.Retirement.ToString()
                 },
-                new AccountTypeMap
+                new AccountType
                 {
-                    AccountName = "Roth IRA",
-                    AccountTypeName = "retirement"
+                    Name = "Brokerage",
+                    Type = AccountTypes.Taxable.ToString()
                 },
-                new AccountTypeMap
+                new AccountType
                 {
-                    AccountName = "Brokerage",
-                    AccountTypeName = "taxable"
+                    Name = "Checking/Savings",
+                    Type = AccountTypes.Taxable.ToString()
                 },
-                new AccountTypeMap
+                new AccountType
                 {
-                    AccountName = "Checking/Savings",
-                    AccountTypeName = "taxable"
+                    Name = "Health Savings Account",
+                    Type = AccountTypes.Taxable.ToString()
                 },
-                new AccountTypeMap
+                new AccountType
                 {
-                    AccountName = "Health Savings Account",
-                    AccountTypeName = "taxable"
+                    Name = "529 Plan",
+                    Type = AccountTypes.Taxable.ToString()
                 },
-                new AccountTypeMap
+                new AccountType
                 {
-                    AccountName = "529 Plan",
-                    AccountTypeName = "taxable"
+                    Name = "SEP IRA",
+                    Type = AccountTypes.Retirement.ToString()
                 },
-                new AccountTypeMap
+                new AccountType
                 {
-                    AccountName = "SEP IRA",
-                    AccountTypeName = "retirement"
+                    Name = "Simple IRA",
+                    Type = AccountTypes.Retirement.ToString()
                 },
-                new AccountTypeMap
+                new AccountType
                 {
-                    AccountName = "Simple IRA",
-                    AccountTypeName = "retirement"
+                    Name = "Taxable",
+                    Type = AccountTypes.Taxable.ToString()
                 },
-                new AccountTypeMap
+                new AccountType
                 {
-                    AccountName = "Taxable",
-                    AccountTypeName = "taxable"
+                    Name = "Tax-Deferred",
+                    Type = AccountTypes.Retirement.ToString()
                 },
-                new AccountTypeMap
+                new AccountType
                 {
-                    AccountName = "Tax-Deferred",
-                    AccountTypeName = "retirement"
+                    Name = "Self Employed Plan",
+                    Type = AccountTypes.Taxable.ToString()
                 },
-                new AccountTypeMap
+                new AccountType
                 {
-                    AccountName = "Self Employed Plan",
-                    AccountTypeName = "taxable"
-                },
-                new AccountTypeMap
-                {
-                    AccountName = "UGMA/UTMA",
-                    AccountTypeName = "taxable"
+                    Name = "UGMA/UTMA",
+                    Type = AccountTypes.Taxable.ToString()
                 }
             };
         }

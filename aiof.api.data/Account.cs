@@ -26,6 +26,9 @@ namespace aiof.api.data
         [MaxLength(100)]
         public string TypeName { get; set; }
 
+        [Required]
+        public AccountType Type { get; set; }
+
         [JsonIgnore]
         [Required]
         public int UserId { get; set; }
