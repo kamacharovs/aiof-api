@@ -26,6 +26,12 @@ namespace aiof.api.tests
             Assert.NotNull(user.LastName);
             Assert.NotNull(user.Email);
             Assert.NotNull(user.Username);
+            Assert.True(user.Dependents.Count() >= 0);
+            Assert.True(user.Assets.Count() >= 0);
+            Assert.True(user.Liabilities.Count() >= 0);
+            Assert.True(user.Goals.Count() >= 0);
+            Assert.True(user.Subscriptions.Count() >= 0);
+            Assert.True(user.Accounts.Count() >= 0);
         }
         [Theory]
         [MemberData(nameof(Helper.UsersId), MemberType = typeof(Helper))]
@@ -49,6 +55,12 @@ namespace aiof.api.tests
             Assert.NotNull(user.Email);
             Assert.NotNull(user.Username);
             Assert.Equal(username, user.Username);
+            Assert.True(user.Dependents.Count() >= 0);
+            Assert.True(user.Assets.Count() >= 0);
+            Assert.True(user.Liabilities.Count() >= 0);
+            Assert.True(user.Goals.Count() >= 0);
+            Assert.True(user.Subscriptions.Count() >= 0);
+            Assert.True(user.Accounts.Count() >= 0);
         }
         [Theory]
         [MemberData(nameof(Helper.UsersIdUsername), MemberType = typeof(Helper))]
