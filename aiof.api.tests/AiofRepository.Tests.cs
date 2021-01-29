@@ -24,21 +24,19 @@ namespace aiof.api.tests
             Assert.NotNull(user.FirstName);
             Assert.NotNull(user.LastName);
             Assert.NotNull(user.Email);
-            Assert.NotNull(user.Username);
         }
 
         [Theory]
-        [MemberData(nameof(Helper.UsersIdUsername), MemberType = typeof(Helper))]
-        public async Task GetUserAsync_By_Username_Exists(int id, string username)
+        [MemberData(nameof(Helper.UsersIdEmail), MemberType = typeof(Helper))]
+        public async Task GetUserAsync_By_Email_Exists(int id, string email)
         {
             var _repo = new ServiceHelper() { UserId = id }.GetRequiredService<IAiofRepository>();
-            var user = await _repo.GetUserAsync(username);
+            var user = await _repo.GetUserAsync(email);
 
             Assert.NotNull(user);
             Assert.NotNull(user.FirstName);
             Assert.NotNull(user.LastName);
             Assert.NotNull(user.Email);
-            Assert.NotNull(user.Username);
         }
     }
 }

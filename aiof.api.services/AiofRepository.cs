@@ -76,10 +76,10 @@ namespace aiof.api.services
                 ?? throw new AiofNotFoundException($"{nameof(User)} with Id='{id}' was not found");
         }
 
-        public async Task<IUser> GetUserAsync(string username)
+        public async Task<IUser> GetUserAsync(string email)
         {
             return await GetUsersQuery()
-                .FirstOrDefaultAsync(x => x.Username == username);
+                .FirstOrDefaultAsync(x => x.Email == email);
         }
 
         public async Task<IUser> UpsertFinanceAsync(

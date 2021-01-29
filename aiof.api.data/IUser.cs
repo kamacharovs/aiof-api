@@ -27,10 +27,6 @@ namespace aiof.api.data
         string Email { get; set; }
 
         [Required]
-        [MaxLength(200)]
-        string Username { get; set; }
-
-        [Required]
         DateTime Created { get; set; }
 
         [Required]

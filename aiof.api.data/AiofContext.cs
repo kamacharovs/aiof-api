@@ -50,7 +50,6 @@ namespace aiof.api.data
                 e.Property(x => x.FirstName).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
                 e.Property(x => x.LastName).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
                 e.Property(x => x.Email).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
-                e.Property(x => x.Username).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
                 e.Property(x => x.Created).HasColumnType("timestamp").HasSnakeCaseColumnName().IsRequired();
 
                 e.HasOne(x => x.Profile)

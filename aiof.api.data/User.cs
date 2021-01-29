@@ -28,10 +28,6 @@ namespace aiof.api.data
         public string Email { get; set; }
 
         [Required]
-        [MaxLength(200)]
-        public string Username { get; set; }
-
-        [Required]
         public DateTime Created { get; set; } = DateTime.UtcNow;
 
         [Required]
