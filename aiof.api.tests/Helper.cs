@@ -94,11 +94,11 @@ namespace aiof.api.tests
             return _Fake.GetFakeUsersData(
                 id: true);
         }
-        public static IEnumerable<object[]> UsersIdUsername()
+        public static IEnumerable<object[]> UsersIdEmail()
         {
             return _Fake.GetFakeUsersData(
                 id: true,
-                username: true);
+                email: true);
         }
         public static IEnumerable<object[]> UserIdWithDependents()
         {
@@ -116,11 +116,11 @@ namespace aiof.api.tests
             return _Fake.GetFakeUserProfilesData(
                 userId: true);
         }
-        public static IEnumerable<object[]> UserProfilesIdUsername()
+        public static IEnumerable<object[]> UserProfilesIdEmail()
         {
             return _Fake.GetFakeUserProfilesData(
                 userId: true,
-                username: true);
+                email: true);
         }
 
         public static IEnumerable<object[]> AssetsNameTypeNameValueUserId()

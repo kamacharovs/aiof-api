@@ -89,8 +89,7 @@ namespace aiof.api.data
                     PublicKey = Guid.Parse("581f3ce6-cf2a-42a5-828f-157a2bfab763"),
                     FirstName = "Georgi",
                     LastName = "Kamacharov",
-                    Email = "gkama@test.com",
-                    Username = "gkama"
+                    Email = "gkama@test.com"
                 },
                 new User
                 {
@@ -98,8 +97,7 @@ namespace aiof.api.data
                     PublicKey = Guid.Parse("8e17276c-88ac-43bd-a9e8-5fdf5381dbd5"),
                     FirstName = "Jessie",
                     LastName = "Brown",
-                    Email = "jessie@test.com",
-                    Username = "jbro"
+                    Email = "jessie@test.com"
                 },
                 new User
                 {
@@ -107,8 +105,7 @@ namespace aiof.api.data
                     PublicKey = Guid.Parse("7c135230-2889-4cbb-bb0e-ab4237d89367"),
                     FirstName = "George",
                     LastName = "Best",
-                    Email = "george.best@auth.com",
-                    Username = "gbest"
+                    Email = "george.best@auth.com"
                 }
             };
         }
@@ -754,19 +751,19 @@ namespace aiof.api.data
         #region Unit Tests
         public IEnumerable<object[]> GetFakeUsersData(
             bool id = false,
-            bool username = false)
+            bool email = false)
         {
             var fakeUsers = GetFakeUsers();
             var toReturn = new List<object[]>();
 
             if (id
-                & username)
+                & email)
             {
                 foreach (var fakeUser in fakeUsers)
                     toReturn.Add(new object[] 
                     { 
                         fakeUser.Id,
-                        fakeUser.Username
+                        fakeUser.Email
                     });
             }
             else if (id)
@@ -777,12 +774,12 @@ namespace aiof.api.data
                         fakeUserId
                     });
             }
-            else if (username)
+            else if (email)
             {
-                foreach (var fakeUserUsername in fakeUsers.Select(x => x.Username))
+                foreach (var fakeUserEmail in fakeUsers.Select(x => x.Email))
                     toReturn.Add(new object[] 
                     { 
-                        fakeUserUsername
+                        fakeUserEmail
                     });
             }
 
@@ -828,7 +825,7 @@ namespace aiof.api.data
 
         public IEnumerable<object[]> GetFakeUserProfilesData(
             bool userId = false,
-            bool username = false)
+            bool email = false)
         {
             var fakeUserProfiles = _context.UserProfiles
                 .Include(x => x.User)
@@ -837,13 +834,13 @@ namespace aiof.api.data
             var toReturn = new List<object[]>();
 
             if (userId
-                && username)
+                && email)
             {
                 foreach (var fakeUser in fakeUserProfiles.Select(x => x.User))
                     toReturn.Add(new object[]
                     {
                         fakeUser.Id,
-                        fakeUser.Username,
+                        fakeUser.Email,
                     });
             }
             else if (userId)
@@ -854,12 +851,12 @@ namespace aiof.api.data
                         fakeUserId
                     });
             }
-            else if (username)
+            else if (email)
             {
-                foreach (var fakeUsername in fakeUserProfiles.Select(x => x.User.Username))
+                foreach (var fakeEmail in fakeUserProfiles.Select(x => x.User.Email))
                     toReturn.Add(new object[]
                     {
-                        fakeUsername
+                        fakeEmail
                     });
             }
 

@@ -84,12 +84,12 @@ namespace aiof.api.services
                 ?? throw new AiofNotFoundException($"User with Id={_context.Tenant.UserId} was not found");
         }
         public async Task<IUser> GetAsync(
-            string username,
+            string email,
             bool asNoTracking = true)
         {
             return await GetQuery()
-                .FirstOrDefaultAsync(x => x.Username == username)
-                ?? throw new AiofNotFoundException($"{nameof(User)} with Username={username} was not found");
+                .FirstOrDefaultAsync(x => x.Email == email)
+                ?? throw new AiofNotFoundException($"{nameof(User)} with Email={email} was not found");
         }
         public async Task<bool> ExistsAsync(int id)
         {

@@ -46,15 +46,15 @@ namespace aiof.api.core.Controllers
         }
         
         /// <summary>
-        /// Get User by username
+        /// Get User by email
         /// </summary>
         [HttpGet]
-        [Route("{username}")]
+        [Route("{email}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetByUsernameAsync([FromRoute, Required] string username)
+        public async Task<IActionResult> GetByEmailAsync([FromRoute, Required] string email)
         {
-            return Ok(await _repo.GetAsync(username));
+            return Ok(await _repo.GetAsync(email));
         }
 
         /// <summary>

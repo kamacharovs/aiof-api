@@ -25,7 +25,6 @@ namespace aiof.api.tests
             Assert.NotNull(user.FirstName);
             Assert.NotNull(user.LastName);
             Assert.NotNull(user.Email);
-            Assert.NotNull(user.Username);
             Assert.True(user.Dependents.Count() >= 0);
             Assert.True(user.Assets.Count() >= 0);
             Assert.True(user.Liabilities.Count() >= 0);
@@ -42,19 +41,18 @@ namespace aiof.api.tests
         }
 
         [Theory]
-        [MemberData(nameof(Helper.UsersIdUsername), MemberType = typeof(Helper))]
-        public async Task GetUserAsync_ByUsername_IsSuccessful(int id, string username)
+        [MemberData(nameof(Helper.UserProfilesIdEmail), MemberType = typeof(Helper))]
+        public async Task GetUserAsync_ByEmail_IsSuccessful(int id, string email)
         {
             var _repo = new ServiceHelper() { UserId = id }.GetRequiredService<IUserRepository>();
-            var user = await _repo.GetAsync(username);
+            var user = await _repo.GetAsync(email);
 
             Assert.Equal(id, user.Id);
             Assert.NotEqual(Guid.Empty, user.PublicKey);
             Assert.NotNull(user.FirstName);
             Assert.NotNull(user.LastName);
             Assert.NotNull(user.Email);
-            Assert.NotNull(user.Username);
-            Assert.Equal(username, user.Username);
+            Assert.Equal(email, user.Email);
             Assert.True(user.Dependents.Count() >= 0);
             Assert.True(user.Assets.Count() >= 0);
             Assert.True(user.Liabilities.Count() >= 0);
@@ -63,11 +61,11 @@ namespace aiof.api.tests
             Assert.True(user.Accounts.Count() >= 0);
         }
         [Theory]
-        [MemberData(nameof(Helper.UsersIdUsername), MemberType = typeof(Helper))]
-        public async Task GetUserAsync_ByUsername_NotFound(int id, string username)
+        [MemberData(nameof(Helper.UsersIdEmail), MemberType = typeof(Helper))]
+        public async Task GetUserAsync_ByEmail_NotFound(int id, string email)
         {
             var _repo = new ServiceHelper() { UserId = id }.GetRequiredService<IUserRepository>();
-            await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.GetAsync(username + "notfound"));
+            await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.GetAsync(email + "notfound"));
         }
 
         [Theory]
