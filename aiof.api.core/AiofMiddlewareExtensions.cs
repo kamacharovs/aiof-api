@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
@@ -96,6 +97,23 @@ namespace aiof.api.core
 
             services.Configure<ClientRateLimitOptions>(o =>
             {
+                var aiofProblemBase = new AiofProblemDetailBase
+                {
+                    Code = StatusCodes.Status429TooManyRequests,
+                    Message = Constants.DefaultTooManyRequestsMessage
+                };
+
+                var content = JsonSerializer.Serialize(aiofProblemBase)
+                    .Replace("{", "{{")
+                    .Replace("}", "}}");
+
+                o.QuotaExceededResponse = new QuotaExceededResponse
+                {
+                    ContentType = Constants.ApplicationProblemJson,
+                    Content = content,
+                    StatusCode = StatusCodes.Status429TooManyRequests
+                };
+
                 o.GeneralRules = new List<RateLimitRule>
                 {
                     new RateLimitRule
