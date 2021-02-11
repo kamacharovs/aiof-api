@@ -8,7 +8,6 @@ using System.Security.Cryptography;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 
@@ -16,7 +15,6 @@ using FluentValidation;
 using AspNetCoreRateLimit;
 
 using aiof.api.data;
-using aiof.api.services;
 
 namespace aiof.api.core
 {

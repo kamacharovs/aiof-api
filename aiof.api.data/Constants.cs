@@ -2,6 +2,13 @@ using System;
 
 namespace aiof.api.data
 {
+    public static class Constants
+    {
+        public const string ApplicationProblemJson = "application/problem+json";
+
+        public const string DefaultTooManyRequestsMessage = "Too many requests. API calls quota exceeded";
+    }
+
     public static class Keys
     {
         public const string Accept = nameof(Accept);
