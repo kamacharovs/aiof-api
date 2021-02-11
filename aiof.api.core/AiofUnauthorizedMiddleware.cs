@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 
 using Microsoft.AspNetCore.Http;
 
@@ -13,12 +12,6 @@ namespace aiof.api.core
     public class AiofUnauthorizedMiddleware
     {
         private readonly RequestDelegate _next;
-
-        private IEnumerable<int> _vallowedStatusCodes = new int[]
-        {
-            StatusCodes.Status401Unauthorized,
-            StatusCodes.Status403Forbidden
-        };
 
         public AiofUnauthorizedMiddleware(
             RequestDelegate next)
@@ -35,7 +28,7 @@ namespace aiof.api.core
         public async Task WriteUnauthorizedResponseAsync(
             HttpContext httpContext)
         {
-            if (_vallowedStatusCodes.Contains(httpContext.Response.StatusCode) is false)
+            if (Constants.AllowedUnauthorizedStatusCodes.Contains(httpContext.Response.StatusCode) is false)
                 return;
 
             var statusCode = httpContext.Response.StatusCode;

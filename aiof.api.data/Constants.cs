@@ -1,5 +1,7 @@
 using System;
 
+using Microsoft.AspNetCore.Http;
+
 namespace aiof.api.data
 {
     public static class Constants
@@ -8,9 +10,17 @@ namespace aiof.api.data
         public const string ApplicationJson = "application/json";
         public const string ApplicationProblemJson = "application/problem+json";
 
+        public const string DefaultMessage = "An unexpected error has occurred";
+        public const string DefaultValidationMessage = "One or more validation errors have occurred. Please see errors for details";
         public const string DefaultUnauthorizedMessage = "Unauthorized. Missing, invalid or expired credentials provided";
         public const string DefaultForbiddenMessage = "Forbidden. You don't have enough permissions to access this API";
         public const string DefaultTooManyRequestsMessage = "Too many requests. API calls quota exceeded";
+
+        public static int[] AllowedUnauthorizedStatusCodes = new int[]
+        {
+            StatusCodes.Status401Unauthorized,
+            StatusCodes.Status403Forbidden
+        };
     }
 
     public static class Keys
