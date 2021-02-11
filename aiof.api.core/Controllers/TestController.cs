@@ -19,8 +19,8 @@ namespace aiof.api.core.Controllers
     [Authorize]
     [ApiController]
     [Route("test")]
-    [Produces(Keys.ApplicationJson)]
-    [Consumes(Keys.ApplicationJson)]
+    [Produces(Constants.ApplicationJson)]
+    [Consumes(Constants.ApplicationJson)]
     public class TestController : ControllerBase
     {
         [HttpGet]

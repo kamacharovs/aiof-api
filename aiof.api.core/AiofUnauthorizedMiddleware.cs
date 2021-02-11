@@ -49,7 +49,7 @@ namespace aiof.api.core
             var aiofProblemJson = JsonSerializer
                 .Serialize(aiofProblem, new JsonSerializerOptions { IgnoreNullValues = true });
 
-            httpContext.Response.ContentType = Keys.ApplicationProblemJson;
+            httpContext.Response.ContentType = Constants.ApplicationProblemJson;
 
             await httpContext.Response
                 .WriteAsync(aiofProblemJson);
