@@ -12,14 +12,15 @@ using Microsoft.FeatureManagement;
 
 using aiof.api.data;
 using aiof.api.services;
+using AspNetCoreRateLimit;
 
 namespace aiof.api.core
 {
     [ExcludeFromCodeCoverage]
     public class Startup
     {
-        public readonly IConfiguration _config;
-        public readonly IWebHostEnvironment _env;
+        public static IConfiguration _config;
+        public static IWebHostEnvironment _env;
 
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
@@ -48,8 +49,9 @@ namespace aiof.api.core
             services.AddLogging()
                 .AddApplicationInsightsTelemetry()
                 .AddHttpContextAccessor()
-                .AddAiofAuthentication(_config)
-                .AddAiofSwaggerGen(_config);
+                .AddAiofAuthentication()
+                .AddAiofSwaggerGen()
+                .AddRateLimit();
 
             services.AddControllers();
             services.AddMvcCore()
@@ -61,7 +63,7 @@ namespace aiof.api.core
                 });
         }
 
-        public void Configure(IApplicationBuilder app, IServiceProvider services)
+        public void Configure(IApplicationBuilder app)
         {
             if (_env.IsDevelopment())
             {
@@ -70,6 +72,7 @@ namespace aiof.api.core
 
             app.UseAiofExceptionMiddleware();
             app.UseAiofUnauthorizedMiddleware();
+            app.UseClientRateLimiting();
             app.UseHealthChecks("/health");
             app.UseSwagger();
 

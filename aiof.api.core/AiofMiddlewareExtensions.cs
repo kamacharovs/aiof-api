@@ -22,7 +22,7 @@ namespace aiof.api.core
 {
     public static partial class AiofMiddlewareExtensions
     {
-        public static IServiceCollection AddAiofAuthentication(this IServiceCollection services, IConfiguration config)
+        public static IServiceCollection AddAiofAuthentication(this IServiceCollection services)
         {
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(
@@ -30,14 +30,14 @@ namespace aiof.api.core
                 x =>
                 {
                     var rsa = RSA.Create();
-                    rsa.FromXmlString(config[Keys.JwtPublicKey]);
+                    rsa.FromXmlString(Startup._config[Keys.JwtPublicKey]);
 
                     x.TokenValidationParameters = new TokenValidationParameters()
                     {
                         ValidateIssuer = true,
-                        ValidIssuer = config[Keys.JwtIssuer],
+                        ValidIssuer = Startup._config[Keys.JwtIssuer],
                         ValidateAudience = true,
-                        ValidAudience = config[Keys.JwtAudience],
+                        ValidAudience = Startup._config[Keys.JwtAudience],
                         ValidateIssuerSigningKey = true,
                         ValidateLifetime = true,
                         IssuerSigningKey = new RsaSecurityKey(rsa)
@@ -47,25 +47,25 @@ namespace aiof.api.core
             return services;
         }
 
-        public static IServiceCollection AddAiofSwaggerGen(this IServiceCollection services, IConfiguration config)
+        public static IServiceCollection AddAiofSwaggerGen(this IServiceCollection services)
         {
             services.AddSwaggerGen(x =>
             {
-                x.SwaggerDoc(config[Keys.OpenApiVersion], new OpenApiInfo
+                x.SwaggerDoc(Startup._config[Keys.OpenApiVersion], new OpenApiInfo
                 {
-                    Title = config[Keys.OpenApiTitle],
-                    Version = config[Keys.OpenApiVersion],
-                    Description = config[Keys.OpenApiDescription],
+                    Title = Startup._config[Keys.OpenApiTitle],
+                    Version = Startup._config[Keys.OpenApiVersion],
+                    Description = Startup._config[Keys.OpenApiDescription],
                     Contact = new OpenApiContact
                     {
-                        Name = config[Keys.OpenApiContactName],
-                        Email = config[Keys.OpenApiContactEmail],
-                        Url = new Uri(config[Keys.OpenApiContactUrl])
+                        Name = Startup._config[Keys.OpenApiContactName],
+                        Email = Startup._config[Keys.OpenApiContactEmail],
+                        Url = new Uri(Startup._config[Keys.OpenApiContactUrl])
                     },
                     License = new OpenApiLicense
                     {
-                        Name = config[Keys.OpenApiLicenseName],
-                        Url = new Uri(config[Keys.OpenApiLicenseUrl]),
+                        Name = Startup._config[Keys.OpenApiLicenseName],
+                        Url = new Uri(Startup._config[Keys.OpenApiLicenseUrl]),
                     }
                 });
                 x.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
@@ -94,7 +94,7 @@ namespace aiof.api.core
 
             services.AddSingleton<IClientPolicyStore, MemoryCacheClientPolicyStore>();
             services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
-            services.AddSingleton<IRateLimitConfiguration, AiofRateLimitConfiguration>();
+            services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 
             services.Configure<ClientRateLimitOptions>(o =>
             {
@@ -102,15 +102,9 @@ namespace aiof.api.core
                 {
                     new RateLimitRule
                     {
-                        Endpoint = "/asset",
-                        Period = "1m",
-                        Limit = 1,
-                    },
-                    new RateLimitRule
-                    {
-                        Endpoint = "/asset",
+                        Endpoint = "*",
                         Period = "1h",
-                        Limit = 5,
+                        Limit = 1,
                     }
                 };
             });
