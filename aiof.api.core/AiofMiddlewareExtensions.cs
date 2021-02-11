@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.IO;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Security.Cryptography;
 
@@ -12,6 +13,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 
 using FluentValidation;
+using AspNetCoreRateLimit;
 
 using aiof.api.data;
 using aiof.api.services;
@@ -82,6 +84,36 @@ namespace aiof.api.core
                 .AddSingleton<AbstractValidator<AccountDto>, AccountDtoValidator>()
                 .AddSingleton<AbstractValidator<UserDto>, UserDtoValidator>()
                 .AddSingleton<AbstractValidator<UserDependentDto>, UserDependentDtoValidator>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddRateLimit(this IServiceCollection services)
+        {
+            services.AddMemoryCache();
+
+            services.AddSingleton<IClientPolicyStore, MemoryCacheClientPolicyStore>();
+            services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+            services.AddSingleton<IRateLimitConfiguration, AiofRateLimitConfiguration>();
+
+            services.Configure<ClientRateLimitOptions>(o =>
+            {
+                o.GeneralRules = new List<RateLimitRule>
+                {
+                    new RateLimitRule
+                    {
+                        Endpoint = "/asset",
+                        Period = "1m",
+                        Limit = 1,
+                    },
+                    new RateLimitRule
+                    {
+                        Endpoint = "/asset",
+                        Period = "1h",
+                        Limit = 5,
+                    }
+                };
+            });
 
             return services;
         }

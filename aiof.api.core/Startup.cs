@@ -1,28 +1,21 @@
 using System;
 using System.Text.Json;
-using System.IO;
-using System.Reflection;
-using System.Security.Cryptography;
+using System.Diagnostics.CodeAnalysis;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.FeatureManagement;
-using Microsoft.OpenApi.Models;
-using Microsoft.IdentityModel.Tokens;
-
-using AutoMapper;
-using FluentValidation;
 
 using aiof.api.data;
 using aiof.api.services;
 
 namespace aiof.api.core
 {
+    [ExcludeFromCodeCoverage]
     public class Startup
     {
         public readonly IConfiguration _config;
