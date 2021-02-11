@@ -14,8 +14,6 @@ namespace aiof.api.core
     {
         private readonly RequestDelegate _next;
 
-        private const string _defaultUnauthorizedMessage = "Unauthorized. Missing, invalid or expired credentials provided";
-        private const string _defaultForbiddenMessage = "Forbidden. You don't have enough permissions to access this API";
         private IEnumerable<int> _vallowedStatusCodes = new int[]
         {
             StatusCodes.Status401Unauthorized,
@@ -47,11 +45,11 @@ namespace aiof.api.core
             {
                 case StatusCodes.Status401Unauthorized:
                     aiofProblem.Code = StatusCodes.Status401Unauthorized;
-                    aiofProblem.Message = _defaultUnauthorizedMessage;
+                    aiofProblem.Message = Constants.DefaultUnauthorizedMessage;
                     break;
                 case StatusCodes.Status403Forbidden:
                     aiofProblem.Code = StatusCodes.Status403Forbidden;
-                    aiofProblem.Message = _defaultForbiddenMessage;
+                    aiofProblem.Message = Constants.DefaultForbiddenMessage;
                     break;
             }
 

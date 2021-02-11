@@ -4,8 +4,12 @@ namespace aiof.api.data
 {
     public static class Constants
     {
+        public const string Accept = nameof(Accept);
+        public const string ApplicationJson = "application/json";
         public const string ApplicationProblemJson = "application/problem+json";
 
+        public const string DefaultUnauthorizedMessage = "Unauthorized. Missing, invalid or expired credentials provided";
+        public const string DefaultForbiddenMessage = "Forbidden. You don't have enough permissions to access this API";
         public const string DefaultTooManyRequestsMessage = "Too many requests. API calls quota exceeded";
     }
 
@@ -64,6 +68,10 @@ namespace aiof.api.data
         public const string OpenApiLicenseUrl = nameof(OpenApi) + ":" + nameof(License) + ":" + nameof(Url);
         
         public const string License = nameof(License);
+
+        public const string RateLimit = nameof(RateLimit);
+        public const string Base = nameof(Base);
+        public const string RateLimitBase = RateLimit + ":" + Base;
 
         public static class Claim
         {

@@ -97,12 +97,12 @@ namespace aiof.api.core
 
             services.Configure<ClientRateLimitOptions>(o =>
             {
+                var baseRateLimit = int.Parse(Startup._config[Keys.RateLimitBase]);
                 var aiofProblemBase = new AiofProblemDetailBase
                 {
                     Code = StatusCodes.Status429TooManyRequests,
-                    Message = Constants.DefaultTooManyRequestsMessage
+                    Message = Constants.DefaultTooManyRequestsMessage, 
                 };
-
                 var content = JsonSerializer.Serialize(aiofProblemBase)
                     .Replace("{", "{{")
                     .Replace("}", "}}");
@@ -120,7 +120,7 @@ namespace aiof.api.core
                     {
                         Endpoint = "*",
                         Period = "1h",
-                        Limit = 1,
+                        Limit = baseRateLimit,
                     }
                 };
             });
