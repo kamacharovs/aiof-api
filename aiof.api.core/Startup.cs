@@ -72,7 +72,7 @@ namespace aiof.api.core
 
             app.UseAiofExceptionMiddleware();
             app.UseAiofUnauthorizedMiddleware();
-            app.UseClientRateLimiting();
+            app.UseIpRateLimiting();
             app.UseHealthChecks("/health");
             app.UseSwagger();
 

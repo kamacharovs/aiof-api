@@ -91,17 +91,17 @@ namespace aiof.api.core
         {
             services.AddMemoryCache();
 
-            services.AddSingleton<IClientPolicyStore, MemoryCacheClientPolicyStore>();
+            services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
             services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
             services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 
-            services.Configure<ClientRateLimitOptions>(o =>
+            services.Configure<IpRateLimitOptions>(o =>
             {
                 var baseRateLimit = int.Parse(Startup._config[Keys.RateLimitBase]);
                 var aiofProblemBase = new AiofProblemDetailBase
                 {
                     Code = StatusCodes.Status429TooManyRequests,
-                    Message = Constants.DefaultTooManyRequestsMessage, 
+                    Message = Constants.DefaultTooManyRequestsMessage,
                 };
                 var content = JsonSerializer.Serialize(aiofProblemBase)
                     .Replace("{", "{{")
@@ -114,13 +114,20 @@ namespace aiof.api.core
                     StatusCode = StatusCodes.Status429TooManyRequests
                 };
 
+                o.EndpointWhitelist = new List<string>
+                {
+                    "get:/health"
+                };
+
+                o.EnableEndpointRateLimiting = false;
+                o.StackBlockedRequests = false;
                 o.GeneralRules = new List<RateLimitRule>
                 {
                     new RateLimitRule
                     {
                         Endpoint = "*",
                         Period = "1h",
-                        Limit = baseRateLimit,
+                        Limit = 1,
                     }
                 };
             });
