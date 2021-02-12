@@ -97,9 +97,9 @@ namespace aiof.api.core
 
             services.Configure<IpRateLimitOptions>(o =>
             {
-                var rateLimitSeconds = int.Parse(Startup._config[Keys.RateLimitSecond]);
-                var rateLimitMinutes = int.Parse(Startup._config[Keys.RateLimitMinute]);
-                var rateLimitHours = int.Parse(Startup._config[Keys.RateLimitHour]);
+                var rateLimitSecond = int.Parse(Startup._config[Keys.RateLimitSecond]);
+                var rateLimitMinute = int.Parse(Startup._config[Keys.RateLimitMinute]);
+                var rateLimitHour = int.Parse(Startup._config[Keys.RateLimitHour]);
 
                 var aiofProblemBase = new AiofProblemDetailBase
                 {
@@ -130,19 +130,19 @@ namespace aiof.api.core
                     {
                         Endpoint = "*",
                         Period = "1s",
-                        Limit = rateLimitSeconds,
+                        Limit = rateLimitSecond,
                     },
                     new RateLimitRule
                     {
                         Endpoint = "*",
                         Period = "1m",
-                        Limit = rateLimitMinutes,
+                        Limit = rateLimitMinute,
                     },
                     new RateLimitRule
                     {
                         Endpoint = "*",
                         Period = "1h",
-                        Limit = rateLimitHours,
+                        Limit = rateLimitHour,
                     }
                 };
             });

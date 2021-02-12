@@ -76,12 +76,12 @@ namespace aiof.api.data
         public const string License = nameof(License);
 
         public const string RateLimit = nameof(RateLimit);
-        public const string Seconds = nameof(Seconds);
-        public const string Minutes = nameof(Minutes);
-        public const string Hours = nameof(Hours);
-        public const string RateLimitSecond = RateLimit + ":" + Seconds;
-        public const string RateLimitMinute = RateLimit + ":" + Minutes;
-        public const string RateLimitHour = RateLimit + ":" + Hours;
+        public const string Second = nameof(Second);
+        public const string Minute = nameof(Minute);
+        public const string Hour = nameof(Hour);
+        public const string RateLimitSecond = RateLimit + ":" + Second;
+        public const string RateLimitMinute = RateLimit + ":" + Minute;
+        public const string RateLimitHour = RateLimit + ":" + Hour;
 
         public static class Claim
         {
