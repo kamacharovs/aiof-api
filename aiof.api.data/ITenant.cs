@@ -18,6 +18,9 @@ namespace aiof.api.data
         Guid PublicKey { get; set; }
 
         [JsonIgnore]
+        int TenantId { get; }
+
+        [JsonIgnore]
         string Log { get; }
     }
 }

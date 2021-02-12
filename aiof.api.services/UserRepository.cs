@@ -27,8 +27,6 @@ namespace aiof.api.services
         private readonly AbstractValidator<AccountDto> _accountDtoValidator;
         private readonly AbstractValidator<UserDependentDto> _dependentDtoValidator;
 
-        private readonly Stopwatch _sw;
-
         public UserRepository(
             ILogger<UserRepository> logger,
             IMapper mapper,
@@ -41,12 +39,10 @@ namespace aiof.api.services
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _context = context ?? throw new ArgumentNullException(nameof(context));
+            _tenant = _context.Tenant ?? throw new ArgumentNullException(nameof(_context.Tenant));
             _subscriptionDtoValidator = subscriptionDtoValidator ?? throw new ArgumentNullException(nameof(subscriptionDtoValidator));
             _accountDtoValidator = accountDtoValidator ?? throw new ArgumentNullException(nameof(accountDtoValidator));
             _dependentDtoValidator = dependentDtoValidator ?? throw new ArgumentNullException(nameof(dependentDtoValidator));
-
-            _tenant = _context.Tenant;
-            _sw = new Stopwatch();
         }
 
         private IQueryable<User> GetQuery(bool asNoTracking = true)

@@ -19,8 +19,8 @@ namespace aiof.api.core.Controllers
     /// </summary>
     [Authorize]
     [ApiController]
-    [Produces(Keys.ApplicationJson)]
-    [Consumes(Keys.ApplicationJson)]
+    [Produces(Constants.ApplicationJson)]
+    [Consumes(Constants.ApplicationJson)]
     [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(IAiofProblemDetailBase), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(IAiofProblemDetailBase), StatusCodes.Status401Unauthorized)]

@@ -24,9 +24,6 @@ namespace aiof.api.core
         private readonly IWebHostEnvironment _env;
         private readonly RequestDelegate _next;
 
-        private const string _defaultMessage = "An unexpected error has occurred";
-        private const string _defaultValidationMessage = "One or more validation errors have occurred. Please see errors for details";
-
         public AiofExceptionMiddleware(
             ILogger<AiofExceptionMiddleware> logger, 
             IWebHostEnvironment env, 
@@ -74,7 +71,7 @@ namespace aiof.api.core
             {
                 Message = canViewSensitiveInfo
                     ? e.Message
-                    : _defaultMessage,
+                    : Constants.DefaultMessage,
                 Code = StatusCodes.Status500InternalServerError,
                 TraceId = $"aiof:api:error:{id}"
             };
@@ -84,7 +81,7 @@ namespace aiof.api.core
             else if (e is ValidationException ve)
             {
                 problem.Code = StatusCodes.Status400BadRequest;
-                problem.Message = _defaultValidationMessage;
+                problem.Message = Constants.DefaultValidationMessage;
                 problem.Errors = ve.Errors.Select(x => x.ErrorMessage);
             }
 

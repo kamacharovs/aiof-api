@@ -2,9 +2,7 @@ using System;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 
 using aiof.api.data;
@@ -14,14 +12,6 @@ namespace aiof.api.core
     public class AiofUnauthorizedMiddleware
     {
         private readonly RequestDelegate _next;
-
-        private const string _defaultUnauthorizedMessage = "Unauthorized. Missing, invalid or expired credentials provided";
-        private const string _defaultForbiddenMessage = "Forbidden. You don't have enough permissions to access this API";
-        private IEnumerable<int> _vallowedStatusCodes = new int[]
-        {
-            StatusCodes.Status401Unauthorized,
-            StatusCodes.Status403Forbidden
-        };
 
         public AiofUnauthorizedMiddleware(
             RequestDelegate next)
@@ -38,7 +28,7 @@ namespace aiof.api.core
         public async Task WriteUnauthorizedResponseAsync(
             HttpContext httpContext)
         {
-            if (_vallowedStatusCodes.Contains(httpContext.Response.StatusCode) is false)
+            if (Constants.AllowedUnauthorizedStatusCodes.Contains(httpContext.Response.StatusCode) is false)
                 return;
 
             var statusCode = httpContext.Response.StatusCode;
@@ -48,18 +38,18 @@ namespace aiof.api.core
             {
                 case StatusCodes.Status401Unauthorized:
                     aiofProblem.Code = StatusCodes.Status401Unauthorized;
-                    aiofProblem.Message = _defaultUnauthorizedMessage;
+                    aiofProblem.Message = Constants.DefaultUnauthorizedMessage;
                     break;
                 case StatusCodes.Status403Forbidden:
                     aiofProblem.Code = StatusCodes.Status403Forbidden;
-                    aiofProblem.Message = _defaultForbiddenMessage;
+                    aiofProblem.Message = Constants.DefaultForbiddenMessage;
                     break;
             }
 
             var aiofProblemJson = JsonSerializer
                 .Serialize(aiofProblem, new JsonSerializerOptions { IgnoreNullValues = true });
 
-            httpContext.Response.ContentType = Keys.ApplicationProblemJson;
+            httpContext.Response.ContentType = Constants.ApplicationProblemJson;
 
             await httpContext.Response
                 .WriteAsync(aiofProblemJson);

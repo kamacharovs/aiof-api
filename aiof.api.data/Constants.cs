@@ -1,13 +1,30 @@
 using System;
 
+using Microsoft.AspNetCore.Http;
+
 namespace aiof.api.data
 {
-    public static class Keys
+    public static class Constants
     {
         public const string Accept = nameof(Accept);
         public const string ApplicationJson = "application/json";
         public const string ApplicationProblemJson = "application/problem+json";
 
+        public const string DefaultMessage = "An unexpected error has occurred";
+        public const string DefaultValidationMessage = "One or more validation errors have occurred. Please see errors for details";
+        public const string DefaultUnauthorizedMessage = "Unauthorized. Missing, invalid or expired credentials provided";
+        public const string DefaultForbiddenMessage = "Forbidden. You don't have enough permissions to access this API";
+        public const string DefaultTooManyRequestsMessage = "Too many requests. API calls quota exceeded";
+
+        public static int[] AllowedUnauthorizedStatusCodes = new int[]
+        {
+            StatusCodes.Status401Unauthorized,
+            StatusCodes.Status403Forbidden
+        };
+    }
+
+    public static class Keys
+    {
         public const string FeatureManagement = nameof(FeatureManagement);
 
         public const string Data = nameof(Data);
@@ -58,6 +75,14 @@ namespace aiof.api.data
         
         public const string License = nameof(License);
 
+        public const string RateLimit = nameof(RateLimit);
+        public const string Second = nameof(Second);
+        public const string Minute = nameof(Minute);
+        public const string Hour = nameof(Hour);
+        public const string RateLimitSecond = RateLimit + ":" + Second;
+        public const string RateLimitMinute = RateLimit + ":" + Minute;
+        public const string RateLimitHour = RateLimit + ":" + Hour;
+
         public static class Claim
         {
             public const string UserId = "user_id";
@@ -79,7 +104,8 @@ namespace aiof.api.data
             public static string Frequency = nameof(data.Frequency).ToSnakeCase();
             public static string Subscription = nameof(data.Subscription).ToSnakeCase();
             public static string Account = nameof(data.Account).ToSnakeCase();
-            public static string AccountType = nameof(data.AccountType).ToSnakeCase();            public static string EducationLevel = nameof(data.EducationLevel).ToSnakeCase();
+            public static string AccountType = nameof(data.AccountType).ToSnakeCase();
+            public static string EducationLevel = nameof(data.EducationLevel).ToSnakeCase();
             public static string MaritalStatus = nameof(data.MaritalStatus).ToSnakeCase();
             public static string ResidentialStatus = nameof(data.ResidentialStatus).ToSnakeCase();
             public static string Gender = nameof(data.Gender).ToSnakeCase();
