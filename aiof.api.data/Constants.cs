@@ -76,8 +76,12 @@ namespace aiof.api.data
         public const string License = nameof(License);
 
         public const string RateLimit = nameof(RateLimit);
-        public const string Base = nameof(Base);
-        public const string RateLimitBase = RateLimit + ":" + Base;
+        public const string Seconds = nameof(Seconds);
+        public const string Minutes = nameof(Minutes);
+        public const string Hours = nameof(Hours);
+        public const string RateLimitSecond = RateLimit + ":" + Seconds;
+        public const string RateLimitMinute = RateLimit + ":" + Minutes;
+        public const string RateLimitHour = RateLimit + ":" + Hours;
 
         public static class Claim
         {
@@ -100,7 +104,8 @@ namespace aiof.api.data
             public static string Frequency = nameof(data.Frequency).ToSnakeCase();
             public static string Subscription = nameof(data.Subscription).ToSnakeCase();
             public static string Account = nameof(data.Account).ToSnakeCase();
-            public static string AccountType = nameof(data.AccountType).ToSnakeCase();            public static string EducationLevel = nameof(data.EducationLevel).ToSnakeCase();
+            public static string AccountType = nameof(data.AccountType).ToSnakeCase();
+            public static string EducationLevel = nameof(data.EducationLevel).ToSnakeCase();
             public static string MaritalStatus = nameof(data.MaritalStatus).ToSnakeCase();
             public static string ResidentialStatus = nameof(data.ResidentialStatus).ToSnakeCase();
             public static string Gender = nameof(data.Gender).ToSnakeCase();

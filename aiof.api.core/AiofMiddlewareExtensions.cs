@@ -97,7 +97,10 @@ namespace aiof.api.core
 
             services.Configure<IpRateLimitOptions>(o =>
             {
-                var baseRateLimit = int.Parse(Startup._config[Keys.RateLimitBase]);
+                var rateLimitSeconds = int.Parse(Startup._config[Keys.RateLimitSecond]);
+                var rateLimitMinutes = int.Parse(Startup._config[Keys.RateLimitMinute]);
+                var rateLimitHours = int.Parse(Startup._config[Keys.RateLimitHour]);
+
                 var aiofProblemBase = new AiofProblemDetailBase
                 {
                     Code = StatusCodes.Status429TooManyRequests,
@@ -126,8 +129,20 @@ namespace aiof.api.core
                     new RateLimitRule
                     {
                         Endpoint = "*",
+                        Period = "1s",
+                        Limit = rateLimitSeconds,
+                    },
+                    new RateLimitRule
+                    {
+                        Endpoint = "*",
+                        Period = "1m",
+                        Limit = rateLimitMinutes,
+                    },
+                    new RateLimitRule
+                    {
+                        Endpoint = "*",
                         Period = "1h",
-                        Limit = 1,
+                        Limit = rateLimitHours,
                     }
                 };
             });
