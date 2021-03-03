@@ -120,29 +120,6 @@ namespace aiof.api.tests
         }
 
         [Theory]
-        [MemberData(nameof(Helper.GoalsUserId), MemberType = typeof(Helper))]
-        public async Task AddAsync_Multiple_IsSuccessful(int userId)
-        {
-            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();
-            var dto1 = Helper.RandomGoalDto();
-            var dto2 = Helper.RandomGoalDto();
-            var goals = _repo.AddAsync(new List<GoalDto> { dto1, dto2 });
-
-            await foreach (var goal in goals)
-            {
-                Assert.NotNull(goal);
-                Assert.NotNull(goal.Name);
-                Assert.Contains(goal.Type.ToString(), Constants.GoalTypes);
-                Assert.Equal(goal.UserId, userId);
-                Assert.True(goal.Amount > 0);
-                Assert.True(goal.CurrentAmount > 0);
-                Assert.True(goal.MonthlyContribution > 0);
-                Assert.NotEqual(DateTime.UtcNow, goal.PlannedDate);
-                Assert.False(goal.IsDeleted);
-            }
-        }
-
-        [Theory]
         [MemberData(nameof(Helper.GoalsIdUserId), MemberType = typeof(Helper))]
         public async Task UpdateAsync_ById_IsSuccessful(int id, int userId)
         {

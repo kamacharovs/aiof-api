@@ -56,6 +56,17 @@ namespace aiof.api.core.Controllers
         }
 
         /// <summary>
+        /// Add Goal
+        /// </summary>
+        [HttpPost]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IGoal), StatusCodes.Status201Created)]
+        public async Task<IActionResult> AddGoalAsync([FromBody, Required] string dto)
+        {
+            return Created(nameof(Goal), await _repo.AddAsync(dto));
+        }
+
+        /// <summary>
         /// Update Goal by id
         /// </summary>
         [HttpPut]
@@ -65,21 +76,9 @@ namespace aiof.api.core.Controllers
         [ProducesResponseType(typeof(IGoal), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpdateGoalAsync(
             [FromRoute, Required] int id, 
-            [FromBody, Required] GoalDto goalDto)
+            [FromBody, Required] GoalDto dto)
         {
-            return Ok(await _repo.UpdateAsync(id, goalDto));
-        }
-
-        /// <summary>
-        /// Add Goal
-        /// </summary>
-        [HttpPost]
-        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(IGoal), StatusCodes.Status201Created)]
-        public async Task<IActionResult> AddGoalAsync([FromBody, Required] GoalTripDto goalDto)
-        {
-            return Created(nameof(Goal), await _repo.AddAsync(goalDto));
-            //return Created(nameof(Goal), await _repo.AddAsync(goalDto));
+            return Ok(await _repo.UpdateAsync(id, dto));
         }
 
         /// <summary>

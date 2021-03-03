@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using System.Text.Json;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -54,17 +55,17 @@ namespace aiof.api.services
         }
 
         public async Task<IGoal> GetAsync(
-            GoalDto goalDto,
+            GoalDto dto,
             bool asNoTracking = true)
         {
             return await GetQuery(asNoTracking)
-                .FirstOrDefaultAsync(x => x.Name == goalDto.Name
-                    && x.Type == goalDto.Type
-                    && x.Amount == goalDto.Amount
-                    && x.CurrentAmount == goalDto.CurrentAmount
-                    && x.MonthlyContribution == goalDto.MonthlyContribution
-                    && x.PlannedDate == goalDto.PlannedDate
-                    && x.ProjectedDate == goalDto.ProjectedDate);
+                .FirstOrDefaultAsync(x => x.Name == dto.Name
+                    && x.Type == dto.Type
+                    && x.Amount == dto.Amount
+                    && x.CurrentAmount == dto.CurrentAmount
+                    && x.MonthlyContribution == dto.MonthlyContribution
+                    && x.PlannedDate == dto.PlannedDate
+                    && x.ProjectedDate == dto.ProjectedDate);
         }
 
         public async Task<IEnumerable<IGoal>> GetAsync(
@@ -94,9 +95,9 @@ namespace aiof.api.services
             return goals;
         }
 
-        public async Task<IGoal> AddAsync<T>(T dto)
-            where T : GoalDto
+        public async Task<IGoal> AddAsync(string dtoStr)
         {
+            var dto = JsonSerializer.Deserialize<GoalDto>(dtoStr);
             Goal goal;
 
             if (dto.Type == GoalType.Generic)
@@ -142,20 +143,14 @@ namespace aiof.api.services
             return goal;
         }
 
-        public async IAsyncEnumerable<IGoal> AddAsync(IEnumerable<GoalDto> goalDtos)
-        {
-            foreach (var goalDto in goalDtos)
-                yield return await AddAsync(goalDto);
-        }
-
         public async Task<IGoal> UpdateAsync(
             int id, 
-            GoalDto goalDto)
+            GoalDto dto)
         {
-            await CheckAsync(goalDto);
+            await CheckAsync(dto);
 
             var goal = await GetAsync(id, false);
-            var goalToUpdate = _mapper.Map(goalDto, goal as Goal);
+            var goalToUpdate = _mapper.Map(dto, goal as Goal);
 
             _context.Goals
                 .Update(goalToUpdate);
@@ -177,12 +172,12 @@ namespace aiof.api.services
         }
 
         private async Task CheckAsync(
-            GoalDto goalDto,
+            GoalDto dto,
             string message = null)
         {
-            if (goalDto == null)
+            if (dto == null)
             { throw new AiofFriendlyException(HttpStatusCode.BadRequest, message ?? $"Goal DTO cannot be NULL"); }
-            else if (await GetAsync(goalDto) != null) 
+            else if (await GetAsync(dto) != null) 
             { throw new AiofFriendlyException(HttpStatusCode.BadRequest, message ?? $"Goal already exists"); }
         }
     }
