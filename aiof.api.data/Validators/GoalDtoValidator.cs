@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 using FluentValidation;
 
@@ -18,8 +19,12 @@ namespace aiof.api.data
                 .NotEmpty();
 
             RuleFor(x => x.Type)
-                .NotNull()
-                .NotEmpty();
+                .Must(x =>
+                {
+                    return Constants.GoalTypes
+                        .ToList()
+                        .Contains(x.ToString());
+                });
 
             RuleFor(x => x.Amount)
                 .NotNull()

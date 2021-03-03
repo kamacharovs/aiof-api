@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 using Microsoft.AspNetCore.Http;
 
@@ -21,6 +23,14 @@ namespace aiof.api.data
             StatusCodes.Status401Unauthorized,
             StatusCodes.Status403Forbidden
         };
+
+        public static IEnumerable<string> GoalTypes =>
+            Enum.GetNames(typeof(GoalType))
+            .ToList();
+
+        public static IEnumerable<string> GoalTripTypes =>
+            Enum.GetNames(typeof(GoalTripType))
+            .ToList();
     }
 
     public static class Keys

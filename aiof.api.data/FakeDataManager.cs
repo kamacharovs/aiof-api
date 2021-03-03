@@ -218,10 +218,10 @@ namespace aiof.api.data
                     Id = 1,
                     PublicKey = Guid.Parse("446b2d9b-6d63-4021-946c-d9b0fd99d3fe"),
                     Name = "buy a home by 2021",
-                    Type = GoalType.Trip,
+                    Type = GoalType.Generic,
                     UserId = 1,
                     Amount = 3000M,
-                    CurrentAmount = 0M,
+                    CurrentAmount = 250M,
                     MonthlyContribution = 200M
                 }
             };
@@ -982,11 +982,11 @@ namespace aiof.api.data
             }
             else if (type)
             {
-                foreach (var fakeGoalTypeName in fakeGoals.Where(x => !x.IsDeleted).Select(x => x.Type).Distinct())
+                foreach (var fakeGoalType in fakeGoals.Where(x => !x.IsDeleted).Select(x => x.Type).Distinct())
                 {
                     toReturn.Add(new object[]
                     {
-                        fakeGoalTypeName
+                        fakeGoalType
                     });
                 }
             }

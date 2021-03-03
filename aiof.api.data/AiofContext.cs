@@ -194,12 +194,14 @@ namespace aiof.api.data
                 e.HasQueryFilter(x => x.UserId == Tenant.UserId
                     && !x.IsDeleted);
 
-                e.HasDiscriminator(x => x.Type);
+                e.HasDiscriminator(x => x.Type)
+                    .HasValue<Goal>(GoalType.Generic)
+                    .HasValue<GoalTrip>(GoalType.Trip);
 
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
-                e.Property(x => x.Type).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.Type).HasSnakeCaseColumnName().HasConversion<string>().IsRequired();
                 e.Property(x => x.UserId).HasSnakeCaseColumnName().HasDefaultValue(Tenant.UserId).IsRequired();
                 e.Property(x => x.Amount).HasSnakeCaseColumnName();
                 e.Property(x => x.CurrentAmount).HasSnakeCaseColumnName();
@@ -213,7 +215,7 @@ namespace aiof.api.data
                 e.ToTable(Keys.Entity.GoalTrip);
 
                 e.Property(x => x.Destination).HasSnakeCaseColumnName().HasMaxLength(300).IsRequired();
-                e.Property(x => x.TripType).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.TripType).HasSnakeCaseColumnName().HasConversion<string>().IsRequired();
                 e.Property(x => x.Duration).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.Travelers).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.Flight).HasSnakeCaseColumnName();

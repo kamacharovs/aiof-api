@@ -102,9 +102,7 @@ namespace aiof.api.core.Controllers
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status200OK)]
         public IActionResult GetGoalTypes()
         {
-            return Ok(Enum.GetValues(typeof(GoalType))
-                .Cast<string>()
-                .ToList());
+            return Ok(Constants.GoalTypes);
         }
     }
 }

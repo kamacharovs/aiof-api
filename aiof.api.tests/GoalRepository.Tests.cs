@@ -20,8 +20,9 @@ namespace aiof.api.tests
             var goal = await _repo.GetAsync(id);
 
             Assert.NotNull(goal);
-            Assert.NotNull(goal);
             Assert.NotNull(goal.Name);
+            Assert.Contains(goal.Type.ToString(), Constants.GoalTypes);
+            Assert.Equal(goal.UserId, userId);
             Assert.True(goal.Amount > 0);
             Assert.True(goal.CurrentAmount > 0);
             Assert.True(goal.MonthlyContribution > 0);
@@ -40,7 +41,7 @@ namespace aiof.api.tests
 
         [Theory]
         [MemberData(nameof(Helper.GoalsType), MemberType = typeof(Helper))]
-        public async Task GetAsync_ByTypeName_IsSuccessful(GoalType type)
+        public async Task GetAsync_ByType_IsSuccessful(GoalType type)
         {
             var _repo = new ServiceHelper().GetRequiredService<IGoalRepository>();
             var goals = await _repo.GetAsync(type);
@@ -49,6 +50,8 @@ namespace aiof.api.tests
             Assert.NotEmpty(goals);
             Assert.NotNull(goal);
             Assert.NotNull(goal.Name);
+            Assert.Contains(goal.Type.ToString(), Constants.GoalTypes);
+            Assert.True(goal.UserId > 0);
             Assert.True(goal.Amount > 0);
             Assert.True(goal.CurrentAmount > 0);
             Assert.True(goal.MonthlyContribution > 0);
@@ -67,6 +70,8 @@ namespace aiof.api.tests
             Assert.NotEmpty(goals);
             Assert.NotNull(goal);
             Assert.NotNull(goal.Name);
+            Assert.Contains(goal.Type.ToString(), Constants.GoalTypes);
+            Assert.Equal(goal.UserId, userId);
             Assert.True(goal.Amount > 0);
             Assert.True(goal.CurrentAmount > 0);
             Assert.True(goal.MonthlyContribution > 0);
@@ -94,6 +99,8 @@ namespace aiof.api.tests
 
             Assert.NotNull(goal);
             Assert.NotNull(goal.Name);
+            Assert.Contains(goal.Type.ToString(), Constants.GoalTypes);
+            Assert.Equal(goal.UserId, userId);
             Assert.True(goal.Amount > 0);
             Assert.True(goal.CurrentAmount > 0);
             Assert.True(goal.MonthlyContribution > 0);
@@ -125,6 +132,8 @@ namespace aiof.api.tests
             {
                 Assert.NotNull(goal);
                 Assert.NotNull(goal.Name);
+                Assert.Contains(goal.Type.ToString(), Constants.GoalTypes);
+                Assert.Equal(goal.UserId, userId);
                 Assert.True(goal.Amount > 0);
                 Assert.True(goal.CurrentAmount > 0);
                 Assert.True(goal.MonthlyContribution > 0);
@@ -148,6 +157,8 @@ namespace aiof.api.tests
 
             Assert.NotNull(goal);
             Assert.NotNull(goal.Name);
+            Assert.Contains(goal.Type.ToString(), Constants.GoalTypes);
+            Assert.Equal(goal.UserId, userId);
             Assert.True(goal.Amount > 0);
             Assert.True(goal.CurrentAmount > 0);
             Assert.True(goal.MonthlyContribution > 0);
