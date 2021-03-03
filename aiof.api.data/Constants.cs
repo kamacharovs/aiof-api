@@ -111,7 +111,6 @@ namespace aiof.api.data
             public static string GoalTrip = nameof(data.GoalTrip).ToSnakeCase();
             public static string AssetType = nameof(data.AssetType).ToSnakeCase();
             public static string LiabilityType = nameof(data.LiabilityType).ToSnakeCase();
-            public static string Frequency = nameof(data.Frequency).ToSnakeCase();
             public static string Subscription = nameof(data.Subscription).ToSnakeCase();
             public static string Account = nameof(data.Account).ToSnakeCase();
             public static string AccountType = nameof(data.AccountType).ToSnakeCase();

@@ -40,9 +40,6 @@ namespace aiof.api.data
             _context.Goals
                 .AddRange(GetFakeGoals());
 
-            _context.Frequencies
-                .AddRange(GetFakeFrequencies());
-
             _context.Subscriptions
                 .AddRange(GetFakeSubscriptions());
 
@@ -297,33 +294,6 @@ namespace aiof.api.data
             };
         }
 
-        public IEnumerable<Frequency> GetFakeFrequencies()
-        {
-            return new List<Frequency>
-            {
-                new Frequency
-                {
-                    Name = "yearly",
-                    Value = 1
-                },
-                new Frequency
-                {
-                    Name = "monthly",
-                    Value = 12
-                },
-                new Frequency
-                {
-                    Name = "weekly",
-                    Value = 52
-                },
-                new Frequency
-                {
-                    Name = "daily",
-                    Value = 365
-                }
-            };
-        }
-
         public IEnumerable<Subscription> GetFakeSubscriptions()
         {
             return new List<Subscription>
@@ -335,7 +305,6 @@ namespace aiof.api.data
                     Name = "Amazon Prime",
                     Description = "Yearly Amazon Prime subscription",
                     Amount = 99M,
-                    PaymentFrequencyName = "yearly",
                     PaymentLength = 1,
                     From = "Amazon",
                     Url = "https://amazon.com/",
@@ -348,7 +317,6 @@ namespace aiof.api.data
                     Name = "Spotify",
                     Description = "My monthly Spotify subscription",
                     Amount = 10.99M,
-                    PaymentFrequencyName = "monthly",
                     PaymentLength = 12,
                     From = "Spotify",
                     Url = "https://spotify.com/",
@@ -361,7 +329,6 @@ namespace aiof.api.data
                     Name = "Generic",
                     Description = "My generic subscription",
                     Amount = 15.99M,
-                    PaymentFrequencyName = "monthly",
                     PaymentLength = 12,
                     From = "Generic",
                     Url = "https://google.com/",
@@ -375,7 +342,6 @@ namespace aiof.api.data
                     Name = "Spotify",
                     Description = "My monthly Spotify subscription",
                     Amount = 10.99M,
-                    PaymentFrequencyName = "monthly",
                     PaymentLength = 12,
                     From = "Generic",
                     Url = "https://spotify.com/",

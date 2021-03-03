@@ -19,7 +19,6 @@ namespace aiof.api.data
         public virtual DbSet<LiabilityType> LiabilityTypes { get; set; }
         public virtual DbSet<Goal> Goals { get; set; }
         public virtual DbSet<GoalTrip> GoalTrips { get; set; }
-        public virtual DbSet<Frequency> Frequencies { get; set; }
         public virtual DbSet<Subscription> Subscriptions { get; set; }
         public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<AccountType> AccountTypes { get; set; }
@@ -246,17 +245,6 @@ namespace aiof.api.data
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
             });
 
-            modelBuilder.Entity<Frequency>(e =>
-            {
-                e.ToTable(Keys.Entity.Frequency);
-
-                e.HasKey(x => x.Name);
-
-                e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(20).IsRequired();
-                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
-                e.Property(x => x.Value).HasSnakeCaseColumnName().IsRequired();
-            });
-
             modelBuilder.Entity<Subscription>(e =>
             {
                 e.ToTable(Keys.Entity.Subscription);
@@ -271,17 +259,11 @@ namespace aiof.api.data
                 e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
                 e.Property(x => x.Description).HasSnakeCaseColumnName().HasMaxLength(500);
                 e.Property(x => x.Amount).HasSnakeCaseColumnName().IsRequired();
-                e.Property(x => x.PaymentFrequencyName).HasSnakeCaseColumnName().HasMaxLength(20).IsRequired();
                 e.Property(x => x.PaymentLength).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.From).HasSnakeCaseColumnName().HasMaxLength(200);
                 e.Property(x => x.Url).HasSnakeCaseColumnName().HasMaxLength(500);
                 e.Property(x => x.UserId).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.IsDeleted).HasSnakeCaseColumnName().IsRequired();
-
-                e.HasOne(x => x.PaymentFrequency)
-                    .WithMany()
-                    .HasForeignKey(x => x.PaymentFrequencyName)
-                    .IsRequired();
             });
 
             modelBuilder.Entity<Account>(e =>

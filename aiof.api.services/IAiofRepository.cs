@@ -16,6 +16,5 @@ namespace aiof.api.services
         Task<IUser> UpsertFinanceAsync(
             int userId,
             UserDto userDto);
-        Task<IEnumerable<IFrequency>> GetFrequenciesAsync();
     }
 }
