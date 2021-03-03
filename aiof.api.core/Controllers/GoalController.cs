@@ -52,7 +52,7 @@ namespace aiof.api.core.Controllers
         [ProducesResponseType(typeof(IEnumerable<IGoal>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllAsync()
         {
-            return Ok(await _repo.GetAllAsync());
+            return Ok(await _repo.GetAllAsObjectsAsync());
         }
 
         /// <summary>

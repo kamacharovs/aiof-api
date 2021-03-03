@@ -82,6 +82,17 @@ namespace aiof.api.services
             return await GetQuery(asNoTracking)
                 .ToListAsync();
         }
+        public async Task<IEnumerable<object>> GetAllAsObjectsAsync(bool asNoTracking = true)
+        {
+            var goals = new List<object>();
+            var goalsInDb = await GetQuery(asNoTracking)
+                .ToListAsync();
+
+            foreach (var goal in goalsInDb)
+                goals.Add(goal);
+
+            return goals;
+        }
 
         public async Task<IGoal> AddAsync(GoalDto goalDto)
         {
