@@ -193,10 +193,6 @@ namespace aiof.api.data
                 e.HasQueryFilter(x => x.UserId == Tenant.UserId
                     && !x.IsDeleted);
 
-                e.HasDiscriminator(x => x.Type)
-                    .HasValue<Goal>(GoalType.Generic)
-                    .HasValue<GoalTrip>(GoalType.Trip);
-
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
