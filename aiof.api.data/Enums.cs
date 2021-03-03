@@ -55,4 +55,24 @@ namespace aiof.api.data
         Retirement,
         Taxable,
     }
+
+    public enum GoalType
+    {
+        Generic,
+        Trip,
+        BuyAHome,
+        BuyACar
+    }
+    public enum GoalTripType
+    {
+        Romance,
+        Adventure,
+        Beach,
+        Family,
+        Golf,
+        Luxury,
+        NationalParks,
+        Spa,
+        Other
+    }
 }

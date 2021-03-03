@@ -11,7 +11,6 @@ using AutoMapper;
 using FluentValidation;
 
 using aiof.api.data;
-using System.Text.Json;
 
 namespace aiof.api.services
 {
@@ -38,22 +37,11 @@ namespace aiof.api.services
         private IQueryable<Goal> GetQuery(bool asNoTracking = true)
         {
             var goalsQuery = _context.Goals
-                .Include(x => x.Type)
-                .Include(x => x.ContributionFrequency)
                 .AsQueryable();
 
             return asNoTracking
                 ? goalsQuery.AsNoTracking()  
                 : goalsQuery;
-        }
-        private IQueryable<GoalType> GetTypesQuery(bool asNoTracking = true)
-        {
-            var goalTypesQuery = _context.GoalTypes
-                .AsQueryable();
-
-            return asNoTracking
-                ? goalTypesQuery.AsNoTracking()
-                : goalTypesQuery;
         }
 
         public async Task<IGoal> GetAsync(
@@ -71,42 +59,27 @@ namespace aiof.api.services
         {
             return await GetQuery(asNoTracking)
                 .FirstOrDefaultAsync(x => x.Name == goalDto.Name
-                    && x.TypeName == goalDto.TypeName
+                    && x.Type == goalDto.Type
                     && x.Amount == goalDto.Amount
                     && x.CurrentAmount == goalDto.CurrentAmount
-                    && x.Contribution == goalDto.Contribution
-                    && x.ContributionFrequencyName == goalDto.ContributionFrequencyName);
+                    && x.MonthlyContribution == goalDto.MonthlyContribution
+                    && x.PlannedDate == goalDto.PlannedDate
+                    && x.ProjectedDate == goalDto.ProjectedDate);
         }
 
         public async Task<IEnumerable<IGoal>> GetAsync(
-            string typeName,
+            GoalType type,
             bool asNoTracking = true)
         {
             return await GetQuery(asNoTracking)
-                .Where(x => x.TypeName == typeName)
-                .OrderBy(x => x.TypeName)
+                .Where(x => x.Type == type)
+                .OrderBy(x => x.Type)
                 .ToListAsync();
         }
 
         public async Task<IEnumerable<IGoal>> GetAllAsync(bool asNoTracking = true)
         {
             return await GetQuery(asNoTracking)
-                .ToListAsync();
-        }
-
-        public async Task<IGoalType> GetTypeAsync(
-            string typeName,
-            bool asNoTracking = true)
-        {
-            return await GetTypesQuery(asNoTracking)
-                .FirstOrDefaultAsync(x => x.Name == typeName)
-                ?? throw new AiofNotFoundException($"Goal type with name={typeName} was not found");
-        }
-
-        public async Task<IEnumerable<IGoalType>> GetTypesAsync()
-        {
-            return await GetTypesQuery()
-                .OrderBy(x => x.Name)
                 .ToListAsync();
         }
 
@@ -121,10 +94,6 @@ namespace aiof.api.services
 
             await _context.Goals.AddAsync(goal);
             await _context.SaveChangesAsync();
-
-            await _context.Entry(goal)
-                .Reference(x => x.Type)
-                .LoadAsync();
 
             _logger.LogInformation("{Tenant} | Created Goal with Id={GoalId}, PublicKey={GoalPublicKey} and UserId={GoalUserId}",
                 _context.Tenant.Log,
@@ -154,12 +123,6 @@ namespace aiof.api.services
                 .Update(goalToUpdate);
 
             await _context.SaveChangesAsync();
-            await _context.Entry(goal)
-                .Reference(x => x.Type)
-                .LoadAsync();
-            await _context.Entry(goal)
-                .Reference(x => x.ContributionFrequency)
-                .LoadAsync();
 
             _logger.LogInformation("{Tenant} | Updated Goal with Id={GoalId}, PublicKey={GoalPublicKey} and UserId={GoalUserId}",
                 _context.Tenant.Log,
@@ -181,8 +144,6 @@ namespace aiof.api.services
         {
             if (goalDto == null)
             { throw new AiofFriendlyException(HttpStatusCode.BadRequest, message ?? $"Goal DTO cannot be NULL"); }
-            else if (goalDto.TypeName != null && await GetTypeAsync(goalDto.TypeName) == null) 
-            { throw new AiofFriendlyException(HttpStatusCode.BadRequest, message ?? $"Goal type doesn't exist"); }
             else if (await GetAsync(goalDto) != null) 
             { throw new AiofFriendlyException(HttpStatusCode.BadRequest, message ?? $"Goal already exists"); }
         }

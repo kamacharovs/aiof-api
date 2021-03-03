@@ -15,10 +15,10 @@ namespace aiof.api.data
         public virtual DbSet<UserProfile> UserProfiles { get; set; }
         public virtual DbSet<Asset> Assets { get; set; }
         public virtual DbSet<Liability> Liabilities { get; set; }
-        public virtual DbSet<Goal> Goals { get; set; }
         public virtual DbSet<AssetType> AssetTypes { get; set; }
         public virtual DbSet<LiabilityType> LiabilityTypes { get; set; }
-        public virtual DbSet<GoalType> GoalTypes { get; set; }
+        public virtual DbSet<Goal> Goals { get; set; }
+        public virtual DbSet<GoalTrip> GoalTrips { get; set; }
         public virtual DbSet<Frequency> Frequencies { get; set; }
         public virtual DbSet<Subscription> Subscriptions { get; set; }
         public virtual DbSet<Account> Accounts { get; set; }
@@ -194,27 +194,34 @@ namespace aiof.api.data
                 e.HasQueryFilter(x => x.UserId == Tenant.UserId
                     && !x.IsDeleted);
 
+                e.HasDiscriminator(x => x.Type);
+
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
-                e.Property(x => x.Amount).HasSnakeCaseColumnName().IsRequired();
-                e.Property(x => x.CurrentAmount).HasSnakeCaseColumnName().IsRequired();
-                e.Property(x => x.Contribution).HasSnakeCaseColumnName().IsRequired();
-                e.Property(x => x.ContributionFrequencyName).HasSnakeCaseColumnName().HasMaxLength(20).IsRequired();
-                e.Property(x => x.TypeName).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
-                e.Property(x => x.PlannedDate).HasSnakeCaseColumnName();
-                e.Property(x => x.UserId).HasSnakeCaseColumnName();
+                e.Property(x => x.Type).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.UserId).HasSnakeCaseColumnName().HasDefaultValue(Tenant.UserId).IsRequired();
+                e.Property(x => x.Amount).HasSnakeCaseColumnName();
+                e.Property(x => x.CurrentAmount).HasSnakeCaseColumnName();
+                e.Property(x => x.MonthlyContribution).HasSnakeCaseColumnName();
+                e.Property(x => x.PlannedDate).HasColumnType("timestamp").HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.ProjectedDate).HasColumnType("timestamp").HasSnakeCaseColumnName();
                 e.Property(x => x.IsDeleted).HasSnakeCaseColumnName().IsRequired();
+            });
+            modelBuilder.Entity<GoalTrip>(e =>
+            {
+                e.ToTable(Keys.Entity.GoalTrip);
 
-                e.HasOne(x => x.Type)
-                    .WithMany()
-                    .HasForeignKey(x => x.TypeName)
-                    .IsRequired();
-
-                e.HasOne(x => x.ContributionFrequency)
-                    .WithMany()
-                    .HasForeignKey(x => x.ContributionFrequencyName)
-                    .IsRequired();
+                e.Property(x => x.Destination).HasSnakeCaseColumnName().HasMaxLength(300).IsRequired();
+                e.Property(x => x.TripType).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.Duration).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.Travelers).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.Flight).HasSnakeCaseColumnName();
+                e.Property(x => x.Hotel).HasSnakeCaseColumnName();
+                e.Property(x => x.Car).HasSnakeCaseColumnName();
+                e.Property(x => x.Food).HasSnakeCaseColumnName();
+                e.Property(x => x.Activities).HasSnakeCaseColumnName();
+                e.Property(x => x.Other).HasSnakeCaseColumnName();
             });
 
             modelBuilder.Entity<AssetType>(e =>
@@ -230,16 +237,6 @@ namespace aiof.api.data
             modelBuilder.Entity<LiabilityType>(e =>
             {
                 e.ToTable(Keys.Entity.LiabilityType);
-
-                e.HasKey(x => x.Name);
-
-                e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
-                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
-            });
-
-            modelBuilder.Entity<GoalType>(e =>
-            {
-                e.ToTable(Keys.Entity.GoalType);
 
                 e.HasKey(x => x.Name);
 

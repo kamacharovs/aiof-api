@@ -37,9 +37,6 @@ namespace aiof.api.data
             _context.Liabilities
                 .AddRange(GetFakeLiabilities());
 
-            _context.GoalTypes
-                .AddRange(GetFakeGoalTypes());
-
             _context.Goals
                 .AddRange(GetFakeGoals());
 
@@ -221,12 +218,11 @@ namespace aiof.api.data
                     Id = 1,
                     PublicKey = Guid.Parse("446b2d9b-6d63-4021-946c-d9b0fd99d3fe"),
                     Name = "buy a home by 2021",
-                    Amount = 345000M,
-                    CurrentAmount = 50000M,
-                    Contribution = 2000M,
-                    ContributionFrequencyName = "monthly",
-                    TypeName = "buy a home",
-                    UserId = 1
+                    Type = GoalType.Trip,
+                    UserId = 1,
+                    Amount = 3000M,
+                    CurrentAmount = 0M,
+                    MonthlyContribution = 200M
                 }
             };
         }
@@ -295,61 +291,6 @@ namespace aiof.api.data
                     Name = "rv"
                 },
                 new LiabilityType
-                {
-                    Name = "other"
-                }
-            };
-        }
-
-        public IEnumerable<GoalType> GetFakeGoalTypes()
-        {
-            return new List<GoalType>
-            {
-                new GoalType
-                {
-                    Name = "crush credit card debt"
-                },
-                new GoalType
-                {
-                    Name = "conquer my loans"
-                },
-                new GoalType
-                {
-                    Name = "save for a rainy day"
-                },
-                new GoalType
-                {
-                    Name = "prepare for retirement"
-                },
-                new GoalType
-                {
-                    Name = "buy a home"
-                },
-                new GoalType
-                {
-                    Name = "buy a car"
-                },
-                new GoalType
-                {
-                    Name = "save for college"
-                },
-                new GoalType
-                {
-                    Name = "take a trip"
-                },
-                new GoalType
-                {
-                    Name = "improve my home"
-                },
-                new GoalType
-                {
-                    Name = "short term"
-                },
-                new GoalType
-                {
-                    Name = "long term"
-                },
-                new GoalType
                 {
                     Name = "other"
                 }
@@ -1010,7 +951,7 @@ namespace aiof.api.data
         public IEnumerable<object[]> GetFakeGoalsData(
             bool id = false,
             bool userId = false,
-            bool typeName = false)
+            bool type = false)
         {
             var fakeGoals = GetFakeGoals()
                 .ToArray();
@@ -1039,9 +980,9 @@ namespace aiof.api.data
                     });
                 }
             }
-            else if (typeName)
+            else if (type)
             {
-                foreach (var fakeGoalTypeName in fakeGoals.Where(x => !x.IsDeleted).Select(x => x.TypeName).Distinct())
+                foreach (var fakeGoalTypeName in fakeGoals.Where(x => !x.IsDeleted).Select(x => x.Type).Distinct())
                 {
                     toReturn.Add(new object[]
                     {

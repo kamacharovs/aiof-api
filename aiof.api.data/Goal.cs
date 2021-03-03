@@ -5,8 +5,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace aiof.api.data
 {
-    public class Goal : IGoal, 
-        IPublicKeyId, IPublicKeyName, IIsDeleted
+    public class Goal : IGoal,
+        IPublicKeyId, IIsDeleted
     {
         [Required]
         public int Id { get; set; }
@@ -18,33 +18,21 @@ namespace aiof.api.data
         [MaxLength(100)]
         public string Name { get; set; }
 
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         [Required]
-        [MaxLength(100)]
-        public string TypeName { get; set; }
-
-        [JsonIgnore]
         public GoalType Type { get; set; }
 
         [Required]
-        public decimal Amount { get; set; }
+        public int UserId { get; set; }
+
+        public decimal? Amount { get; set; }
+        public decimal? CurrentAmount { get; set; }
+        public decimal? MonthlyContribution { get; set; }
 
         [Required]
-        public decimal CurrentAmount { get; set; }
+        public DateTime PlannedDate { get; set; } = DateTime.UtcNow.AddYears(1);
 
-        [Required]
-        public decimal Contribution { get; set; }
-
-        [Required]
-        [MaxLength(20)]
-        public string ContributionFrequencyName { get; set; }
-
-        [JsonIgnore]
-        public Frequency ContributionFrequency { get; set; }
-
-        public DateTime? PlannedDate { get; set; } = DateTime.UtcNow.AddYears(1);
-
-        [JsonIgnore]
-        public int? UserId { get; set; }
+        public DateTime? ProjectedDate { get; set; }
 
         [JsonIgnore]
         public bool IsDeleted { get; set; } = false;
@@ -53,11 +41,11 @@ namespace aiof.api.data
     public class GoalDto
     {
         public string Name { get; set; }
-        public string TypeName { get; set; }
+        public GoalType Type { get; set; }
         public decimal? Amount { get; set; }
         public decimal? CurrentAmount { get; set; }
-        public decimal? Contribution { get; set; }
-        public string ContributionFrequencyName { get; set; }
-        public DateTime? PlannedDate { get; set; }
+        public decimal? MonthlyContribution { get; set; }
+        public DateTime PlannedDate { get; set; }
+        public DateTime? ProjectedDate { get; set; }
     }
 }

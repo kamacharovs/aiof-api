@@ -20,19 +20,13 @@ namespace aiof.api.tests
             var goal = await _repo.GetAsync(id);
 
             Assert.NotNull(goal);
+            Assert.NotNull(goal);
             Assert.NotNull(goal.Name);
-            Assert.NotNull(goal.TypeName);
-            Assert.NotNull(goal.Type);
             Assert.True(goal.Amount > 0);
             Assert.True(goal.CurrentAmount > 0);
-            Assert.True(goal.Contribution > 0);
-            Assert.NotNull(goal.ContributionFrequencyName);
-            Assert.NotNull(goal.ContributionFrequency);
-            Assert.Equal(userId, goal.UserId);
+            Assert.True(goal.MonthlyContribution > 0);
+            Assert.NotEqual(DateTime.UtcNow, goal.PlannedDate);
             Assert.False(goal.IsDeleted);
-
-            if (goal.PlannedDate != null)
-                Assert.NotEqual(new DateTime(), goal.PlannedDate);
         }
 
         [Theory]
@@ -45,27 +39,21 @@ namespace aiof.api.tests
         }
 
         [Theory]
-        [MemberData(nameof(Helper.GoalsTypeName), MemberType = typeof(Helper))]
-        public async Task GetAsync_ByTypeName_IsSuccessful(string typeName)
+        [MemberData(nameof(Helper.GoalsType), MemberType = typeof(Helper))]
+        public async Task GetAsync_ByTypeName_IsSuccessful(GoalType type)
         {
             var _repo = new ServiceHelper().GetRequiredService<IGoalRepository>();
-            var goals = await _repo.GetAsync(typeName);
+            var goals = await _repo.GetAsync(type);
             var goal = goals.FirstOrDefault();
 
             Assert.NotEmpty(goals);
             Assert.NotNull(goal);
             Assert.NotNull(goal.Name);
-            Assert.NotNull(goal.TypeName);
-            Assert.NotNull(goal.Type);
             Assert.True(goal.Amount > 0);
             Assert.True(goal.CurrentAmount > 0);
-            Assert.True(goal.Contribution > 0);
-            Assert.NotNull(goal.ContributionFrequencyName);
-            Assert.NotNull(goal.ContributionFrequency);
+            Assert.True(goal.MonthlyContribution > 0);
+            Assert.NotEqual(DateTime.UtcNow, goal.PlannedDate);
             Assert.False(goal.IsDeleted);
-
-            if (goal.PlannedDate != null)
-                Assert.NotEqual(new DateTime(), goal.PlannedDate);
         }
 
         [Theory]
@@ -79,17 +67,11 @@ namespace aiof.api.tests
             Assert.NotEmpty(goals);
             Assert.NotNull(goal);
             Assert.NotNull(goal.Name);
-            Assert.NotNull(goal.TypeName);
-            Assert.NotNull(goal.Type);
             Assert.True(goal.Amount > 0);
             Assert.True(goal.CurrentAmount > 0);
-            Assert.True(goal.Contribution > 0);
-            Assert.NotNull(goal.ContributionFrequencyName);
-            Assert.NotNull(goal.ContributionFrequency);
+            Assert.True(goal.MonthlyContribution > 0);
+            Assert.NotEqual(DateTime.UtcNow, goal.PlannedDate);
             Assert.False(goal.IsDeleted);
-
-            if (goal.PlannedDate != null)
-                Assert.NotEqual(new DateTime(), goal.PlannedDate);
         }
 
         [Theory]
@@ -103,31 +85,6 @@ namespace aiof.api.tests
         }
 
         [Theory]
-        [MemberData(nameof(Helper.GoalsTypeName), MemberType = typeof(Helper))]
-        public async Task GetTypeAsync_IsSuccessful(string typeName)
-        {
-            var _repo = new ServiceHelper().GetRequiredService<IGoalRepository>();
-            var goalType = await _repo.GetTypeAsync(typeName);
-
-            Assert.NotNull(goalType);
-            Assert.NotNull(goalType.Name);
-            Assert.NotEqual(Guid.Empty, goalType.PublicKey);
-        }
-
-        [Fact]
-        public async Task GetTypesAsync_IsSuccessful()
-        {
-            var _repo = new ServiceHelper().GetRequiredService<IGoalRepository>();
-            var types = await _repo.GetTypesAsync();
-            var type = types.FirstOrDefault();
-
-            Assert.NotEmpty(types);
-            Assert.NotNull(type);
-            Assert.NotNull(type.Name);
-            Assert.NotEqual(Guid.Empty, type.PublicKey);
-        }
-
-        [Theory]
         [MemberData(nameof(Helper.GoalsUserId), MemberType = typeof(Helper))]
         public async Task AddAsync_IsSuccessful(int userId)
         {
@@ -137,17 +94,11 @@ namespace aiof.api.tests
 
             Assert.NotNull(goal);
             Assert.NotNull(goal.Name);
-            Assert.NotNull(goal.TypeName);
-            Assert.NotNull(goal.Type);
             Assert.True(goal.Amount > 0);
             Assert.True(goal.CurrentAmount > 0);
-            Assert.True(goal.Contribution > 0);
-            Assert.NotNull(goal.ContributionFrequencyName);
-            Assert.NotNull(goal.ContributionFrequency);
+            Assert.True(goal.MonthlyContribution > 0);
+            Assert.NotEqual(DateTime.UtcNow, goal.PlannedDate);
             Assert.False(goal.IsDeleted);
-
-            if (goal.PlannedDate != null)
-                Assert.NotEqual(new DateTime(), goal.PlannedDate);
         }
 
         [Theory]
@@ -163,18 +114,6 @@ namespace aiof.api.tests
 
         [Theory]
         [MemberData(nameof(Helper.GoalsUserId), MemberType = typeof(Helper))]
-        public async Task AddAsync_TypeDoesntExist_Throws_NotFound(int userId)
-        {
-            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();
-            var dto = Helper.RandomGoalDto();
-            
-            dto.TypeName = "definitelydoesntexist";
-
-            await Assert.ThrowsAsync<AiofNotFoundException>(() => repo.AddAsync(dto));
-        }
-
-        [Theory]
-        [MemberData(nameof(Helper.GoalsUserId), MemberType = typeof(Helper))]
         public async Task AddAsync_Multiple_IsSuccessful(int userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();
@@ -186,17 +125,11 @@ namespace aiof.api.tests
             {
                 Assert.NotNull(goal);
                 Assert.NotNull(goal.Name);
-                Assert.NotNull(goal.TypeName);
-                Assert.NotNull(goal.Type);
                 Assert.True(goal.Amount > 0);
                 Assert.True(goal.CurrentAmount > 0);
-                Assert.True(goal.Contribution > 0);
-                Assert.NotNull(goal.ContributionFrequencyName);
-                Assert.NotNull(goal.ContributionFrequency);
+                Assert.True(goal.MonthlyContribution > 0);
+                Assert.NotEqual(DateTime.UtcNow, goal.PlannedDate);
                 Assert.False(goal.IsDeleted);
-
-                if (goal.PlannedDate != null)
-                    Assert.NotEqual(new DateTime(), goal.PlannedDate);
             }
         }
 
@@ -215,18 +148,11 @@ namespace aiof.api.tests
 
             Assert.NotNull(goal);
             Assert.NotNull(goal.Name);
-            Assert.NotNull(goal.TypeName);
-            Assert.NotNull(goal.Type);
             Assert.True(goal.Amount > 0);
-            Assert.Equal(newAmount, goal.Amount);
             Assert.True(goal.CurrentAmount > 0);
-            Assert.True(goal.Contribution > 0);
-            Assert.NotNull(goal.ContributionFrequencyName);
-            Assert.NotNull(goal.ContributionFrequency);
+            Assert.True(goal.MonthlyContribution > 0);
+            Assert.NotEqual(DateTime.UtcNow, goal.PlannedDate);
             Assert.False(goal.IsDeleted);
-
-            if (goal.PlannedDate != null)
-                Assert.NotEqual(new DateTime(), goal.PlannedDate);
         }
 
         [Theory]

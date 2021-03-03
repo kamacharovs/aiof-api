@@ -17,7 +17,7 @@ namespace aiof.api.data
                 .NotNull()
                 .NotEmpty();
 
-            RuleFor(x => x.TypeName)
+            RuleFor(x => x.Type)
                 .NotNull()
                 .NotEmpty();
 
@@ -34,17 +34,6 @@ namespace aiof.api.data
                 .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
                 .LessThan(CommonValidator.MaximumValue)
                 .WithMessage(CommonValidator.ValueMessage);
-
-            RuleFor(x => x.Contribution)
-                .NotNull()
-                .NotEmpty()
-                .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
-                .LessThan(CommonValidator.MaximumValue)
-                .WithMessage(CommonValidator.ValueMessage);
-
-            RuleFor(x => x.ContributionFrequencyName)
-                .NotNull()
-                .NotEmpty();
         }
     }
 }

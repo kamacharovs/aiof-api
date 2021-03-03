@@ -15,13 +15,9 @@ namespace aiof.api.services
             GoalDto goalDto,
             bool asNoTracking = true);
         Task<IEnumerable<IGoal>> GetAsync(
-            string typeName,
+            GoalType type,
             bool asNoTracking = true);
         Task<IEnumerable<IGoal>> GetAllAsync(bool asNoTracking = true);
-        Task<IGoalType> GetTypeAsync(
-            string typeName,
-            bool asNoTracking = true);
-        Task<IEnumerable<IGoalType>> GetTypesAsync();
         Task<IGoal> AddAsync(GoalDto goalDto);
         IAsyncEnumerable<IGoal> AddAsync(IEnumerable<GoalDto> goalDtos);
         Task<IGoal> UpdateAsync(

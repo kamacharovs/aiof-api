@@ -99,10 +99,12 @@ namespace aiof.api.core.Controllers
         /// </summary>
         [HttpGet]
         [Route("types")]
-        [ProducesResponseType(typeof(IEnumerable<IGoalType>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetGoalTypesAsync()
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status200OK)]
+        public IActionResult GetGoalTypes()
         {
-            return Ok(await _repo.GetTypesAsync());
+            return Ok(Enum.GetValues(typeof(GoalType))
+                .Cast<string>()
+                .ToList());
         }
     }
 }

@@ -190,10 +190,10 @@ namespace aiof.api.tests
                 id: true,
                 userId: true);
         }
-        public static IEnumerable<object[]> GoalsTypeName()
+        public static IEnumerable<object[]> GoalsType()
         {
             return _Fake.GetFakeGoalsData(
-                typeName: true);
+                type: true);
         }
 
         public static IEnumerable<object[]> SubscriptionsId()
@@ -302,11 +302,10 @@ namespace aiof.api.tests
         {
             return new Faker<GoalDto>()
                 .RuleFor(x => x.Name, f => f.Random.String2(10))
-                .RuleFor(x => x.TypeName, f => _Fake.GetFakeGoalTypes().First().Name)
+                .RuleFor(x => x.Type, f => GoalType.Generic)
                 .RuleFor(x => x.Amount, f => f.Random.Decimal(5000, 10000))
                 .RuleFor(x => x.CurrentAmount, f => f.Random.Decimal(1000, 4000))
-                .RuleFor(x => x.Contribution, f => f.Random.Decimal(700, 900))
-                .RuleFor(x => x.ContributionFrequencyName, f => "monthly")
+                .RuleFor(x => x.MonthlyContribution, f => f.Random.Decimal(100, 200))
                 .RuleFor(x => x.PlannedDate, f => DateTime.Now.AddDays(7));
         }
 
