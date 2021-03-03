@@ -41,7 +41,11 @@ namespace aiof.api.data
     public class GoalDto
     {
         public string Name { get; set; }
+
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        [Required]
         public GoalType Type { get; set; }
+
         public decimal? Amount { get; set; }
         public decimal? CurrentAmount { get; set; }
         public decimal? MonthlyContribution { get; set; }

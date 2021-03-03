@@ -46,6 +46,25 @@ namespace aiof.api.data
                 .ForMember(x => x.PlannedDate, o => o.MapFrom(s => s.PlannedDate))
                 .ForMember(x => x.ProjectedDate, o => o.Condition(s => s.ProjectedDate != null));
 
+            CreateMap<GoalTripDto, GoalTrip>()
+                .ForMember(x => x.Name, o => o.Condition(s => s.Name != null))
+                .ForMember(x => x.Type, o => o.MapFrom(s => s.Type))
+                .ForMember(x => x.Amount, o => o.Condition(s => s.Amount != null))
+                .ForMember(x => x.CurrentAmount, o => o.Condition(s => s.CurrentAmount != null))
+                .ForMember(x => x.MonthlyContribution, o => o.Condition(s => s.MonthlyContribution != null))
+                .ForMember(x => x.PlannedDate, o => o.MapFrom(s => s.PlannedDate))
+                .ForMember(x => x.ProjectedDate, o => o.Condition(s => s.ProjectedDate != null))
+                .ForMember(x => x.Destination, o => o.MapFrom(s => s.Destination))
+                .ForMember(x => x.TripType, o => o.MapFrom(s => s.TripType))
+                .ForMember(x => x.Duration, o => o.Condition(s => s.Duration != null))
+                .ForMember(x => x.Travelers, o => o.Condition(s => s.Travelers != null))
+                .ForMember(x => x.Flight, o => o.Condition(s => s.Flight != null))
+                .ForMember(x => x.Hotel, o => o.Condition(s => s.Hotel != null))
+                .ForMember(x => x.Car, o => o.Condition(s => s.Car != null))
+                .ForMember(x => x.Food, o => o.Condition(s => s.Food != null))
+                .ForMember(x => x.Activities, o => o.Condition(s => s.Activities != null))
+                .ForMember(x => x.Other, o => o.Condition(s => s.Other != null));
+
             CreateMap<LiabilityDto, Liability>()
                 .ForMember(x => x.Name, o => o.Condition(s => s.Name != null))
                 .ForMember(x => x.TypeName, o => o.Condition(s => s.TypeName != null))

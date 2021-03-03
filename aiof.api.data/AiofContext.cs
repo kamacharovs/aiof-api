@@ -197,7 +197,7 @@ namespace aiof.api.data
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
                 e.Property(x => x.Type).HasSnakeCaseColumnName().HasConversion<string>().IsRequired();
-                e.Property(x => x.UserId).HasSnakeCaseColumnName().HasDefaultValue(Tenant.UserId).IsRequired();
+                e.Property(x => x.UserId).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.Amount).HasSnakeCaseColumnName();
                 e.Property(x => x.CurrentAmount).HasSnakeCaseColumnName();
                 e.Property(x => x.MonthlyContribution).HasSnakeCaseColumnName();

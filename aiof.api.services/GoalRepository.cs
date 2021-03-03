@@ -94,20 +94,47 @@ namespace aiof.api.services
             return goals;
         }
 
-        public async Task<IGoal> AddAsync(GoalDto goalDto)
+        public async Task<IGoal> AddAsync<T>(T dto)
+            where T : GoalDto
         {
-            await _goalDtoValidator.ValidateAndThrowAsync(goalDto);
-            await CheckAsync(goalDto);
+            Goal goal;
 
-            var goal = _mapper.Map<Goal>(goalDto);
+            if (dto.Type == GoalType.Generic)
+            {
+                goal = _mapper.Map<Goal>(dto);
+                goal.UserId = _context.Tenant.UserId;
 
-            goal.UserId = _context.Tenant.UserId;
+                await _context.Goals.AddAsync(goal);
+                await _context.SaveChangesAsync();
+            }
+            if (dto.Type == GoalType.Trip)
+            {
+                goal = _mapper.Map<GoalTrip>(dto);
+                goal.UserId = _context.Tenant.UserId;
 
-            await _context.Goals.AddAsync(goal);
-            await _context.SaveChangesAsync();
+                // Calculate the amount, if it's null
+                var goalTrip = goal as GoalTrip;
 
-            _logger.LogInformation("{Tenant} | Created Goal with Id={GoalId}, PublicKey={GoalPublicKey} and UserId={GoalUserId}",
+                goalTrip.Amount = goal.Amount ?? 
+                    (goalTrip.Flight ?? 0
+                    + goalTrip.Hotel ?? 0
+                    + goalTrip.Car ?? 0
+                    + goalTrip.Food ?? 0
+                    + goalTrip.Activities ?? 0
+                    + goalTrip.Other) * goalTrip.Travelers;
+
+                await _context.GoalTrips.AddAsync(goalTrip);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
+                    $"Not supported");
+            }
+
+            _logger.LogInformation("{Tenant} | Created {GoalType} Goal with Id={GoalId}, PublicKey={GoalPublicKey} and UserId={GoalUserId}",
                 _context.Tenant.Log,
+                goal.Type,
                 goal.Id,
                 goal.PublicKey,
                 goal.UserId);

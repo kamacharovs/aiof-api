@@ -76,9 +76,10 @@ namespace aiof.api.core.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(IGoal), StatusCodes.Status201Created)]
-        public async Task<IActionResult> AddGoalAsync([FromBody, Required] GoalDto goalDto)
+        public async Task<IActionResult> AddGoalAsync([FromBody, Required] GoalTripDto goalDto)
         {
             return Created(nameof(Goal), await _repo.AddAsync(goalDto));
+            //return Created(nameof(Goal), await _repo.AddAsync(goalDto));
         }
 
         /// <summary>

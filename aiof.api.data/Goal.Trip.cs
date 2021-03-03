@@ -33,7 +33,11 @@ namespace aiof.api.data
     public class GoalTripDto : GoalDto
     {
         public string Destination { get; set; }
+
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        [Required]
         public GoalTripType TripType { get; set; }
+
         public double? Duration { get; set; }
         public int? Travelers { get; set; }
         public decimal? Flight { get; set; }
