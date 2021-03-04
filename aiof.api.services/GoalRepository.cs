@@ -156,10 +156,9 @@ namespace aiof.api.services
                 goal = _mapper.Map<GoalHome>(goalHomeDto);
                 goal.UserId = _context.Tenant.UserId;
 
-                // Calculate the amount, if it's null
+                // Calculate the amount and recommended amount. Counting insurance, property tax, closing costs, etc.
                 var goalHome = goal as GoalHome;
 
-                // Calculate the amount and recommended amount. Counting insurance, property tax, closing costs, etc.
                 goalHome.Amount = goalHome.Amount ?? goalHome.HomeValue * goalHome.PercentDownPayment;
                 goalHome.RecommendedAmount = goalHome.RecommendedAmount ?? goalHome.Amount + goalHome.HomeValue * 0.01M;
 
