@@ -78,7 +78,7 @@ namespace aiof.api.core
             services.AddSingleton<AbstractValidator<AssetDto>, AssetDtoValidator>()
                 .AddSingleton<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>()
                 .AddSingleton<AbstractValidator<LiabilityType>, LiabilityTypeValidator>()
-                .AddSingleton<AbstractValidator<GoalDto>, GoalDtoValidator>()
+                .AddSingleton<AbstractValidator<GoalDto>, GoalDtoValidator<GoalDto>>()
                 .AddSingleton<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>()
                 .AddSingleton<AbstractValidator<AccountDto>, AccountDtoValidator>()
                 .AddSingleton<AbstractValidator<UserDto>, UserDtoValidator>()

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Xunit;
+using Newtonsoft.Json;
 
 using aiof.api.data;
 using aiof.api.services;
@@ -94,7 +95,7 @@ namespace aiof.api.tests
         public async Task AddAsync_IsSuccessful(int userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();
-            var dto = Helper.RandomGoalDto();
+            var dto = JsonConvert.SerializeObject(Helper.RandomGoalDto());
             var goal = await _repo.AddAsync(dto);
 
             Assert.NotNull(goal);
@@ -113,7 +114,7 @@ namespace aiof.api.tests
         public async Task AddAsync_AlreadyExists_Throws_BadRequest(int userId)
         {
             var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();
-            var dto = Helper.RandomGoalDto();
+            var dto = JsonConvert.SerializeObject(Helper.RandomGoalDto());
             var goal = await repo.AddAsync(dto);
 
             await Assert.ThrowsAsync<AiofFriendlyException>(() => repo.AddAsync(dto));

@@ -9,10 +9,13 @@ namespace aiof.api.data
 
         public const decimal MinimumValue = 1M;
         public const decimal MaximumValue = 99999999M;
+        public const decimal MinimumPercentageValue = 0.1M;
+        public const decimal MaximumPercentageValue = 100M;
         public const int MinimumValueInt = 0;
         public const int MaximumValueInt = 99999999;
 
         public static string ValueMessage = $"Value must be between {MinimumValue} and {MaximumValue}";
+        public static string PercentageMessage = $"Percentage value must be between {MinimumPercentageValue} and {MaximumPercentageValue}";
 
         public static bool IsValidPhoneNumber(string value)
         {
