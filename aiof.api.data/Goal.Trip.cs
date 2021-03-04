@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations;
 
 namespace aiof.api.data
@@ -12,7 +11,6 @@ namespace aiof.api.data
         [MaxLength(300)]
         public string Destination { get; set; }
 
-        [JsonConverter(typeof(JsonStringEnumConverter))]
         [Required]
         public GoalTripType TripType { get; set; }
 

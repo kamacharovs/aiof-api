@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -63,8 +64,7 @@ namespace aiof.api.core.Controllers
         [ProducesResponseType(typeof(IGoal), StatusCodes.Status201Created)]
         public async Task<IActionResult> AddGoalAsync()
         {
-            var content = await new System.IO.StreamReader(Request.Body).ReadToEndAsync();
-            return Created(nameof(Goal), await _repo.AddAsync(""));
+            return Created(nameof(Goal), await _repo.AddAsync(await Request.GetRawBodyStringAsync()));
         }
 
         /// <summary>

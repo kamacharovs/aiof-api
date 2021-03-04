@@ -97,7 +97,11 @@ namespace aiof.api.services
 
         public async Task<IGoal> AddAsync(string dtoStr)
         {
-            var dto = JsonSerializer.Deserialize<GoalDto>(dtoStr);
+            if (string.IsNullOrWhiteSpace(dtoStr))
+                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
+                    $"Error while adding Goal. Payload cannot be empty");
+
+            var dto = Newtonsoft.Json.JsonConvert.DeserializeObject<GoalDto>(dtoStr);
             Goal goal;
 
             if (dto.Type == GoalType.Generic)
@@ -110,7 +114,7 @@ namespace aiof.api.services
             }
             if (dto.Type == GoalType.Trip)
             {
-                goal = _mapper.Map<GoalTrip>(dto);
+                goal = _mapper.Map<GoalTrip>(Newtonsoft.Json.JsonConvert.DeserializeObject<GoalTripDto>(dtoStr));
                 goal.UserId = _context.Tenant.UserId;
 
                 // Calculate the amount, if it's null

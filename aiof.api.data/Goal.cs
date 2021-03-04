@@ -18,7 +18,6 @@ namespace aiof.api.data
         [MaxLength(100)]
         public string Name { get; set; }
 
-        [JsonConverter(typeof(JsonStringEnumConverter))]
         [Required]
         public GoalType Type { get; set; }
 
