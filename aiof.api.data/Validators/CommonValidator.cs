@@ -7,9 +7,9 @@ namespace aiof.api.data
     {
         public static string RegexPhoneNumber = @"^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$";
 
-        public const decimal MinimumValue = 1M;
+        public const decimal MinimumValue = 0M;
         public const decimal MaximumValue = 99999999M;
-        public const decimal MinimumPercentageValue = 0.1M;
+        public const decimal MinimumPercentageValue = 0M;
         public const decimal MaximumPercentageValue = 100M;
         public const int MinimumValueInt = 0;
         public const int MaximumValueInt = 99999999;

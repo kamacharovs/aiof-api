@@ -21,18 +21,24 @@ namespace aiof.api.services
         private readonly IMapper _mapper;
         private readonly AiofContext _context;
         private readonly AbstractValidator<GoalDto> _goalDtoValidator;
+        private readonly AbstractValidator<GoalTripDto> _goalTripDtoValidator;
+        private readonly AbstractValidator<GoalHomeDto> _goalHomeDtoValidator;
 
         public GoalRepository(
             ILogger<GoalRepository> logger,
             IMapper mapper, 
             AiofContext context,
-            AbstractValidator<GoalDto> goalDtoValidator)
+            AbstractValidator<GoalDto> goalDtoValidator,
+            AbstractValidator<GoalTripDto> goalTripDtoValidator,
+            AbstractValidator<GoalHomeDto> goalHomeDtoValidator)
             : base(logger, context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _goalDtoValidator = goalDtoValidator ?? throw new ArgumentNullException(nameof(goalDtoValidator));
+            _goalTripDtoValidator = goalTripDtoValidator ?? throw new ArgumentNullException(nameof(goalTripDtoValidator));
+            _goalHomeDtoValidator = goalHomeDtoValidator ?? throw new ArgumentNullException(nameof(goalHomeDtoValidator));
         }
 
         private IQueryable<Goal> GetQuery(bool asNoTracking = true)
@@ -104,6 +110,10 @@ namespace aiof.api.services
             var dto = JsonConvert.DeserializeObject<GoalDto>(dtoStr);
             Goal goal;
 
+            // Validate and throw
+            await _goalDtoValidator.ValidateAndThrowAsync(dto);
+
+            // Based on Type, perform the appropriate actions
             if (dto.Type == GoalType.Generic)
             {
                 goal = _mapper.Map<Goal>(dto);
@@ -114,7 +124,12 @@ namespace aiof.api.services
             }
             else if (dto.Type == GoalType.Trip)
             {
-                goal = _mapper.Map<GoalTrip>(JsonConvert.DeserializeObject<GoalTripDto>(dtoStr));
+                var goalTripDto = JsonConvert.DeserializeObject<GoalTripDto>(dtoStr);
+
+                // Validate and throw
+                await _goalTripDtoValidator.ValidateAndThrowAsync(goalTripDto);
+
+                goal = _mapper.Map<GoalTrip>(goalTripDto);
                 goal.UserId = _context.Tenant.UserId;
 
                 // Calculate the amount, if it's null
@@ -133,14 +148,20 @@ namespace aiof.api.services
             }
             else if (dto.Type == GoalType.BuyAHome)
             {
-                goal = _mapper.Map<GoalHome>(JsonConvert.DeserializeObject<GoalHomeDto>(dtoStr));
+                var goalHomeDto = JsonConvert.DeserializeObject<GoalHomeDto>(dtoStr);
+
+                // Validate and throw
+                await _goalHomeDtoValidator.ValidateAndThrowAsync(goalHomeDto);
+
+                goal = _mapper.Map<GoalHome>(goalHomeDto);
                 goal.UserId = _context.Tenant.UserId;
 
                 // Calculate the amount, if it's null
                 var goalHome = goal as GoalHome;
 
-                goalHome.Amount = goalHome.Amount ??
-                    goalHome.HomeValue * goalHome.PercentDownPayment;
+                // Calculate the amount and recommended amount. Counting insurance, property tax, closing costs, etc.
+                goalHome.Amount = goalHome.Amount ?? goalHome.HomeValue * goalHome.PercentDownPayment;
+                goalHome.RecommendedAmount = goalHome.RecommendedAmount ?? goalHome.Amount + goalHome.HomeValue * 0.01M;
 
                 await _context.GoalsHome.AddAsync(goalHome);
                 await _context.SaveChangesAsync();

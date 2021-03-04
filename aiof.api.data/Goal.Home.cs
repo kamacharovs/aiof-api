@@ -11,7 +11,7 @@ namespace aiof.api.data
         public decimal? PercentDownPayment { get; set; }
         public decimal? AnnualInsurance { get; set; }
         public decimal? AnnualPropertyTax { get; set; }
-        public decimal? RecommendedAmount { get; }
+        public decimal? RecommendedAmount { get; set; }
     }
 
     public class GoalHomeDto : GoalDto
@@ -21,6 +21,6 @@ namespace aiof.api.data
         public decimal? PercentDownPayment { get; set; }
         public decimal? AnnualInsurance { get; set; }
         public decimal? AnnualPropertyTax { get; set; }
-        public decimal? RecommendedAmount { get; }
+        public decimal? RecommendedAmount { get; set;  }
     }
 }

@@ -27,18 +27,16 @@ namespace aiof.api.data
                 });
 
             RuleFor(x => x.Amount)
-                .NotNull()
-                .NotEmpty()
                 .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
                 .LessThanOrEqualTo(CommonValidator.MaximumValue)
-                .WithMessage(CommonValidator.ValueMessage);
+                .WithMessage(CommonValidator.ValueMessage)
+                .When(x => x.Amount.HasValue);
 
             RuleFor(x => x.CurrentAmount)
-                .NotNull()
-                .NotEmpty()
                 .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
                 .LessThanOrEqualTo(CommonValidator.MaximumValue)
-                .WithMessage(CommonValidator.ValueMessage);
+                .WithMessage(CommonValidator.ValueMessage)
+                .When(x => x.CurrentAmount.HasValue);
         }
     }
 
@@ -54,51 +52,57 @@ namespace aiof.api.data
             RuleFor(x => x.TripType)
                 .NotNull()
                 .NotEmpty()
+                .Must(x =>
+                {
+                    return Constants.GoalTripTypes
+                        .ToList()
+                        .Contains(x.ToString());
+                })
                 .WithMessage($"Invalid Type. Allowed values are {string.Join(", ", Constants.GoalTripTypes)}");
 
             RuleFor(x => x.Duration)
                 .LessThanOrEqualTo(1000)
-                .When(x => x.Duration != null);
+                .When(x => x.Duration.HasValue);
 
             RuleFor(x => x.Travelers)
                 .LessThanOrEqualTo(1000)
-                .When(x => x.Travelers != null);
+                .When(x => x.Travelers.HasValue);
 
             RuleFor(x => x.Flight)
                 .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
                 .LessThanOrEqualTo(CommonValidator.MaximumValue)
-                .When(x => x.Flight != null)
-                .WithMessage(CommonValidator.ValueMessage);
+                .WithMessage(CommonValidator.ValueMessage)
+                .When(x => x.Flight.HasValue);
 
             RuleFor(x => x.Hotel)
                 .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
                 .LessThanOrEqualTo(CommonValidator.MaximumValue)
-                .When(x => x.Hotel != null)
-                .WithMessage(CommonValidator.ValueMessage);
+                .WithMessage(CommonValidator.ValueMessage)
+                .When(x => x.Hotel.HasValue);
 
             RuleFor(x => x.Car)
                 .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
                 .LessThanOrEqualTo(CommonValidator.MaximumValue)
-                .When(x => x.Car != null)
-                .WithMessage(CommonValidator.ValueMessage);
+                .WithMessage(CommonValidator.ValueMessage)
+                .When(x => x.Car.HasValue);
 
             RuleFor(x => x.Food)
                 .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
                 .LessThanOrEqualTo(CommonValidator.MaximumValue)
-                .When(x => x.Food != null)
-                .WithMessage(CommonValidator.ValueMessage);
+                .WithMessage(CommonValidator.ValueMessage)
+                .When(x => x.Food.HasValue);
 
             RuleFor(x => x.Activities)
                 .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
                 .LessThanOrEqualTo(CommonValidator.MaximumValue)
-                .When(x => x.Activities != null)
-                .WithMessage(CommonValidator.ValueMessage);
+                .WithMessage(CommonValidator.ValueMessage)
+                .When(x => x.Activities.HasValue);
 
             RuleFor(x => x.Other)
                 .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
                 .LessThanOrEqualTo(CommonValidator.MaximumValue)
-                .When(x => x.Other != null)
-                .WithMessage(CommonValidator.ValueMessage);
+                .WithMessage(CommonValidator.ValueMessage)
+                .When(x => x.Other.HasValue);
         }
     }
 
@@ -109,38 +113,38 @@ namespace aiof.api.data
             RuleFor(x => x.HomeValue)
                 .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
                 .LessThanOrEqualTo(CommonValidator.MaximumValue)
-                .When(x => x.HomeValue != null)
-                .WithMessage(CommonValidator.ValueMessage);
+                .WithMessage(CommonValidator.ValueMessage)
+                .When(x => x.HomeValue.HasValue);
 
             RuleFor(x => x.MortgageRate)
                 .GreaterThanOrEqualTo(CommonValidator.MinimumPercentageValue)
                 .LessThanOrEqualTo(CommonValidator.MaximumPercentageValue)
-                .When(x => x.MortgageRate != null)
-                .WithMessage(CommonValidator.PercentageMessage);
+                .WithMessage(CommonValidator.PercentageMessage)
+                .When(x => x.MortgageRate.HasValue);
 
             RuleFor(x => x.PercentDownPayment)
                 .GreaterThanOrEqualTo(CommonValidator.MinimumPercentageValue)
                 .LessThanOrEqualTo(CommonValidator.MaximumPercentageValue)
-                .When(x => x.PercentDownPayment != null)
-                .WithMessage(CommonValidator.PercentageMessage);
+                .WithMessage(CommonValidator.PercentageMessage)
+                .When(x => x.PercentDownPayment.HasValue);
 
             RuleFor(x => x.AnnualInsurance)
                 .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
                 .LessThanOrEqualTo(CommonValidator.MaximumValue)
-                .When(x => x.AnnualInsurance != null)
-                .WithMessage(CommonValidator.ValueMessage);
+                .WithMessage(CommonValidator.ValueMessage)
+                .When(x => x.AnnualInsurance.HasValue);
 
             RuleFor(x => x.AnnualPropertyTax)
                 .GreaterThanOrEqualTo(CommonValidator.MinimumPercentageValue)
                 .LessThanOrEqualTo(CommonValidator.MaximumPercentageValue)
-                .When(x => x.AnnualPropertyTax != null)
-                .WithMessage(CommonValidator.PercentageMessage);
+                .WithMessage(CommonValidator.PercentageMessage)
+                .When(x => x.AnnualPropertyTax.HasValue);
 
             RuleFor(x => x.RecommendedAmount)
                 .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
                 .LessThanOrEqualTo(CommonValidator.MaximumValue)
-                .When(x => x.RecommendedAmount != null)
-                .WithMessage(CommonValidator.ValueMessage);
+                .WithMessage(CommonValidator.ValueMessage)
+                .When(x => x.RecommendedAmount.HasValue);
         }
     }
 }
