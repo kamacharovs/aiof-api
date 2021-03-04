@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using System.Text.Json;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 using AutoMapper;
 using FluentValidation;
+using Newtonsoft.Json;
 
 using aiof.api.data;
 
@@ -101,7 +101,7 @@ namespace aiof.api.services
                 throw new AiofFriendlyException(HttpStatusCode.BadRequest,
                     $"Error while adding Goal. Payload cannot be empty");
 
-            var dto = Newtonsoft.Json.JsonConvert.DeserializeObject<GoalDto>(dtoStr);
+            var dto = JsonConvert.DeserializeObject<GoalDto>(dtoStr);
             Goal goal;
 
             if (dto.Type == GoalType.Generic)
@@ -112,9 +112,9 @@ namespace aiof.api.services
                 await _context.Goals.AddAsync(goal);
                 await _context.SaveChangesAsync();
             }
-            if (dto.Type == GoalType.Trip)
+            else if (dto.Type == GoalType.Trip)
             {
-                goal = _mapper.Map<GoalTrip>(Newtonsoft.Json.JsonConvert.DeserializeObject<GoalTripDto>(dtoStr));
+                goal = _mapper.Map<GoalTrip>(JsonConvert.DeserializeObject<GoalTripDto>(dtoStr));
                 goal.UserId = _context.Tenant.UserId;
 
                 // Calculate the amount, if it's null
@@ -128,13 +128,27 @@ namespace aiof.api.services
                     + goalTrip.Activities ?? 0
                     + goalTrip.Other) * goalTrip.Travelers;
 
-                await _context.GoalTrips.AddAsync(goalTrip);
+                await _context.GoalsTrip.AddAsync(goalTrip);
+                await _context.SaveChangesAsync();
+            }
+            else if (dto.Type == GoalType.BuyAHome)
+            {
+                goal = _mapper.Map<GoalHome>(JsonConvert.DeserializeObject<GoalHomeDto>(dtoStr));
+                goal.UserId = _context.Tenant.UserId;
+
+                // Calculate the amount, if it's null
+                var goalHome = goal as GoalHome;
+
+                goalHome.Amount = goalHome.Amount ??
+                    goalHome.HomeValue * goalHome.PercentDownPayment;
+
+                await _context.GoalsHome.AddAsync(goalHome);
                 await _context.SaveChangesAsync();
             }
             else
             {
                 throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"Not supported");
+                    $"Error while adding Goal. {dto.Type} Type is not yet supported");
             }
 
             _logger.LogInformation("{Tenant} | Created {GoalType} Goal with Id={GoalId}, PublicKey={GoalPublicKey} and UserId={GoalUserId}",

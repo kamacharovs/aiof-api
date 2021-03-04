@@ -109,6 +109,7 @@ namespace aiof.api.data
             public static string Liability = nameof(data.Liability).ToSnakeCase();
             public static string Goal = nameof(data.Goal).ToSnakeCase();
             public static string GoalTrip = nameof(data.GoalTrip).ToSnakeCase();
+            public static string GoalHome = nameof(data.GoalHome).ToSnakeCase();
             public static string AssetType = nameof(data.AssetType).ToSnakeCase();
             public static string LiabilityType = nameof(data.LiabilityType).ToSnakeCase();
             public static string Subscription = nameof(data.Subscription).ToSnakeCase();

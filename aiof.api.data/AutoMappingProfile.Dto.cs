@@ -65,6 +65,21 @@ namespace aiof.api.data
                 .ForMember(x => x.Activities, o => o.Condition(s => s.Activities != null))
                 .ForMember(x => x.Other, o => o.Condition(s => s.Other != null));
 
+            CreateMap<GoalHomeDto, GoalHome>()
+                .ForMember(x => x.Name, o => o.Condition(s => s.Name != null))
+                .ForMember(x => x.Type, o => o.MapFrom(s => s.Type))
+                .ForMember(x => x.Amount, o => o.Condition(s => s.Amount != null))
+                .ForMember(x => x.CurrentAmount, o => o.Condition(s => s.CurrentAmount != null))
+                .ForMember(x => x.MonthlyContribution, o => o.Condition(s => s.MonthlyContribution != null))
+                .ForMember(x => x.PlannedDate, o => o.MapFrom(s => s.PlannedDate))
+                .ForMember(x => x.ProjectedDate, o => o.Condition(s => s.ProjectedDate != null))
+                .ForMember(x => x.HomeValue, o => o.Condition(s => s.HomeValue != null))
+                .ForMember(x => x.MortgageRate, o => o.Condition(s => s.MortgageRate != null))
+                .ForMember(x => x.PercentDownPayment, o => o.Condition(s => s.PercentDownPayment != null))
+                .ForMember(x => x.AnnualInsurance, o => o.Condition(s => s.AnnualInsurance != null))
+                .ForMember(x => x.AnnualPropertyTax, o => o.Condition(s => s.AnnualPropertyTax != null))
+                .ForMember(x => x.RecommendedAmount, o => o.Condition(s => s.RecommendedAmount != null));
+
             CreateMap<LiabilityDto, Liability>()
                 .ForMember(x => x.Name, o => o.Condition(s => s.Name != null))
                 .ForMember(x => x.TypeName, o => o.Condition(s => s.TypeName != null))

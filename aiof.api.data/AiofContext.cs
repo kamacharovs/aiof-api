@@ -18,7 +18,8 @@ namespace aiof.api.data
         public virtual DbSet<AssetType> AssetTypes { get; set; }
         public virtual DbSet<LiabilityType> LiabilityTypes { get; set; }
         public virtual DbSet<Goal> Goals { get; set; }
-        public virtual DbSet<GoalTrip> GoalTrips { get; set; }
+        public virtual DbSet<GoalTrip> GoalsTrip { get; set; }
+        public virtual DbSet<GoalHome> GoalsHome { get; set; }
         public virtual DbSet<Subscription> Subscriptions { get; set; }
         public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<AccountType> AccountTypes { get; set; }
@@ -219,6 +220,17 @@ namespace aiof.api.data
                 e.Property(x => x.Food).HasSnakeCaseColumnName();
                 e.Property(x => x.Activities).HasSnakeCaseColumnName();
                 e.Property(x => x.Other).HasSnakeCaseColumnName();
+            });
+            modelBuilder.Entity<GoalHome>(e =>
+            {
+                e.ToTable(Keys.Entity.GoalHome);
+
+                e.Property(x => x.HomeValue).HasSnakeCaseColumnName();
+                e.Property(x => x.MortgageRate).HasSnakeCaseColumnName();
+                e.Property(x => x.PercentDownPayment).HasSnakeCaseColumnName();
+                e.Property(x => x.AnnualInsurance).HasSnakeCaseColumnName();
+                e.Property(x => x.AnnualPropertyTax).HasSnakeCaseColumnName();
+                e.Property(x => x.RecommendedAmount).HasSnakeCaseColumnName();
             });
 
             modelBuilder.Entity<AssetType>(e =>
