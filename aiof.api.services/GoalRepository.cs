@@ -108,7 +108,7 @@ namespace aiof.api.services
                     $"Error while adding Goal. Payload cannot be empty");
 
             var dto = JsonConvert.DeserializeObject<GoalDto>(dtoStr);
-            Goal goal;
+            IGoal goal;
 
             // Validate and throw
             await _goalDtoValidator.ValidateAndThrowAsync(dto);
@@ -116,54 +116,15 @@ namespace aiof.api.services
             // Based on Type, perform the appropriate actions
             if (dto.Type == GoalType.Generic)
             {
-                goal = _mapper.Map<Goal>(dto);
-                goal.UserId = _context.Tenant.UserId;
-
-                await _context.Goals.AddAsync(goal);
-                await _context.SaveChangesAsync();
+                goal = await AddAsync(dto);
             }
             else if (dto.Type == GoalType.Trip)
             {
-                var goalTripDto = JsonConvert.DeserializeObject<GoalTripDto>(dtoStr);
-
-                // Validate and throw
-                await _goalTripDtoValidator.ValidateAndThrowAsync(goalTripDto);
-
-                goal = _mapper.Map<GoalTrip>(goalTripDto);
-                goal.UserId = _context.Tenant.UserId;
-
-                // Calculate the amount, if it's null
-                var goalTrip = goal as GoalTrip;
-
-                goalTrip.Amount = goal.Amount ?? 
-                    (goalTrip.Flight ?? 0
-                    + goalTrip.Hotel ?? 0
-                    + goalTrip.Car ?? 0
-                    + goalTrip.Food ?? 0
-                    + goalTrip.Activities ?? 0
-                    + goalTrip.Other) * goalTrip.Travelers;
-
-                await _context.GoalsTrip.AddAsync(goalTrip);
-                await _context.SaveChangesAsync();
+                goal = await AddAsync(JsonConvert.DeserializeObject<GoalTripDto>(dtoStr));  
             }
             else if (dto.Type == GoalType.BuyAHome)
             {
-                var goalHomeDto = JsonConvert.DeserializeObject<GoalHomeDto>(dtoStr);
-
-                // Validate and throw
-                await _goalHomeDtoValidator.ValidateAndThrowAsync(goalHomeDto);
-
-                goal = _mapper.Map<GoalHome>(goalHomeDto);
-                goal.UserId = _context.Tenant.UserId;
-
-                // Calculate the amount and recommended amount. Counting insurance, property tax, closing costs, etc.
-                var goalHome = goal as GoalHome;
-
-                goalHome.Amount = goalHome.Amount ?? goalHome.HomeValue * goalHome.PercentDownPayment;
-                goalHome.RecommendedAmount = goalHome.RecommendedAmount ?? goalHome.Amount + goalHome.HomeValue * 0.01M;
-
-                await _context.GoalsHome.AddAsync(goalHome);
-                await _context.SaveChangesAsync();
+                goal = await AddAsync(JsonConvert.DeserializeObject<GoalHomeDto>(dtoStr));
             }
             else
             {
@@ -177,6 +138,61 @@ namespace aiof.api.services
                 goal.Id,
                 goal.PublicKey,
                 goal.UserId);
+
+            return goal;
+        }
+
+        public async Task<IGoal> AddAsync(GoalDto dto)
+        {
+            var goal = _mapper.Map<Goal>(dto);
+
+            goal.UserId = _context.Tenant.UserId;
+
+            await _context.Goals.AddAsync(goal);
+            await _context.SaveChangesAsync();
+
+            return goal;
+        }
+
+        public async Task<IGoal> AddAsync(GoalTripDto dto)
+        {
+            // Validate and throw
+            await _goalTripDtoValidator.ValidateAndThrowAsync(dto);
+
+            var goal = _mapper.Map<GoalTrip>(dto);
+
+            goal.UserId = _context.Tenant.UserId;
+
+            // Calculate the amount, if it's null
+            goal.Amount = goal.Amount ??
+                (goal.Flight ?? 0
+                + goal.Hotel ?? 0
+                + goal.Car ?? 0
+                + goal.Food ?? 0
+                + goal.Activities ?? 0
+                + goal.Other) * goal.Travelers;
+
+            await _context.GoalsTrip.AddAsync(goal);
+            await _context.SaveChangesAsync();
+
+            return goal;
+        }
+
+        public async Task<IGoal> AddAsync(GoalHomeDto dto)
+        {
+            // Validate and throw
+            await _goalHomeDtoValidator.ValidateAndThrowAsync(dto);
+
+            var goal = _mapper.Map<GoalHome>(dto);
+
+            goal.UserId = _context.Tenant.UserId;
+
+            // Calculate the amount and recommended amount. Counting insurance, property tax, closing costs, etc.
+            goal.Amount = goal.Amount ?? goal.HomeValue * goal.PercentDownPayment;
+            goal.RecommendedAmount = goal.RecommendedAmount ?? goal.Amount + goal.HomeValue * 0.01M;
+
+            await _context.GoalsHome.AddAsync(goal);
+            await _context.SaveChangesAsync();
 
             return goal;
         }

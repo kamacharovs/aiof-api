@@ -20,6 +20,9 @@ namespace aiof.api.services
         Task<IEnumerable<IGoal>> GetAllAsync(bool asNoTracking = true);
         Task<IEnumerable<object>> GetAllAsObjectsAsync(bool asNoTracking = true);
         Task<IGoal> AddAsync(string dtoStr);
+        Task<IGoal> AddAsync(GoalDto dto);
+        Task<IGoal> AddAsync(GoalTripDto dto);
+        Task<IGoal> AddAsync(GoalHomeDto dto);
         Task<IGoal> UpdateAsync(
             int id, 
             GoalDto dto);
