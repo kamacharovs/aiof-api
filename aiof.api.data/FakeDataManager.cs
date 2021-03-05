@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace aiof.api.data
 {
+    [ExcludeFromCodeCoverage]
     public class FakeDataManager
     {
         private readonly AiofContext _context;
