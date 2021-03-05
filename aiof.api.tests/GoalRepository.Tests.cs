@@ -92,7 +92,7 @@ namespace aiof.api.tests
 
         [Theory]
         [MemberData(nameof(Helper.GoalsUserId), MemberType = typeof(Helper))]
-        public async Task AddAsync_IsSuccessful(int userId)
+        public async Task AddAsync_Generic_IsSuccessful(int userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();
             var dto = JsonConvert.SerializeObject(Helper.RandomGoalDto());
@@ -111,13 +111,56 @@ namespace aiof.api.tests
 
         [Theory]
         [MemberData(nameof(Helper.GoalsUserId), MemberType = typeof(Helper))]
-        public async Task AddAsync_AlreadyExists_Throws_BadRequest(int userId)
+        public async Task AddAsync_Trip_IsSuccessful(int userId)
         {
-            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();
-            var dto = JsonConvert.SerializeObject(Helper.RandomGoalDto());
-            var goal = await repo.AddAsync(dto);
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();
+            var dto = JsonConvert.SerializeObject(Helper.RandomGoalTripDto());
+            var goal = (await _repo.AddAsync(dto)) as GoalTrip;
 
-            await Assert.ThrowsAsync<AiofFriendlyException>(() => repo.AddAsync(dto));
+            Assert.NotNull(goal);
+            Assert.NotNull(goal.Name);
+            Assert.Equal(GoalType.Trip, goal.Type);
+            Assert.Equal(goal.UserId, userId);
+            Assert.True(goal.Amount > 0);
+            Assert.True(goal.CurrentAmount > 0);
+            Assert.True(goal.MonthlyContribution > 0);
+            Assert.NotEqual(DateTime.UtcNow, goal.PlannedDate);
+            Assert.False(goal.IsDeleted);
+            Assert.NotNull(goal.Destination);
+            Assert.Contains(goal.TripType.ToString(), Constants.GoalTripTypes);
+            Assert.True(goal.Duration >= 0);
+            Assert.True(goal.Travelers >= 0);
+            Assert.True(goal.Flight >= 0);
+            Assert.True(goal.Hotel >= 0);
+            Assert.True(goal.Car >= 0);
+            Assert.True(goal.Food >= 0);
+            Assert.True(goal.Activities >= 0);
+            Assert.True(goal.Other >= 0);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.GoalsUserId), MemberType = typeof(Helper))]
+        public async Task AddAsync_Home_IsSuccessful(int userId)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();
+            var dto = JsonConvert.SerializeObject(Helper.RandomGoalHomeDto());
+            var goal = (await _repo.AddAsync(dto)) as GoalHome;
+
+            Assert.NotNull(goal);
+            Assert.NotNull(goal.Name);
+            Assert.Equal(GoalType.BuyAHome, goal.Type);
+            Assert.Equal(goal.UserId, userId);
+            Assert.True(goal.Amount > 0);
+            Assert.True(goal.CurrentAmount > 0);
+            Assert.True(goal.MonthlyContribution > 0);
+            Assert.NotEqual(DateTime.UtcNow, goal.PlannedDate);
+            Assert.False(goal.IsDeleted);
+            Assert.True(goal.HomeValue >= 0);
+            Assert.True(goal.MortgageRate >= 0);
+            Assert.True(goal.PercentDownPayment >= 0);
+            Assert.True(goal.AnnualInsurance >= 0);
+            Assert.True(goal.AnnualPropertyTax >= 0);
+            Assert.True(goal.RecommendedAmount >= 0);
         }
 
         [Theory]

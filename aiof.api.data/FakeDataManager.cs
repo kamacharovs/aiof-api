@@ -40,6 +40,12 @@ namespace aiof.api.data
             _context.Goals
                 .AddRange(GetFakeGoals());
 
+            _context.GoalsTrip
+                .AddRange(GetFakeGoalsTrip());
+
+            _context.GoalsHome
+                .AddRange(GetFakeGoalsHome());
+
             _context.Subscriptions
                 .AddRange(GetFakeSubscriptions());
 
@@ -224,7 +230,58 @@ namespace aiof.api.data
             };
         }
 
-        public IEnumerable<AssetType> GetFakeAssetTypes()
+        public IEnumerable<GoalTrip> GetFakeGoalsTrip()
+        {
+            return new List<GoalTrip>
+            {
+                new GoalTrip
+                {
+                    Id = 2,
+                    PublicKey = Guid.Parse("c4f6db70-2345-4a7c-866f-dfdec6a2ec34"),
+                    Name = "trip 1 2021",
+                    Type = GoalType.Trip,
+                    UserId = 1,
+                    Amount = 1550M,
+                    CurrentAmount = 0M,
+                    MonthlyContribution = 200M,
+                    Destination = "Bahamas",
+                    TripType = GoalTripType.Romance,
+                    Duration = 7,
+                    Travelers = 2,
+                    Flight = 750M,
+                    Hotel = 500M,
+                    Car = 0M,
+                    Food = 0M,
+                    Activities = 250M,
+                    Other = 50M
+                }
+            };
+        }
+
+        public IEnumerable<GoalHome> GetFakeGoalsHome()
+        {
+            return new List<GoalHome>
+            {
+                new GoalHome
+                {
+                    Id = 3,
+                    PublicKey = Guid.Parse("c189fa22-0c6b-41c7-879e-b2b5c6dee80f"),
+                    Name = "Buy a home in 2022",
+                    Type = GoalType.BuyAHome,
+                    UserId = 1,
+                    CurrentAmount = 25000M,
+                    MonthlyContribution = 750M,
+                    HomeValue = 350000M,
+                    MortgageRate = 0.03M,
+                    PercentDownPayment = 0.1M,
+                    AnnualInsurance = 500M,
+                    AnnualPropertyTax = 0.01M,
+                    RecommendedAmount = 40000M
+                }
+            };
+        }
+
+            public IEnumerable<AssetType> GetFakeAssetTypes()
         {
             return new List<AssetType>
             {
