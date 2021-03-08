@@ -18,6 +18,7 @@ namespace aiof.api.data
         public string Model { get; set; }
         public string Trim { get; set; }
         public bool? New { get; set; } = false;
+        public decimal? Price { get; set; }
         public decimal? DesiredMonthlyPayment { get; set; }
         public int? LoanTermMonths { get; set; } = 36;
         public decimal? InterestRate { get; set; } = 2.75M;
@@ -30,6 +31,7 @@ namespace aiof.api.data
         public string Model { get; set; }
         public string Trim { get; set; }
         public bool? New { get; set; }
+        public decimal? Price { get; set; }
         public decimal? DesiredMonthlyPayment { get; set; }
         public int? LoanTermMonths { get; set; }
         public decimal? InterestRate { get; set; }

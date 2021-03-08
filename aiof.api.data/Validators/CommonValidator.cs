@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace aiof.api.data
@@ -16,6 +17,15 @@ namespace aiof.api.data
 
         public static string ValueMessage = $"Value must be between {MinimumValue} and {MaximumValue}";
         public static string PercentageMessage = $"Percentage value must be between {MinimumPercentageValue} and {MaximumPercentageValue}";
+
+        public static IEnumerable<int> ValidCarLoanTerms = new List<int>
+        {
+            36,
+            48,
+            60,
+            72
+        };
+        public static string ValidCarLoanTermsMessage = $"Value must be one of the following {string.Join(", ", ValidCarLoanTerms)}";
 
         public static bool IsValidPhoneNumber(string value)
         {

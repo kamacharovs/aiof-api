@@ -81,6 +81,7 @@ namespace aiof.api.core
                 .AddSingleton<AbstractValidator<GoalDto>, GoalDtoValidator<GoalDto>>()
                 .AddSingleton<AbstractValidator<GoalTripDto>, GoalTripDtoValidator>()
                 .AddSingleton<AbstractValidator<GoalHomeDto>, GoalHomeDtoValidator>()
+                .AddSingleton<AbstractValidator<GoalCarDto>, GoalCarDtoValidator>()
                 .AddSingleton<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>()
                 .AddSingleton<AbstractValidator<AccountDto>, AccountDtoValidator>()
                 .AddSingleton<AbstractValidator<UserDto>, UserDtoValidator>()

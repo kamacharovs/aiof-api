@@ -20,6 +20,7 @@ namespace aiof.api.data
         public virtual DbSet<Goal> Goals { get; set; }
         public virtual DbSet<GoalTrip> GoalsTrip { get; set; }
         public virtual DbSet<GoalHome> GoalsHome { get; set; }
+        public virtual DbSet<GoalCar> GoalsCar { get; set; }
         public virtual DbSet<Subscription> Subscriptions { get; set; }
         public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<AccountType> AccountTypes { get; set; }
@@ -241,6 +242,7 @@ namespace aiof.api.data
                 e.Property(x => x.Model).HasSnakeCaseColumnName();
                 e.Property(x => x.Trim).HasSnakeCaseColumnName();
                 e.Property(x => x.New).HasSnakeCaseColumnName();
+                e.Property(x => x.Price).HasSnakeCaseColumnName();
                 e.Property(x => x.DesiredMonthlyPayment).HasSnakeCaseColumnName();
                 e.Property(x => x.LoanTermMonths).HasSnakeCaseColumnName();
                 e.Property(x => x.InterestRate).HasSnakeCaseColumnName();

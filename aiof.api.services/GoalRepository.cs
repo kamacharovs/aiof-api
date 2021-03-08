@@ -23,6 +23,7 @@ namespace aiof.api.services
         private readonly AbstractValidator<GoalDto> _goalDtoValidator;
         private readonly AbstractValidator<GoalTripDto> _goalTripDtoValidator;
         private readonly AbstractValidator<GoalHomeDto> _goalHomeDtoValidator;
+        private readonly AbstractValidator<GoalCarDto> _goalCarDtoValidator;
 
         public GoalRepository(
             ILogger<GoalRepository> logger,
@@ -30,7 +31,8 @@ namespace aiof.api.services
             AiofContext context,
             AbstractValidator<GoalDto> goalDtoValidator,
             AbstractValidator<GoalTripDto> goalTripDtoValidator,
-            AbstractValidator<GoalHomeDto> goalHomeDtoValidator)
+            AbstractValidator<GoalHomeDto> goalHomeDtoValidator,
+            AbstractValidator<GoalCarDto> goalCarDtoValidator)
             : base(logger, context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
@@ -39,6 +41,7 @@ namespace aiof.api.services
             _goalDtoValidator = goalDtoValidator ?? throw new ArgumentNullException(nameof(goalDtoValidator));
             _goalTripDtoValidator = goalTripDtoValidator ?? throw new ArgumentNullException(nameof(goalTripDtoValidator));
             _goalHomeDtoValidator = goalHomeDtoValidator ?? throw new ArgumentNullException(nameof(goalHomeDtoValidator));
+            _goalCarDtoValidator = goalCarDtoValidator ?? throw new ArgumentNullException(nameof(goalCarDtoValidator));
         }
 
         private IQueryable<Goal> GetQuery(bool asNoTracking = true)
@@ -126,6 +129,10 @@ namespace aiof.api.services
             {
                 goal = await AddAsync(JsonConvert.DeserializeObject<GoalHomeDto>(dtoStr));
             }
+            else if (dto.Type == GoalType.BuyACar)
+            {
+                goal = await AddAsync(JsonConvert.DeserializeObject<GoalCarDto>(dtoStr));
+            }
             else
             {
                 throw new AiofFriendlyException(HttpStatusCode.BadRequest,
@@ -192,6 +199,25 @@ namespace aiof.api.services
             goal.RecommendedAmount = goal.RecommendedAmount ?? goal.Amount + goal.HomeValue * 0.01M;
 
             await _context.GoalsHome.AddAsync(goal);
+            await _context.SaveChangesAsync();
+
+            return goal;
+        }
+
+        public async Task<IGoal> AddAsync(GoalCarDto dto)
+        {
+            // Validate and throw
+            await _goalCarDtoValidator.ValidateAndThrowAsync(dto);
+
+            var goal = _mapper.Map<GoalCar>(dto);
+
+            goal.UserId = _context.Tenant.UserId;
+
+            // Calculate the amount if not given
+            goal.Amount = goal.Amount ?? 
+                goal.Price - (goal.DesiredMonthlyPayment * goal.LoanTermMonths);
+
+            await _context.GoalsCar.AddAsync(goal);
             await _context.SaveChangesAsync();
 
             return goal;

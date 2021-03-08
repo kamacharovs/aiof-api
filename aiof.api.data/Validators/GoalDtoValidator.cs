@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using FluentValidation;
@@ -145,6 +146,50 @@ namespace aiof.api.data
                 .LessThanOrEqualTo(CommonValidator.MaximumValue)
                 .WithMessage(CommonValidator.ValueMessage)
                 .When(x => x.RecommendedAmount.HasValue);
+        }
+    }
+
+    public class GoalCarDtoValidator : GoalDtoValidator<GoalCarDto>
+    {
+        public GoalCarDtoValidator()
+        {
+            RuleFor(x => x.Year)
+                .GreaterThanOrEqualTo(1900)
+                .When(x => x.Year.HasValue);
+
+            RuleFor(x => x.Make)
+                .MaximumLength(500)
+                .When(x => !string.IsNullOrWhiteSpace(x.Make));
+
+            RuleFor(x => x.Model)
+                .MaximumLength(500)
+                .When(x => !string.IsNullOrWhiteSpace(x.Model));
+
+            RuleFor(x => x.Trim)
+                .MaximumLength(500)
+                .When(x => !string.IsNullOrWhiteSpace(x.Trim));
+
+            RuleFor(x => x.DesiredMonthlyPayment)
+                .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
+                .LessThanOrEqualTo(CommonValidator.MaximumValue)
+                .WithMessage(CommonValidator.ValueMessage)
+                .When(x => x.DesiredMonthlyPayment.HasValue);
+
+            RuleFor(x => x.LoanTermMonths)
+                .Must(x =>
+                {
+                    return CommonValidator
+                        .ValidCarLoanTerms
+                        .Contains((int)x);
+                })
+                .When(x => x.LoanTermMonths.HasValue)
+                .WithMessage(CommonValidator.ValidCarLoanTermsMessage);
+
+            RuleFor(x => x.InterestRate)
+                .GreaterThanOrEqualTo(CommonValidator.MinimumPercentageValue)
+                .LessThanOrEqualTo(CommonValidator.MaximumPercentageValue)
+                .WithMessage(CommonValidator.PercentageMessage)
+                .When(x => x.InterestRate.HasValue);
         }
     }
 }
