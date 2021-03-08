@@ -80,6 +80,9 @@ namespace aiof.api.data
                 .ForMember(x => x.AnnualPropertyTax, o => o.Condition(s => s.AnnualPropertyTax != null))
                 .ForMember(x => x.RecommendedAmount, o => o.Condition(s => s.RecommendedAmount != null));
 
+            CreateMap<GoalCarDto, GoalCar>()
+                .ForAllMembers(x => x.Condition((source, destination, member) => member != null));
+
             CreateMap<LiabilityDto, Liability>()
                 .ForMember(x => x.Name, o => o.Condition(s => s.Name != null))
                 .ForMember(x => x.TypeName, o => o.Condition(s => s.TypeName != null))

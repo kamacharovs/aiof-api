@@ -232,6 +232,19 @@ namespace aiof.api.data
                 e.Property(x => x.AnnualPropertyTax).HasSnakeCaseColumnName();
                 e.Property(x => x.RecommendedAmount).HasSnakeCaseColumnName();
             });
+            modelBuilder.Entity<GoalCar>(e =>
+            {
+                e.ToTable(Keys.Entity.GoalCar);
+
+                e.Property(x => x.Year).HasSnakeCaseColumnName();
+                e.Property(x => x.Make).HasSnakeCaseColumnName();
+                e.Property(x => x.Model).HasSnakeCaseColumnName();
+                e.Property(x => x.Trim).HasSnakeCaseColumnName();
+                e.Property(x => x.New).HasSnakeCaseColumnName();
+                e.Property(x => x.DesiredMonthlyPayment).HasSnakeCaseColumnName();
+                e.Property(x => x.LoanTermMonths).HasSnakeCaseColumnName();
+                e.Property(x => x.InterestRate).HasSnakeCaseColumnName();
+            });
 
             modelBuilder.Entity<AssetType>(e =>
             {
