@@ -238,9 +238,9 @@ namespace aiof.api.data
                 e.ToTable(Keys.Entity.GoalCar);
 
                 e.Property(x => x.Year).HasSnakeCaseColumnName();
-                e.Property(x => x.Make).HasSnakeCaseColumnName();
-                e.Property(x => x.Model).HasSnakeCaseColumnName();
-                e.Property(x => x.Trim).HasSnakeCaseColumnName();
+                e.Property(x => x.Make).HasSnakeCaseColumnName().HasMaxLength(500);
+                e.Property(x => x.Model).HasSnakeCaseColumnName().HasMaxLength(500);
+                e.Property(x => x.Trim).HasSnakeCaseColumnName().HasMaxLength(500);
                 e.Property(x => x.New).HasSnakeCaseColumnName();
                 e.Property(x => x.Price).HasSnakeCaseColumnName();
                 e.Property(x => x.DesiredMonthlyPayment).HasSnakeCaseColumnName();
