@@ -24,7 +24,7 @@ namespace aiof.api.data
                 {
                     return Constants.GoalTypes
                         .ToList()
-                        .Contains(x.ToString());
+                        .Contains(x);
                 });
 
             RuleFor(x => x.Amount)
@@ -57,7 +57,7 @@ namespace aiof.api.data
                 {
                     return Constants.GoalTripTypes
                         .ToList()
-                        .Contains(x.ToString());
+                        .Contains(x);
                 })
                 .WithMessage($"Invalid Type. Allowed values are {string.Join(", ", Constants.GoalTripTypes)}");
 

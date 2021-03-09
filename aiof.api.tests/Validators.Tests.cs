@@ -122,7 +122,7 @@ namespace aiof.api.tests
 
             var goalDto = new GoalDto
             {
-                Name = name,
+                Name = string.Empty,
                 Type = GoalType.Generic
             };
             Assert.False(_goalDtoValidator.Validate(goalDto).IsValid);

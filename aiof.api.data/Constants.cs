@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 
 using Microsoft.AspNetCore.Http;
 
@@ -24,13 +25,26 @@ namespace aiof.api.data
             StatusCodes.Status403Forbidden
         };
 
-        public static IEnumerable<string> GoalTypes =>
-            Enum.GetNames(typeof(GoalType))
-            .ToList();
+        public static IEnumerable<GoalType> GoalTypes => new List<GoalType>
+        {
+            GoalType.Generic,
+            GoalType.Trip,
+            GoalType.BuyAHome,
+            GoalType.BuyACar
+        };
 
-        public static IEnumerable<string> GoalTripTypes =>
-            Enum.GetNames(typeof(GoalTripType))
-            .ToList();
+        public static IEnumerable<GoalTripType> GoalTripTypes => new List<GoalTripType>
+        {
+            GoalTripType.Romance,
+            GoalTripType.Adventure,
+            GoalTripType.Beach,
+            GoalTripType.Family,
+            GoalTripType.Golf,
+            GoalTripType.Luxury,
+            GoalTripType.NationalParks,
+            GoalTripType.Spa,
+            GoalTripType.Other
+        };
     }
 
     public static class Keys

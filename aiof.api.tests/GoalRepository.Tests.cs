@@ -22,7 +22,7 @@ namespace aiof.api.tests
 
             Assert.NotNull(goal);
             Assert.NotNull(goal.Name);
-            Assert.Contains(goal.Type.ToString(), Constants.GoalTypes);
+            Assert.Contains(goal.Type, Constants.GoalTypes);
             Assert.Equal(goal.UserId, userId);
             Assert.True(goal.Amount > 0);
             Assert.True(goal.CurrentAmount > 0);
@@ -51,7 +51,7 @@ namespace aiof.api.tests
             Assert.NotEmpty(goals);
             Assert.NotNull(goal);
             Assert.NotNull(goal.Name);
-            Assert.Contains(goal.Type.ToString(), Constants.GoalTypes);
+            Assert.Contains(goal.Type, Constants.GoalTypes);
             Assert.True(goal.UserId > 0);
             Assert.True(goal.Amount > 0);
             Assert.True(goal.CurrentAmount > 0);
@@ -71,7 +71,7 @@ namespace aiof.api.tests
             Assert.NotEmpty(goals);
             Assert.NotNull(goal);
             Assert.NotNull(goal.Name);
-            Assert.Contains(goal.Type.ToString(), Constants.GoalTypes);
+            Assert.Contains(goal.Type, Constants.GoalTypes);
             Assert.Equal(goal.UserId, userId);
             Assert.True(goal.Amount > 0);
             Assert.True(goal.CurrentAmount > 0);
@@ -100,7 +100,7 @@ namespace aiof.api.tests
 
             Assert.NotNull(goal);
             Assert.NotNull(goal.Name);
-            Assert.Contains(goal.Type.ToString(), Constants.GoalTypes);
+            Assert.Contains(goal.Type, Constants.GoalTypes);
             Assert.Equal(goal.UserId, userId);
             Assert.True(goal.Amount > 0);
             Assert.True(goal.CurrentAmount > 0);
@@ -118,7 +118,7 @@ namespace aiof.api.tests
 
             Assert.NotNull(goal);
             Assert.NotNull(goal.Name);
-            Assert.Contains(goal.Type.ToString(), Constants.GoalTypes);
+            Assert.Contains(goal.Type, Constants.GoalTypes);
             Assert.Equal(goal.UserId, userId);
             Assert.True(goal.Amount > 0);
             Assert.True(goal.CurrentAmount > 0);
@@ -145,7 +145,7 @@ namespace aiof.api.tests
             Assert.NotEqual(DateTime.UtcNow, goal.PlannedDate);
             Assert.False(goal.IsDeleted);
             Assert.NotNull(goal.Destination);
-            Assert.Contains(goal.TripType.ToString(), Constants.GoalTripTypes);
+            Assert.Contains(goal.TripType, Constants.GoalTripTypes);
             Assert.True(goal.Duration >= 0);
             Assert.True(goal.Travelers >= 0);
             Assert.True(goal.Flight >= 0);
@@ -173,7 +173,7 @@ namespace aiof.api.tests
             Assert.NotEqual(DateTime.UtcNow, goal.PlannedDate);
             Assert.False(goal.IsDeleted);
             Assert.NotNull(goal.Destination);
-            Assert.Contains(goal.TripType.ToString(), Constants.GoalTripTypes);
+            Assert.Contains(goal.TripType, Constants.GoalTripTypes);
             Assert.True(goal.Duration >= 0);
             Assert.True(goal.Travelers >= 0);
             Assert.True(goal.Flight >= 0);
@@ -248,7 +248,7 @@ namespace aiof.api.tests
 
             Assert.NotNull(goal);
             Assert.NotNull(goal.Name);
-            Assert.Contains(goal.Type.ToString(), Constants.GoalTypes);
+            Assert.Contains(goal.Type, Constants.GoalTypes);
             Assert.Equal(goal.UserId, userId);
             Assert.True(goal.Amount > 0);
             Assert.True(goal.CurrentAmount > 0);

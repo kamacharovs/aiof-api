@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace aiof.api.data
 {
@@ -59,45 +60,21 @@ namespace aiof.api.data
 
     public enum GoalType
     {
-        [EnumMember(Value = "Generic")]
         Generic,
-
-        [EnumMember(Value = "Trip")]
         Trip,
-
-        [EnumMember(Value = "Buy a home")]
         BuyAHome,
-
-        [EnumMember(Value = "Buy a car")]
         BuyACar
     }
     public enum GoalTripType
     {
-        [EnumMember(Value = "Romance")]
         Romance,
-
-        [EnumMember(Value = "Adventure")]
         Adventure,
-
-        [EnumMember(Value = "Beach")]
         Beach,
-
-        [EnumMember(Value = "Family")]
         Family,
-
-        [EnumMember(Value = "Golf")]
         Golf,
-
-        [EnumMember(Value = "Luxury")]
         Luxury,
-
-        [EnumMember(Value = "National parks")]
         NationalParks,
-
-        [EnumMember(Value = "Spa")]
         Spa,
-
-        [EnumMember(Value = "Other")]
         Other
     }
 }

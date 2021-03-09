@@ -87,15 +87,6 @@ namespace aiof.api.services
                 .ToListAsync();
         }
 
-        public IEnumerable<string> GetTypes()
-        {
-            return Constants.GoalTypes;
-        }
-        public IEnumerable<string> GetTripTypes()
-        {
-            return Constants.GoalTripTypes;
-        }
-
         public async Task<IEnumerable<IGoal>> GetAllAsync(bool asNoTracking = true)
         {
             return await GetQuery(asNoTracking)

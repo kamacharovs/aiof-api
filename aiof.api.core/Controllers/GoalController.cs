@@ -103,7 +103,7 @@ namespace aiof.api.core.Controllers
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status200OK)]
         public IActionResult GetGoalTypes()
         {
-            return Ok(_repo.GetTypes());
+            return Ok(Constants.GoalTypes);
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace aiof.api.core.Controllers
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status200OK)]
         public IActionResult GetGoalTripTypes()
         {
-            return Ok(_repo.GetTripTypes());
+            return Ok(Constants.GoalTripTypes);
         }
     }
 }
