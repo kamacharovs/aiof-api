@@ -172,12 +172,12 @@ namespace aiof.api.services
 
             // Calculate the amount, if it's null
             goal.Amount = goal.Amount ??
-                (goal.Flight ?? 0
-                + goal.Hotel ?? 0
-                + goal.Car ?? 0
-                + goal.Food ?? 0
-                + goal.Activities ?? 0
-                + goal.Other) * goal.Travelers;
+                (goal.Flight.GetValueOrDefault()
+                + goal.Hotel.GetValueOrDefault()
+                + goal.Car.GetValueOrDefault()
+                + goal.Food.GetValueOrDefault()
+                + goal.Activities.GetValueOrDefault()
+                + goal.Other.GetValueOrDefault()) * goal.Travelers;
 
             await _context.GoalsTrip.AddAsync(goal);
             await _context.SaveChangesAsync();
@@ -195,8 +195,8 @@ namespace aiof.api.services
             goal.UserId = _context.Tenant.UserId;
 
             // Calculate the amount and recommended amount. Counting insurance, property tax, closing costs, etc.
-            goal.Amount = goal.Amount ?? goal.HomeValue * goal.PercentDownPayment;
-            goal.RecommendedAmount = goal.RecommendedAmount ?? goal.Amount + goal.HomeValue * 0.01M;
+            goal.Amount = goal.Amount ?? goal.HomeValue.GetValueOrDefault() * goal.PercentDownPayment.GetValueOrDefault();
+            goal.RecommendedAmount = goal.RecommendedAmount ?? goal.Amount.GetValueOrDefault() + goal.HomeValue.GetValueOrDefault() * 0.01M;
 
             await _context.GoalsHome.AddAsync(goal);
             await _context.SaveChangesAsync();
@@ -215,7 +215,7 @@ namespace aiof.api.services
 
             // Calculate the amount if not given
             goal.Amount = goal.Amount ?? 
-                goal.Price - (goal.DesiredMonthlyPayment * goal.LoanTermMonths);
+                goal.Price.GetValueOrDefault() - (goal.DesiredMonthlyPayment.GetValueOrDefault() * goal.LoanTermMonths.GetValueOrDefault());
 
             await _context.GoalsCar.AddAsync(goal);
             await _context.SaveChangesAsync();
