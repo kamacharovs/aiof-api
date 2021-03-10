@@ -139,7 +139,7 @@ namespace aiof.api.services
                     $"Error while adding Goal. {dto.Type} Type is not yet supported");
             }
 
-            _logger.LogInformation("{Tenant} | Created {GoalType} Goal with Id={GoalId}, PublicKey={GoalPublicKey} and UserId={GoalUserId}",
+            _logger.LogInformation("{Tenant} | Added {GoalType} Goal with Id={GoalId}, PublicKey={GoalPublicKey} and UserId={GoalUserId}",
                 _context.Tenant.Log,
                 goal.Type,
                 goal.Id,
