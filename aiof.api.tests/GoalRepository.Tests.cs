@@ -106,6 +106,7 @@ namespace aiof.api.tests
             Assert.True(goal.CurrentAmount > 0);
             Assert.True(goal.MonthlyContribution > 0);
             Assert.NotEqual(DateTime.UtcNow, goal.PlannedDate);
+            Assert.NotEqual(DateTime.UtcNow, goal.ProjectedDate);
             Assert.False(goal.IsDeleted);
         }
         [Theory]
@@ -124,6 +125,7 @@ namespace aiof.api.tests
             Assert.True(goal.CurrentAmount > 0);
             Assert.True(goal.MonthlyContribution > 0);
             Assert.NotEqual(DateTime.UtcNow, goal.PlannedDate);
+            Assert.NotEqual(DateTime.UtcNow, goal.ProjectedDate);
             Assert.False(goal.IsDeleted);
         }
 
@@ -143,6 +145,7 @@ namespace aiof.api.tests
             Assert.True(goal.CurrentAmount > 0);
             Assert.True(goal.MonthlyContribution > 0);
             Assert.NotEqual(DateTime.UtcNow, goal.PlannedDate);
+            Assert.NotEqual(DateTime.UtcNow, goal.ProjectedDate);
             Assert.False(goal.IsDeleted);
             Assert.NotNull(goal.Destination);
             Assert.Contains(goal.TripType, Constants.GoalTripTypes);
@@ -171,6 +174,7 @@ namespace aiof.api.tests
             Assert.True(goal.CurrentAmount > 0);
             Assert.True(goal.MonthlyContribution > 0);
             Assert.NotEqual(DateTime.UtcNow, goal.PlannedDate);
+            Assert.NotEqual(DateTime.UtcNow, goal.ProjectedDate);
             Assert.False(goal.IsDeleted);
             Assert.NotNull(goal.Destination);
             Assert.Contains(goal.TripType, Constants.GoalTripTypes);
@@ -200,6 +204,7 @@ namespace aiof.api.tests
             Assert.True(goal.CurrentAmount > 0);
             Assert.True(goal.MonthlyContribution > 0);
             Assert.NotEqual(DateTime.UtcNow, goal.PlannedDate);
+            Assert.NotEqual(DateTime.UtcNow, goal.ProjectedDate);
             Assert.False(goal.IsDeleted);
             Assert.True(goal.HomeValue >= 0);
             Assert.True(goal.MortgageRate >= 0);
@@ -224,6 +229,7 @@ namespace aiof.api.tests
             Assert.True(goal.CurrentAmount > 0);
             Assert.True(goal.MonthlyContribution > 0);
             Assert.NotEqual(DateTime.UtcNow, goal.PlannedDate);
+            Assert.NotEqual(DateTime.UtcNow, goal.ProjectedDate);
             Assert.False(goal.IsDeleted);
             Assert.True(goal.HomeValue >= 0);
             Assert.True(goal.MortgageRate >= 0);

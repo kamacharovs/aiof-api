@@ -340,7 +340,7 @@ namespace aiof.api.tests
                 .RuleFor(x => x.MonthlyContribution, f => f.Random.Decimal(100, 200))
                 .RuleFor(x => x.PlannedDate, f => DateTime.Now.AddDays(60))
                 .RuleFor(x => x.Destination, f => f.Random.String2(10))
-                .RuleFor(x => x.TripType, f => f.PickRandom<GoalTripType>())
+                .RuleFor(x => x.TripType, f => GoalTripType.Adventure)
                 .RuleFor(x => x.Duration, f => f.Random.Double(5, 14))
                 .RuleFor(x => x.Travelers, f => f.Random.Int(1, 4))
                 .RuleFor(x => x.Flight, f => f.Random.Decimal(0, 1000))

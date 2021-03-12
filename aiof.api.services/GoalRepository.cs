@@ -155,6 +155,11 @@ namespace aiof.api.services
 
             goal.UserId = _context.Tenant.UserId;
 
+            goal.ProjectedDate = CalculateProjectedDate(
+                goal.Amount,
+                goal.CurrentAmount,
+                goal.MonthlyContribution);
+
             await _context.Goals.AddAsync(goal);
             await _context.SaveChangesAsync();
 
@@ -203,6 +208,11 @@ namespace aiof.api.services
             goal.Amount = goal.Amount ?? goal.HomeValue.GetValueOrDefault() * goal.PercentDownPayment.GetValueOrDefault();
             goal.RecommendedAmount = goal.RecommendedAmount ?? goal.Amount.GetValueOrDefault() + goal.HomeValue.GetValueOrDefault() * 0.01M;
 
+            goal.ProjectedDate = CalculateProjectedDate(
+                goal.Amount,
+                goal.CurrentAmount,
+                goal.MonthlyContribution);
+
             await _context.GoalsHome.AddAsync(goal);
             await _context.SaveChangesAsync();
 
@@ -221,6 +231,11 @@ namespace aiof.api.services
             // Calculate the amount if not given
             goal.Amount = goal.Amount ?? 
                 goal.Price.GetValueOrDefault() - (goal.DesiredMonthlyPayment.GetValueOrDefault() * goal.LoanTermMonths.GetValueOrDefault());
+
+            goal.ProjectedDate = CalculateProjectedDate(
+                goal.Amount,
+                goal.CurrentAmount,
+                goal.MonthlyContribution);
 
             await _context.GoalsCar.AddAsync(goal);
             await _context.SaveChangesAsync();
