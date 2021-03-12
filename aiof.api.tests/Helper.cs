@@ -242,6 +242,15 @@ namespace aiof.api.tests
                 category: true);
         }
 
+        public static IEnumerable<object[]> CalculateProjectcedDates()
+        {
+            return _Fake.GetFakeAmountCurrentAmountMonthlyContribution();
+        }
+        public static IEnumerable<object[]> CalculateProjectedDatesNegatives()
+        {
+            return _Fake.GetFakeAmountCurrentAmountMonthlyContributionNegatives();
+        }
+
         public static UserDto RandomUserDto()
         {
             return new Faker<UserDto>()

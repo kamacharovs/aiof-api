@@ -27,5 +27,9 @@ namespace aiof.api.services
             int id, 
             GoalDto dto);
         Task DeleteAsync(int id);
+        DateTime? CalculateProjectedDate(
+            decimal? amount,
+            decimal? currentAmount,
+            decimal? monthlyContribution);
     }
 }

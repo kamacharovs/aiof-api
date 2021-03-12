@@ -299,5 +299,39 @@ namespace aiof.api.tests
 
             await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.DeleteAsync(id * 100));
         }
+
+        [Theory]
+        [MemberData(nameof(Helper.CalculateProjectcedDates), MemberType = typeof(Helper))]
+        public void CalculateProjectedDate_IsSuccessful(
+            decimal? amount,
+            decimal? currentAmount,
+            decimal? monthlyContribution)
+        {
+            var _repo = new ServiceHelper().GetRequiredService<IGoalRepository>();
+
+            var projectedDate = _repo.CalculateProjectedDate(
+                amount,
+                currentAmount,
+                monthlyContribution);
+
+            Assert.NotNull(projectedDate);
+            Assert.True(projectedDate > DateTime.UtcNow);
+        }
+        [Theory]
+        [MemberData(nameof(Helper.CalculateProjectedDatesNegatives), MemberType = typeof(Helper))]
+        public void CalculateProjectedDate_IsNull(
+            decimal? amount,
+            decimal? currentAmount,
+            decimal? monthlyContribution)
+        {
+            var _repo = new ServiceHelper().GetRequiredService<IGoalRepository>();
+
+            var projectedDate = _repo.CalculateProjectedDate(
+                amount,
+                currentAmount,
+                monthlyContribution);
+
+            Assert.Null(projectedDate);
+        }
     }
 }

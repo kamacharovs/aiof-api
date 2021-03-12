@@ -1157,6 +1157,26 @@ namespace aiof.api.data
 
             return toReturn;
         }
+
+        public IEnumerable<object[]> GetFakeAmountCurrentAmountMonthlyContribution()
+        {
+            return new List<object[]>
+            {
+                new object[] { 350M, 0M, 20M },
+                new object[] { 1000M, 250M, 200M },
+                new object[] { 3750M, 500M, 500M }
+            };
+        }
+        public IEnumerable<object[]> GetFakeAmountCurrentAmountMonthlyContributionNegatives()
+        {
+            return new List<object[]>
+            {
+                new object[] { null, 0M, 20M },
+                new object[] { 1000M, 250M, null },
+                new object[] { null, null, 20M },
+                new object[] { 1000M, null, null },
+            };
+        }
         #endregion
     }
 }

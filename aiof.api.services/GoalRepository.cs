@@ -251,11 +251,15 @@ namespace aiof.api.services
             return goal;
         }
 
+        public async Task DeleteAsync(int id)
+        {
+            await base.SoftDeleteAsync<Goal>(id);
+        }
+
         public DateTime? CalculateProjectedDate(
             decimal? amount,
             decimal? currentAmount,
-            decimal? monthlyContribution
-            )
+            decimal? monthlyContribution)
         {
             if (amount is null || monthlyContribution is null)
                 return null;
@@ -268,11 +272,6 @@ namespace aiof.api.services
             return DateTime.UtcNow.AddMonths(
                Convert.ToInt32(monthsToAmount)
                );
-        }
-
-        public async Task DeleteAsync(int id)
-        {
-            await base.SoftDeleteAsync<Goal>(id);
         }
 
         private async Task CheckAsync(
