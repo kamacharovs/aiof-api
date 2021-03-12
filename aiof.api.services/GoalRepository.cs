@@ -179,6 +179,18 @@ namespace aiof.api.services
                 + goal.Activities.GetValueOrDefault()
                 + goal.Other.GetValueOrDefault()) * goal.Travelers;
 
+            if (goal.MonthlyContribution is not null)
+            {
+                // Assuming no cash flow, the projected date would be
+                // (Amount - CurrentAmount) / MonthlyContribution
+                var amountDiff = goal.Amount - goal.CurrentAmount.GetValueOrDefault();
+                var monthsToAmount = Math.Round((decimal)(amountDiff / goal.MonthlyContribution), 3);
+
+                goal.ProjectedDate = DateTime.UtcNow.AddMonths(
+                   Convert.ToInt32(monthsToAmount)
+                   );
+            }
+
             await _context.GoalsTrip.AddAsync(goal);
             await _context.SaveChangesAsync();
 
