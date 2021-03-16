@@ -252,7 +252,7 @@ namespace aiof.api.data
             {
                 e.ToTable(Keys.Entity.GoalCollege);
 
-                e.Property(x => x.CollegeType).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.CollegeType).HasSnakeCaseColumnName().HasConversion<string>().IsRequired();
                 e.Property(x => x.CostPerYear).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.StudentAge).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.Years).HasSnakeCaseColumnName().IsRequired();
