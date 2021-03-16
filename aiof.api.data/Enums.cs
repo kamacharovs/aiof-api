@@ -29,7 +29,7 @@ namespace aiof.api.data
         HighSchool,
         Bachelors,
         Masters,
-        Doctorate,
+        Doctorate
     }
 
     public enum ResidentialStatuses
@@ -49,7 +49,7 @@ namespace aiof.api.data
         Stepson,
         Stepdaughter,
         Stepbrother,
-        Stepsister,
+        Stepsister
     }
 
     public enum AccountTypes
@@ -63,7 +63,8 @@ namespace aiof.api.data
         Generic,
         Trip,
         BuyAHome,
-        BuyACar
+        BuyACar,
+        SaveForCollege
     }
     public enum GoalTripType
     {
@@ -76,5 +77,12 @@ namespace aiof.api.data
         NationalParks,
         Spa,
         Other
+    }
+    public enum GoalCollegeType
+    {
+        PublicInState,
+        PublicOutOfState,
+        Private,
+        Community
     }
 }

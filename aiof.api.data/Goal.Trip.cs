@@ -4,8 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace aiof.api.data
 {
-    public class GoalTrip : Goal, 
-        IGoalTrip
+    public class GoalTrip : Goal
     {
         [Required]
         [MaxLength(300)]
