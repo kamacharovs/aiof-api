@@ -97,6 +97,6 @@ Migrations are managed in the `ef-migrations` branch
 ```powershell
 dotnet ef migrations add {migration name} -s .\aiof.api.core -p .\aiof.api.data
 dotnet ef migrations script -p .\aiof.api.data
-dotnet ef migrations script {migration name} -p .\aiof.api.data
+dotnet ef migrations script {migration name} -s .\aiof.api.core -p .\aiof.api.data
 dotnet ef migrations remove -s .\aiof.api.core -p .\aiof.api.data
 ```
