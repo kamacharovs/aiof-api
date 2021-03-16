@@ -260,13 +260,14 @@ namespace aiof.api.services
             goal.UserId = _context.Tenant.UserId;
 
             // Calculate the amount, if it's null
-            goal.Amount = goal.Amount ?? (decimal)base.FutureValue(
+            var amount = goal.Amount ?? (decimal)base.FutureValue(
                 rate: (double)goal.AnnualCostIncrease,
                 amount: (double)goal.CostPerYear,
-                years: goal.Years) - goal.CurrentAmount.GetValueOrDefault();
+                years: goal.Years);
 
+            goal.Amount = amount - goal.CurrentAmount.GetValueOrDefault();
             goal.ProjectedDate = CalculateProjectedDate(
-                goal.Amount,
+                amount,
                 goal.CurrentAmount,
                 goal.MonthlyContribution);
 
