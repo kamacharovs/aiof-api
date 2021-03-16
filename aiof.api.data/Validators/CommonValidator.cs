@@ -14,9 +14,13 @@ namespace aiof.api.data
         public const decimal MaximumPercentageValue = 100M;
         public const int MinimumValueInt = 0;
         public const int MaximumValueInt = 99999999;
+        public const int MinimumYears = 0;
+        public const int MaximumYears = 130;
 
         public static string ValueMessage = $"Value must be between {MinimumValue} and {MaximumValue}";
         public static string PercentageMessage = $"Percentage value must be between {MinimumPercentageValue} and {MaximumPercentageValue}";
+        public static string IntMessage = $"Value must be between {MinimumValueInt} and {MaximumValueInt}";
+        public static string YearsMessage = $"Year value must be between {MinimumYears} and {MaximumYears}";
 
         public static IEnumerable<int> ValidCarLoanTerms = new List<int>
         {
@@ -26,6 +30,9 @@ namespace aiof.api.data
             72
         };
         public static string ValidCarLoanTermsMessage = $"Value must be one of the following {string.Join(", ", ValidCarLoanTerms)}";
+
+        public static string GoalTripTypesMessage = $"Invalid Type. Allowed values are {string.Join(", ", Constants.GoalTripTypes)}";
+        public static string GoalCollegeTypesMessage = $"Invalid Type. Allowed values are {string.Join(", ", Constants.GoalCollegeTypes)}";
 
         public static bool IsValidPhoneNumber(string value)
         {

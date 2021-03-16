@@ -59,7 +59,7 @@ namespace aiof.api.data
                         .ToList()
                         .Contains(x);
                 })
-                .WithMessage($"Invalid Type. Allowed values are {string.Join(", ", Constants.GoalTripTypes)}");
+                .WithMessage(CommonValidator.GoalTripTypesMessage);
 
             RuleFor(x => x.Duration)
                 .LessThanOrEqualTo(1000)
@@ -190,6 +190,54 @@ namespace aiof.api.data
                 .LessThanOrEqualTo(CommonValidator.MaximumPercentageValue)
                 .WithMessage(CommonValidator.PercentageMessage)
                 .When(x => x.InterestRate.HasValue);
+        }
+    }
+
+    public class GoalCollegeDtoValidator : GoalDtoValidator<GoalCollegeDto>
+    {
+        public GoalCollegeDtoValidator()
+        {
+            RuleFor(x => x.CollegeType)
+                .NotNull()
+                .NotEmpty()
+                .Must(x =>
+                {
+                    return Constants.GoalCollegeTypes
+                        .ToList()
+                        .Contains(x);
+                })
+                .WithMessage(CommonValidator.GoalCollegeTypesMessage);
+
+            RuleFor(x => x.CostPerYear)
+                .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
+                .LessThanOrEqualTo(CommonValidator.MaximumValue)
+                .WithMessage(CommonValidator.ValueMessage);
+
+            RuleFor(x => x.StudentAge)
+                .GreaterThanOrEqualTo(CommonValidator.MinimumYears)
+                .LessThanOrEqualTo(CommonValidator.MaximumYears)
+                .WithMessage(CommonValidator.YearsMessage);
+
+            RuleFor(x => x.Years)
+                .GreaterThanOrEqualTo(CommonValidator.MinimumYears)
+                .LessThanOrEqualTo(CommonValidator.MaximumYears)
+                .WithMessage(CommonValidator.YearsMessage);
+
+            RuleFor(x => x.CollegeName)
+                .MaximumLength(300)
+                .When(x => !string.IsNullOrWhiteSpace(x.CollegeName));
+
+            RuleFor(x => x.AnnualCostIncrease)
+                .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
+                .LessThanOrEqualTo(CommonValidator.MaximumValue)
+                .WithMessage(CommonValidator.ValueMessage)
+                .When(x => x.AnnualCostIncrease.HasValue);
+
+            RuleFor(x => x.BeginningCollegeAge)
+                .GreaterThanOrEqualTo(CommonValidator.MinimumValueInt)
+                .LessThanOrEqualTo(CommonValidator.MaximumValueInt)
+                .WithMessage(CommonValidator.IntMessage)
+                .When(x => x.AnnualCostIncrease.HasValue);
         }
     }
 }

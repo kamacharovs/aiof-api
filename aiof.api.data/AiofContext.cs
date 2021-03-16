@@ -247,6 +247,18 @@ namespace aiof.api.data
                 e.Property(x => x.LoanTermMonths).HasSnakeCaseColumnName();
                 e.Property(x => x.InterestRate).HasSnakeCaseColumnName();
             });
+            modelBuilder.Entity<GoalCollege>(e =>
+            {
+                e.ToTable(Keys.Entity.GoalCollege);
+
+                e.Property(x => x.CollegeType).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.CostPerYear).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.StudentAge).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.Years).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.CollegeName).HasSnakeCaseColumnName().HasMaxLength(300);
+                e.Property(x => x.AnnualCostIncrease).HasSnakeCaseColumnName();
+                e.Property(x => x.BeginningCollegeAge).HasSnakeCaseColumnName();
+            });
 
             modelBuilder.Entity<AssetType>(e =>
             {

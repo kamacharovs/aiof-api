@@ -83,6 +83,15 @@ namespace aiof.api.data
             CreateMap<GoalCarDto, GoalCar>()
                 .ForAllMembers(x => x.Condition((source, destination, member) => member != null));
 
+            CreateMap<GoalCollegeDto, GoalCollege>()
+                .ForMember(x => x.CollegeType, o => o.MapFrom(s => s.CollegeType))
+                .ForMember(x => x.CostPerYear, o => o.MapFrom(s => s.CostPerYear))
+                .ForMember(x => x.StudentAge, o => o.MapFrom(s => s.StudentAge))
+                .ForMember(x => x.Years, o => o.MapFrom(s => s.Years))
+                .ForMember(x => x.CollegeName, o => o.Condition(s => s.CollegeName != null))
+                .ForMember(x => x.AnnualCostIncrease, o => o.Condition(s => s.AnnualCostIncrease != null))
+                .ForMember(x => x.BeginningCollegeAge, o => o.Condition(s => s.BeginningCollegeAge != null));
+
             CreateMap<LiabilityDto, Liability>()
                 .ForMember(x => x.Name, o => o.Condition(s => s.Name != null))
                 .ForMember(x => x.TypeName, o => o.Condition(s => s.TypeName != null))

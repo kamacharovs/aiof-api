@@ -25,7 +25,7 @@ namespace aiof.api.data
             StatusCodes.Status403Forbidden
         };
 
-        public static IEnumerable<GoalType> GoalTypes => new List<GoalType>
+        public static IEnumerable<GoalType> GoalTypes => new GoalType[]
         {
             GoalType.Generic,
             GoalType.Trip,
@@ -33,7 +33,7 @@ namespace aiof.api.data
             GoalType.BuyACar
         };
 
-        public static IEnumerable<GoalTripType> GoalTripTypes => new List<GoalTripType>
+        public static IEnumerable<GoalTripType> GoalTripTypes => new GoalTripType[]
         {
             GoalTripType.Romance,
             GoalTripType.Adventure,
@@ -44,6 +44,14 @@ namespace aiof.api.data
             GoalTripType.NationalParks,
             GoalTripType.Spa,
             GoalTripType.Other
+        };
+
+        public static IEnumerable<GoalCollegeType> GoalCollegeTypes => new GoalCollegeType[]
+        {
+            GoalCollegeType.PublicInState,
+            GoalCollegeType.PublicOutOfState,
+            GoalCollegeType.Private,
+            GoalCollegeType.Community
         };
     }
 
@@ -125,6 +133,7 @@ namespace aiof.api.data
             public static string GoalTrip = nameof(data.GoalTrip).ToSnakeCase();
             public static string GoalHome = nameof(data.GoalHome).ToSnakeCase();
             public static string GoalCar = nameof(data.GoalCar).ToSnakeCase();
+            public static string GoalCollege = nameof(data.GoalCollege).ToSnakeCase();
             public static string AssetType = nameof(data.AssetType).ToSnakeCase();
             public static string LiabilityType = nameof(data.LiabilityType).ToSnakeCase();
             public static string Subscription = nameof(data.Subscription).ToSnakeCase();
