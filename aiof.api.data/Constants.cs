@@ -30,7 +30,8 @@ namespace aiof.api.data
             GoalType.Generic,
             GoalType.Trip,
             GoalType.BuyAHome,
-            GoalType.BuyACar
+            GoalType.BuyACar,
+            GoalType.SaveForCollege
         };
 
         public static IEnumerable<GoalTripType> GoalTripTypes => new GoalTripType[]

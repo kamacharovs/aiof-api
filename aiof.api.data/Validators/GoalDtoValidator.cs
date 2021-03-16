@@ -25,7 +25,8 @@ namespace aiof.api.data
                     return Constants.GoalTypes
                         .ToList()
                         .Contains(x);
-                });
+                })
+                .WithMessage(CommonValidator.GoalTypesMessage);
 
             RuleFor(x => x.Amount)
                 .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
@@ -204,9 +205,10 @@ namespace aiof.api.data
                 {
                     return Constants.GoalCollegeTypes
                         .ToList()
-                        .Contains(x);
+                        .Contains((GoalCollegeType)x);
                 })
-                .WithMessage(CommonValidator.GoalCollegeTypesMessage);
+                .WithMessage(CommonValidator.GoalCollegeTypesMessage)
+                .When(x => x.CollegeType.HasValue);
 
             RuleFor(x => x.CostPerYear)
                 .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
@@ -221,7 +223,8 @@ namespace aiof.api.data
             RuleFor(x => x.Years)
                 .GreaterThanOrEqualTo(CommonValidator.MinimumYears)
                 .LessThanOrEqualTo(CommonValidator.MaximumYears)
-                .WithMessage(CommonValidator.YearsMessage);
+                .WithMessage(CommonValidator.YearsMessage)
+                .When(x => x.Years.HasValue);
 
             RuleFor(x => x.CollegeName)
                 .MaximumLength(300)

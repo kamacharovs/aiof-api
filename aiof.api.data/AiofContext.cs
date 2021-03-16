@@ -21,6 +21,7 @@ namespace aiof.api.data
         public virtual DbSet<GoalTrip> GoalsTrip { get; set; }
         public virtual DbSet<GoalHome> GoalsHome { get; set; }
         public virtual DbSet<GoalCar> GoalsCar { get; set; }
+        public virtual DbSet<GoalCollege> GoalsCollege { get; set; }
         public virtual DbSet<Subscription> Subscriptions { get; set; }
         public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<AccountType> AccountTypes { get; set; }

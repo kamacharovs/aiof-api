@@ -55,6 +55,7 @@ namespace aiof.api.tests
                 .AddSingleton<AbstractValidator<GoalTripDto>, GoalTripDtoValidator>()
                 .AddSingleton<AbstractValidator<GoalHomeDto>, GoalHomeDtoValidator>()
                 .AddSingleton<AbstractValidator<GoalCarDto>, GoalCarDtoValidator>()
+                .AddSingleton<AbstractValidator<GoalCollegeDto>, GoalCollegeDtoValidator>()
                 .AddSingleton<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>()
                 .AddSingleton<AbstractValidator<AccountDto>, AccountDtoValidator>()
                 .AddSingleton<AbstractValidator<UserDto>, UserDtoValidator>()
@@ -374,6 +375,24 @@ namespace aiof.api.tests
                 .RuleFor(x => x.AnnualInsurance, f => f.Random.Decimal(500, 750))
                 .RuleFor(x => x.AnnualPropertyTax, f => f.Random.Decimal(0.005M, 0.01M))
                 .RuleFor(x => x.RecommendedAmount, f => f.Random.Decimal(33000, 38000));
+        }
+
+        public static GoalCollegeDto RandomGoalCollegeDto()
+        {
+            return FakerGoalCollegeDto().Generate();
+        }
+        public static List<GoalCollegeDto> RandomGoalCollegeDtos(int? n = null)
+        {
+            return FakerGoalCollegeDto().Generate(n ?? GeneratedAmount);
+        }
+        private static Faker<GoalCollegeDto> FakerGoalCollegeDto()
+        {
+            return new Faker<GoalCollegeDto>()
+                .RuleFor(x => x.CollegeType, f => GoalCollegeType.PublicOutOfState)
+                .RuleFor(x => x.CostPerYear, f => f.Random.Decimal(15000M, 30000M))
+                .RuleFor(x => x.StudentAge, f => f.Random.Int(1, 10))
+                .RuleFor(x => x.Years, f => f.Random.Int(4, 6))
+                .RuleFor(x => x.CollegeName, f => f.Random.String2(5));
         }
 
         public static SubscriptionDto RandomSubscriptionDto()

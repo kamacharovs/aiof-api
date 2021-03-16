@@ -48,6 +48,9 @@ namespace aiof.api.data
             _context.GoalsHome
                 .AddRange(GetFakeGoalsHome());
 
+            _context.GoalsCollege
+                .AddRange(GetFakeGoalsCollege());
+
             _context.Subscriptions
                 .AddRange(GetFakeSubscriptions());
 
@@ -279,6 +282,29 @@ namespace aiof.api.data
                     AnnualInsurance = 500M,
                     AnnualPropertyTax = 0.01M,
                     RecommendedAmount = 40000M
+                }
+            };
+        }
+
+        public IEnumerable<GoalCollege> GetFakeGoalsCollege()
+        {
+            return new List<GoalCollege>
+            {
+                new GoalCollege
+                {
+                    Id = 5,
+                    PublicKey = Guid.Parse("5b2d9805-16f8-4726-8d7e-6fd08a8e9c98"),
+                    Name = "save for college",
+                    Type = GoalType.SaveForCollege,
+                    UserId = 1,
+                    Amount = 94030M,
+                    CurrentAmount = 12500M,
+                    MonthlyContribution = 350M,
+                    CollegeType = GoalCollegeType.PublicInState,
+                    CostPerYear = 17500M,
+                    StudentAge = 10,
+                    Years = 4,
+                    CollegeName = "Existing college"
                 }
             };
         }

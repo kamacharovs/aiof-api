@@ -24,6 +24,7 @@ namespace aiof.api.services
         private readonly AbstractValidator<GoalTripDto> _goalTripDtoValidator;
         private readonly AbstractValidator<GoalHomeDto> _goalHomeDtoValidator;
         private readonly AbstractValidator<GoalCarDto> _goalCarDtoValidator;
+        private readonly AbstractValidator<GoalCollegeDto> _goalCollegeDtoValidator;
 
         public GoalRepository(
             ILogger<GoalRepository> logger,
@@ -32,7 +33,8 @@ namespace aiof.api.services
             AbstractValidator<GoalDto> goalDtoValidator,
             AbstractValidator<GoalTripDto> goalTripDtoValidator,
             AbstractValidator<GoalHomeDto> goalHomeDtoValidator,
-            AbstractValidator<GoalCarDto> goalCarDtoValidator)
+            AbstractValidator<GoalCarDto> goalCarDtoValidator,
+            AbstractValidator<GoalCollegeDto> goalCollegeDtoValidator)
             : base(logger, context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
@@ -42,6 +44,7 @@ namespace aiof.api.services
             _goalTripDtoValidator = goalTripDtoValidator ?? throw new ArgumentNullException(nameof(goalTripDtoValidator));
             _goalHomeDtoValidator = goalHomeDtoValidator ?? throw new ArgumentNullException(nameof(goalHomeDtoValidator));
             _goalCarDtoValidator = goalCarDtoValidator ?? throw new ArgumentNullException(nameof(goalCarDtoValidator));
+            _goalCollegeDtoValidator = goalCollegeDtoValidator ?? throw new ArgumentNullException(nameof(goalCollegeDtoValidator));
         }
 
         private IQueryable<Goal> GetQuery(bool asNoTracking = true)
@@ -132,6 +135,10 @@ namespace aiof.api.services
             else if (dto.Type == GoalType.BuyACar)
             {
                 goal = await AddAsync(JsonConvert.DeserializeObject<GoalCarDto>(dtoStr));
+            }
+            else if (dto.Type == GoalType.SaveForCollege)
+            {
+                goal = await AddAsync(JsonConvert.DeserializeObject<GoalCollegeDto>(dtoStr));
             }
             else
             {
@@ -238,6 +245,27 @@ namespace aiof.api.services
                 goal.MonthlyContribution);
 
             await _context.GoalsCar.AddAsync(goal);
+            await _context.SaveChangesAsync();
+
+            return goal;
+        }
+
+        public async Task<IGoal> AddAsync(GoalCollegeDto dto)
+        {
+            // Validate and throw
+            await _goalCollegeDtoValidator.ValidateAndThrowAsync(dto);
+
+            var goal = _mapper.Map<GoalCollege>(dto);
+
+            goal.UserId = _context.Tenant.UserId;
+
+            // Calculate the amount, if it's null
+            goal.Amount = goal.Amount ?? (decimal)base.FutureValue(
+                rate: (double)goal.AnnualCostIncrease,
+                amount: (double)goal.CostPerYear,
+                years: goal.Years);
+
+            await _context.GoalsCollege.AddAsync(goal);
             await _context.SaveChangesAsync();
 
             return goal;

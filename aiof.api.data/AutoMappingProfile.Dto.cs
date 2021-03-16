@@ -84,10 +84,17 @@ namespace aiof.api.data
                 .ForAllMembers(x => x.Condition((source, destination, member) => member != null));
 
             CreateMap<GoalCollegeDto, GoalCollege>()
-                .ForMember(x => x.CollegeType, o => o.MapFrom(s => s.CollegeType))
+                .ForMember(x => x.Name, o => o.Condition(s => s.Name != null))
+                .ForMember(x => x.Type, o => o.MapFrom(s => s.Type))
+                .ForMember(x => x.Amount, o => o.Condition(s => s.Amount != null))
+                .ForMember(x => x.CurrentAmount, o => o.Condition(s => s.CurrentAmount != null))
+                .ForMember(x => x.MonthlyContribution, o => o.Condition(s => s.MonthlyContribution != null))
+                .ForMember(x => x.PlannedDate, o => o.MapFrom(s => s.PlannedDate))
+                .ForMember(x => x.ProjectedDate, o => o.Condition(s => s.ProjectedDate != null))
+                .ForMember(x => x.CollegeType, o => o.Condition(s => s.CollegeType != null))
                 .ForMember(x => x.CostPerYear, o => o.MapFrom(s => s.CostPerYear))
                 .ForMember(x => x.StudentAge, o => o.MapFrom(s => s.StudentAge))
-                .ForMember(x => x.Years, o => o.MapFrom(s => s.Years))
+                .ForMember(x => x.Years, o => o.Condition(s => s.Years != null))
                 .ForMember(x => x.CollegeName, o => o.Condition(s => s.CollegeName != null))
                 .ForMember(x => x.AnnualCostIncrease, o => o.Condition(s => s.AnnualCostIncrease != null))
                 .ForMember(x => x.BeginningCollegeAge, o => o.Condition(s => s.BeginningCollegeAge != null));

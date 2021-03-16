@@ -10,7 +10,7 @@ namespace aiof.api.data
         /// College type. For example, Public (in state), Public (out of state), etc.
         /// </summary>
         [Required]
-        public GoalCollegeType CollegeType { get; set; }
+        public GoalCollegeType CollegeType { get; set; } = GoalCollegeType.PublicInState;
 
         /// <summary>
         /// Cost per year in today's dollars
@@ -28,7 +28,7 @@ namespace aiof.api.data
         /// Years in college
         /// </summary>
         [Required]
-        public int Years { get; set; }
+        public int Years { get; set; } = 4;
 
         /// <summary>
         /// The name of the college
@@ -46,10 +46,10 @@ namespace aiof.api.data
 
     public class GoalCollegeDto : GoalDto
     {
-        public GoalCollegeType CollegeType { get; set; }
+        public GoalCollegeType? CollegeType { get; set; }
         public decimal CostPerYear { get; set; }
         public int StudentAge { get; set; }
-        public int Years { get; set; }
+        public int? Years { get; set; }
         public string CollegeName { get; set; }
         public decimal? AnnualCostIncrease { get; set; }
         public int? BeginningCollegeAge { get; set; }
