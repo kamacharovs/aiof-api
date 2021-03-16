@@ -190,6 +190,59 @@ namespace aiof.api.tests
 
         [Theory]
         [MemberData(nameof(Helper.GoalsUserId), MemberType = typeof(Helper))]
+        public async Task AddAsync_College_IsSuccessful(int userId)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();
+            var dto = JsonConvert.SerializeObject(Helper.RandomGoalCollegeDto());
+            var goal = (await _repo.AddAsync(dto)) as GoalCollege;
+
+            Assert.NotNull(goal);
+            Assert.NotNull(goal.Name);
+            Assert.Equal(GoalType.SaveForCollege, goal.Type);
+            Assert.Equal(goal.UserId, userId);
+            Assert.True(goal.Amount > 0);
+            Assert.True(goal.CurrentAmount > 0);
+            Assert.True(goal.MonthlyContribution > 0);
+            Assert.NotEqual(DateTime.UtcNow, goal.PlannedDate);
+            Assert.NotEqual(DateTime.UtcNow, goal.ProjectedDate);
+            Assert.False(goal.IsDeleted);
+            Assert.Contains(goal.CollegeType, Constants.GoalCollegeTypes);
+            Assert.True(goal.CostPerYear >= 0);
+            Assert.True(goal.StudentAge >= 0);
+            Assert.True(goal.Years >= 0);
+            Assert.True(goal.CollegeName != null);
+            Assert.True(goal.AnnualCostIncrease.GetValueOrDefault() >= 0);
+            Assert.True(goal.BeginningCollegeAge.GetValueOrDefault() >= 0);
+        }
+        [Theory]
+        [MemberData(nameof(Helper.GoalsUserId), MemberType = typeof(Helper))]
+        public async Task AddAsync_GoalCollegeDto_IsSuccessful(int userId)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();
+            var dto = Helper.RandomGoalCollegeDto();
+            var goal = (await _repo.AddAsync(dto)) as GoalCollege;
+
+            Assert.NotNull(goal);
+            Assert.NotNull(goal.Name);
+            Assert.Equal(GoalType.SaveForCollege, goal.Type);
+            Assert.Equal(goal.UserId, userId);
+            Assert.True(goal.Amount > 0);
+            Assert.True(goal.CurrentAmount > 0);
+            Assert.True(goal.MonthlyContribution > 0);
+            Assert.NotEqual(DateTime.UtcNow, goal.PlannedDate);
+            Assert.NotEqual(DateTime.UtcNow, goal.ProjectedDate);
+            Assert.False(goal.IsDeleted);
+            Assert.Contains(goal.CollegeType, Constants.GoalCollegeTypes);
+            Assert.True(goal.CostPerYear >= 0);
+            Assert.True(goal.StudentAge >= 0);
+            Assert.True(goal.Years >= 0);
+            Assert.True(goal.CollegeName != null);
+            Assert.True(goal.AnnualCostIncrease.GetValueOrDefault() >= 0);
+            Assert.True(goal.BeginningCollegeAge.GetValueOrDefault() >= 0);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.GoalsUserId), MemberType = typeof(Helper))]
         public async Task AddAsync_Home_IsSuccessful(int userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();

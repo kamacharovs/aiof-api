@@ -263,7 +263,12 @@ namespace aiof.api.services
             goal.Amount = goal.Amount ?? (decimal)base.FutureValue(
                 rate: (double)goal.AnnualCostIncrease,
                 amount: (double)goal.CostPerYear,
-                years: goal.Years);
+                years: goal.Years) - goal.CurrentAmount.GetValueOrDefault();
+
+            goal.ProjectedDate = CalculateProjectedDate(
+                goal.Amount,
+                goal.CurrentAmount,
+                goal.MonthlyContribution);
 
             await _context.GoalsCollege.AddAsync(goal);
             await _context.SaveChangesAsync();

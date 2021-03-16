@@ -388,6 +388,12 @@ namespace aiof.api.tests
         private static Faker<GoalCollegeDto> FakerGoalCollegeDto()
         {
             return new Faker<GoalCollegeDto>()
+                .RuleFor(x => x.Name, f => f.Random.String2(7))
+                .RuleFor(x => x.Type, f => GoalType.SaveForCollege)
+                .RuleFor(x => x.Amount, f => f.Random.Decimal(5000, 10000))
+                .RuleFor(x => x.CurrentAmount, f => f.Random.Decimal(1000, 4000))
+                .RuleFor(x => x.MonthlyContribution, f => f.Random.Decimal(100, 200))
+                .RuleFor(x => x.PlannedDate, f => DateTime.Now.AddDays(60))
                 .RuleFor(x => x.CollegeType, f => GoalCollegeType.PublicOutOfState)
                 .RuleFor(x => x.CostPerYear, f => f.Random.Decimal(15000M, 30000M))
                 .RuleFor(x => x.StudentAge, f => f.Random.Int(1, 10))

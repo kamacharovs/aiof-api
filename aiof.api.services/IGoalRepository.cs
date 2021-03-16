@@ -23,6 +23,7 @@ namespace aiof.api.services
         Task<IGoal> AddAsync(GoalDto dto);
         Task<IGoal> AddAsync(GoalTripDto dto);
         Task<IGoal> AddAsync(GoalHomeDto dto);
+        Task<IGoal> AddAsync(GoalCollegeDto dto);
         Task<IGoal> UpdateAsync(
             int id, 
             GoalDto dto);

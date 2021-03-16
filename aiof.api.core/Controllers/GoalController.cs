@@ -116,5 +116,16 @@ namespace aiof.api.core.Controllers
         {
             return Ok(Constants.GoalTripTypes);
         }
+
+        /// <summary>
+        /// Get Goal college types
+        /// </summary>
+        [HttpGet]
+        [Route("college/types")]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status200OK)]
+        public IActionResult GetGoalCollegeTypes()
+        {
+            return Ok(Constants.GoalCollegeTypes);
+        }
     }
 }
