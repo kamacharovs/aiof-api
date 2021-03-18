@@ -120,36 +120,6 @@ namespace aiof.api.services
 
         public double FutureValue(
             double rate,
-            double nper,
-            double pmt,
-            double pv,
-            int when = 1)
-        {
-            if (when != 1 
-                && when != 0)
-            {
-                throw new AiofFriendlyException(HttpStatusCode.BadRequest,
-                    $"Future value 'when' paramter must be either 1 or 0");
-            }
-
-            var result = 0.0;
-
-            if (rate == 0)
-                result = pv + pmt * nper;
-            else
-            {
-                var first = pv * Math.Pow(1 + rate, nper);
-                var numerator = pmt * (1 + rate * when);
-                var denominator = rate * (Math.Pow(1 + rate, nper) - 1);
-
-                result = first + numerator / denominator;
-            }
-
-            return result;
-        }
-
-        public double FutureValue(
-            double rate,
             double amount,
             int years)
         {
