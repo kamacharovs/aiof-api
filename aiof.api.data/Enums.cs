@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Runtime.Serialization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace aiof.api.data
 {
@@ -27,7 +29,7 @@ namespace aiof.api.data
         HighSchool,
         Bachelors,
         Masters,
-        Doctorate,
+        Doctorate
     }
 
     public enum ResidentialStatuses
@@ -47,12 +49,40 @@ namespace aiof.api.data
         Stepson,
         Stepdaughter,
         Stepbrother,
-        Stepsister,
+        Stepsister
     }
 
     public enum AccountTypes
     {
         Retirement,
         Taxable,
+    }
+
+    public enum GoalType
+    {
+        Generic,
+        Trip,
+        BuyAHome,
+        BuyACar,
+        SaveForCollege
+    }
+    public enum GoalTripType
+    {
+        Romance,
+        Adventure,
+        Beach,
+        Family,
+        Golf,
+        Luxury,
+        NationalParks,
+        Spa,
+        Other
+    }
+    public enum GoalCollegeType
+    {
+        PublicInState,
+        PublicOutOfState,
+        Private,
+        Community
     }
 }

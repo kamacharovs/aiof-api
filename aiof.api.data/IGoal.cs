@@ -17,33 +17,21 @@ namespace aiof.api.data
         [MaxLength(100)]
         string Name { get; set; }
 
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         [Required]
-        [MaxLength(100)]
-        string TypeName { get; set; }
-
-        [JsonIgnore]
         GoalType Type { get; set; }
 
         [Required]
-        decimal Amount { get; set; }
+        int UserId { get; set; }
+
+        decimal? Amount { get; set; }
+        decimal? CurrentAmount { get; set; }
+        decimal? MonthlyContribution { get; set; }
 
         [Required]
-        decimal CurrentAmount { get; set; }
+        DateTime PlannedDate { get; set; } 
 
-        [Required]
-        decimal Contribution { get; set; }
-
-        [Required]
-        [MaxLength(20)]
-        string ContributionFrequencyName { get; set; }
-
-        [JsonIgnore]
-        Frequency ContributionFrequency { get; set; }
-
-        DateTime? PlannedDate { get; set; }
-
-        [JsonIgnore]
-        int? UserId { get; set; }
+        DateTime? ProjectedDate { get; set; }
 
         [JsonIgnore]
         bool IsDeleted { get; set; }

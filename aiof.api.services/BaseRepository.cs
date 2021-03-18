@@ -117,5 +117,23 @@ namespace aiof.api.services
                 typeof(T).Name,
                 JsonSerializer.Serialize(entity));
         }
+
+        public double FutureValue(
+            double rate,
+            double amount,
+            int years)
+        {
+            var total = 0.0;
+
+            for (int i = 0; i < years; i++)
+            {
+                var amountIncrease = amount * rate;
+
+                total += amount + amountIncrease;
+                amount = amount + amountIncrease;
+            }
+
+            return total;
+        }
     }
 }

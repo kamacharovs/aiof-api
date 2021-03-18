@@ -27,8 +27,6 @@ namespace aiof.api.services
         private readonly AbstractValidator<AccountDto> _accountDtoValidator;
         private readonly AbstractValidator<UserDependentDto> _dependentDtoValidator;
 
-        private readonly Stopwatch _sw;
-
         public UserRepository(
             ILogger<UserRepository> logger,
             IMapper mapper,
@@ -41,12 +39,10 @@ namespace aiof.api.services
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _context = context ?? throw new ArgumentNullException(nameof(context));
+            _tenant = _context.Tenant ?? throw new ArgumentNullException(nameof(_context.Tenant));
             _subscriptionDtoValidator = subscriptionDtoValidator ?? throw new ArgumentNullException(nameof(subscriptionDtoValidator));
             _accountDtoValidator = accountDtoValidator ?? throw new ArgumentNullException(nameof(accountDtoValidator));
             _dependentDtoValidator = dependentDtoValidator ?? throw new ArgumentNullException(nameof(dependentDtoValidator));
-
-            _tenant = _context.Tenant;
-            _sw = new Stopwatch();
         }
 
         private IQueryable<User> GetQuery(bool asNoTracking = true)
@@ -84,12 +80,12 @@ namespace aiof.api.services
                 ?? throw new AiofNotFoundException($"User with Id={_context.Tenant.UserId} was not found");
         }
         public async Task<IUser> GetAsync(
-            string username,
+            string email,
             bool asNoTracking = true)
         {
             return await GetQuery()
-                .FirstOrDefaultAsync(x => x.Username == username)
-                ?? throw new AiofNotFoundException($"{nameof(User)} with Username={username} was not found");
+                .FirstOrDefaultAsync(x => x.Email == email)
+                ?? throw new AiofNotFoundException($"{nameof(User)} with Email={email} was not found");
         }
         public async Task<bool> ExistsAsync(int id)
         {
@@ -220,7 +216,6 @@ namespace aiof.api.services
         private IQueryable<Subscription> GetSubscriptionsQuery(bool asNoTracking = true)
         {
             var subscriptionQuery = _context.Subscriptions
-                .Include(x => x.PaymentFrequency)
                 .AsQueryable();
 
             return asNoTracking

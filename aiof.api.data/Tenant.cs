@@ -20,6 +20,17 @@ namespace aiof.api.data
         public Guid PublicKey { get; set; }
 
         [JsonIgnore]
+        public int TenantId
+        {
+            get
+            {
+                return UserId == 0
+                    ? ClientId
+                    : UserId;
+            }
+        }
+
+        [JsonIgnore]
         public string Log
         {
             get

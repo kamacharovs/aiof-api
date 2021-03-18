@@ -12,10 +12,9 @@ namespace aiof.api.services
             int id,
             bool included = true,
             bool asNoTracking = true);
-        Task<IUser> GetUserAsync(string username);
+        Task<IUser> GetUserAsync(string email);
         Task<IUser> UpsertFinanceAsync(
             int userId,
             UserDto userDto);
-        Task<IEnumerable<IFrequency>> GetFrequenciesAsync();
     }
 }

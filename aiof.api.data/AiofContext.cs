@@ -15,11 +15,13 @@ namespace aiof.api.data
         public virtual DbSet<UserProfile> UserProfiles { get; set; }
         public virtual DbSet<Asset> Assets { get; set; }
         public virtual DbSet<Liability> Liabilities { get; set; }
-        public virtual DbSet<Goal> Goals { get; set; }
         public virtual DbSet<AssetType> AssetTypes { get; set; }
         public virtual DbSet<LiabilityType> LiabilityTypes { get; set; }
-        public virtual DbSet<GoalType> GoalTypes { get; set; }
-        public virtual DbSet<Frequency> Frequencies { get; set; }
+        public virtual DbSet<Goal> Goals { get; set; }
+        public virtual DbSet<GoalTrip> GoalsTrip { get; set; }
+        public virtual DbSet<GoalHome> GoalsHome { get; set; }
+        public virtual DbSet<GoalCar> GoalsCar { get; set; }
+        public virtual DbSet<GoalCollege> GoalsCollege { get; set; }
         public virtual DbSet<Subscription> Subscriptions { get; set; }
         public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<AccountType> AccountTypes { get; set; }
@@ -54,7 +56,6 @@ namespace aiof.api.data
                 e.Property(x => x.FirstName).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
                 e.Property(x => x.LastName).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
                 e.Property(x => x.Email).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
-                e.Property(x => x.Username).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
                 e.Property(x => x.Created).HasColumnType("timestamp").HasSnakeCaseColumnName().IsRequired();
 
                 e.HasOne(x => x.Profile)
@@ -202,24 +203,66 @@ namespace aiof.api.data
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
-                e.Property(x => x.Amount).HasSnakeCaseColumnName().IsRequired();
-                e.Property(x => x.CurrentAmount).HasSnakeCaseColumnName().IsRequired();
-                e.Property(x => x.Contribution).HasSnakeCaseColumnName().IsRequired();
-                e.Property(x => x.ContributionFrequencyName).HasSnakeCaseColumnName().HasMaxLength(20).IsRequired();
-                e.Property(x => x.TypeName).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
-                e.Property(x => x.PlannedDate).HasSnakeCaseColumnName();
-                e.Property(x => x.UserId).HasSnakeCaseColumnName();
+                e.Property(x => x.Type).HasSnakeCaseColumnName().HasConversion<string>().IsRequired();
+                e.Property(x => x.UserId).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.Amount).HasSnakeCaseColumnName();
+                e.Property(x => x.CurrentAmount).HasSnakeCaseColumnName();
+                e.Property(x => x.MonthlyContribution).HasSnakeCaseColumnName();
+                e.Property(x => x.PlannedDate).HasColumnType("timestamp").HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.ProjectedDate).HasColumnType("timestamp").HasSnakeCaseColumnName();
                 e.Property(x => x.IsDeleted).HasSnakeCaseColumnName().IsRequired();
+            });
+            modelBuilder.Entity<GoalTrip>(e =>
+            {
+                e.ToTable(Keys.Entity.GoalTrip);
 
-                e.HasOne(x => x.Type)
-                    .WithMany()
-                    .HasForeignKey(x => x.TypeName)
-                    .IsRequired();
+                e.Property(x => x.Destination).HasSnakeCaseColumnName().HasMaxLength(300).IsRequired();
+                e.Property(x => x.TripType).HasSnakeCaseColumnName().HasConversion<string>().IsRequired();
+                e.Property(x => x.Duration).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.Travelers).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.Flight).HasSnakeCaseColumnName();
+                e.Property(x => x.Hotel).HasSnakeCaseColumnName();
+                e.Property(x => x.Car).HasSnakeCaseColumnName();
+                e.Property(x => x.Food).HasSnakeCaseColumnName();
+                e.Property(x => x.Activities).HasSnakeCaseColumnName();
+                e.Property(x => x.Other).HasSnakeCaseColumnName();
+            });
+            modelBuilder.Entity<GoalHome>(e =>
+            {
+                e.ToTable(Keys.Entity.GoalHome);
 
-                e.HasOne(x => x.ContributionFrequency)
-                    .WithMany()
-                    .HasForeignKey(x => x.ContributionFrequencyName)
-                    .IsRequired();
+                e.Property(x => x.HomeValue).HasSnakeCaseColumnName();
+                e.Property(x => x.MortgageRate).HasSnakeCaseColumnName();
+                e.Property(x => x.PercentDownPayment).HasSnakeCaseColumnName();
+                e.Property(x => x.AnnualInsurance).HasSnakeCaseColumnName();
+                e.Property(x => x.AnnualPropertyTax).HasSnakeCaseColumnName();
+                e.Property(x => x.RecommendedAmount).HasSnakeCaseColumnName();
+            });
+            modelBuilder.Entity<GoalCar>(e =>
+            {
+                e.ToTable(Keys.Entity.GoalCar);
+
+                e.Property(x => x.Year).HasSnakeCaseColumnName();
+                e.Property(x => x.Make).HasSnakeCaseColumnName().HasMaxLength(500);
+                e.Property(x => x.Model).HasSnakeCaseColumnName().HasMaxLength(500);
+                e.Property(x => x.Trim).HasSnakeCaseColumnName().HasMaxLength(500);
+                e.Property(x => x.New).HasSnakeCaseColumnName();
+                e.Property(x => x.Price).HasSnakeCaseColumnName();
+                e.Property(x => x.DesiredMonthlyPayment).HasSnakeCaseColumnName();
+                e.Property(x => x.LoanTermMonths).HasSnakeCaseColumnName();
+                e.Property(x => x.InterestRate).HasSnakeCaseColumnName();
+            });
+            modelBuilder.Entity<GoalCollege>(e =>
+            {
+                e.ToTable(Keys.Entity.GoalCollege);
+
+                e.Property(x => x.CollegeType).HasSnakeCaseColumnName().HasConversion<string>().IsRequired();
+                e.Property(x => x.CostPerYear).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.StudentAge).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.Years).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.CollegeName).HasSnakeCaseColumnName().HasMaxLength(300);
+                e.Property(x => x.AnnualCostIncrease).HasSnakeCaseColumnName();
+                e.Property(x => x.BeginningCollegeAge).HasSnakeCaseColumnName();
             });
 
             modelBuilder.Entity<AssetType>(e =>
@@ -242,27 +285,6 @@ namespace aiof.api.data
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
             });
 
-            modelBuilder.Entity<GoalType>(e =>
-            {
-                e.ToTable(Keys.Entity.GoalType);
-
-                e.HasKey(x => x.Name);
-
-                e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
-                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
-            });
-
-            modelBuilder.Entity<Frequency>(e =>
-            {
-                e.ToTable(Keys.Entity.Frequency);
-
-                e.HasKey(x => x.Name);
-
-                e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(20).IsRequired();
-                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
-                e.Property(x => x.Value).HasSnakeCaseColumnName().IsRequired();
-            });
-
             modelBuilder.Entity<Subscription>(e =>
             {
                 e.ToTable(Keys.Entity.Subscription);
@@ -277,17 +299,11 @@ namespace aiof.api.data
                 e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
                 e.Property(x => x.Description).HasSnakeCaseColumnName().HasMaxLength(500);
                 e.Property(x => x.Amount).HasSnakeCaseColumnName().IsRequired();
-                e.Property(x => x.PaymentFrequencyName).HasSnakeCaseColumnName().HasMaxLength(20).IsRequired();
                 e.Property(x => x.PaymentLength).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.From).HasSnakeCaseColumnName().HasMaxLength(200);
                 e.Property(x => x.Url).HasSnakeCaseColumnName().HasMaxLength(500);
                 e.Property(x => x.UserId).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.IsDeleted).HasSnakeCaseColumnName().IsRequired();
-
-                e.HasOne(x => x.PaymentFrequency)
-                    .WithMany()
-                    .HasForeignKey(x => x.PaymentFrequencyName)
-                    .IsRequired();
             });
 
             modelBuilder.Entity<Account>(e =>

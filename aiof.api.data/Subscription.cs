@@ -22,13 +22,6 @@ namespace aiof.api.data
 
         [Required]
         public decimal Amount { get; set; }
-
-        [Required]
-        [MaxLength(20)]
-        public string PaymentFrequencyName { get; set; }
-
-        [JsonIgnore]
-        public Frequency PaymentFrequency { get; set; }
         
         [Required]
         public int PaymentLength { get; set; }

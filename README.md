@@ -17,24 +17,11 @@ On a high level, the API is a CRUD application for `aiof` data. It is based on a
 - Does access to the data the User is trying to get need to be controlled? If yes
 - Then, `user_id` gets extracted from the JWT claim and EF Core uses `QueryFilters` to filter the data a User can access - in the current scenario, only their own
 
-### EF Core migrations
-
-Migrations are managed in the `ef-migrations` branch
-
-An example of creating a simple migration and generating the SQL script for it
-
-```powershell
-dotnet ef migrations add {migration name} -s .\aiof.api.core -p .\aiof.api.data
-dotnet ef migrations script -p .\aiof.api.data
-dotnet ef migrations script {migration name} -p .\aiof.api.data
-dotnet ef migrations remove -s .\aiof.api.core -p .\aiof.api.data
-```
-
 ## How to run it
 
 In order to fully run it locally, the recommended way is to use `docker-compose`. That pulls down all the Docker images needed and you will have the full microservices architecture locally in order to get a JWT from `aiof-auth` and add it to your requests to this API
 
-### Locally
+### Local
 
 From the root project directory
 
@@ -56,6 +43,20 @@ http://localhost:5001
 ```
 
 ### Docker
+
+There are 2 ways to run it through Docker. One is pulling the remote image and the other is building the image locally
+
+#### Docker local
+
+Build the image from `Dockerfile.local`
+
+```powershell
+docker build -t aiof-api:latest -f Dockerfile.local .
+```
+
+You can now use your locally built `aiof-api:latest` in any `docker-compose.yml` configuration. This is extremely helpful when you change logic in the API and you need to run this custom code locally for other microservices depending on it
+
+#### Docker remote
 
 Pull the latest image from Docker Hub
 
@@ -87,4 +88,15 @@ From the project root directory
 
 ```powershell
 docker-compose up
+```
+
+## EF Core migrations
+
+Migrations are managed in the `ef-migrations` branch
+
+```powershell
+dotnet ef migrations add {migration name} -s .\aiof.api.core -p .\aiof.api.data
+dotnet ef migrations script -p .\aiof.api.data
+dotnet ef migrations script {migration name} -s .\aiof.api.core -p .\aiof.api.data
+dotnet ef migrations remove -s .\aiof.api.core -p .\aiof.api.data
 ```

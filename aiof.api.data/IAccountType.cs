@@ -12,8 +12,11 @@ namespace aiof.api.data
         [MaxLength(100)]
         string Name { get; set; }
 
-        [JsonIgnore]
         [Required]
         Guid PublicKey { get; set; }
+
+        [Required]
+        [MaxLength(100)]
+        string Type { get; set; }
     }
 }

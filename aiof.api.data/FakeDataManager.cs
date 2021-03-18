@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace aiof.api.data
 {
+    [ExcludeFromCodeCoverage]
     public class FakeDataManager
     {
         private readonly AiofContext _context;
@@ -37,14 +39,17 @@ namespace aiof.api.data
             _context.Liabilities
                 .AddRange(GetFakeLiabilities());
 
-            _context.GoalTypes
-                .AddRange(GetFakeGoalTypes());
-
             _context.Goals
                 .AddRange(GetFakeGoals());
 
-            _context.Frequencies
-                .AddRange(GetFakeFrequencies());
+            _context.GoalsTrip
+                .AddRange(GetFakeGoalsTrip());
+
+            _context.GoalsHome
+                .AddRange(GetFakeGoalsHome());
+
+            _context.GoalsCollege
+                .AddRange(GetFakeGoalsCollege());
 
             _context.Subscriptions
                 .AddRange(GetFakeSubscriptions());
@@ -89,8 +94,7 @@ namespace aiof.api.data
                     PublicKey = Guid.Parse("581f3ce6-cf2a-42a5-828f-157a2bfab763"),
                     FirstName = "Georgi",
                     LastName = "Kamacharov",
-                    Email = "gkama@test.com",
-                    Username = "gkama"
+                    Email = "gkama@test.com"
                 },
                 new User
                 {
@@ -98,8 +102,7 @@ namespace aiof.api.data
                     PublicKey = Guid.Parse("8e17276c-88ac-43bd-a9e8-5fdf5381dbd5"),
                     FirstName = "Jessie",
                     LastName = "Brown",
-                    Email = "jessie@test.com",
-                    Username = "jbro"
+                    Email = "jessie@test.com"
                 },
                 new User
                 {
@@ -107,8 +110,7 @@ namespace aiof.api.data
                     PublicKey = Guid.Parse("7c135230-2889-4cbb-bb0e-ab4237d89367"),
                     FirstName = "George",
                     LastName = "Best",
-                    Email = "george.best@auth.com",
-                    Username = "gbest"
+                    Email = "george.best@auth.com"
                 }
             };
         }
@@ -224,17 +226,90 @@ namespace aiof.api.data
                     Id = 1,
                     PublicKey = Guid.Parse("446b2d9b-6d63-4021-946c-d9b0fd99d3fe"),
                     Name = "buy a home by 2021",
-                    Amount = 345000M,
-                    CurrentAmount = 50000M,
-                    Contribution = 2000M,
-                    ContributionFrequencyName = "monthly",
-                    TypeName = "buy a home",
-                    UserId = 1
+                    Type = GoalType.Generic,
+                    UserId = 1,
+                    Amount = 3000M,
+                    CurrentAmount = 250M,
+                    MonthlyContribution = 200M
                 }
             };
         }
 
-        public IEnumerable<AssetType> GetFakeAssetTypes()
+        public IEnumerable<GoalTrip> GetFakeGoalsTrip()
+        {
+            return new List<GoalTrip>
+            {
+                new GoalTrip
+                {
+                    Id = 2,
+                    PublicKey = Guid.Parse("c4f6db70-2345-4a7c-866f-dfdec6a2ec34"),
+                    Name = "trip 1 2021",
+                    Type = GoalType.Trip,
+                    UserId = 1,
+                    Amount = 1550M,
+                    CurrentAmount = 0M,
+                    MonthlyContribution = 200M,
+                    Destination = "Bahamas",
+                    TripType = GoalTripType.Romance,
+                    Duration = 7,
+                    Travelers = 2,
+                    Flight = 750M,
+                    Hotel = 500M,
+                    Car = 0M,
+                    Food = 0M,
+                    Activities = 250M,
+                    Other = 50M
+                }
+            };
+        }
+
+        public IEnumerable<GoalHome> GetFakeGoalsHome()
+        {
+            return new List<GoalHome>
+            {
+                new GoalHome
+                {
+                    Id = 3,
+                    PublicKey = Guid.Parse("c189fa22-0c6b-41c7-879e-b2b5c6dee80f"),
+                    Name = "Buy a home in 2022",
+                    Type = GoalType.BuyAHome,
+                    UserId = 1,
+                    CurrentAmount = 25000M,
+                    MonthlyContribution = 750M,
+                    HomeValue = 350000M,
+                    MortgageRate = 0.03M,
+                    PercentDownPayment = 0.1M,
+                    AnnualInsurance = 500M,
+                    AnnualPropertyTax = 0.01M,
+                    RecommendedAmount = 40000M
+                }
+            };
+        }
+
+        public IEnumerable<GoalCollege> GetFakeGoalsCollege()
+        {
+            return new List<GoalCollege>
+            {
+                new GoalCollege
+                {
+                    Id = 5,
+                    PublicKey = Guid.Parse("5b2d9805-16f8-4726-8d7e-6fd08a8e9c98"),
+                    Name = "save for college",
+                    Type = GoalType.SaveForCollege,
+                    UserId = 1,
+                    Amount = 94030M,
+                    CurrentAmount = 12500M,
+                    MonthlyContribution = 350M,
+                    CollegeType = GoalCollegeType.PublicInState,
+                    CostPerYear = 17500M,
+                    StudentAge = 10,
+                    Years = 4,
+                    CollegeName = "Existing college"
+                }
+            };
+        }
+
+            public IEnumerable<AssetType> GetFakeAssetTypes()
         {
             return new List<AssetType>
             {
@@ -304,88 +379,6 @@ namespace aiof.api.data
             };
         }
 
-        public IEnumerable<GoalType> GetFakeGoalTypes()
-        {
-            return new List<GoalType>
-            {
-                new GoalType
-                {
-                    Name = "crush credit card debt"
-                },
-                new GoalType
-                {
-                    Name = "conquer my loans"
-                },
-                new GoalType
-                {
-                    Name = "save for a rainy day"
-                },
-                new GoalType
-                {
-                    Name = "prepare for retirement"
-                },
-                new GoalType
-                {
-                    Name = "buy a home"
-                },
-                new GoalType
-                {
-                    Name = "buy a car"
-                },
-                new GoalType
-                {
-                    Name = "save for college"
-                },
-                new GoalType
-                {
-                    Name = "take a trip"
-                },
-                new GoalType
-                {
-                    Name = "improve my home"
-                },
-                new GoalType
-                {
-                    Name = "short term"
-                },
-                new GoalType
-                {
-                    Name = "long term"
-                },
-                new GoalType
-                {
-                    Name = "other"
-                }
-            };
-        }
-
-        public IEnumerable<Frequency> GetFakeFrequencies()
-        {
-            return new List<Frequency>
-            {
-                new Frequency
-                {
-                    Name = "yearly",
-                    Value = 1
-                },
-                new Frequency
-                {
-                    Name = "monthly",
-                    Value = 12
-                },
-                new Frequency
-                {
-                    Name = "weekly",
-                    Value = 52
-                },
-                new Frequency
-                {
-                    Name = "daily",
-                    Value = 365
-                }
-            };
-        }
-
         public IEnumerable<Subscription> GetFakeSubscriptions()
         {
             return new List<Subscription>
@@ -397,7 +390,6 @@ namespace aiof.api.data
                     Name = "Amazon Prime",
                     Description = "Yearly Amazon Prime subscription",
                     Amount = 99M,
-                    PaymentFrequencyName = "yearly",
                     PaymentLength = 1,
                     From = "Amazon",
                     Url = "https://amazon.com/",
@@ -410,7 +402,6 @@ namespace aiof.api.data
                     Name = "Spotify",
                     Description = "My monthly Spotify subscription",
                     Amount = 10.99M,
-                    PaymentFrequencyName = "monthly",
                     PaymentLength = 12,
                     From = "Spotify",
                     Url = "https://spotify.com/",
@@ -423,7 +414,6 @@ namespace aiof.api.data
                     Name = "Generic",
                     Description = "My generic subscription",
                     Amount = 15.99M,
-                    PaymentFrequencyName = "monthly",
                     PaymentLength = 12,
                     From = "Generic",
                     Url = "https://google.com/",
@@ -437,7 +427,6 @@ namespace aiof.api.data
                     Name = "Spotify",
                     Description = "My monthly Spotify subscription",
                     Amount = 10.99M,
-                    PaymentFrequencyName = "monthly",
                     PaymentLength = 12,
                     From = "Generic",
                     Url = "https://spotify.com/",
@@ -754,19 +743,19 @@ namespace aiof.api.data
         #region Unit Tests
         public IEnumerable<object[]> GetFakeUsersData(
             bool id = false,
-            bool username = false)
+            bool email = false)
         {
             var fakeUsers = GetFakeUsers();
             var toReturn = new List<object[]>();
 
             if (id
-                & username)
+                & email)
             {
                 foreach (var fakeUser in fakeUsers)
                     toReturn.Add(new object[] 
                     { 
                         fakeUser.Id,
-                        fakeUser.Username
+                        fakeUser.Email
                     });
             }
             else if (id)
@@ -777,12 +766,12 @@ namespace aiof.api.data
                         fakeUserId
                     });
             }
-            else if (username)
+            else if (email)
             {
-                foreach (var fakeUserUsername in fakeUsers.Select(x => x.Username))
+                foreach (var fakeUserEmail in fakeUsers.Select(x => x.Email))
                     toReturn.Add(new object[] 
                     { 
-                        fakeUserUsername
+                        fakeUserEmail
                     });
             }
 
@@ -828,7 +817,7 @@ namespace aiof.api.data
 
         public IEnumerable<object[]> GetFakeUserProfilesData(
             bool userId = false,
-            bool username = false)
+            bool email = false)
         {
             var fakeUserProfiles = _context.UserProfiles
                 .Include(x => x.User)
@@ -837,13 +826,13 @@ namespace aiof.api.data
             var toReturn = new List<object[]>();
 
             if (userId
-                && username)
+                && email)
             {
                 foreach (var fakeUser in fakeUserProfiles.Select(x => x.User))
                     toReturn.Add(new object[]
                     {
                         fakeUser.Id,
-                        fakeUser.Username,
+                        fakeUser.Email,
                     });
             }
             else if (userId)
@@ -854,12 +843,12 @@ namespace aiof.api.data
                         fakeUserId
                     });
             }
-            else if (username)
+            else if (email)
             {
-                foreach (var fakeUsername in fakeUserProfiles.Select(x => x.User.Username))
+                foreach (var fakeEmail in fakeUserProfiles.Select(x => x.User.Email))
                     toReturn.Add(new object[]
                     {
-                        fakeUsername
+                        fakeEmail
                     });
             }
 
@@ -1013,7 +1002,7 @@ namespace aiof.api.data
         public IEnumerable<object[]> GetFakeGoalsData(
             bool id = false,
             bool userId = false,
-            bool typeName = false)
+            bool type = false)
         {
             var fakeGoals = GetFakeGoals()
                 .ToArray();
@@ -1042,13 +1031,13 @@ namespace aiof.api.data
                     });
                 }
             }
-            else if (typeName)
+            else if (type)
             {
-                foreach (var fakeGoalTypeName in fakeGoals.Where(x => !x.IsDeleted).Select(x => x.TypeName).Distinct())
+                foreach (var fakeGoalType in fakeGoals.Where(x => !x.IsDeleted).Select(x => x.Type).Distinct())
                 {
                     toReturn.Add(new object[]
                     {
-                        fakeGoalTypeName
+                        fakeGoalType
                     });
                 }
             }
@@ -1193,6 +1182,26 @@ namespace aiof.api.data
             }
 
             return toReturn;
+        }
+
+        public IEnumerable<object[]> GetFakeAmountCurrentAmountMonthlyContribution()
+        {
+            return new List<object[]>
+            {
+                new object[] { 350M, 0M, 20M },
+                new object[] { 1000M, 250M, 200M },
+                new object[] { 3750M, 500M, 500M }
+            };
+        }
+        public IEnumerable<object[]> GetFakeAmountCurrentAmountMonthlyContributionNegatives()
+        {
+            return new List<object[]>
+            {
+                new object[] { null, 0M, 20M },
+                new object[] { 1000M, 250M, null },
+                new object[] { null, null, 20M },
+                new object[] { 1000M, null, null },
+            };
         }
         #endregion
     }

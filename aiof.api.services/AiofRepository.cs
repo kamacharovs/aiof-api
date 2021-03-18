@@ -53,16 +53,6 @@ namespace aiof.api.services
                     .AsQueryable();
         }
 
-        private IQueryable<Frequency> GetFrequenciesQuery(bool asNoTracking = true)
-        {
-            return asNoTracking
-                ? _context.Frequencies
-                    .AsNoTracking()
-                    .AsQueryable()
-                : _context.Frequencies
-                    .AsQueryable();
-        }
-
         public async Task<IUser> GetUserAsync(
             int id,
             bool included = true,
@@ -76,10 +66,10 @@ namespace aiof.api.services
                 ?? throw new AiofNotFoundException($"{nameof(User)} with Id='{id}' was not found");
         }
 
-        public async Task<IUser> GetUserAsync(string username)
+        public async Task<IUser> GetUserAsync(string email)
         {
             return await GetUsersQuery()
-                .FirstOrDefaultAsync(x => x.Username == username);
+                .FirstOrDefaultAsync(x => x.Email == email);
         }
 
         public async Task<IUser> UpsertFinanceAsync(
@@ -93,12 +83,6 @@ namespace aiof.api.services
             await _context.SaveChangesAsync();
 
             return await GetUserAsync(userId);
-        }
-
-        public async Task<IEnumerable<IFrequency>> GetFrequenciesAsync()
-        {
-            return await GetFrequenciesQuery()
-                .ToListAsync();
         }
     }
 }

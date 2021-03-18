@@ -20,8 +20,8 @@ namespace aiof.api.core.Controllers
     [Authorize]
     [ApiController]
     [Route("user")]
-    [Produces(Keys.ApplicationJson)]
-    [Consumes(Keys.ApplicationJson)]
+    [Produces(Constants.ApplicationJson)]
+    [Consumes(Constants.ApplicationJson)]
     [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(IAiofProblemDetailBase), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(IAiofProblemDetailBase), StatusCodes.Status401Unauthorized)]
@@ -46,15 +46,15 @@ namespace aiof.api.core.Controllers
         }
         
         /// <summary>
-        /// Get User by username
+        /// Get User by email
         /// </summary>
         [HttpGet]
-        [Route("{username}")]
+        [Route("{email}")]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IUser), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetByUsernameAsync([FromRoute, Required] string username)
+        public async Task<IActionResult> GetByEmailAsync([FromRoute, Required] string email)
         {
-            return Ok(await _repo.GetAsync(username));
+            return Ok(await _repo.GetAsync(email));
         }
 
         /// <summary>

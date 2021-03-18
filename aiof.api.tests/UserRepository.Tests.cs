@@ -25,7 +25,12 @@ namespace aiof.api.tests
             Assert.NotNull(user.FirstName);
             Assert.NotNull(user.LastName);
             Assert.NotNull(user.Email);
-            Assert.NotNull(user.Username);
+            Assert.True(user.Dependents.Count() >= 0);
+            Assert.True(user.Assets.Count() >= 0);
+            Assert.True(user.Liabilities.Count() >= 0);
+            Assert.True(user.Goals.Count() >= 0);
+            Assert.True(user.Subscriptions.Count() >= 0);
+            Assert.True(user.Accounts.Count() >= 0);
         }
         [Theory]
         [MemberData(nameof(Helper.UsersId), MemberType = typeof(Helper))]
@@ -36,26 +41,31 @@ namespace aiof.api.tests
         }
 
         [Theory]
-        [MemberData(nameof(Helper.UsersIdUsername), MemberType = typeof(Helper))]
-        public async Task GetUserAsync_ByUsername_IsSuccessful(int id, string username)
+        [MemberData(nameof(Helper.UserProfilesIdEmail), MemberType = typeof(Helper))]
+        public async Task GetUserAsync_ByEmail_IsSuccessful(int id, string email)
         {
             var _repo = new ServiceHelper() { UserId = id }.GetRequiredService<IUserRepository>();
-            var user = await _repo.GetAsync(username);
+            var user = await _repo.GetAsync(email);
 
             Assert.Equal(id, user.Id);
             Assert.NotEqual(Guid.Empty, user.PublicKey);
             Assert.NotNull(user.FirstName);
             Assert.NotNull(user.LastName);
             Assert.NotNull(user.Email);
-            Assert.NotNull(user.Username);
-            Assert.Equal(username, user.Username);
+            Assert.Equal(email, user.Email);
+            Assert.True(user.Dependents.Count() >= 0);
+            Assert.True(user.Assets.Count() >= 0);
+            Assert.True(user.Liabilities.Count() >= 0);
+            Assert.True(user.Goals.Count() >= 0);
+            Assert.True(user.Subscriptions.Count() >= 0);
+            Assert.True(user.Accounts.Count() >= 0);
         }
         [Theory]
-        [MemberData(nameof(Helper.UsersIdUsername), MemberType = typeof(Helper))]
-        public async Task GetUserAsync_ByUsername_NotFound(int id, string username)
+        [MemberData(nameof(Helper.UsersIdEmail), MemberType = typeof(Helper))]
+        public async Task GetUserAsync_ByEmail_NotFound(int id, string email)
         {
             var _repo = new ServiceHelper() { UserId = id }.GetRequiredService<IUserRepository>();
-            await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.GetAsync(username + "notfound"));
+            await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.GetAsync(email + "notfound"));
         }
 
         [Theory]
@@ -88,7 +98,13 @@ namespace aiof.api.tests
         public async Task UpsertAsync_IsSuccessful(int id)
         {
             var _repo = new ServiceHelper() { UserId = id }.GetRequiredService<IUserRepository>();
-            var dto = Helper.RandomUserDto(id);
+            var rdto = Helper.RandomUserDtos().FirstOrDefault().ToArray();
+            var dto = new UserDto
+            {
+                Assets = (ICollection<AssetDto>)rdto[0],
+                Liabilities = (ICollection<LiabilityDto>)rdto[1],
+                Goals = (ICollection<GoalDto>)rdto[2]
+            };
 
             Assert.NotNull(dto);
 
@@ -117,8 +133,7 @@ namespace aiof.api.tests
                     user.Goals.FirstOrDefault(x => x.Name == goal.Name
                         && x.TypeName == goal.TypeName));
             }
-        }
-        */
+        }*/
 
         [Theory]
         [MemberData(nameof(Helper.UsersId), MemberType = typeof(Helper))]
@@ -335,8 +350,6 @@ namespace aiof.api.tests
             Assert.NotNull(sub.Name);
             Assert.NotNull(sub.Description);
             Assert.True(sub.Amount > 0);
-            Assert.NotNull(sub.PaymentFrequencyName);
-            Assert.NotNull(sub.PaymentFrequency);
             Assert.True(sub.PaymentLength > 0);
 
             if (!string.IsNullOrEmpty(sub.From))
@@ -378,8 +391,6 @@ namespace aiof.api.tests
             Assert.NotNull(sub.Name);
             Assert.NotNull(sub.Description);
             Assert.True(sub.Amount > 0);
-            Assert.NotNull(sub.PaymentFrequencyName);
-            Assert.NotNull(sub.PaymentFrequency);
             Assert.True(sub.PaymentLength > 0);
             Assert.NotNull(sub.From);
             Assert.NotNull(sub.Url);

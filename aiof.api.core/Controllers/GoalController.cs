@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,8 +19,8 @@ namespace aiof.api.core.Controllers
     [Authorize]
     [ApiController]
     [Route("goal")]
-    [Produces(Keys.ApplicationJson)]
-    [Consumes(Keys.ApplicationJson)]
+    [Produces(Constants.ApplicationJson)]
+    [Consumes(Constants.ApplicationJson)]
     [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(IAiofProblemDetailBase), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(IAiofProblemDetailBase), StatusCodes.Status401Unauthorized)]
@@ -52,7 +53,18 @@ namespace aiof.api.core.Controllers
         [ProducesResponseType(typeof(IEnumerable<IGoal>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllAsync()
         {
-            return Ok(await _repo.GetAllAsync());
+            return Ok(await _repo.GetAllAsObjectsAsync());
+        }
+
+        /// <summary>
+        /// Add Goal
+        /// </summary>
+        [HttpPost]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IGoal), StatusCodes.Status201Created)]
+        public async Task<IActionResult> AddGoalAsync()
+        {
+            return Created(nameof(Goal), await _repo.AddAsync(await Request.GetRawBodyStringAsync()));
         }
 
         /// <summary>
@@ -65,20 +77,9 @@ namespace aiof.api.core.Controllers
         [ProducesResponseType(typeof(IGoal), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpdateGoalAsync(
             [FromRoute, Required] int id, 
-            [FromBody, Required] GoalDto goalDto)
+            [FromBody, Required] GoalDto dto)
         {
-            return Ok(await _repo.UpdateAsync(id, goalDto));
-        }
-
-        /// <summary>
-        /// Add Goal
-        /// </summary>
-        [HttpPost]
-        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(IGoal), StatusCodes.Status201Created)]
-        public async Task<IActionResult> AddGoalAsync([FromBody, Required] GoalDto goalDto)
-        {
-            return Created(nameof(Goal), await _repo.AddAsync(goalDto));
+            return Ok(await _repo.UpdateAsync(id, dto));
         }
 
         /// <summary>
@@ -99,10 +100,32 @@ namespace aiof.api.core.Controllers
         /// </summary>
         [HttpGet]
         [Route("types")]
-        [ProducesResponseType(typeof(IEnumerable<IGoalType>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetGoalTypesAsync()
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status200OK)]
+        public IActionResult GetGoalTypes()
         {
-            return Ok(await _repo.GetTypesAsync());
+            return Ok(Constants.GoalTypes);
+        }
+
+        /// <summary>
+        /// Get Goal trip types
+        /// </summary>
+        [HttpGet]
+        [Route("trip/types")]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status200OK)]
+        public IActionResult GetGoalTripTypes()
+        {
+            return Ok(Constants.GoalTripTypes);
+        }
+
+        /// <summary>
+        /// Get Goal college types
+        /// </summary>
+        [HttpGet]
+        [Route("college/types")]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status200OK)]
+        public IActionResult GetGoalCollegeTypes()
+        {
+            return Ok(Constants.GoalCollegeTypes);
         }
     }
 }

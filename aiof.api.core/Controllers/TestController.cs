@@ -19,8 +19,8 @@ namespace aiof.api.core.Controllers
     [Authorize]
     [ApiController]
     [Route("test")]
-    [Produces(Keys.ApplicationJson)]
-    [Consumes(Keys.ApplicationJson)]
+    [Produces(Constants.ApplicationJson)]
+    [Consumes(Constants.ApplicationJson)]
     public class TestController : ControllerBase
     {
         [HttpGet]
@@ -63,7 +63,7 @@ namespace aiof.api.core.Controllers
             throw new ValidationException($"Validation error", 
             new List<ValidationFailure>
             {
-                new ValidationFailure("Username", "Username must be present"),
+                new ValidationFailure("Email", "Email must be present"),
                 new ValidationFailure("Password", "Password must contain an upper case letter")
             });
         }

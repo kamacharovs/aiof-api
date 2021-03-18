@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Xunit;
+using Newtonsoft.Json;
 
 using aiof.api.data;
 using aiof.api.services;
@@ -21,18 +22,13 @@ namespace aiof.api.tests
 
             Assert.NotNull(goal);
             Assert.NotNull(goal.Name);
-            Assert.NotNull(goal.TypeName);
-            Assert.NotNull(goal.Type);
+            Assert.Contains(goal.Type, Constants.GoalTypes);
+            Assert.Equal(goal.UserId, userId);
             Assert.True(goal.Amount > 0);
             Assert.True(goal.CurrentAmount > 0);
-            Assert.True(goal.Contribution > 0);
-            Assert.NotNull(goal.ContributionFrequencyName);
-            Assert.NotNull(goal.ContributionFrequency);
-            Assert.Equal(userId, goal.UserId);
+            Assert.True(goal.MonthlyContribution > 0);
+            Assert.NotEqual(DateTime.UtcNow, goal.PlannedDate);
             Assert.False(goal.IsDeleted);
-
-            if (goal.PlannedDate != null)
-                Assert.NotEqual(new DateTime(), goal.PlannedDate);
         }
 
         [Theory]
@@ -45,27 +41,23 @@ namespace aiof.api.tests
         }
 
         [Theory]
-        [MemberData(nameof(Helper.GoalsTypeName), MemberType = typeof(Helper))]
-        public async Task GetAsync_ByTypeName_IsSuccessful(string typeName)
+        [MemberData(nameof(Helper.GoalsType), MemberType = typeof(Helper))]
+        public async Task GetAsync_ByType_IsSuccessful(GoalType type)
         {
             var _repo = new ServiceHelper().GetRequiredService<IGoalRepository>();
-            var goals = await _repo.GetAsync(typeName);
+            var goals = await _repo.GetAsync(type);
             var goal = goals.FirstOrDefault();
 
             Assert.NotEmpty(goals);
             Assert.NotNull(goal);
             Assert.NotNull(goal.Name);
-            Assert.NotNull(goal.TypeName);
-            Assert.NotNull(goal.Type);
+            Assert.Contains(goal.Type, Constants.GoalTypes);
+            Assert.True(goal.UserId > 0);
             Assert.True(goal.Amount > 0);
             Assert.True(goal.CurrentAmount > 0);
-            Assert.True(goal.Contribution > 0);
-            Assert.NotNull(goal.ContributionFrequencyName);
-            Assert.NotNull(goal.ContributionFrequency);
+            Assert.True(goal.MonthlyContribution > 0);
+            Assert.NotEqual(DateTime.UtcNow, goal.PlannedDate);
             Assert.False(goal.IsDeleted);
-
-            if (goal.PlannedDate != null)
-                Assert.NotEqual(new DateTime(), goal.PlannedDate);
         }
 
         [Theory]
@@ -79,17 +71,13 @@ namespace aiof.api.tests
             Assert.NotEmpty(goals);
             Assert.NotNull(goal);
             Assert.NotNull(goal.Name);
-            Assert.NotNull(goal.TypeName);
-            Assert.NotNull(goal.Type);
+            Assert.Contains(goal.Type, Constants.GoalTypes);
+            Assert.Equal(goal.UserId, userId);
             Assert.True(goal.Amount > 0);
             Assert.True(goal.CurrentAmount > 0);
-            Assert.True(goal.Contribution > 0);
-            Assert.NotNull(goal.ContributionFrequencyName);
-            Assert.NotNull(goal.ContributionFrequency);
+            Assert.True(goal.MonthlyContribution > 0);
+            Assert.NotEqual(DateTime.UtcNow, goal.PlannedDate);
             Assert.False(goal.IsDeleted);
-
-            if (goal.PlannedDate != null)
-                Assert.NotEqual(new DateTime(), goal.PlannedDate);
         }
 
         [Theory]
@@ -103,33 +91,27 @@ namespace aiof.api.tests
         }
 
         [Theory]
-        [MemberData(nameof(Helper.GoalsTypeName), MemberType = typeof(Helper))]
-        public async Task GetTypeAsync_IsSuccessful(string typeName)
+        [MemberData(nameof(Helper.GoalsUserId), MemberType = typeof(Helper))]
+        public async Task AddAsync_Generic_IsSuccessful(int userId)
         {
-            var _repo = new ServiceHelper().GetRequiredService<IGoalRepository>();
-            var goalType = await _repo.GetTypeAsync(typeName);
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();
+            var dto = JsonConvert.SerializeObject(Helper.RandomGoalDto());
+            var goal = await _repo.AddAsync(dto);
 
-            Assert.NotNull(goalType);
-            Assert.NotNull(goalType.Name);
-            Assert.NotEqual(Guid.Empty, goalType.PublicKey);
+            Assert.NotNull(goal);
+            Assert.NotNull(goal.Name);
+            Assert.Contains(goal.Type, Constants.GoalTypes);
+            Assert.Equal(goal.UserId, userId);
+            Assert.True(goal.Amount > 0);
+            Assert.True(goal.CurrentAmount > 0);
+            Assert.True(goal.MonthlyContribution > 0);
+            Assert.NotEqual(DateTime.UtcNow, goal.PlannedDate);
+            Assert.NotEqual(DateTime.UtcNow, goal.ProjectedDate);
+            Assert.False(goal.IsDeleted);
         }
-
-        [Fact]
-        public async Task GetTypesAsync_IsSuccessful()
-        {
-            var _repo = new ServiceHelper().GetRequiredService<IGoalRepository>();
-            var types = await _repo.GetTypesAsync();
-            var type = types.FirstOrDefault();
-
-            Assert.NotEmpty(types);
-            Assert.NotNull(type);
-            Assert.NotNull(type.Name);
-            Assert.NotEqual(Guid.Empty, type.PublicKey);
-        }
-
         [Theory]
         [MemberData(nameof(Helper.GoalsUserId), MemberType = typeof(Helper))]
-        public async Task AddAsync_IsSuccessful(int userId)
+        public async Task AddAsync_GoalDto_IsSuccessful(int userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();
             var dto = Helper.RandomGoalDto();
@@ -137,67 +119,177 @@ namespace aiof.api.tests
 
             Assert.NotNull(goal);
             Assert.NotNull(goal.Name);
-            Assert.NotNull(goal.TypeName);
-            Assert.NotNull(goal.Type);
+            Assert.Contains(goal.Type, Constants.GoalTypes);
+            Assert.Equal(goal.UserId, userId);
             Assert.True(goal.Amount > 0);
             Assert.True(goal.CurrentAmount > 0);
-            Assert.True(goal.Contribution > 0);
-            Assert.NotNull(goal.ContributionFrequencyName);
-            Assert.NotNull(goal.ContributionFrequency);
+            Assert.True(goal.MonthlyContribution > 0);
+            Assert.NotEqual(DateTime.UtcNow, goal.PlannedDate);
+            Assert.NotEqual(DateTime.UtcNow, goal.ProjectedDate);
             Assert.False(goal.IsDeleted);
-
-            if (goal.PlannedDate != null)
-                Assert.NotEqual(new DateTime(), goal.PlannedDate);
         }
 
         [Theory]
         [MemberData(nameof(Helper.GoalsUserId), MemberType = typeof(Helper))]
-        public async Task AddAsync_AlreadyExists_Throws_BadRequest(int userId)
-        {
-            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();
-            var dto = Helper.RandomGoalDto();
-            var goal = await repo.AddAsync(dto);
-
-            await Assert.ThrowsAsync<AiofFriendlyException>(() => repo.AddAsync(dto));
-        }
-
-        [Theory]
-        [MemberData(nameof(Helper.GoalsUserId), MemberType = typeof(Helper))]
-        public async Task AddAsync_TypeDoesntExist_Throws_NotFound(int userId)
-        {
-            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();
-            var dto = Helper.RandomGoalDto();
-            
-            dto.TypeName = "definitelydoesntexist";
-
-            await Assert.ThrowsAsync<AiofNotFoundException>(() => repo.AddAsync(dto));
-        }
-
-        [Theory]
-        [MemberData(nameof(Helper.GoalsUserId), MemberType = typeof(Helper))]
-        public async Task AddAsync_Multiple_IsSuccessful(int userId)
+        public async Task AddAsync_Trip_IsSuccessful(int userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();
-            var dto1 = Helper.RandomGoalDto();
-            var dto2 = Helper.RandomGoalDto();
-            var goals = _repo.AddAsync(new List<GoalDto> { dto1, dto2 });
+            var dto = JsonConvert.SerializeObject(Helper.RandomGoalTripDto());
+            var goal = (await _repo.AddAsync(dto)) as GoalTrip;
 
-            await foreach (var goal in goals)
-            {
-                Assert.NotNull(goal);
-                Assert.NotNull(goal.Name);
-                Assert.NotNull(goal.TypeName);
-                Assert.NotNull(goal.Type);
-                Assert.True(goal.Amount > 0);
-                Assert.True(goal.CurrentAmount > 0);
-                Assert.True(goal.Contribution > 0);
-                Assert.NotNull(goal.ContributionFrequencyName);
-                Assert.NotNull(goal.ContributionFrequency);
-                Assert.False(goal.IsDeleted);
+            Assert.NotNull(goal);
+            Assert.NotNull(goal.Name);
+            Assert.Equal(GoalType.Trip, goal.Type);
+            Assert.Equal(goal.UserId, userId);
+            Assert.True(goal.Amount > 0);
+            Assert.True(goal.CurrentAmount > 0);
+            Assert.True(goal.MonthlyContribution > 0);
+            Assert.NotEqual(DateTime.UtcNow, goal.PlannedDate);
+            Assert.NotEqual(DateTime.UtcNow, goal.ProjectedDate);
+            Assert.False(goal.IsDeleted);
+            Assert.NotNull(goal.Destination);
+            Assert.Contains(goal.TripType, Constants.GoalTripTypes);
+            Assert.True(goal.Duration >= 0);
+            Assert.True(goal.Travelers >= 0);
+            Assert.True(goal.Flight >= 0);
+            Assert.True(goal.Hotel >= 0);
+            Assert.True(goal.Car >= 0);
+            Assert.True(goal.Food >= 0);
+            Assert.True(goal.Activities >= 0);
+            Assert.True(goal.Other >= 0);
+        }
+        [Theory]
+        [MemberData(nameof(Helper.GoalsUserId), MemberType = typeof(Helper))]
+        public async Task AddAsync_GoalTripDto_IsSuccessful(int userId)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();
+            var dto = Helper.RandomGoalTripDto();
+            var goal = (await _repo.AddAsync(dto)) as GoalTrip;
 
-                if (goal.PlannedDate != null)
-                    Assert.NotEqual(new DateTime(), goal.PlannedDate);
-            }
+            Assert.NotNull(goal);
+            Assert.NotNull(goal.Name);
+            Assert.Equal(GoalType.Trip, goal.Type);
+            Assert.Equal(goal.UserId, userId);
+            Assert.True(goal.Amount > 0);
+            Assert.True(goal.CurrentAmount > 0);
+            Assert.True(goal.MonthlyContribution > 0);
+            Assert.NotEqual(DateTime.UtcNow, goal.PlannedDate);
+            Assert.NotEqual(DateTime.UtcNow, goal.ProjectedDate);
+            Assert.False(goal.IsDeleted);
+            Assert.NotNull(goal.Destination);
+            Assert.Contains(goal.TripType, Constants.GoalTripTypes);
+            Assert.True(goal.Duration >= 0);
+            Assert.True(goal.Travelers >= 0);
+            Assert.True(goal.Flight >= 0);
+            Assert.True(goal.Hotel >= 0);
+            Assert.True(goal.Car >= 0);
+            Assert.True(goal.Food >= 0);
+            Assert.True(goal.Activities >= 0);
+            Assert.True(goal.Other >= 0);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.GoalsUserId), MemberType = typeof(Helper))]
+        public async Task AddAsync_College_IsSuccessful(int userId)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();
+            var dto = JsonConvert.SerializeObject(Helper.RandomGoalCollegeDto());
+            var goal = (await _repo.AddAsync(dto)) as GoalCollege;
+
+            Assert.NotNull(goal);
+            Assert.NotNull(goal.Name);
+            Assert.Equal(GoalType.SaveForCollege, goal.Type);
+            Assert.Equal(goal.UserId, userId);
+            Assert.True(goal.Amount > 0);
+            Assert.True(goal.CurrentAmount > 0);
+            Assert.True(goal.MonthlyContribution > 0);
+            Assert.NotEqual(DateTime.UtcNow, goal.PlannedDate);
+            Assert.NotEqual(DateTime.UtcNow, goal.ProjectedDate);
+            Assert.False(goal.IsDeleted);
+            Assert.Contains(goal.CollegeType, Constants.GoalCollegeTypes);
+            Assert.True(goal.CostPerYear >= 0);
+            Assert.True(goal.StudentAge >= 0);
+            Assert.True(goal.Years >= 0);
+            Assert.True(goal.CollegeName != null);
+            Assert.True(goal.AnnualCostIncrease.GetValueOrDefault() >= 0);
+            Assert.True(goal.BeginningCollegeAge.GetValueOrDefault() >= 0);
+        }
+        [Theory]
+        [MemberData(nameof(Helper.GoalsUserId), MemberType = typeof(Helper))]
+        public async Task AddAsync_GoalCollegeDto_IsSuccessful(int userId)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();
+            var dto = Helper.RandomGoalCollegeDto();
+            var goal = (await _repo.AddAsync(dto)) as GoalCollege;
+
+            Assert.NotNull(goal);
+            Assert.NotNull(goal.Name);
+            Assert.Equal(GoalType.SaveForCollege, goal.Type);
+            Assert.Equal(goal.UserId, userId);
+            Assert.True(goal.Amount > 0);
+            Assert.True(goal.CurrentAmount > 0);
+            Assert.True(goal.MonthlyContribution > 0);
+            Assert.NotEqual(DateTime.UtcNow, goal.PlannedDate);
+            Assert.NotEqual(DateTime.UtcNow, goal.ProjectedDate);
+            Assert.False(goal.IsDeleted);
+            Assert.Contains(goal.CollegeType, Constants.GoalCollegeTypes);
+            Assert.True(goal.CostPerYear >= 0);
+            Assert.True(goal.StudentAge >= 0);
+            Assert.True(goal.Years >= 0);
+            Assert.True(goal.CollegeName != null);
+            Assert.True(goal.AnnualCostIncrease.GetValueOrDefault() >= 0);
+            Assert.True(goal.BeginningCollegeAge.GetValueOrDefault() >= 0);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.GoalsUserId), MemberType = typeof(Helper))]
+        public async Task AddAsync_Home_IsSuccessful(int userId)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();
+            var dto = JsonConvert.SerializeObject(Helper.RandomGoalHomeDto());
+            var goal = (await _repo.AddAsync(dto)) as GoalHome;
+
+            Assert.NotNull(goal);
+            Assert.NotNull(goal.Name);
+            Assert.Equal(GoalType.BuyAHome, goal.Type);
+            Assert.Equal(goal.UserId, userId);
+            Assert.True(goal.Amount > 0);
+            Assert.True(goal.CurrentAmount > 0);
+            Assert.True(goal.MonthlyContribution > 0);
+            Assert.NotEqual(DateTime.UtcNow, goal.PlannedDate);
+            Assert.NotEqual(DateTime.UtcNow, goal.ProjectedDate);
+            Assert.False(goal.IsDeleted);
+            Assert.True(goal.HomeValue >= 0);
+            Assert.True(goal.MortgageRate >= 0);
+            Assert.True(goal.PercentDownPayment >= 0);
+            Assert.True(goal.AnnualInsurance >= 0);
+            Assert.True(goal.AnnualPropertyTax >= 0);
+            Assert.True(goal.RecommendedAmount >= 0);
+        }
+        [Theory]
+        [MemberData(nameof(Helper.GoalsUserId), MemberType = typeof(Helper))]
+        public async Task AddAsync_GoalHomeDto_IsSuccessful(int userId)
+        {
+            var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();
+            var dto = Helper.RandomGoalHomeDto();
+            var goal = (await _repo.AddAsync(dto)) as GoalHome;
+
+            Assert.NotNull(goal);
+            Assert.NotNull(goal.Name);
+            Assert.Equal(GoalType.BuyAHome, goal.Type);
+            Assert.Equal(goal.UserId, userId);
+            Assert.True(goal.Amount > 0);
+            Assert.True(goal.CurrentAmount > 0);
+            Assert.True(goal.MonthlyContribution > 0);
+            Assert.NotEqual(DateTime.UtcNow, goal.PlannedDate);
+            Assert.NotEqual(DateTime.UtcNow, goal.ProjectedDate);
+            Assert.False(goal.IsDeleted);
+            Assert.True(goal.HomeValue >= 0);
+            Assert.True(goal.MortgageRate >= 0);
+            Assert.True(goal.PercentDownPayment >= 0);
+            Assert.True(goal.AnnualInsurance >= 0);
+            Assert.True(goal.AnnualPropertyTax >= 0);
+            Assert.True(goal.RecommendedAmount >= 0);
         }
 
         [Theory]
@@ -215,18 +307,13 @@ namespace aiof.api.tests
 
             Assert.NotNull(goal);
             Assert.NotNull(goal.Name);
-            Assert.NotNull(goal.TypeName);
-            Assert.NotNull(goal.Type);
+            Assert.Contains(goal.Type, Constants.GoalTypes);
+            Assert.Equal(goal.UserId, userId);
             Assert.True(goal.Amount > 0);
-            Assert.Equal(newAmount, goal.Amount);
             Assert.True(goal.CurrentAmount > 0);
-            Assert.True(goal.Contribution > 0);
-            Assert.NotNull(goal.ContributionFrequencyName);
-            Assert.NotNull(goal.ContributionFrequency);
+            Assert.True(goal.MonthlyContribution > 0);
+            Assert.NotEqual(DateTime.UtcNow, goal.PlannedDate);
             Assert.False(goal.IsDeleted);
-
-            if (goal.PlannedDate != null)
-                Assert.NotEqual(new DateTime(), goal.PlannedDate);
         }
 
         [Theory]
@@ -270,6 +357,40 @@ namespace aiof.api.tests
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IGoalRepository>();
 
             await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.DeleteAsync(id * 100));
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.CalculateProjectcedDates), MemberType = typeof(Helper))]
+        public void CalculateProjectedDate_IsSuccessful(
+            decimal? amount,
+            decimal? currentAmount,
+            decimal? monthlyContribution)
+        {
+            var _repo = new ServiceHelper().GetRequiredService<IGoalRepository>();
+
+            var projectedDate = _repo.CalculateProjectedDate(
+                amount,
+                currentAmount,
+                monthlyContribution);
+
+            Assert.NotNull(projectedDate);
+            Assert.True(projectedDate > DateTime.UtcNow);
+        }
+        [Theory]
+        [MemberData(nameof(Helper.CalculateProjectedDatesNegatives), MemberType = typeof(Helper))]
+        public void CalculateProjectedDate_IsNull(
+            decimal? amount,
+            decimal? currentAmount,
+            decimal? monthlyContribution)
+        {
+            var _repo = new ServiceHelper().GetRequiredService<IGoalRepository>();
+
+            var projectedDate = _repo.CalculateProjectedDate(
+                amount,
+                currentAmount,
+                monthlyContribution);
+
+            Assert.Null(projectedDate);
         }
     }
 }
