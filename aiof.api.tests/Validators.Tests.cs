@@ -61,11 +61,12 @@ namespace aiof.api.tests
         }
 
         [Theory]
-        [InlineData("Name1", "TypeName1")]
-        [InlineData("Name2", "TypeName2")]
+        [InlineData("Name1", "typename1", GoalType.Generic)]
+        [InlineData("Name2", "typename1", GoalType.Trip)]
         public void Asset_Liability_Goal_Dto_Valid(
             string name,
-            string typeName)
+            string typeName,
+            GoalType type)
         {
             var assetDto = new AssetDto
             {
@@ -84,11 +85,10 @@ namespace aiof.api.tests
             var goalDto = new GoalDto
             {
                 Name = name,
-                TypeName = typeName,
+                Type = type,
                 Amount = 10M,
                 CurrentAmount = 1M,
-                Contribution = 1M,
-                ContributionFrequencyName = "monthly"
+                MonthlyContribution = 1M
             };
             Assert.True(_goalDtoValidator.Validate(goalDto).IsValid);
         }
@@ -122,8 +122,8 @@ namespace aiof.api.tests
 
             var goalDto = new GoalDto
             {
-                Name = name,
-                TypeName = typeName
+                Name = string.Empty,
+                Type = GoalType.Generic
             };
             Assert.False(_goalDtoValidator.Validate(goalDto).IsValid);
         }

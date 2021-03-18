@@ -216,7 +216,6 @@ namespace aiof.api.services
         private IQueryable<Subscription> GetSubscriptionsQuery(bool asNoTracking = true)
         {
             var subscriptionQuery = _context.Subscriptions
-                .Include(x => x.PaymentFrequency)
                 .AsQueryable();
 
             return asNoTracking

@@ -350,8 +350,6 @@ namespace aiof.api.tests
             Assert.NotNull(sub.Name);
             Assert.NotNull(sub.Description);
             Assert.True(sub.Amount > 0);
-            Assert.NotNull(sub.PaymentFrequencyName);
-            Assert.NotNull(sub.PaymentFrequency);
             Assert.True(sub.PaymentLength > 0);
 
             if (!string.IsNullOrEmpty(sub.From))
@@ -393,8 +391,6 @@ namespace aiof.api.tests
             Assert.NotNull(sub.Name);
             Assert.NotNull(sub.Description);
             Assert.True(sub.Amount > 0);
-            Assert.NotNull(sub.PaymentFrequencyName);
-            Assert.NotNull(sub.PaymentFrequency);
             Assert.True(sub.PaymentLength > 0);
             Assert.NotNull(sub.From);
             Assert.NotNull(sub.Url);

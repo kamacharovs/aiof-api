@@ -21,15 +21,5 @@ namespace aiof.api.data
 
             return propertyBuilder;
         }
-
-        public static async Task<DbSet<TEntity>> ValidateFrequencyAsync<TEntity>(
-            this AiofContext context, 
-            string value)
-            where TEntity : class
-        {
-            return await context.Frequencies.AnyAsync(x => x.Name == value) 
-                ? context.Set<TEntity>() 
-                : throw new AiofFriendlyException(HttpStatusCode.BadRequest, $"Invalid {nameof(Frequency)}");
-        }
     }
 }

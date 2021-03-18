@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Security.Claims;
+using System.Diagnostics.CodeAnalysis;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +16,7 @@ using aiof.api.services;
 
 namespace aiof.api.tests
 {
+    [ExcludeFromCodeCoverage]
     public class ServiceHelper
     {
         public int? UserId { get; set; }
@@ -51,7 +51,11 @@ namespace aiof.api.tests
             services.AddSingleton<AbstractValidator<AssetDto>, AssetDtoValidator>()
                 .AddSingleton<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>()
                 .AddSingleton<AbstractValidator<LiabilityType>, LiabilityTypeValidator>()
-                .AddSingleton<AbstractValidator<GoalDto>, GoalDtoValidator>()
+                .AddSingleton<AbstractValidator<GoalDto>, GoalDtoValidator<GoalDto>>()
+                .AddSingleton<AbstractValidator<GoalTripDto>, GoalTripDtoValidator>()
+                .AddSingleton<AbstractValidator<GoalHomeDto>, GoalHomeDtoValidator>()
+                .AddSingleton<AbstractValidator<GoalCarDto>, GoalCarDtoValidator>()
+                .AddSingleton<AbstractValidator<GoalCollegeDto>, GoalCollegeDtoValidator>()
                 .AddSingleton<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>()
                 .AddSingleton<AbstractValidator<AccountDto>, AccountDtoValidator>()
                 .AddSingleton<AbstractValidator<UserDto>, UserDtoValidator>()
@@ -78,6 +82,7 @@ namespace aiof.api.tests
         }
     }
 
+    [ExcludeFromCodeCoverage]
     public static class Helper
     {
         public const string Category = nameof(Category);
@@ -190,10 +195,10 @@ namespace aiof.api.tests
                 id: true,
                 userId: true);
         }
-        public static IEnumerable<object[]> GoalsTypeName()
+        public static IEnumerable<object[]> GoalsType()
         {
             return _Fake.GetFakeGoalsData(
-                typeName: true);
+                type: true);
         }
 
         public static IEnumerable<object[]> SubscriptionsId()
@@ -236,6 +241,15 @@ namespace aiof.api.tests
         {
             return _Fake.GetFakeUsefulDocumentationsData(
                 category: true);
+        }
+
+        public static IEnumerable<object[]> CalculateProjectcedDates()
+        {
+            return _Fake.GetFakeAmountCurrentAmountMonthlyContribution();
+        }
+        public static IEnumerable<object[]> CalculateProjectedDatesNegatives()
+        {
+            return _Fake.GetFakeAmountCurrentAmountMonthlyContributionNegatives();
         }
 
         public static UserDto RandomUserDto()
@@ -302,12 +316,89 @@ namespace aiof.api.tests
         {
             return new Faker<GoalDto>()
                 .RuleFor(x => x.Name, f => f.Random.String2(10))
-                .RuleFor(x => x.TypeName, f => _Fake.GetFakeGoalTypes().First().Name)
+                .RuleFor(x => x.Type, f => GoalType.Generic)
                 .RuleFor(x => x.Amount, f => f.Random.Decimal(5000, 10000))
                 .RuleFor(x => x.CurrentAmount, f => f.Random.Decimal(1000, 4000))
-                .RuleFor(x => x.Contribution, f => f.Random.Decimal(700, 900))
-                .RuleFor(x => x.ContributionFrequencyName, f => "monthly")
+                .RuleFor(x => x.MonthlyContribution, f => f.Random.Decimal(100, 200))
                 .RuleFor(x => x.PlannedDate, f => DateTime.Now.AddDays(7));
+        }
+
+        public static GoalTripDto RandomGoalTripDto()
+        {
+            return FakerGoalTripDto().Generate();
+        }
+        public static List<GoalTripDto> RandomGoalTripDtos(int? n = null)
+        {
+            return FakerGoalTripDto().Generate(n ?? GeneratedAmount);
+        }
+        private static Faker<GoalTripDto> FakerGoalTripDto()
+        {
+            return new Faker<GoalTripDto>()
+                .RuleFor(x => x.Name, f => f.Random.String2(7))
+                .RuleFor(x => x.Type, f => GoalType.Trip)
+                .RuleFor(x => x.Amount, f => f.Random.Decimal(5000, 10000))
+                .RuleFor(x => x.CurrentAmount, f => f.Random.Decimal(1000, 4000))
+                .RuleFor(x => x.MonthlyContribution, f => f.Random.Decimal(100, 200))
+                .RuleFor(x => x.PlannedDate, f => DateTime.Now.AddDays(60))
+                .RuleFor(x => x.Destination, f => f.Random.String2(10))
+                .RuleFor(x => x.TripType, f => GoalTripType.Adventure)
+                .RuleFor(x => x.Duration, f => f.Random.Double(5, 14))
+                .RuleFor(x => x.Travelers, f => f.Random.Int(1, 4))
+                .RuleFor(x => x.Flight, f => f.Random.Decimal(0, 1000))
+                .RuleFor(x => x.Hotel, f => f.Random.Decimal(0, 1000))
+                .RuleFor(x => x.Car, f => f.Random.Decimal(0, 1000))
+                .RuleFor(x => x.Food, f => f.Random.Decimal(0, 1000))
+                .RuleFor(x => x.Activities, f => f.Random.Decimal(0, 1000))
+                .RuleFor(x => x.Other, f => f.Random.Decimal(0, 1000));
+        }
+
+        public static GoalHomeDto RandomGoalHomeDto()
+        {
+            return FakerGoalHomeDto().Generate();
+        }
+        public static List<GoalHomeDto> RandomGoalHomeDtos(int? n = null)
+        {
+            return FakerGoalHomeDto().Generate(n ?? GeneratedAmount);
+        }
+        private static Faker<GoalHomeDto> FakerGoalHomeDto()
+        {
+            return new Faker<GoalHomeDto>()
+                .RuleFor(x => x.Name, f => f.Random.String2(7))
+                .RuleFor(x => x.Type, f => GoalType.BuyAHome)
+                .RuleFor(x => x.Amount, f => f.Random.Decimal(30000, 35000))
+                .RuleFor(x => x.CurrentAmount, f => f.Random.Decimal(20000, 35000))
+                .RuleFor(x => x.MonthlyContribution, f => f.Random.Decimal(100, 200))
+                .RuleFor(x => x.PlannedDate, f => DateTime.Now.AddYears(2))
+                .RuleFor(x => x.HomeValue, f => f.Random.Decimal(300000, 350000))
+                .RuleFor(x => x.MortgageRate, f => f.Random.Decimal(0.025M, 0.035M))
+                .RuleFor(x => x.PercentDownPayment, f => f.Random.Decimal(0.1M, 0.15M))
+                .RuleFor(x => x.AnnualInsurance, f => f.Random.Decimal(500, 750))
+                .RuleFor(x => x.AnnualPropertyTax, f => f.Random.Decimal(0.005M, 0.01M))
+                .RuleFor(x => x.RecommendedAmount, f => f.Random.Decimal(33000, 38000));
+        }
+
+        public static GoalCollegeDto RandomGoalCollegeDto()
+        {
+            return FakerGoalCollegeDto().Generate();
+        }
+        public static List<GoalCollegeDto> RandomGoalCollegeDtos(int? n = null)
+        {
+            return FakerGoalCollegeDto().Generate(n ?? GeneratedAmount);
+        }
+        private static Faker<GoalCollegeDto> FakerGoalCollegeDto()
+        {
+            return new Faker<GoalCollegeDto>()
+                .RuleFor(x => x.Name, f => f.Random.String2(7))
+                .RuleFor(x => x.Type, f => GoalType.SaveForCollege)
+                .RuleFor(x => x.Amount, f => f.Random.Decimal(5000, 10000))
+                .RuleFor(x => x.CurrentAmount, f => f.Random.Decimal(1000, 4000))
+                .RuleFor(x => x.MonthlyContribution, f => f.Random.Decimal(100, 200))
+                .RuleFor(x => x.PlannedDate, f => DateTime.Now.AddDays(60))
+                .RuleFor(x => x.CollegeType, f => GoalCollegeType.PublicOutOfState)
+                .RuleFor(x => x.CostPerYear, f => f.Random.Decimal(15000M, 30000M))
+                .RuleFor(x => x.StudentAge, f => f.Random.Int(1, 10))
+                .RuleFor(x => x.Years, f => f.Random.Int(4, 6))
+                .RuleFor(x => x.CollegeName, f => f.Random.String2(5));
         }
 
         public static SubscriptionDto RandomSubscriptionDto()

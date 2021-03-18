@@ -79,7 +79,7 @@ namespace aiof.api.data
             RuleForEach(x => x.Liabilities)
                 .SetValidator(new LiabilityDtoValidator());
             RuleForEach(x => x.Goals)
-                .SetValidator(new GoalDtoValidator());
+                .SetValidator(new GoalDtoValidator<GoalDto>());
             RuleForEach(x => x.Subscriptions)
                 .SetValidator(new SubscriptionDtoValidator());
             RuleForEach(x => x.Accounts)
