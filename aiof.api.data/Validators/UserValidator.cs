@@ -93,11 +93,6 @@ namespace aiof.api.data
         {
             ValidatorOptions.Global.CascadeMode = CascadeMode.Stop;
 
-            var validUserRelationships = Enum.GetValues(typeof(UserRelationships))
-                .Cast<UserRelationships>()
-                .Select(x => x.ToString())
-                .ToArray();
-
             RuleFor(x => x)
                 .NotNull();
 
@@ -131,12 +126,12 @@ namespace aiof.api.data
                 .NotEmpty()
                 .Must(x =>
                 {
-                    if (validUserRelationships.Contains(x, StringComparer.InvariantCultureIgnoreCase))
+                    if (Constants.UserRelationships.Contains(x, StringComparer.InvariantCultureIgnoreCase))
                         return true;
 
                     return false;
                 })
-                .WithMessage($"User relationship must be one of the following {string.Join(", ", validUserRelationships)}");
+                .WithMessage(CommonValidator.UserRelationshipsMessage);
         }
     }
 }

@@ -243,7 +243,7 @@ namespace aiof.api.tests
                 Age = age,
                 Email = $"{firstName}.{lastName}@aiof.com",
                 AmountOfSupportProvided = 15M,
-                UserRelationship = UserRelationships.Child.ToString()
+                UserRelationship = UserRelationship.Child.ToString()
             };
 
             Assert.True(_userDependentDtoValidator.Validate(dto).IsValid);
@@ -272,7 +272,7 @@ namespace aiof.api.tests
                 Age = 12,
                 Email = $"{firstName}.{lastName}@aiof.com",
                 AmountOfSupportProvided = 15M,
-                UserRelationship = UserRelationships.Child.ToString()
+                UserRelationship = UserRelationship.Child.ToString()
             };
 
             Assert.False(_userDependentDtoValidator.Validate(dto).IsValid);
@@ -290,7 +290,7 @@ namespace aiof.api.tests
                 Age = age,
                 Email = "firstName.lastName@aiof.com",
                 AmountOfSupportProvided = 15M,
-                UserRelationship = UserRelationships.Child.ToString()
+                UserRelationship = UserRelationship.Child.ToString()
             };
 
             Assert.False(_userDependentDtoValidator.Validate(dto).IsValid);
@@ -308,7 +308,7 @@ namespace aiof.api.tests
                 Age = 12,
                 Email = email,
                 AmountOfSupportProvided = 15M,
-                UserRelationship = UserRelationships.Child.ToString()
+                UserRelationship = UserRelationship.Child.ToString()
             };
 
             Assert.False(_userDependentDtoValidator.Validate(dto).IsValid);
@@ -327,7 +327,7 @@ namespace aiof.api.tests
                 Age = 12,
                 Email = "firstname.lastname@aiof.com",
                 AmountOfSupportProvided = decimal.Negate(amountOfSupportProvided),
-                UserRelationship = UserRelationships.Child.ToString()
+                UserRelationship = UserRelationship.Child.ToString()
             };
 
             Assert.False(_userDependentDtoValidator.Validate(dto).IsValid);

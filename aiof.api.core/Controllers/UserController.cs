@@ -122,6 +122,19 @@ namespace aiof.api.core.Controllers
         }
 
         /// <summary>
+        /// Get User dependent relationships
+        /// </summary>
+        /// <returns></returns>
+        [FeatureGate(FeatureFlags.UserDependent)]
+        [HttpGet]
+        [Route("dependent/relationships")]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status200OK)]
+        public IActionResult GetUserRelationships()
+        {
+            return Ok(Constants.UserRelationships);
+        }
+
+        /// <summary>
         /// Get User profile
         /// </summary>
         [HttpGet]

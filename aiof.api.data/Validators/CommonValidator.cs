@@ -31,6 +31,7 @@ namespace aiof.api.data
         };
         public static string ValidCarLoanTermsMessage = $"Value must be one of the following {string.Join(", ", ValidCarLoanTerms)}";
 
+        public static string UserRelationshipsMessage = $"User relationship must be one of the following {string.Join(", ", Constants.UserRelationships)}";
         public static string GoalTypesMessage = $"Invalid Type. Allowed values are {string.Join(", ", Constants.GoalTypes)}";
         public static string GoalTripTypesMessage = $"Invalid Type. Allowed values are {string.Join(", ", Constants.GoalTripTypes)}";
         public static string GoalCollegeTypesMessage = $"Invalid Type. Allowed values are {string.Join(", ", Constants.GoalCollegeTypes)}";

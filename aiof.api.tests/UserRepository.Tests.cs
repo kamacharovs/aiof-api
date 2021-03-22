@@ -195,7 +195,7 @@ namespace aiof.api.tests
                 Age = 10,
                 Email = null,
                 AmountOfSupportProvided = 15000M,
-                UserRelationship = UserRelationships.Child.ToString()
+                UserRelationship = UserRelationship.Child.ToString()
             };
             await _repo.AddDependentAsync(dependentDto);
             var dependent = await _repo.GetDependentAsync(dependentDto);
@@ -264,7 +264,7 @@ namespace aiof.api.tests
                     Age = 10,
                     Email = null,
                     AmountOfSupportProvided = 15000M,
-                    UserRelationship = UserRelationships.Child.ToString()
+                    UserRelationship = UserRelationship.Child.ToString()
                 });
 
             Assert.NotNull(dependent);

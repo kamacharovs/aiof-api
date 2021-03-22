@@ -127,7 +127,7 @@ namespace aiof.api.data
                     Age = 3,
                     Email = "zima.kamacharov@aiof.com",
                     AmountOfSupportProvided = 1500M,
-                    UserRelationship = UserRelationships.Child.ToString(),
+                    UserRelationship = UserRelationship.Child.ToString(),
                     UserId = 1
                 },
                 new UserDependent
@@ -138,7 +138,7 @@ namespace aiof.api.data
                     Age = 12,
                     Email = null,
                     AmountOfSupportProvided = 12000M,
-                    UserRelationship = UserRelationships.Son.ToString(),
+                    UserRelationship = UserRelationship.Son.ToString(),
                     UserId = 2
                 }
             };

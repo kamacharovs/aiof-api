@@ -25,6 +25,12 @@ namespace aiof.api.data
             StatusCodes.Status403Forbidden
         };
 
+        public static IEnumerable<string> UserRelationships =>
+            Enum.GetValues(typeof(UserRelationship))
+                .Cast<UserRelationship>()
+                .Select(x => x.ToString())
+                .ToArray();
+
         public static IEnumerable<GoalType> GoalTypes => new GoalType[]
         {
             GoalType.Generic,
