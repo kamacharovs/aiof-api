@@ -159,6 +159,18 @@ namespace aiof.api.core.Controllers
         }
 
         /// <summary>
+        /// Upsert User profile physical address
+        /// </summary>
+        [HttpPut]
+        [Route("profile/physical/address")]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IAddress), StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpsertProfilePhysicalAddressAsync([FromBody] AddressDto addressDto)
+        {
+            return Ok(await _repo.UpsertProfilePhysicalAddressAsync(addressDto));
+        }
+
+        /// <summary>
         /// Get Subscription by id
         /// </summary>
         [HttpGet]

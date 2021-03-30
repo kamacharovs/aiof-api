@@ -153,12 +153,12 @@ namespace aiof.api.services
             return profile;
         }
 
-        public async Task<IAddress> UpsertProfileAddressAsync(AddressDto dto)
+        public async Task<IAddress> UpsertProfilePhysicalAddressAsync(AddressDto dto)
         {
-            var profile = (await GetProfileAsync(false) ?? await UpsertProfileAsync(null)) as UserProfile;
-            var profilePhysicalAddress = profile.PhysicalAddress;
+            await _addressDtoValidator.ValidateAndThrowAsync(dto);
 
-            var address = _mapper.Map(dto, profilePhysicalAddress);
+            var profile = await GetProfileAsync();
+            var address = _mapper.Map(dto, profile.PhysicalAddress ?? new Address());
 
             address.UserProfileId = profile.Id;
 
@@ -167,7 +167,7 @@ namespace aiof.api.services
 
             await _context.SaveChangesAsync();
 
-            return profile.PhysicalAddress;
+            return address;
         }
 
         #region Dependent

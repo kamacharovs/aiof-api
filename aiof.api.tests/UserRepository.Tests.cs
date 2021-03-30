@@ -85,6 +85,7 @@ namespace aiof.api.tests
             Assert.NotNull(profile.OccupationIndustry);
             Assert.NotNull(profile.MaritalStatus);
             Assert.NotNull(profile.ResidentialStatus);
+            Assert.True(profile.GrossSalary.HasValue ? profile.GrossSalary >= 0 : profile.GrossSalary == null);
             Assert.True(profile.HouseholdIncome.HasValue ? profile.HouseholdIncome >= 0 : profile.HouseholdIncome == null);
             Assert.True(profile.HouseholdAdults.HasValue ? profile.HouseholdAdults >= 0 : profile.HouseholdAdults == null);
             Assert.True(profile.HouseholdChildren.HasValue ? profile.HouseholdChildren >= 0 : profile.HouseholdChildren == null);
