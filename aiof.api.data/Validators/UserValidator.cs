@@ -87,48 +87,44 @@ namespace aiof.api.data
         }
     }
 
-    public class AddressValidator : AbstractValidator<Address>
+    public class AddressDtoValidator : AbstractValidator<AddressDto>
     {
-        public AddressValidator()
+        public AddressDtoValidator()
         {
             ValidatorOptions.Global.CascadeMode = CascadeMode.Stop;
 
             RuleFor(x => x.StreetLine1)
-                .NotNull()
                 .NotEmpty()
-                .MaximumLength(200);
+                .MaximumLength(200)
+                .When(x => x.StreetLine1 != null);
+
+            RuleFor(x => x.StreetLine2)
+                .NotEmpty()
+                .MaximumLength(200)
+                .When(x => x.StreetLine2 != null);
 
             RuleFor(x => x.City)
-                .NotNull()
                 .NotEmpty()
-                .MaximumLength(200);
+                .MaximumLength(200)
+                .When(x => x.City != null);
 
             RuleFor(x => x.State)
-                .NotNull()
                 .NotEmpty()
                 .MaximumLength(2)
                 .Must(x =>
                 {
                     return CommonValidator.IsValidState(x);
-                });
+                })
+                .When(x => x.State != null);
 
             RuleFor(x => x.ZipCode)
-                .NotNull()
                 .NotEmpty()
                 .MaximumLength(5)
                 .Must(x =>
                 {
                     return CommonValidator.IsValidZipCode(x);
-                });
-
-            RuleFor(x => x.Country)
-                .NotNull()
-                .NotEmpty()
-                .MaximumLength(200)
-                .Must(x =>
-                {
-                    return x == "USA";
-                });
+                })
+                .When(x => x.ZipCode != null);
         }
     }
 

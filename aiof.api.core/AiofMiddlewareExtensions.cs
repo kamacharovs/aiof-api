@@ -86,6 +86,7 @@ namespace aiof.api.core
                 .AddSingleton<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>()
                 .AddSingleton<AbstractValidator<AccountDto>, AccountDtoValidator>()
                 .AddSingleton<AbstractValidator<UserDto>, UserDtoValidator>()
+                .AddSingleton<AbstractValidator<AddressDto>, AddressDtoValidator>()
                 .AddSingleton<AbstractValidator<UserDependentDto>, UserDependentDtoValidator>();
 
             return services;

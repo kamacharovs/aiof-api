@@ -23,6 +23,7 @@ namespace aiof.api.services
         private readonly IMapper _mapper;
         private readonly ITenant _tenant;
         private readonly AiofContext _context;
+        private readonly AbstractValidator<AddressDto> _addressDtoValidator;
         private readonly AbstractValidator<SubscriptionDto> _subscriptionDtoValidator;
         private readonly AbstractValidator<AccountDto> _accountDtoValidator;
         private readonly AbstractValidator<UserDependentDto> _dependentDtoValidator;
@@ -31,6 +32,7 @@ namespace aiof.api.services
             ILogger<UserRepository> logger,
             IMapper mapper,
             AiofContext context,
+            AbstractValidator<AddressDto> addressDtoValidator,
             AbstractValidator<SubscriptionDto> subscriptionDtoValidator,
             AbstractValidator<AccountDto> accountDtoValidator,
             AbstractValidator<UserDependentDto> dependentDtoValidator)
@@ -40,6 +42,7 @@ namespace aiof.api.services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _tenant = _context.Tenant ?? throw new ArgumentNullException(nameof(_context.Tenant));
+            _addressDtoValidator = addressDtoValidator ?? throw new ArgumentNullException(nameof(addressDtoValidator));
             _subscriptionDtoValidator = subscriptionDtoValidator ?? throw new ArgumentNullException(nameof(subscriptionDtoValidator));
             _accountDtoValidator = accountDtoValidator ?? throw new ArgumentNullException(nameof(accountDtoValidator));
             _dependentDtoValidator = dependentDtoValidator ?? throw new ArgumentNullException(nameof(dependentDtoValidator));
@@ -148,6 +151,23 @@ namespace aiof.api.services
                 JsonSerializer.Serialize(profile));
 
             return profile;
+        }
+
+        public async Task<IAddress> UpsertProfileAddressAsync(AddressDto dto)
+        {
+            var profile = (await GetProfileAsync(false) ?? await UpsertProfileAsync(null)) as UserProfile;
+            var profilePhysicalAddress = profile.PhysicalAddress;
+
+            var address = _mapper.Map(dto, profilePhysicalAddress);
+
+            address.UserProfileId = profile.Id;
+
+            _context.Addresses
+                .Update(address);
+
+            await _context.SaveChangesAsync();
+
+            return profile.PhysicalAddress;
         }
 
         #region Dependent
