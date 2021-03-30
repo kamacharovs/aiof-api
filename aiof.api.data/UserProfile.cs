@@ -39,6 +39,8 @@ namespace aiof.api.data
         public int? HouseholdChildren { get; set; }
 
         public decimal? RetirementContributionsPreTax { get; set; }
+
+        public Address PhysicalAddress { get; set; }
     }
 
     public class UserProfileDto

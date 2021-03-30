@@ -13,6 +13,7 @@ namespace aiof.api.data
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserDependent> UserDependents { get; set; }
         public virtual DbSet<UserProfile> UserProfiles { get; set; }
+        public virtual DbSet<Address> Addresses { get; set; }
         public virtual DbSet<Asset> Assets { get; set; }
         public virtual DbSet<Liability> Liabilities { get; set; }
         public virtual DbSet<AssetType> AssetTypes { get; set; }
@@ -91,28 +92,6 @@ namespace aiof.api.data
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
-            modelBuilder.Entity<UserDependent>(e =>
-            {
-                e.ToTable(Keys.Entity.UserDependent);
-
-                e.HasKey(x => x.Id);
-
-                e.HasQueryFilter(x => x.UserId == Tenant.UserId
-                    && !x.IsDeleted);
-
-                e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
-                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
-                e.Property(x => x.FirstName).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
-                e.Property(x => x.LastName).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
-                e.Property(x => x.Age).HasSnakeCaseColumnName().IsRequired();
-                e.Property(x => x.Email).HasSnakeCaseColumnName().HasMaxLength(200);
-                e.Property(x => x.AmountOfSupportProvided).HasSnakeCaseColumnName();
-                e.Property(x => x.UserRelationship).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
-                e.Property(x => x.UserId).HasSnakeCaseColumnName().IsRequired();
-                e.Property(x => x.Created).HasColumnType("timestamp").HasSnakeCaseColumnName().IsRequired();
-                e.Property(x => x.IsDeleted).HasSnakeCaseColumnName().IsRequired();
-            });
-
             modelBuilder.Entity<UserProfile>(e =>
             {
                 e.ToTable(Keys.Entity.UserProfile);
@@ -137,6 +116,50 @@ namespace aiof.api.data
                 e.Property(x => x.HouseholdAdults).HasSnakeCaseColumnName();
                 e.Property(x => x.HouseholdChildren).HasSnakeCaseColumnName();
                 e.Property(x => x.RetirementContributionsPreTax).HasSnakeCaseColumnName();
+
+                e.HasOne(x => x.PhysicalAddress)
+                    .WithOne()
+                    .HasForeignKey<Address>(x => x.UserProfileId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<Address>(e =>
+            {
+                e.ToTable(Keys.Entity.Address);
+
+                e.HasKey(x => x.Id);
+
+                e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
+                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.StreetLine1).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
+                e.Property(x => x.StreetLine2).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
+                e.Property(x => x.City).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
+                e.Property(x => x.State).HasSnakeCaseColumnName().HasMaxLength(2).IsRequired();
+                e.Property(x => x.ZipCode).HasSnakeCaseColumnName().HasMaxLength(5).IsRequired();
+                e.Property(x => x.Country).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
+                e.Property(x => x.UserProfileId).HasSnakeCaseColumnName().IsRequired();
+            });
+
+            modelBuilder.Entity<UserDependent>(e =>
+            {
+                e.ToTable(Keys.Entity.UserDependent);
+
+                e.HasKey(x => x.Id);
+
+                e.HasQueryFilter(x => x.UserId == Tenant.UserId
+                    && !x.IsDeleted);
+
+                e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
+                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.FirstName).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
+                e.Property(x => x.LastName).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
+                e.Property(x => x.Age).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.Email).HasSnakeCaseColumnName().HasMaxLength(200);
+                e.Property(x => x.AmountOfSupportProvided).HasSnakeCaseColumnName();
+                e.Property(x => x.UserRelationship).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
+                e.Property(x => x.UserId).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.Created).HasColumnType("timestamp").HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.IsDeleted).HasSnakeCaseColumnName().IsRequired();
             });
 
             modelBuilder.Entity<Asset>(e =>
