@@ -271,6 +271,17 @@ namespace aiof.api.tests
                 .Generate();
         }
 
+        public static AddressDto RandomAddressDto()
+        {
+            return new Faker<AddressDto>()
+                .RuleFor(x => x.StreetLine1, f => f.Address.StreetAddress())
+                .RuleFor(x => x.StreetLine2, f => f.Random.Int(100, 1000).ToString())
+                .RuleFor(x => x.City, f => f.Address.City())
+                .RuleFor(x => x.State, f => f.Address.StateAbbr())
+                .RuleFor(x => x.ZipCode, f => f.Random.Int(10000, 99999).ToString())
+                .Generate();
+        }
+
         public static AssetDto RandomAssetDto()
         {
             return FakerAssetDto().Generate();

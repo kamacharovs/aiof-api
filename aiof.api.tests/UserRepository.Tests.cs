@@ -116,6 +116,41 @@ namespace aiof.api.tests
         }
 
         [Theory]
+        [MemberData(nameof(Helper.UserProfilesId), MemberType = typeof(Helper))]
+        public async Task UpsertProfilePhysicalAddressAsync_IsSuccessful(int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
+            var dto = Helper.RandomAddressDto();
+
+            var address = await repo.UpsertProfilePhysicalAddressAsync(dto);
+
+            Assert.NotNull(address);
+            Assert.NotEqual(0, address.Id);
+            Assert.NotEqual(Guid.Empty, address.PublicKey);
+            Assert.NotNull(address.StreetLine1);
+            Assert.NotNull(address.StreetLine2);
+            Assert.NotNull(address.City);
+            Assert.NotNull(address.State);
+            Assert.NotNull(address.ZipCode);
+            Assert.NotNull(address.Country);
+
+            var userProfileId = (await repo.GetProfileAsync()).Id;
+
+            Assert.Equal(userProfileId, address.UserProfileId);
+        }
+        [Theory]
+        [MemberData(nameof(Helper.UserProfilesId), MemberType = typeof(Helper))]
+        public async Task UpsertProfilePhysicalAddressAsync_InvalidData_Throws_ValidationException(int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
+            var dto = Helper.RandomAddressDto();
+
+            dto.ZipCode = "1111111111111";
+
+            await Assert.ThrowsAsync<FluentValidation.ValidationException>(() => repo.UpsertProfilePhysicalAddressAsync(dto));
+        }
+
+        [Theory]
         [MemberData(nameof(Helper.UsersId), MemberType = typeof(Helper))]
         public async Task UpsertAsync_IsSuccessful(int id)
         {
@@ -181,6 +216,7 @@ namespace aiof.api.tests
             int userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
+
             await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.GetDependentAsync(id * 100));
         }
 
@@ -441,6 +477,7 @@ namespace aiof.api.tests
         public async Task GetAccountAsync_NotFound(int userId, int id)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
+
             await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.GetAccountAsync(id * 5));
         }
 

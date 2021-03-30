@@ -157,7 +157,7 @@ namespace aiof.api.services
         {
             await _addressDtoValidator.ValidateAndThrowAsync(dto);
 
-            var profile = await GetProfileAsync();
+            var profile = await GetProfileAsync(false);
             var address = _mapper.Map(dto, profile.PhysicalAddress ?? new Address());
 
             address.UserProfileId = profile.Id;
