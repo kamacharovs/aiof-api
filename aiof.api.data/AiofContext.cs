@@ -132,7 +132,7 @@ namespace aiof.api.data
                 e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
                 e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.StreetLine1).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
-                e.Property(x => x.StreetLine2).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
+                e.Property(x => x.StreetLine2).HasSnakeCaseColumnName().HasMaxLength(200);
                 e.Property(x => x.City).HasSnakeCaseColumnName().HasMaxLength(200).IsRequired();
                 e.Property(x => x.State).HasSnakeCaseColumnName().HasMaxLength(2).IsRequired();
                 e.Property(x => x.ZipCode).HasSnakeCaseColumnName().HasMaxLength(5).IsRequired();

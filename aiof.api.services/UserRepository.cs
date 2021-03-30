@@ -49,6 +49,7 @@ namespace aiof.api.services
         {
             var usersQuery = _context.Users
                 .Include(x => x.Profile)
+                    .ThenInclude(x => x.PhysicalAddress)
                 .Include(x => x.Dependents)
                 .Include(x => x.Assets)
                 .Include(x => x.Goals)
@@ -66,6 +67,7 @@ namespace aiof.api.services
         {
             var usersProfileQuery = _context.UserProfiles
                 .Include(x => x.User)
+                .Include(x => x.PhysicalAddress)
                 .AsQueryable();
 
             return asNoTracking

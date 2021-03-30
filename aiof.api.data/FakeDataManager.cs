@@ -27,6 +27,9 @@ namespace aiof.api.data
             _context.UserProfiles
                 .AddRange(GetFakeUserProfiles());
 
+            _context.Addresses
+                .AddRange(GetFakeAddresses());
+
             _context.AssetTypes
                 .AddRange(GetFakeAssetTypes());
 
@@ -155,6 +158,23 @@ namespace aiof.api.data
                     Gender = "Male",
                     Occupation = "Sr. Software Engineer",
                     OccupationIndustry = "IT"
+                }
+            };
+        }
+
+        public IEnumerable<Address> GetFakeAddresses()
+        {
+            return new List<Address>
+            {
+                new Address
+                {
+                    Id = 1,
+                    StreetLine1 = "123 Main Street",
+                    StreetLine2 = null,
+                    City = "Charlotte",
+                    State = "NC",
+                    ZipCode = "28205",
+                    UserProfileId = 1
                 }
             };
         }
