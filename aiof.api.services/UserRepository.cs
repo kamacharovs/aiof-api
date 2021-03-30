@@ -104,11 +104,18 @@ namespace aiof.api.services
 
         public async Task<IUser> UpsertAsync(UserDto userDto)
         {
-            var userInDb = await GetAsync(false) as User;
-            var dtoAsUser = _mapper.Map<User>(userDto);
-            var user = _mapper.Map(dtoAsUser, userInDb);
+            var assets = _mapper.Map<IEnumerable<Asset>>(userDto.Assets);
+            var liabilities = _mapper.Map<IEnumerable<Liability>>(userDto.Liabilities);
+            var goals = _mapper.Map<IEnumerable<Goal>>(userDto.Goals);
 
-            _context.Update(user);
+            assets = assets.Map(x => x.UserId = _tenant.UserId);
+            liabilities = liabilities.Map(x => x.UserId = _tenant.UserId);
+            goals = goals.Map(x => x.UserId = _tenant.UserId);
+
+            _context.Assets.UpdateRange(assets);
+            _context.Liabilities.UpdateRange(liabilities);
+            _context.Goals.UpdateRange(goals);
+
             await _context.SaveChangesAsync();
 
             _logger.LogInformation("{Tenant} | UpsertUserAsync completed | {UserDto}",

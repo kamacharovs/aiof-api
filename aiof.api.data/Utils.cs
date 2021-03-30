@@ -15,6 +15,15 @@ namespace aiof.api.data
         {
             return string.Concat(str.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x.ToString() : x.ToString())).ToLower();
         }
+
+        public static IEnumerable<T> Map<T>(this IEnumerable<T> source, Action<T> action)
+        {
+            foreach (var item in source)
+            {
+                action(item);
+                yield return item;
+            }
+        }
     }
 
     public static class HttpRequestExtensions

@@ -82,6 +82,18 @@ namespace aiof.api.tests
             Assert.NotNull(profile.Occupation);
             Assert.NotNull(profile.OccupationIndustry);
             Assert.NotNull(profile.MaritalStatus);
+
+            if (profile.PhysicalAddress != null)
+            {
+                Assert.NotEqual(0, profile.PhysicalAddress.Id);
+                Assert.NotEqual(Guid.Empty, profile.PhysicalAddress.PublicKey);
+                Assert.NotNull(profile.PhysicalAddress.StreetLine1);
+                Assert.NotNull(profile.PhysicalAddress.City);
+                Assert.NotNull(profile.PhysicalAddress.State);
+                Assert.NotNull(profile.PhysicalAddress.ZipCode);
+                Assert.NotNull(profile.PhysicalAddress.Country);
+                Assert.NotEqual(0, profile.PhysicalAddress.UserProfileId);
+            }
         }
         [Theory]
         [MemberData(nameof(Helper.UserProfilesId), MemberType = typeof(Helper))]
@@ -92,7 +104,6 @@ namespace aiof.api.tests
             await Assert.ThrowsAsync<AiofNotFoundException>(() =>_repo.GetProfileAsync());
         }
 
-        /*
         [Theory]
         [MemberData(nameof(Helper.UsersId), MemberType = typeof(Helper))]
         public async Task UpsertAsync_IsSuccessful(int id)
@@ -111,29 +122,9 @@ namespace aiof.api.tests
             var user = await _repo.UpsertAsync(dto);
 
             Assert.NotEmpty(user.Assets);
-            foreach (var asset in dto.Assets)
-            {
-                Assert.NotNull(
-                    user.Assets.FirstOrDefault(x => x.Name == asset.Name
-                        && x.TypeName == asset.TypeName));
-            }
-
             Assert.NotEmpty(user.Liabilities);
-            foreach (var liability in dto.Liabilities)
-            {
-                Assert.NotNull(
-                    user.Liabilities.FirstOrDefault(x => x.Name == liability.Name
-                        && x.TypeName == liability.TypeName));
-            }
-
             Assert.NotEmpty(user.Goals);
-            foreach (var goal in dto.Goals)
-            {
-                Assert.NotNull(
-                    user.Goals.FirstOrDefault(x => x.Name == goal.Name
-                        && x.TypeName == goal.TypeName));
-            }
-        }*/
+        }
 
         [Theory]
         [MemberData(nameof(Helper.UsersId), MemberType = typeof(Helper))]
