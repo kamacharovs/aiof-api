@@ -174,12 +174,14 @@ namespace aiof.api.tests
     public class UserDtoValidatorTests
     {
         private readonly AbstractValidator<UserDto> _userDtoValidator;
+        private readonly AbstractValidator<AddressDto> _addressDtoValidator;
         private readonly AbstractValidator<UserDependentDto> _userDependentDtoValidator;
 
         public UserDtoValidatorTests()
         {
             var serviceHelper = new ServiceHelper();
             _userDtoValidator = serviceHelper.GetRequiredService<AbstractValidator<UserDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<UserDto>));
+            _addressDtoValidator = serviceHelper.GetRequiredService<AbstractValidator<AddressDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<AddressDto>));
             _userDependentDtoValidator = serviceHelper.GetRequiredService<AbstractValidator<UserDependentDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<UserDependentDto>));
         }
 
@@ -227,6 +229,95 @@ namespace aiof.api.tests
             Assert.True(_userDtoValidator.Validate(userDto).IsValid);
         }
 
+        #region Address
+        [Fact]
+        public void AddressDto_Validation_IsSuccessful()
+        {
+            var dto = Helper.RandomAddressDto();
+
+            Assert.True(_addressDtoValidator.Validate(dto).IsValid);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("1234 Main Street")]
+        public void AddressDto_Validation_StreetLine1_IsNotValid(string streetLine1)
+        {
+            var dto = new AddressDto
+            {
+                StreetLine1 = string.IsNullOrWhiteSpace(streetLine1)
+                    ? streetLine1
+                    : new string(streetLine1[0], 201)
+            };
+
+            Assert.False(_addressDtoValidator.Validate(dto).IsValid);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("101")]
+        public void AddressDto_Validation_StreetLine2_IsNotValid(string streetLine2)
+        {
+            var dto = new AddressDto
+            {
+                StreetLine2 = string.IsNullOrWhiteSpace(streetLine2)
+                    ? streetLine2
+                    : new string(streetLine2[0], 201)
+            };
+
+            Assert.False(_addressDtoValidator.Validate(dto).IsValid);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("101")]
+        public void AddressDto_Validation_City_IsNotValid(string city)
+        {
+            var dto = new AddressDto
+            {
+                City = string.IsNullOrWhiteSpace(city)
+                    ? city
+                    : new string(city[0], 201)
+            };
+
+            Assert.False(_addressDtoValidator.Validate(dto).IsValid);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("ZZ")]
+        [InlineData("zz")]
+        [InlineData("TEST")]
+        [InlineData("TOOLONG")]
+        [InlineData("1234")]
+        public void AddressDto_Validation_State_IsNotValid(string state)
+        {
+            var dto = new AddressDto
+            {
+                State = state
+            };
+
+            Assert.False(_addressDtoValidator.Validate(dto).IsValid);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("1234567")]
+        [InlineData("123")]
+        [InlineData("1234")]
+        [InlineData("123456")]
+        public void AddressDto_Validation_ZipCode_IsNotValid(string zipCode)
+        {
+            var dto = new AddressDto
+            {
+                ZipCode = zipCode
+            };
+
+            Assert.False(_addressDtoValidator.Validate(dto).IsValid);
+        }
+        #endregion
+
+        #region Dependent
         [Theory]
         [InlineData("Firstname1", "Lastname1", 12)]
         [InlineData("Firstname2", "Lastname2", 13)]
@@ -357,5 +448,6 @@ namespace aiof.api.tests
             if (!string.IsNullOrWhiteSpace(userRelationship))
                 Assert.NotNull(validation.Errors.FirstOrDefault(x => x.ErrorMessage.Contains("User relationship must be")));
         }
+        #endregion
     }
 }
