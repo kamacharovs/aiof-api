@@ -157,7 +157,10 @@ namespace aiof.api.data
                     UserId = 1,
                     Gender = "Male",
                     Occupation = "Sr. Software Engineer",
-                    OccupationIndustry = "IT"
+                    OccupationIndustry = "IT",
+                    MaritalStatus = MaritalStatuses.Single.ToString(),
+                    EducationLevel = EducationLevels.Bachelors.ToString(),
+                    ResidentialStatus = ResidentialStatuses.Rent.ToString()
                 }
             };
         }

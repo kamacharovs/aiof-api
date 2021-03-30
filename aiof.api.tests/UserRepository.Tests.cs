@@ -76,12 +76,19 @@ namespace aiof.api.tests
             var profile = await _repo.GetProfileAsync();
 
             Assert.NotNull(profile);
+            Assert.NotEqual(0, profile.Id);
+            Assert.NotEqual(0, profile.UserId);
             Assert.NotEqual(profile.PublicKey, Guid.Empty);
             Assert.NotNull(profile.User);
             Assert.NotNull(profile.Gender);
             Assert.NotNull(profile.Occupation);
             Assert.NotNull(profile.OccupationIndustry);
             Assert.NotNull(profile.MaritalStatus);
+            Assert.NotNull(profile.ResidentialStatus);
+            Assert.True(profile.HouseholdIncome.HasValue ? profile.HouseholdIncome >= 0 : profile.HouseholdIncome == null);
+            Assert.True(profile.HouseholdAdults.HasValue ? profile.HouseholdAdults >= 0 : profile.HouseholdAdults == null);
+            Assert.True(profile.HouseholdChildren.HasValue ? profile.HouseholdChildren >= 0 : profile.HouseholdChildren == null);
+            Assert.True(profile.RetirementContributionsPreTax.HasValue ? profile.RetirementContributionsPreTax >= 0 : profile.RetirementContributionsPreTax == null);
 
             if (profile.PhysicalAddress != null)
             {
@@ -93,6 +100,9 @@ namespace aiof.api.tests
                 Assert.NotNull(profile.PhysicalAddress.ZipCode);
                 Assert.NotNull(profile.PhysicalAddress.Country);
                 Assert.NotEqual(0, profile.PhysicalAddress.UserProfileId);
+
+                if (profile.PhysicalAddress.StreetLine2 != null)
+                    Assert.False(string.IsNullOrEmpty(profile.PhysicalAddress.StreetLine2));
             }
         }
         [Theory]

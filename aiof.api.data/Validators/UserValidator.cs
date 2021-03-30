@@ -87,6 +87,51 @@ namespace aiof.api.data
         }
     }
 
+    public class AddressValidator : AbstractValidator<Address>
+    {
+        public AddressValidator()
+        {
+            ValidatorOptions.Global.CascadeMode = CascadeMode.Stop;
+
+            RuleFor(x => x.StreetLine1)
+                .NotNull()
+                .NotEmpty()
+                .MaximumLength(200);
+
+            RuleFor(x => x.City)
+                .NotNull()
+                .NotEmpty()
+                .MaximumLength(200);
+
+            RuleFor(x => x.State)
+                .NotNull()
+                .NotEmpty()
+                .MaximumLength(2)
+                .Must(x =>
+                {
+                    return CommonValidator.IsValidState(x);
+                });
+
+            RuleFor(x => x.ZipCode)
+                .NotNull()
+                .NotEmpty()
+                .MaximumLength(5)
+                .Must(x =>
+                {
+                    return CommonValidator.IsValidZipCode(x);
+                });
+
+            RuleFor(x => x.Country)
+                .NotNull()
+                .NotEmpty()
+                .MaximumLength(200)
+                .Must(x =>
+                {
+                    return x == "USA";
+                });
+        }
+    }
+
     public class UserDependentDtoValidator : AbstractValidator<UserDependentDto>
     {
         public UserDependentDtoValidator()
