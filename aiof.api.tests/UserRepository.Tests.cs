@@ -146,6 +146,8 @@ namespace aiof.api.tests
             var dto = Helper.RandomAddressDto();
 
             dto.ZipCode = "1111111111111";
+            dto.StreetLine1 = new string('\n', 201);
+            dto.StreetLine2 = new string('\n', 201);
 
             await Assert.ThrowsAsync<FluentValidation.ValidationException>(() => repo.UpsertProfilePhysicalAddressAsync(dto));
         }

@@ -82,7 +82,7 @@ namespace aiof.api.services
         {
             return await GetQuery(asNoTracking)
                 .FirstOrDefaultAsync()
-                ?? throw new AiofNotFoundException($"User with Id={_context.Tenant.UserId} was not found");
+                ?? throw new AiofNotFoundException($"User with Id={_tenant.UserId} was not found");
         }
         public async Task<IUser> GetAsync(
             string email,
@@ -102,7 +102,7 @@ namespace aiof.api.services
         {
             return await GetProfilesQuery(asNoTracking)
                 .FirstOrDefaultAsync()
-                ?? throw new AiofNotFoundException($"UserProfile for User with UserId={_context.Tenant.UserId} was not found");
+                ?? throw new AiofNotFoundException($"UserProfile for User with UserId={_tenant.UserId} was not found");
         }
 
         public async Task<IUser> UpsertAsync(UserDto userDto)
@@ -138,7 +138,7 @@ namespace aiof.api.services
             catch (Exception e) when (e is AiofNotFoundException) { }
 
             profile = _mapper.Map(userProfileDto, profile);
-            profile.UserId = _context.Tenant.UserId;
+            profile.UserId = _tenant.UserId;
 
             _context.UserProfiles
                 .Update(profile);
@@ -147,7 +147,7 @@ namespace aiof.api.services
 
             _logger.LogInformation("{Tenant} | Upserted UserProfile with UserId={UserId}. UserProfile={UserProfile}",
                 _tenant.Log,
-                _context.Tenant.UserId,
+                _tenant.UserId,
                 JsonSerializer.Serialize(profile));
 
             return profile;
@@ -166,6 +166,11 @@ namespace aiof.api.services
                 .Update(address);
 
             await _context.SaveChangesAsync();
+
+            _logger.LogInformation("{Tenant} | Upserted UserProfilePhysicalAddress with UserId={UserId}. PhysicalAddress={PhysicalAddress}",
+                _tenant.Log,
+                _tenant.UserId,
+                JsonSerializer.Serialize(address));
 
             return address;
         }
@@ -392,7 +397,7 @@ namespace aiof.api.services
 
             var account = _mapper.Map<Account>(accountDto);
 
-            account.UserId = _context.Tenant.UserId;
+            account.UserId = _tenant.UserId;
 
             await _context.Accounts.AddAsync(account);
             await _context.SaveChangesAsync();
