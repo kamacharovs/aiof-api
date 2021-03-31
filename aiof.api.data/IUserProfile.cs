@@ -38,5 +38,7 @@ namespace aiof.api.data
         int? HouseholdChildren { get; set; }
 
         decimal? RetirementContributionsPreTax { get; set; }
+
+        Address PhysicalAddress { get; set; }
     }
 }

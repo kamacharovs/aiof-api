@@ -59,6 +59,7 @@ namespace aiof.api.tests
                 .AddSingleton<AbstractValidator<SubscriptionDto>, SubscriptionDtoValidator>()
                 .AddSingleton<AbstractValidator<AccountDto>, AccountDtoValidator>()
                 .AddSingleton<AbstractValidator<UserDto>, UserDtoValidator>()
+                .AddSingleton<AbstractValidator<AddressDto>, AddressDtoValidator>()
                 .AddSingleton<AbstractValidator<UserDependentDto>, UserDependentDtoValidator>();
 
             services.AddDbContext<AiofContext>(o => o.UseInMemoryDatabase(Guid.NewGuid().ToString()));
@@ -267,6 +268,17 @@ namespace aiof.api.tests
                 .RuleFor(x => x.Gender, f => f.Person.Gender.ToString())
                 .RuleFor(x => x.DateOfBirth, f => f.Date.Past(f.Random.Int(18, 99)))
                 .RuleFor(x => x.EducationLevel, f => EducationLevels.Bachelors.ToString())
+                .Generate();
+        }
+
+        public static AddressDto RandomAddressDto()
+        {
+            return new Faker<AddressDto>()
+                .RuleFor(x => x.StreetLine1, f => f.Address.StreetAddress())
+                .RuleFor(x => x.StreetLine2, f => f.Random.Int(100, 1000).ToString())
+                .RuleFor(x => x.City, f => f.Address.City())
+                .RuleFor(x => x.State, f => f.Address.StateAbbr())
+                .RuleFor(x => x.ZipCode, f => f.Random.Int(10000, 99999).ToString())
                 .Generate();
         }
 

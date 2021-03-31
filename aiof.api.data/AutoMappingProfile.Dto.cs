@@ -22,15 +22,18 @@ namespace aiof.api.data
             CreateMap<UserDto, User>()
                 .ForAllMembers(x => x.Condition((source, destination, member) => member != null));
 
+            CreateMap<UserProfileDto, UserProfile>()
+                .ForAllMembers(x => x.Condition((source, destination, member) => member != null));
+
+            CreateMap<AddressDto, Address>()
+                .ForAllMembers(x => x.Condition((source, destination, member) => member != null));
+
             CreateMap<UserDependent, UserDependent>()
                 .ForAllMembers(x => x.Condition((source, destination, member) => member != null));
             CreateMap<UserDependentDto, UserDependent>()
                 .ForMember(x => x.Age, o => o.Condition(s => s.Age != null))
                 .ForMember(x => x.AmountOfSupportProvided, o => o.Condition(s => s.AmountOfSupportProvided != null))
                 .ForAllOtherMembers(x => x.Condition((source, destination, member) => member != null));
-
-            CreateMap<UserProfileDto, UserProfile>()
-                .ForAllMembers(x => x.Condition((source, destination, member) => member != null));
 
             CreateMap<AssetDto, Asset>()
                 .ForMember(x => x.Name, o => o.Condition(s => s.Name != null))

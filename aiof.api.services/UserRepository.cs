@@ -23,6 +23,7 @@ namespace aiof.api.services
         private readonly IMapper _mapper;
         private readonly ITenant _tenant;
         private readonly AiofContext _context;
+        private readonly AbstractValidator<AddressDto> _addressDtoValidator;
         private readonly AbstractValidator<SubscriptionDto> _subscriptionDtoValidator;
         private readonly AbstractValidator<AccountDto> _accountDtoValidator;
         private readonly AbstractValidator<UserDependentDto> _dependentDtoValidator;
@@ -31,6 +32,7 @@ namespace aiof.api.services
             ILogger<UserRepository> logger,
             IMapper mapper,
             AiofContext context,
+            AbstractValidator<AddressDto> addressDtoValidator,
             AbstractValidator<SubscriptionDto> subscriptionDtoValidator,
             AbstractValidator<AccountDto> accountDtoValidator,
             AbstractValidator<UserDependentDto> dependentDtoValidator)
@@ -40,6 +42,7 @@ namespace aiof.api.services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _tenant = _context.Tenant ?? throw new ArgumentNullException(nameof(_context.Tenant));
+            _addressDtoValidator = addressDtoValidator ?? throw new ArgumentNullException(nameof(addressDtoValidator));
             _subscriptionDtoValidator = subscriptionDtoValidator ?? throw new ArgumentNullException(nameof(subscriptionDtoValidator));
             _accountDtoValidator = accountDtoValidator ?? throw new ArgumentNullException(nameof(accountDtoValidator));
             _dependentDtoValidator = dependentDtoValidator ?? throw new ArgumentNullException(nameof(dependentDtoValidator));
@@ -49,6 +52,7 @@ namespace aiof.api.services
         {
             var usersQuery = _context.Users
                 .Include(x => x.Profile)
+                    .ThenInclude(x => x.PhysicalAddress)
                 .Include(x => x.Dependents)
                 .Include(x => x.Assets)
                 .Include(x => x.Goals)
@@ -66,6 +70,7 @@ namespace aiof.api.services
         {
             var usersProfileQuery = _context.UserProfiles
                 .Include(x => x.User)
+                .Include(x => x.PhysicalAddress)
                 .AsQueryable();
 
             return asNoTracking
@@ -77,7 +82,7 @@ namespace aiof.api.services
         {
             return await GetQuery(asNoTracking)
                 .FirstOrDefaultAsync()
-                ?? throw new AiofNotFoundException($"User with Id={_context.Tenant.UserId} was not found");
+                ?? throw new AiofNotFoundException($"User with Id={_tenant.UserId} was not found");
         }
         public async Task<IUser> GetAsync(
             string email,
@@ -97,16 +102,23 @@ namespace aiof.api.services
         {
             return await GetProfilesQuery(asNoTracking)
                 .FirstOrDefaultAsync()
-                ?? throw new AiofNotFoundException($"UserProfile for User with UserId={_context.Tenant.UserId} was not found");
+                ?? throw new AiofNotFoundException($"UserProfile for User with UserId={_tenant.UserId} was not found");
         }
 
         public async Task<IUser> UpsertAsync(UserDto userDto)
         {
-            var userInDb = await GetAsync(false) as User;
-            var dtoAsUser = _mapper.Map<User>(userDto);
-            var user = _mapper.Map(dtoAsUser, userInDb);
+            var assets = _mapper.Map<IEnumerable<Asset>>(userDto.Assets);
+            var liabilities = _mapper.Map<IEnumerable<Liability>>(userDto.Liabilities);
+            var goals = _mapper.Map<IEnumerable<Goal>>(userDto.Goals);
 
-            _context.Update(user);
+            assets = assets.Map(x => x.UserId = _tenant.UserId);
+            liabilities = liabilities.Map(x => x.UserId = _tenant.UserId);
+            goals = goals.Map(x => x.UserId = _tenant.UserId);
+
+            _context.Assets.UpdateRange(assets);
+            _context.Liabilities.UpdateRange(liabilities);
+            _context.Goals.UpdateRange(goals);
+
             await _context.SaveChangesAsync();
 
             _logger.LogInformation("{Tenant} | UpsertUserAsync completed | {UserDto}",
@@ -126,7 +138,7 @@ namespace aiof.api.services
             catch (Exception e) when (e is AiofNotFoundException) { }
 
             profile = _mapper.Map(userProfileDto, profile);
-            profile.UserId = _context.Tenant.UserId;
+            profile.UserId = _tenant.UserId;
 
             _context.UserProfiles
                 .Update(profile);
@@ -135,10 +147,32 @@ namespace aiof.api.services
 
             _logger.LogInformation("{Tenant} | Upserted UserProfile with UserId={UserId}. UserProfile={UserProfile}",
                 _tenant.Log,
-                _context.Tenant.UserId,
+                _tenant.UserId,
                 JsonSerializer.Serialize(profile));
 
             return profile;
+        }
+
+        public async Task<IAddress> UpsertProfilePhysicalAddressAsync(AddressDto dto)
+        {
+            await _addressDtoValidator.ValidateAndThrowAsync(dto);
+
+            var profile = await GetProfileAsync(false);
+            var address = _mapper.Map(dto, profile.PhysicalAddress ?? new Address());
+
+            address.UserProfileId = profile.Id;
+
+            _context.Addresses
+                .Update(address);
+
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation("{Tenant} | Upserted UserProfilePhysicalAddress with UserId={UserId}. PhysicalAddress={PhysicalAddress}",
+                _tenant.Log,
+                _tenant.UserId,
+                JsonSerializer.Serialize(address));
+
+            return address;
         }
 
         #region Dependent
@@ -363,7 +397,7 @@ namespace aiof.api.services
 
             var account = _mapper.Map<Account>(accountDto);
 
-            account.UserId = _context.Tenant.UserId;
+            account.UserId = _tenant.UserId;
 
             await _context.Accounts.AddAsync(account);
             await _context.SaveChangesAsync();
