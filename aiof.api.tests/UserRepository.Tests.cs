@@ -76,12 +76,35 @@ namespace aiof.api.tests
             var profile = await _repo.GetProfileAsync();
 
             Assert.NotNull(profile);
+            Assert.NotEqual(0, profile.Id);
+            Assert.NotEqual(0, profile.UserId);
             Assert.NotEqual(profile.PublicKey, Guid.Empty);
             Assert.NotNull(profile.User);
             Assert.NotNull(profile.Gender);
             Assert.NotNull(profile.Occupation);
             Assert.NotNull(profile.OccupationIndustry);
             Assert.NotNull(profile.MaritalStatus);
+            Assert.NotNull(profile.ResidentialStatus);
+            Assert.True(profile.GrossSalary.HasValue ? profile.GrossSalary >= 0 : profile.GrossSalary == null);
+            Assert.True(profile.HouseholdIncome.HasValue ? profile.HouseholdIncome >= 0 : profile.HouseholdIncome == null);
+            Assert.True(profile.HouseholdAdults.HasValue ? profile.HouseholdAdults >= 0 : profile.HouseholdAdults == null);
+            Assert.True(profile.HouseholdChildren.HasValue ? profile.HouseholdChildren >= 0 : profile.HouseholdChildren == null);
+            Assert.True(profile.RetirementContributionsPreTax.HasValue ? profile.RetirementContributionsPreTax >= 0 : profile.RetirementContributionsPreTax == null);
+
+            if (profile.PhysicalAddress != null)
+            {
+                Assert.NotEqual(0, profile.PhysicalAddress.Id);
+                Assert.NotEqual(Guid.Empty, profile.PhysicalAddress.PublicKey);
+                Assert.NotNull(profile.PhysicalAddress.StreetLine1);
+                Assert.NotNull(profile.PhysicalAddress.City);
+                Assert.NotNull(profile.PhysicalAddress.State);
+                Assert.NotNull(profile.PhysicalAddress.ZipCode);
+                Assert.NotNull(profile.PhysicalAddress.Country);
+                Assert.NotEqual(0, profile.PhysicalAddress.UserProfileId);
+
+                if (profile.PhysicalAddress.StreetLine2 != null)
+                    Assert.False(string.IsNullOrEmpty(profile.PhysicalAddress.StreetLine2));
+            }
         }
         [Theory]
         [MemberData(nameof(Helper.UserProfilesId), MemberType = typeof(Helper))]
@@ -92,7 +115,43 @@ namespace aiof.api.tests
             await Assert.ThrowsAsync<AiofNotFoundException>(() =>_repo.GetProfileAsync());
         }
 
-        /*
+        [Theory]
+        [MemberData(nameof(Helper.UserProfilesId), MemberType = typeof(Helper))]
+        public async Task UpsertProfilePhysicalAddressAsync_IsSuccessful(int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
+            var dto = Helper.RandomAddressDto();
+
+            var address = await repo.UpsertProfilePhysicalAddressAsync(dto);
+
+            Assert.NotNull(address);
+            Assert.NotEqual(0, address.Id);
+            Assert.NotEqual(Guid.Empty, address.PublicKey);
+            Assert.NotNull(address.StreetLine1);
+            Assert.NotNull(address.StreetLine2);
+            Assert.NotNull(address.City);
+            Assert.NotNull(address.State);
+            Assert.NotNull(address.ZipCode);
+            Assert.NotNull(address.Country);
+
+            var userProfileId = (await repo.GetProfileAsync()).Id;
+
+            Assert.Equal(userProfileId, address.UserProfileId);
+        }
+        [Theory]
+        [MemberData(nameof(Helper.UserProfilesId), MemberType = typeof(Helper))]
+        public async Task UpsertProfilePhysicalAddressAsync_InvalidData_Throws_ValidationException(int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
+            var dto = Helper.RandomAddressDto();
+
+            dto.ZipCode = "1111111111111";
+            dto.StreetLine1 = new string('\n', 201);
+            dto.StreetLine2 = new string('\n', 201);
+
+            await Assert.ThrowsAsync<FluentValidation.ValidationException>(() => repo.UpsertProfilePhysicalAddressAsync(dto));
+        }
+
         [Theory]
         [MemberData(nameof(Helper.UsersId), MemberType = typeof(Helper))]
         public async Task UpsertAsync_IsSuccessful(int id)
@@ -111,29 +170,9 @@ namespace aiof.api.tests
             var user = await _repo.UpsertAsync(dto);
 
             Assert.NotEmpty(user.Assets);
-            foreach (var asset in dto.Assets)
-            {
-                Assert.NotNull(
-                    user.Assets.FirstOrDefault(x => x.Name == asset.Name
-                        && x.TypeName == asset.TypeName));
-            }
-
             Assert.NotEmpty(user.Liabilities);
-            foreach (var liability in dto.Liabilities)
-            {
-                Assert.NotNull(
-                    user.Liabilities.FirstOrDefault(x => x.Name == liability.Name
-                        && x.TypeName == liability.TypeName));
-            }
-
             Assert.NotEmpty(user.Goals);
-            foreach (var goal in dto.Goals)
-            {
-                Assert.NotNull(
-                    user.Goals.FirstOrDefault(x => x.Name == goal.Name
-                        && x.TypeName == goal.TypeName));
-            }
-        }*/
+        }
 
         [Theory]
         [MemberData(nameof(Helper.UsersId), MemberType = typeof(Helper))]
@@ -179,6 +218,7 @@ namespace aiof.api.tests
             int userId)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
+
             await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.GetDependentAsync(id * 100));
         }
 
@@ -195,7 +235,7 @@ namespace aiof.api.tests
                 Age = 10,
                 Email = null,
                 AmountOfSupportProvided = 15000M,
-                UserRelationship = UserRelationships.Child.ToString()
+                UserRelationship = UserRelationship.Child.ToString()
             };
             await _repo.AddDependentAsync(dependentDto);
             var dependent = await _repo.GetDependentAsync(dependentDto);
@@ -264,7 +304,7 @@ namespace aiof.api.tests
                     Age = 10,
                     Email = null,
                     AmountOfSupportProvided = 15000M,
-                    UserRelationship = UserRelationships.Child.ToString()
+                    UserRelationship = UserRelationship.Child.ToString()
                 });
 
             Assert.NotNull(dependent);
@@ -439,6 +479,7 @@ namespace aiof.api.tests
         public async Task GetAccountAsync_NotFound(int userId, int id)
         {
             var _repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IUserRepository>();
+
             await Assert.ThrowsAsync<AiofNotFoundException>(() => _repo.GetAccountAsync(id * 5));
         }
 

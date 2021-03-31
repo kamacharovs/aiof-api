@@ -27,6 +27,9 @@ namespace aiof.api.data
             _context.UserProfiles
                 .AddRange(GetFakeUserProfiles());
 
+            _context.Addresses
+                .AddRange(GetFakeAddresses());
+
             _context.AssetTypes
                 .AddRange(GetFakeAssetTypes());
 
@@ -127,7 +130,7 @@ namespace aiof.api.data
                     Age = 3,
                     Email = "zima.kamacharov@aiof.com",
                     AmountOfSupportProvided = 1500M,
-                    UserRelationship = UserRelationships.Child.ToString(),
+                    UserRelationship = UserRelationship.Child.ToString(),
                     UserId = 1
                 },
                 new UserDependent
@@ -138,7 +141,7 @@ namespace aiof.api.data
                     Age = 12,
                     Email = null,
                     AmountOfSupportProvided = 12000M,
-                    UserRelationship = UserRelationships.Son.ToString(),
+                    UserRelationship = UserRelationship.Son.ToString(),
                     UserId = 2
                 }
             };
@@ -154,7 +157,27 @@ namespace aiof.api.data
                     UserId = 1,
                     Gender = "Male",
                     Occupation = "Sr. Software Engineer",
-                    OccupationIndustry = "IT"
+                    OccupationIndustry = "IT",
+                    MaritalStatus = MaritalStatuses.Single.ToString(),
+                    EducationLevel = EducationLevels.Bachelors.ToString(),
+                    ResidentialStatus = ResidentialStatuses.Rent.ToString()
+                }
+            };
+        }
+
+        public IEnumerable<Address> GetFakeAddresses()
+        {
+            return new List<Address>
+            {
+                new Address
+                {
+                    Id = 1,
+                    StreetLine1 = "123 Main Street",
+                    StreetLine2 = null,
+                    City = "Charlotte",
+                    State = "NC",
+                    ZipCode = "28205",
+                    UserProfileId = 1
                 }
             };
         }

@@ -24,14 +24,27 @@ namespace aiof.api.data
         [Required]
         public User User { get; set; }
 
+        [MaxLength(100)]
         public string Gender { get; set; }
+
         public DateTime? DateOfBirth { get; set; }
         public int? Age { get; set; }
+
+        [MaxLength(200)]
         public string Occupation { get; set; }
+
+        [MaxLength(200)]
         public string OccupationIndustry { get; set; }
+
         public decimal? GrossSalary { get; set; }
+
+        [MaxLength(100)]
         public string MaritalStatus { get; set; } = MaritalStatuses.Single.ToString();
+
+        [MaxLength(100)]
         public string EducationLevel { get; set; }
+
+        [MaxLength(100)]
         public string ResidentialStatus { get; set; }
 
         public decimal? HouseholdIncome { get; set; }
@@ -39,6 +52,8 @@ namespace aiof.api.data
         public int? HouseholdChildren { get; set; }
 
         public decimal? RetirementContributionsPreTax { get; set; }
+
+        public Address PhysicalAddress { get; set; }
     }
 
     public class UserProfileDto

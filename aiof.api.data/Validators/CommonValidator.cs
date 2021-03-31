@@ -7,6 +7,8 @@ namespace aiof.api.data
     public static class CommonValidator
     {
         public static string RegexPhoneNumber = @"^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$";
+        public static string RegexZipCode = @"^\d{5}(?:[-\s]\d{4})?$";
+        public static string States = "|AL|AK|AS|AZ|AR|CA|CO|CT|DE|DC|FM|FL|GA|GU|HI|ID|IL|IN|IA|KS|KY|LA|ME|MH|MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|MP|OH|OK|OR|PW|PA|PR|RI|SC|SD|TN|TX|UT|VT|VI|VA|WA|WV|WI|WY|";
 
         public const decimal MinimumValue = 0M;
         public const decimal MaximumValue = 99999999M;
@@ -31,6 +33,7 @@ namespace aiof.api.data
         };
         public static string ValidCarLoanTermsMessage = $"Value must be one of the following {string.Join(", ", ValidCarLoanTerms)}";
 
+        public static string UserRelationshipsMessage = $"User relationship must be one of the following {string.Join(", ", Constants.UserRelationships)}";
         public static string GoalTypesMessage = $"Invalid Type. Allowed values are {string.Join(", ", Constants.GoalTypes)}";
         public static string GoalTripTypesMessage = $"Invalid Type. Allowed values are {string.Join(", ", Constants.GoalTripTypes)}";
         public static string GoalCollegeTypesMessage = $"Invalid Type. Allowed values are {string.Join(", ", Constants.GoalCollegeTypes)}";
@@ -41,6 +44,23 @@ namespace aiof.api.data
                 return false;
                 
             return new Regex(RegexPhoneNumber).IsMatch(value);
+        }
+
+        public static bool IsValidState(string state)
+        {
+            if (string.IsNullOrWhiteSpace(state))
+                return false;
+
+            return state.Length == 2 
+                && States.IndexOf(state.ToUpperInvariant()) > 0;
+        }
+
+        public static bool IsValidZipCode(string zipCode)
+        {
+            if (string.IsNullOrWhiteSpace(zipCode))
+                return false;
+
+            return new Regex(RegexZipCode).IsMatch(zipCode);
         }
     }
 }

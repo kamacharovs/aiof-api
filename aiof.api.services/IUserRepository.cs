@@ -15,6 +15,7 @@ namespace aiof.api.services
         Task<IUserProfile> GetProfileAsync(bool asNoTracking = true);
         Task<IUser> UpsertAsync(UserDto userDto);
         Task<IUserProfile> UpsertProfileAsync(UserProfileDto userProfileDto);
+        Task<IAddress> UpsertProfilePhysicalAddressAsync(AddressDto dto);
 
         Task<IUserDependent> GetDependentAsync(int id);
         Task<IUserDependent> GetDependentAsync(UserDependentDto dto);

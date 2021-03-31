@@ -25,6 +25,12 @@ namespace aiof.api.data
             StatusCodes.Status403Forbidden
         };
 
+        public static IEnumerable<string> UserRelationships =>
+            Enum.GetValues(typeof(UserRelationship))
+                .Cast<UserRelationship>()
+                .Select(x => x.ToString())
+                .ToArray();
+
         public static IEnumerable<GoalType> GoalTypes => new GoalType[]
         {
             GoalType.Generic,
@@ -127,6 +133,7 @@ namespace aiof.api.data
         {
             public static string User = nameof(data.User).ToSnakeCase();
             public static string UserProfile = nameof(data.UserProfile).ToSnakeCase();
+            public static string Address = nameof(data.Address).ToSnakeCase();
             public static string UserDependent = nameof(data.UserDependent).ToSnakeCase();
             public static string Asset = nameof(data.Asset).ToSnakeCase();
             public static string Liability = nameof(data.Liability).ToSnakeCase();

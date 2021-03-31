@@ -122,6 +122,19 @@ namespace aiof.api.core.Controllers
         }
 
         /// <summary>
+        /// Get User dependent relationships
+        /// </summary>
+        /// <returns></returns>
+        [FeatureGate(FeatureFlags.UserDependent)]
+        [HttpGet]
+        [Route("dependent/relationships")]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status200OK)]
+        public IActionResult GetUserRelationships()
+        {
+            return Ok(Constants.UserRelationships);
+        }
+
+        /// <summary>
         /// Get User profile
         /// </summary>
         [HttpGet]
@@ -143,6 +156,18 @@ namespace aiof.api.core.Controllers
         public async Task<IActionResult> UpsertUserProfileAsync([FromBody, Required] UserProfileDto userProfileDto)
         {
             return Ok(await _repo.UpsertProfileAsync(userProfileDto));
+        }
+
+        /// <summary>
+        /// Upsert User profile physical address
+        /// </summary>
+        [HttpPut]
+        [Route("profile/physical/address")]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IAddress), StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpsertProfilePhysicalAddressAsync([FromBody] AddressDto addressDto)
+        {
+            return Ok(await _repo.UpsertProfilePhysicalAddressAsync(addressDto));
         }
 
         /// <summary>

@@ -87,16 +87,52 @@ namespace aiof.api.data
         }
     }
 
+    public class AddressDtoValidator : AbstractValidator<AddressDto>
+    {
+        public AddressDtoValidator()
+        {
+            ValidatorOptions.Global.CascadeMode = CascadeMode.Stop;
+
+            RuleFor(x => x.StreetLine1)
+                .NotEmpty()
+                .MaximumLength(200)
+                .When(x => x.StreetLine1 != null);
+
+            RuleFor(x => x.StreetLine2)
+                .NotEmpty()
+                .MaximumLength(200)
+                .When(x => x.StreetLine2 != null);
+
+            RuleFor(x => x.City)
+                .NotEmpty()
+                .MaximumLength(200)
+                .When(x => x.City != null);
+
+            RuleFor(x => x.State)
+                .NotEmpty()
+                .MaximumLength(2)
+                .Must(x =>
+                {
+                    return CommonValidator.IsValidState(x);
+                })
+                .When(x => x.State != null);
+
+            RuleFor(x => x.ZipCode)
+                .NotEmpty()
+                .MaximumLength(5)
+                .Must(x =>
+                {
+                    return CommonValidator.IsValidZipCode(x);
+                })
+                .When(x => x.ZipCode != null);
+        }
+    }
+
     public class UserDependentDtoValidator : AbstractValidator<UserDependentDto>
     {
         public UserDependentDtoValidator()
         {
             ValidatorOptions.Global.CascadeMode = CascadeMode.Stop;
-
-            var validUserRelationships = Enum.GetValues(typeof(UserRelationships))
-                .Cast<UserRelationships>()
-                .Select(x => x.ToString())
-                .ToArray();
 
             RuleFor(x => x)
                 .NotNull();
@@ -131,12 +167,12 @@ namespace aiof.api.data
                 .NotEmpty()
                 .Must(x =>
                 {
-                    if (validUserRelationships.Contains(x, StringComparer.InvariantCultureIgnoreCase))
+                    if (Constants.UserRelationships.Contains(x, StringComparer.InvariantCultureIgnoreCase))
                         return true;
 
                     return false;
                 })
-                .WithMessage($"User relationship must be one of the following {string.Join(", ", validUserRelationships)}");
+                .WithMessage(CommonValidator.UserRelationshipsMessage);
         }
     }
 }
