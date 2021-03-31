@@ -151,6 +151,7 @@ namespace aiof.api.core.Controllers
         /// </summary>
         [HttpPut]
         [Route("profile")]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(IUserProfile), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpsertUserProfileAsync([FromBody, Required] UserProfileDto userProfileDto)
@@ -163,6 +164,7 @@ namespace aiof.api.core.Controllers
         /// </summary>
         [HttpPut]
         [Route("profile/physical/address")]
+        [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IAiofProblemDetail), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(IAddress), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpsertProfilePhysicalAddressAsync([FromBody] AddressDto addressDto)

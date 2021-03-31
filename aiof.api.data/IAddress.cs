@@ -14,27 +14,21 @@ namespace aiof.api.data
         [Required]
         Guid PublicKey { get; set; }
 
-        [Required]
         [MaxLength(200)]
         string StreetLine1 { get; set; }
 
-        [Required]
         [MaxLength(200)]
         string StreetLine2 { get; set; }
 
-        [Required]
         [MaxLength(200)]
         string City { get; set; }
 
-        [Required]
         [MaxLength(2)]
         string State { get; set; }
 
-        [Required]
         [MaxLength(5)]
         string ZipCode { get; set; }
 
-        [Required]
         [MaxLength(200)]
         string Country { get; set; }
 
