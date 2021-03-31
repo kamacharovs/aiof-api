@@ -14,27 +14,21 @@ namespace aiof.api.data
         [Required]
         public Guid PublicKey { get; set; } = Guid.NewGuid();
 
-        [Required]
         [MaxLength(200)]
         public string StreetLine1 { get; set; }
 
-        [Required]
         [MaxLength(200)]
         public string StreetLine2 { get; set; }
 
-        [Required]
         [MaxLength(200)]
         public string City { get; set; }
 
-        [Required]
         [MaxLength(2)]
         public string State { get; set; }
 
-        [Required]
         [MaxLength(5)]
         public string ZipCode { get; set; }
 
-        [Required]
         [MaxLength(200)]
         public string Country { get; set; } = "USA";
 
