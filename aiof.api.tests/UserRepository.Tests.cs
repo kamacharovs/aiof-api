@@ -160,16 +160,14 @@ namespace aiof.api.tests
             var rdto = Helper.RandomUserDtos().FirstOrDefault().ToArray();
             var dto = new UserDto
             {
-                Assets = (ICollection<AssetDto>)rdto[0],
-                Liabilities = (ICollection<LiabilityDto>)rdto[1],
-                Goals = (ICollection<GoalDto>)rdto[2]
+                Liabilities = (ICollection<LiabilityDto>)rdto[0],
+                Goals = (ICollection<GoalDto>)rdto[1]
             };
 
             Assert.NotNull(dto);
 
             var user = await _repo.UpsertAsync(dto);
 
-            Assert.NotEmpty(user.Assets);
             Assert.NotEmpty(user.Liabilities);
             Assert.NotEmpty(user.Goals);
         }

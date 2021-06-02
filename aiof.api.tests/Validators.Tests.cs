@@ -42,7 +42,6 @@ namespace aiof.api.tests
     [Trait(Helper.Category, Helper.UnitTest)]
     public class ValidatorsTests
     {
-        private readonly AbstractValidator<AssetDto> _assetDtoValidator;
         private readonly AbstractValidator<GoalDto> _goalDtoValidator;
         private readonly AbstractValidator<LiabilityDto> _liabilityDtoValidator;
         private readonly AbstractValidator<LiabilityType> _liabilityTypeValidator;
@@ -52,80 +51,11 @@ namespace aiof.api.tests
         public ValidatorsTests()
         {
             var serviceHelper = new ServiceHelper();
-            _assetDtoValidator = serviceHelper.GetRequiredService<AbstractValidator<AssetDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<AssetDto>));
             _goalDtoValidator = serviceHelper.GetRequiredService<AbstractValidator<GoalDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<GoalDto>));
             _liabilityDtoValidator = serviceHelper.GetRequiredService<AbstractValidator<LiabilityDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<LiabilityDto>));
             _liabilityTypeValidator = serviceHelper.GetRequiredService<AbstractValidator<LiabilityType>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<LiabilityType>));
             _subscriptionDtoValidator = serviceHelper.GetRequiredService<AbstractValidator<SubscriptionDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<SubscriptionDto>));
             _accountDtoValidator = serviceHelper.GetRequiredService<AbstractValidator<AccountDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<AccountDto>));
-        }
-
-        [Theory]
-        [InlineData("Name1", "typename1", GoalType.Generic)]
-        [InlineData("Name2", "typename1", GoalType.Trip)]
-        public void Asset_Liability_Goal_Dto_Valid(
-            string name,
-            string typeName,
-            GoalType type)
-        {
-            var assetDto = new AssetDto
-            {
-                Name = name,
-                TypeName = typeName
-            };
-            Assert.True(_assetDtoValidator.Validate(assetDto).IsValid);
-
-            var liabilityDto = new LiabilityDto
-            {
-                Name = name,
-                TypeName = typeName
-            };
-            Assert.True(_liabilityDtoValidator.Validate(liabilityDto).IsValid);
-
-            var goalDto = new GoalDto
-            {
-                Name = name,
-                Type = type,
-                Amount = 10M,
-                CurrentAmount = 1M,
-                MonthlyContribution = 1M
-            };
-            Assert.True(_goalDtoValidator.Validate(goalDto).IsValid);
-        }
-
-        [Theory]
-        [InlineData("Name1", null)]
-        [InlineData(null, "TypeName2")]
-        [InlineData("Name1", "")]
-        [InlineData("", "TypeName2")]
-        [InlineData(null, null)]
-        [InlineData("", "")]
-        public void Asset_Liability_Goal_Dto_Name_TypeName_Invalid(
-            string name,
-            string typeName)
-        {
-            var assetDto = new AssetDto
-            {
-                Name = name,
-                TypeName = typeName,
-                Value = 15000M
-            };
-            Assert.False(_assetDtoValidator.Validate(assetDto).IsValid);
-
-            var liabilityDto = new LiabilityDto
-            {
-                Name = name,
-                TypeName = typeName,
-                Value = 15000M
-            };
-            Assert.False(_liabilityDtoValidator.Validate(liabilityDto).IsValid);
-
-            var goalDto = new GoalDto
-            {
-                Name = string.Empty,
-                Type = GoalType.Generic
-            };
-            Assert.False(_goalDtoValidator.Validate(goalDto).IsValid);
         }
 
         [Theory]
@@ -188,25 +118,14 @@ namespace aiof.api.tests
         [Theory]
         [MemberData(nameof(Helper.RandomUserDtos), MemberType = typeof(Helper))]
         public void UserDto_Validation_IsSuccessful(
-            List<AssetDto> assets,
             List<LiabilityDto> liabilities,
             List<GoalDto> goals)
         {
             var userDto = new UserDto
             {
-                Assets = assets,
                 Liabilities = liabilities,
                 Goals = goals
             };
-
-            Assert.True(_userDtoValidator.Validate(userDto).IsValid);
-        }
-
-        [Fact]
-        public void UserDto_Validation_AssetsOnly_IsSuccessful()
-        {
-            var assetDtos = Helper.RandomAssetDtos();
-            var userDto = new UserDto { Assets = assetDtos };
 
             Assert.True(_userDtoValidator.Validate(userDto).IsValid);
         }

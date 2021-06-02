@@ -107,15 +107,12 @@ namespace aiof.api.services
 
         public async Task<IUser> UpsertAsync(UserDto userDto)
         {
-            var assets = _mapper.Map<IEnumerable<Asset>>(userDto.Assets);
             var liabilities = _mapper.Map<IEnumerable<Liability>>(userDto.Liabilities);
             var goals = _mapper.Map<IEnumerable<Goal>>(userDto.Goals);
 
-            assets = assets.Map(x => x.UserId = _tenant.UserId);
             liabilities = liabilities.Map(x => x.UserId = _tenant.UserId);
             goals = goals.Map(x => x.UserId = _tenant.UserId);
 
-            _context.Assets.UpdateRange(assets);
             _context.Liabilities.UpdateRange(liabilities);
             _context.Goals.UpdateRange(goals);
 

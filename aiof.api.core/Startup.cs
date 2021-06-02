@@ -33,7 +33,6 @@ namespace aiof.api.core
         {
             services.AddScoped<IAiofRepository, AiofRepository>()
                 .AddScoped<IUserRepository, UserRepository>()
-                .AddScoped<IAssetRepository, AssetRepository>()
                 .AddScoped<IGoalRepository, GoalRepository>()
                 .AddScoped<ILiabilityRepository, LiabilityRepository>()
                 .AddScoped<IUtilityRepository, UtilityRepository>()

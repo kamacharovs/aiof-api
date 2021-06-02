@@ -38,7 +38,6 @@ namespace aiof.api.tests
 
             services.AddScoped<IAiofRepository, AiofRepository>()
                 .AddScoped<IUserRepository, UserRepository>()
-                .AddScoped<IAssetRepository, AssetRepository>()
                 .AddScoped<IGoalRepository, GoalRepository>()
                 .AddScoped<ILiabilityRepository, LiabilityRepository>()
                 .AddScoped<IUtilityRepository, UtilityRepository>()
@@ -48,8 +47,7 @@ namespace aiof.api.tests
             services.AddScoped<ITenant>(x => GetMockTenant());
             services.AddSingleton(new MapperConfiguration(x => { x.AddProfile(new AutoMappingProfileDto()); }).CreateMapper());
 
-            services.AddSingleton<AbstractValidator<AssetDto>, AssetDtoValidator>()
-                .AddSingleton<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>()
+            services.AddSingleton<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>()
                 .AddSingleton<AbstractValidator<LiabilityType>, LiabilityTypeValidator>()
                 .AddSingleton<AbstractValidator<GoalDto>, GoalDtoValidator<GoalDto>>()
                 .AddSingleton<AbstractValidator<GoalTripDto>, GoalTripDtoValidator>()
@@ -256,7 +254,6 @@ namespace aiof.api.tests
         public static UserDto RandomUserDto()
         {
             return new Faker<UserDto>()
-                .RuleFor(x => x.Assets, f => RandomAssetDtos())
                 .RuleFor(x => x.Liabilities, f => RandomLiabilityDtos())
                 .RuleFor(x => x.Goals, f => RandomGoalDtos())
                 .Generate();
@@ -280,22 +277,6 @@ namespace aiof.api.tests
                 .RuleFor(x => x.State, f => f.Address.StateAbbr())
                 .RuleFor(x => x.ZipCode, f => f.Random.Int(10000, 99999).ToString())
                 .Generate();
-        }
-
-        public static AssetDto RandomAssetDto()
-        {
-            return FakerAssetDto().Generate();
-        }
-        public static List<AssetDto> RandomAssetDtos(int? n = null)
-        {
-            return FakerAssetDto().Generate(n ?? GeneratedAmount);
-        }
-        private static Faker<AssetDto> FakerAssetDto()
-        {
-            return new Faker<AssetDto>()
-                .RuleFor(x => x.Name, f => f.Random.String2(10))
-                .RuleFor(x => x.TypeName, f => _Fake.GetFakeAssetTypes().First().Name)
-                .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000));
         }
 
         public static LiabilityDto RandomLiabilityDto(int? n = null)
@@ -444,7 +425,6 @@ namespace aiof.api.tests
             {
                 new object[]
                 {
-                    RandomAssetDtos(),
                     RandomLiabilityDtos(),
                     RandomGoalDtos()
                 }

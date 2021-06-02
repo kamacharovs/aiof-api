@@ -164,20 +164,21 @@ namespace aiof.api.data
 
             modelBuilder.Entity<Asset>(e =>
             {
-                e.ToTable(Keys.Entity.Asset);
+                e.ToTable(Keys.Entity.Asset, Keys.Schema.Asset, e => e.ExcludeFromMigrations());
 
                 e.HasKey(x => x.Id);
 
                 e.HasQueryFilter(x => x.UserId == Tenant.UserId
                     && !x.IsDeleted);
 
-                e.Property(x => x.Id).HasSnakeCaseColumnName().ValueGeneratedOnAdd().IsRequired();
-                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
-                e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
-                e.Property(x => x.TypeName).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
-                e.Property(x => x.Value).HasSnakeCaseColumnName().IsRequired();
-                e.Property(x => x.UserId).HasSnakeCaseColumnName().IsRequired();
-                e.Property(x => x.IsDeleted).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.Id).HasSnakeCaseColumnName();
+                e.Property(x => x.PublicKey).HasSnakeCaseColumnName();
+                e.Property(x => x.Name).HasSnakeCaseColumnName();
+                e.Property(x => x.TypeName).HasSnakeCaseColumnName();
+                e.Property(x => x.Value).HasSnakeCaseColumnName();
+                e.Property(x => x.UserId).HasSnakeCaseColumnName();
+                e.Property(x => x.Created).HasColumnType("timestamp").HasSnakeCaseColumnName();
+                e.Property(x => x.IsDeleted).HasSnakeCaseColumnName();
 
                 e.HasOne(x => x.Type)
                     .WithMany()
@@ -286,7 +287,7 @@ namespace aiof.api.data
 
             modelBuilder.Entity<AssetType>(e =>
             {
-                e.ToTable(Keys.Entity.AssetType);
+                e.ToTable(Keys.Entity.AssetType, Keys.Schema.Asset, e => e.ExcludeFromMigrations());
 
                 e.HasKey(x => x.Name);
 
