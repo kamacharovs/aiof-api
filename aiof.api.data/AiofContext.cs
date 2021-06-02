@@ -164,7 +164,7 @@ namespace aiof.api.data
 
             modelBuilder.Entity<Asset>(e =>
             {
-                e.ToTable(Keys.Entity.Asset, Keys.Schema.Asset);
+                e.ToTable(Keys.Entity.Asset, Keys.Schema.Asset, e => e.ExcludeFromMigrations());
 
                 e.HasKey(x => x.Id);
 
@@ -287,7 +287,7 @@ namespace aiof.api.data
 
             modelBuilder.Entity<AssetType>(e =>
             {
-                e.ToTable(Keys.Entity.AssetType, Keys.Schema.Asset);
+                e.ToTable(Keys.Entity.AssetType, Keys.Schema.Asset, e => e.ExcludeFromMigrations());
 
                 e.HasKey(x => x.Name);
 
