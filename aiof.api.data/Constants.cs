@@ -129,6 +129,11 @@ namespace aiof.api.data
             public const string PublicKey = "public_key";
         }
 
+        public static class Schema
+        {
+            public static string Asset = "asset";
+        }
+
         public static class Entity
         {
             public static string User = nameof(data.User).ToSnakeCase();

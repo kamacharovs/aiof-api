@@ -75,8 +75,7 @@ namespace aiof.api.core
 
         public static IServiceCollection AddAiofFluentValidators(this IServiceCollection services)
         {
-            services.AddSingleton<AbstractValidator<AssetDto>, AssetDtoValidator>()
-                .AddSingleton<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>()
+            services.AddSingleton<AbstractValidator<LiabilityDto>, LiabilityDtoValidator>()
                 .AddSingleton<AbstractValidator<LiabilityType>, LiabilityTypeValidator>()
                 .AddSingleton<AbstractValidator<GoalDto>, GoalDtoValidator<GoalDto>>()
                 .AddSingleton<AbstractValidator<GoalTripDto>, GoalTripDtoValidator>()

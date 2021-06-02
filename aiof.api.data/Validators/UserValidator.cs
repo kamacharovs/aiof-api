@@ -74,8 +74,6 @@ namespace aiof.api.data
     {
         public UserDtoValidator()
         {
-            RuleForEach(x => x.Assets)
-                .SetValidator(new AssetDtoValidator());
             RuleForEach(x => x.Liabilities)
                 .SetValidator(new LiabilityDtoValidator());
             RuleForEach(x => x.Goals)
